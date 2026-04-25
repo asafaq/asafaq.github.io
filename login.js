@@ -10,9 +10,8 @@ async function login() {
         const newPlayer = {
             id: username,
             password: password,
-            level: 1,
-            xp: 0
         };
+		addNewPlayerData(newPlayer);
 
         await storage.savePlayer(newPlayer);
         document.getElementById("status").textContent = "New player created!";

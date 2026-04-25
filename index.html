@@ -92,13 +92,67 @@
     position: relative;
     display: inline-block;
 }
-.guild_licence {
-    position: absolute;   /* positioned relative to main-container */
-    z-index: 10;          /* ensures it's above the main image */
+
+/* 1. The Container - Keep absolute so your JS top/left works */
+.guild_licence, .guild_stash {
+  position: absolute; 
+  width: 64px;         /* Match your icon width */
+  height: 64px;        /* Match your icon height */
+  overflow: hidden;    /* This clips the shine so it doesn't bleed out */
 }
 
+/* 2. Your existing icon code stays as is */
 .item-icon {
-    width: 64px; /* small image size */
+  width: 60px;
+  display: block;
+}
+
+/* 2. The Shine Layer */
+.guild_licence::after,
+.guild_stash::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -200%; /* Hidden off-side by default */
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    transparent
+  );
+  transform: skewX(-25deg);
+  pointer-events: none;
+  z-index: 10;
+  
+  /* This starts the 15-second loop automatically */
+  animation: idleShine 15s infinite;
+}
+
+/* 3. The 15-second Loop Logic */
+@keyframes idleShine {
+  0% { left: -200%; }
+  4% { left: 200%; }   /* The shine takes 0.6s (4% of 15s) to cross */
+  100% { left: 200%; } /* It stays at the end for the remaining 14.4s */
+}
+
+/* 4. The Hover Logic */
+.guild_licence:hover::after,
+.guild_stash:hover::after {
+  /* Stop the idle animation so they don't clash */
+  animation: none; 
+  /* Move it across immediately on hover */
+  left: 200%;
+  transition: left 0.6s ease-in-out;
+}
+
+/* 5. The "No-Reset" Fix */
+/* This ensures that when you STOP hovering, it snaps back to the start 
+   instantly (0s) instead of sliding backwards across the icon. */
+.guild_licence::after,
+.guild_stash::after {
+  transition: left 0s; 
 }
 
 .hover-zone {
@@ -143,6 +197,21 @@
 }
 
 
+/* 2. We create the shine effect */
+<!-- .guild_licence::after { -->
+  <!-- content: ""; -->
+  <!-- position: absolute; -->
+  <!-- top: -50%; -->
+  <!-- left: -150%; -->
+  <!-- width: 50%; -->
+  <!-- height: 200%; -->
+  <!-- background: rgba(255, 255, 255, 0.4); -->
+  <!-- transform: rotate(30deg); -->
+  <!-- transition: none; -->
+  <!-- pointer-events: none; /* VERY IMPORTANT: This lets your mouse click 'through' the shine to the tooltip zone */ -->
+<!-- } -->
+
+
 .login-box {
     background: #333;
     padding: 20px;
@@ -180,7 +249,36 @@
     color: #ccc;
 }
 
+/* 1. The Container */
+.shine-container {
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+  line-height: 0; /* Removes bottom gap */
+}
 
+/* 2. Creating the Shine Layer */
+.shine-container::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%; /* Start off-screen */
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    to right, 
+    rgba(255, 255, 255, 0) 0%, 
+    rgba(255, 255, 255, 0.3) 50%, 
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: skewX(-25deg); /* Slant the shine */
+}
+
+/* 3. The Hover Animation */
+.shine-container:hover::after {
+  left: 150%; /* Move across to the other side */
+  transition: left 0.7s ease-in-out;
+}
 
 </style>
 </head>
@@ -292,6 +390,10 @@ async function login() {
 	<div class="menu-item" onclick="loadPage('mail')">
       <img src="assets/menu/menu_mail.png" class="icon">
       <div class="tooltipmenu">Mail</div>
+    </div>
+	<div class="menu-item" onclick="loadPage('settings')">
+      <img src="assets/menu/menu_quill.png" class="icon">
+      <div class="tooltipmenu">Settings</div>
     </div>
     </div>
   </div>

@@ -19,7 +19,7 @@ function loadPage(page) {
       <div id="guild-container">
         <img id="guild-image" src="assets/guild/guild.png" />
 
-        <div class="guild_licence" style="top: 160px; left: 160px;">
+        <div class="guild_licence" style="top: 160px; left: 240px;">
           <img src="assets/guild/licence_icon.png" class="item-icon">
 
           <div class="hover-zone"
@@ -29,6 +29,17 @@ function loadPage(page) {
 
           <div class="tooltip"></div>
         </div>
+		
+		<div class="guild_stash" style="top: 200px; left: 80px;">
+          <img src="assets/guild/chest60.png" class="item-icon">
+          <div class="hover-zone"
+               data-label="Guild Stash"
+               data-large="assets/guild/adventurers_licence_50.png">
+          </div>
+          <div class="tooltip"></div>
+        </div>
+		
+		
       </div>
     `,
     // other pages...
@@ -80,8 +91,6 @@ function initGuildTooltips() {
 function loadPhaserScripts() {
   const scripts = [
     "node_modules/phaser/dist/phaser.js",
-    "dist/scenes/Adventurer.js",
-    "dist/scenes/GuildHallScene.js",
   ];
 
   scripts.forEach(src => {

@@ -107,3 +107,23 @@ async function deleteRemote(key) {
         await fetch(`/api/delete?key=${key}`, { method: "DELETE" });
     } catch {}
 }
+
+
+function addNewPlayerData(newPlayer) {
+	const lore = require('./lore.json');
+
+    // Example: inject adventurer.guy1 data
+    const add_adv1 = lore.Adventurer.Hogperson;
+    const add_adv2 = lore.Adventurer.Bragain;
+
+    // Copy all fields from the template into the new player
+    for (const key in add_adv1) {
+        newPlayer[key] = add_adv1[key];
+	}
+    for (const key in add_adv2) {
+        newPlayer[key] = add_adv2[key];
+    }
+
+module.exports = addNewPlayerData;
+}
+
