@@ -1,9 +1,10 @@
-
 class databaseStorage {
     constructor() {
         this.dbName = "PlayerDB";
         this.storeName = "players";
+        this.currentPlayer = null;   // store only the logged-in player
     }
+
 
     open() {
         return new Promise((resolve, reject) => {
@@ -40,7 +41,8 @@ class databaseStorage {
 	}
 }
 
-// const storage = new databaseStorage();
+const storage = new databaseStorage();
+const username = storage.getPlayer(username);
 
 async function login() {
     const username = document.getElementById("username").value.trim();
@@ -109,9 +111,11 @@ async function deleteRemote(key) {
 }
 
 
-function addNewPlayerData(newPlayer) {
-	const lore = require('./lore.json');
-
+async function addNewPlayerData(newPlayer) {
+    const response = await fetch('./lore.json');
+    const lore = await response.json();
+    console.log(lore);
+}
     // Example: inject adventurer.guy1 data
     const add_adv1 = lore.Adventurer.Hogperson;
     const add_adv2 = lore.Adventurer.Bragain;
@@ -125,5 +129,3 @@ function addNewPlayerData(newPlayer) {
     }
 
 module.exports = addNewPlayerData;
-}
-

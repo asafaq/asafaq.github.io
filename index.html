@@ -48,10 +48,10 @@
 
   .right-menu {
     position: absolute;
-    top: 120px;
+    top: 80px;
     right: 0;
     width: 60px;
-    height: 400px;
+    height: 480px;
     background: #444;
     display: flex;
     flex-direction: column;
@@ -94,7 +94,7 @@
 }
 
 /* 1. The Container - Keep absolute so your JS top/left works */
-.guild_licence, .guild_stash {
+.guild_License, .guild_stash {
   position: absolute; 
   width: 64px;         /* Match your icon width */
   height: 64px;        /* Match your icon height */
@@ -108,7 +108,7 @@
 }
 
 /* 2. The Shine Layer */
-.guild_licence::after,
+.guild_License::after,
 .guild_stash::after {
   content: "";
   position: absolute;
@@ -138,7 +138,7 @@
 }
 
 /* 4. The Hover Logic */
-.guild_licence:hover::after,
+.guild_License:hover::after,
 .guild_stash:hover::after {
   /* Stop the idle animation so they don't clash */
   animation: none; 
@@ -150,7 +150,7 @@
 /* 5. The "No-Reset" Fix */
 /* This ensures that when you STOP hovering, it snaps back to the start 
    instantly (0s) instead of sliding backwards across the icon. */
-.guild_licence::after,
+.guild_License::after,
 .guild_stash::after {
   transition: left 0s; 
 }
@@ -196,20 +196,6 @@
     width: 500px; /* large image size */
 }
 
-
-/* 2. We create the shine effect */
-<!-- .guild_licence::after { -->
-  <!-- content: ""; -->
-  <!-- position: absolute; -->
-  <!-- top: -50%; -->
-  <!-- left: -150%; -->
-  <!-- width: 50%; -->
-  <!-- height: 200%; -->
-  <!-- background: rgba(255, 255, 255, 0.4); -->
-  <!-- transform: rotate(30deg); -->
-  <!-- transition: none; -->
-  <!-- pointer-events: none; /* VERY IMPORTANT: This lets your mouse click 'through' the shine to the tooltip zone */ -->
-<!-- } -->
 
 
 .login-box {
@@ -280,6 +266,71 @@
   transition: left 0.7s ease-in-out;
 }
 
+#window-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0,0,0,0.4); /* dim background */
+  z-index: 9999;
+}
+
+.window {
+  background: #222;
+  border: 2px solid #555;
+  padding: 20px;
+  border-radius: 8px;
+  color: white;
+  min-width: 300px;
+  max-width: 600px;
+  text-align: center;
+}
+
+.window-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.window-body img {
+  max-width: 100%;
+}
+
+/* This hides images that haven't loaded their source yet */
+img:not([src]), img[src=""] {
+  visibility: hidden;
+}
+
+/* Optional: Prevent the "broken" border in some browsers */
+img:not([src]) {
+  opacity: 0;
+}
+#contracts-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+#contract_parchment {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+#contracts-container p {
+  position: absolute;
+  top: 20%;
+  left: 10%;
+  right: 10%;
+  color: black;
+  font-size: 18px;
+  z-index: 2;
+}
 </style>
 </head>
 <!-- <button onclick="saveGame()">Save</button> -->
@@ -299,20 +350,16 @@
 
 <body>
 <script>
-    let database = { players: [] }; // default placeholder
+// default placeholder    let database = { players: [] }; 
 </script>
 
     <script src="database.js"></script>
 	<script src="ui.js"></script>
 	
-	<script>
-    const storage = new databaseStorage();
-	</script>
-
 	<script src="login.js"></script>
 
 <div class="app-frame" id="app-frame">
-
+  <div id="window-container"></div>
   <div class="status-bar">Status Line</div>
 
   <div class="main-window" id="mainWindow">
@@ -331,69 +378,30 @@
       <img src="assets/menu/menu_contracts.png" class="icon">
       <div class="tooltipmenu">Contract</div>
 
-<script>
-console.log("Script loaded");
-
-
-
-async function login() {
-    const username = document.getElementById("username").value.trim();
-    const password = document.getElementById("password").value.trim();
-    const status = document.getElementById("status");
-
-    if (!username || !password) {
-        status.textContent = "Enter username and password";
-        return;
-    }
-
-    let player = await storage.getPlayer(username);
-
-    if (!player) {
-        // Auto-create new player
-        player = {
-            id: username,
-            password: password,
-            level: 1,
-            xp: 0
-        };
-
-        await storage.savePlayer(player);
-        status.textContent = "New player created!";
-    } else {
-        if (player.password !== password) {
-            status.textContent = "Wrong password";
-            return;
-        }
-    }
-
-    localStorage.setItem("activePlayerId", username);
-    status.textContent = "Login successful!";
-		// Hide login, show game
-	document.querySelector(".login-box").style.display = "none";
-	document.getElementById("app-frame").style.display = "block";
-
-}
-</script>
-    </div>
+      </div>
     <div class="menu-item" onclick="loadPage('missions')">
       <img src="assets/menu/menu_missions.png" class="icon">
       <div class="tooltipmenu">Missions</div>
     </div>
-    <div class="menu-item" onclick="loadPage('market')">
-      <img src="assets/menu/menu_store.png" class="icon">
-      <div class="tooltipmenu">Market</div>
-    </div>
 	<div class="menu-item" onclick="loadPage('journal')">
       <img src="assets/menu/menu_journal.png" class="icon">
-      <div class="tooltipmenu">Journal</div>
+      <div class="tooltipmenu">Lore</div>
     </div>
 	<div class="menu-item" onclick="loadPage('mail')">
       <img src="assets/menu/menu_mail.png" class="icon">
       <div class="tooltipmenu">Mail</div>
     </div>
-	<div class="menu-item" onclick="loadPage('settings')">
-      <img src="assets/menu/menu_quill.png" class="icon">
-      <div class="tooltipmenu">Settings</div>
+	<div class="menu-item" onclick="loadPage('tavern')">
+      <img src="assets/menu/menu_tavern.png" class="icon">
+      <div class="tooltipmenu">Tavern</div>
+    </div>
+	<div class="menu-item" onclick="loadPage('lore')">
+      <img src="assets/menu/menu_lore.png" class="icon">
+      <div class="tooltipmenu">Lore</div>
+    </div>
+    <div class="menu-item" onclick="loadPage('market')">
+      <img src="assets/menu/menu_store.png" class="icon">
+      <div class="tooltipmenu">Market</div>
     </div>
     </div>
   </div>
