@@ -203,9 +203,10 @@ const patronList = [
     missions: `
       <div id="missions-container">
         <img id="contract_parchment" src="assets/missions/guild_party_party_window.png" />
-		<p>Guild<br>
-		Party A<br>
-		Patry B</p>
+		<p class="line1">Guild</p>
+		<p class="line2">Party A</p>
+		<p class="line3">Party B</p>
+
 		</div>
 		`
     // other pages...
