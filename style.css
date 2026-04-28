@@ -9,7 +9,7 @@
     font-family: Arial, sans-serif;
     display: flex;
     justify-content: center;
-    padding: 40px 0;
+    padding: 0;
   }
 
   mainWindow {
@@ -19,6 +19,7 @@
     display: none;
     width: 540px;
     height: 960px;
+	transform-origin: top center;
     background: #f5f5f5;
     border-radius: 12px;
     overflow-y: auto;
@@ -72,13 +73,34 @@
     align-items: center;
   }
 
-  .menu-item:hover { background: #888; }
-
-  .menu-item:hover .tooltip {
+.menu-item:hover  {
     opacity: 1;
-    transform: translateX(-10px);
+	background: #888;
+    transform: translateX(-2px);
   }
 
+.tooltipmenu:hover {
+	display: block;
+}
+
+.tooltipmenu {
+    display: none;
+    position: absolute;
+    background: #333;
+    color: white;
+    padding: 6px 10px;
+    border-radius: 4px;
+    white-space: nowrap;
+    z-index: 20;
+    margin-top: 4px;     /* Small gap */
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+	pointer-events: none;
+	/* Position to the LEFT of the icon */
+    top: 50%;
+    right: 100%;           /* This pushes it to the left */
+    transform: translateY(-50%);
+    margin-right: 12px;    /* Gap between icon and tooltip */
+}
 
   .icon {
     width: 56px;
@@ -158,19 +180,6 @@
     width: 64px;
     height: 64px;
     cursor: pointer;
-}
-
-.tooltipmenu {
-    display: none;
-    position: absolute;
-    background: #333;
-    color: white;
-    padding: 6px 10px;
-    border-radius: 4px;
-    top: 100%;
-    left: 0;
-    white-space: nowrap;
-    z-index: 10;
 }
 
 
@@ -351,4 +360,17 @@ img:not([src]) {
   top: 360px;
   left: 100px;
   color: white;
+}
+.tutorial-button {
+  position: absolute;
+  top: 520px;
+  right: 80px;
+  padding: 10px 16px;
+  background: #4a90e2;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  display: none; /* hidden by default */
+  z-index: 20;
 }

@@ -9,12 +9,9 @@
 <!-- <button onclick="saveGame()">Save</button> -->
 <!-- <button onclick="loadGame()">Load</button> -->
 
-<div class="login-box">
-    <h2>Login</h2>
-
+	<div class="login-box">
     <input id="username" type="text" placeholder="Username">
     <input id="password" type="password" placeholder="Password">
-
     <button onclick="login()">Login</button>
 
     <p id="status"></p>
@@ -22,15 +19,11 @@
 
 
 <body>
-<script>
-// default placeholder    let database = { players: [] }; 
-</script>
+	<script src="login.js"></script>
 
     <script src="database.js"></script>
 	<script src="ui.js"></script>
 	
-	<script src="login.js"></script>
-
 <div class="app-frame" id="app-frame">
   <div id="window-container"></div>
   <div class="status-bar">Status Line</div>
@@ -38,7 +31,6 @@
   <div class="main-window" id="mainWindow">
     <h2>Welcome</h2>
     <p>Select a menu item to change this content.</p>
-    <p>Scroll down to test scrolling.</p>
   </div>
 
   <div class="right-menu">
@@ -49,7 +41,6 @@
     <div class="menu-item" onclick="loadPage('contracts')">
       <img src="assets/menu/menu_contracts.png" class="icon">
       <div class="tooltipmenu">Contract</div>
-
       </div>
     <div class="menu-item" onclick="loadPage('missions')">
       <img src="assets/menu/menu_missions.png" class="icon">
@@ -79,8 +70,6 @@
   </div>
 
 </div>
-
-
 
 </body>
 </html>

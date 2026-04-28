@@ -1,3 +1,6 @@
+let Database
+let player
+
 async function login() {
 	const username = document.getElementById("username").value.trim();
 	const password = document.getElementById("password").value.trim();
@@ -8,7 +11,7 @@ async function login() {
 		return;
 	}
 
-	let player = await storage.getPlayer(username);
+	player = await storage.loadPlayer(username);
 
     // CASE 1: Player does not exist → create new one
     if (!player) {
@@ -28,7 +31,7 @@ async function login() {
 
     // CASE 2: Player exists → check password
     if (player.password !== password) {
-		console.log("LOADING EXISTING PLAYER:", player);
+		console.log("LOADING EXISTING PLAYER:", player, "typed Wrong password.");
         document.getElementById("status").textContent = "Wrong password";
         return;
     }

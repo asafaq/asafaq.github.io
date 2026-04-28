@@ -1,16 +1,3 @@
-async function startGame() {
-    await Database.init();
-
-	// const storage = new databaseStorage();
-	// const username = storage.getPlayer(username);
-    const save = await Database.get("playerData");
-
-    if (save) {
-        console.log("Loaded save:", save);
-    } else {
-        console.log("No save found, starting new game");
-    }
-}
 
 
 function loadPage(page) {
@@ -19,6 +6,9 @@ function loadPage(page) {
 // 1. Define your patron data in an array. 
 // You can easily add up to 12 objects here.
 // 1. Single source of truth with the 'location' key
+//	0 is Hidden
+//	1	guild
+//	2	tavern
 const patronList = [
   { 
     name: "Patron One", 
@@ -38,7 +28,7 @@ const patronList = [
   },
   { 
     name: "Future Patron", 
-    location: 1, 
+    location: 2, 
     top: "400px", 
     left: "120px", 
     icon: "assets/patrons/amyssa_s.png", 
@@ -49,7 +39,7 @@ const patronList = [
     location: 0, 
     top: "550px", 
     left: "100px", 
-    icon: "assets/patrons/amyssa_s.png", 
+    icon: "assets/patrons/Claudio_s.png", 
     large: "assets/patrons/p3_full.png" 
   },
   { 
@@ -151,7 +141,6 @@ const patronList = [
   // You can fill out all 12 here with location: 0
 ];
 
-
   const pages = {
     guild: `
       <div id="guild-container">
@@ -189,7 +178,9 @@ const patronList = [
 				  </div>
 				`).join('')}
 			</div>
-		  `,
+	<button id="tutorial-button" class="tutorial-button">Start Tutorial</button>
+
+		`,
 		// this patrons will open 2 default patrons, but in the future needs to be able to read from DB which partons are inhouse to display.
     contracts: `
       <div id="contracts-container">
@@ -206,19 +197,89 @@ const patronList = [
 		<p class="line1">Guild</p>
 		<p class="line2">Party A</p>
 		<p class="line3">Party B</p>
-
 		</div>
-		`
+		`,
+	journal: `
+      <div id="journal-container">
+        <img id="contract_parchment" src="assets/guild/contract_parchment.png" />
+		<p style="margin: 40px; color: black;">Welcome to the guild contracts.<br>
+		this is W.I.P<br>
+		please return after completing the<br>
+		tutorial.</p>
+		</div>
+		`,
+	mail: `
+      <div id="mail-container">
+        <img id="contract_parchment" src="assets/guild/contract_parchment.png" />
+		<p style="margin: 40px; color: black;">Welcome to the guild contracts.<br>
+		this is W.I.P<br>
+		please return after completing the<br>
+		tutorial.</p>
+		</div>
+		`,
+	tavern: `
+      <div id="tavern-container">
+        <img id="contract_parchment" src="assets/guild/tavern.png" />
+		<p style="margin: 40px; color: black;">Welcome to the Tavern! W.I.P<br>
+		this is the room to find new adventurers looking for a contract, and where your past adventurers will wait and tell all their tales and exploits while soaking their sorrows and trauma in ales.<br>
+		please return after completing the tutorial.</p>
+		</div>
+		${patronList
+		.filter(patron => patron.location === 2) 
+		.map(patron => `
+		  <div class="patron-wrapper" style="position: absolute; top: ${patron.top}; left: ${patron.left};">
+			<img src="${patron.icon}" class="item-icon">
+			<div class="hover-zone"
+				 data-label="${patron.name}"
+				 data-large="${patron.large}">
+			</div>
+			<div class="tooltip"></div>
+		  </div>
+		`).join('')}
+		  </div>
+		  `,
+		// this patrons will open 2 default patrons, but in the future needs to be able to read from DB which partons are inhouse to display.
+
     // other pages...
   };
 
   main.innerHTML = pages[page] || "<p>Unknown page</p>";
 
   if (page === "guild") {
-    loadPhaserScripts();
+    //loadPhaserScripts();
     initGuildTooltips();   // <-- important
+	showTutorialButton();
   }
 }
+
+function showTutorialButton() {
+	if (player.tutor === 0) {
+		const btn = document.getElementById("tutorial-button");
+		if (btn) {
+			btn.style.display = "block";
+			console.log("tutorial-button:", player.tutor, btn);
+		} else {
+			console.warn("tutorial-button element not found");
+		}
+	}
+}
+
+function scaleApp() {
+  const frame = document.querySelector('.app-frame');
+  const targetWidth = 540;
+  const targetHeight = 960;
+
+  const scaleX = window.innerWidth / targetWidth;
+  const scaleY = window.innerHeight / targetHeight;
+
+  const scale = Math.min(scaleX, scaleY); // keep proportions
+
+  frame.style.transform = `scale(${scale})`;
+}
+
+window.addEventListener('resize', scaleApp);
+window.addEventListener('load', scaleApp);
+
 
 function initGuildTooltips() {
   document.querySelectorAll('.guild_License').forEach(unit => {
@@ -258,24 +319,6 @@ function initGuildTooltips() {
 		tooltip.style.display = "none";
 	  }
 	});		
-    // zone.addEventListener('touchstart', (e) => {
-	  // if (clickActive) return;
-      // e.preventDefault();
-      // const largeSrc = zone.dataset.large;
-
-      // if (tooltip.style.display === "block") {
-        // tooltip.style.display = "none";
-      // } else {
-        // tooltip.innerHTML = `<img src="${largeSrc}">`;
-        // tooltip.style.display = "block";
-      // }
-    // });
-
-    // document.addEventListener('touchstart', (e) => {
-      // if (!unit.contains(e.target)) {
-        // tooltip.style.display = "none";
-      // }
-    // });
   });
 }
 
@@ -309,14 +352,14 @@ function openWindow(label, imageSrc) {
 
 }
 
-function loadPhaserScripts() {
-  const scripts = [
-    "node_modules/phaser/dist/phaser.js",
-  ];
+// function loadPhaserScripts() {
+  // const scripts = [
+    // "node_modules/phaser/dist/phaser.js",
+  // ];
 
-  scripts.forEach(src => {
-    const s = document.createElement("script");
-    s.src = src;
-    document.body.appendChild(s);
-  });
-}
+  // scripts.forEach(src => {
+    // const s = document.createElement("script");
+    // s.src = src;
+    // document.body.appendChild(s);
+  // });
+// }

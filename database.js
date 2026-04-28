@@ -1,85 +1,3 @@
-class databaseStorage {
-    constructor() {
-        this.dbName = "PlayerDB";
-        this.storeName = "players";
-        this.currentPlayer = null;   // store only the logged-in player
-    }
-
-
-    open() {
-        return new Promise((resolve, reject) => {
-            const request = indexedDB.open(this.dbName, 2);
-
-            request.onupgradeneeded = () => {
-                const db = request.result;
-				if (!db.objectStoreNames.contains(this.storeName)) {
-					db.createObjectStore(this.storeName, { keyPath: "id" });
-				}
-            };
-
-            request.onsuccess = () => resolve(request.result);
-            request.onerror = () => reject(request.error);
-        });
-    }
-
-    async savePlayer(player) {
-        const db = await this.open();
-        const tx = db.transaction(this.storeName, "readwrite");
-        tx.objectStore(this.storeName).put(player);
-        return tx.complete;
-    }
-
-	async getPlayer(id) {
-		const db = await this.open();
-		return new Promise((resolve, reject) => {
-			const tx = db.transaction(this.storeName, "readonly");
-			const request = tx.objectStore(this.storeName).get(id);
-
-			request.onsuccess = () => resolve(request.result || null);
-			request.onerror = () => reject(request.error);
-		});
-	}
-}
-
-const storage = new databaseStorage();
-const username = storage.getPlayer(username);
-
-async function login() {
-    const username = document.getElementById("username").value.trim();
-    const password = document.getElementById("password").value.trim();
-
-    const player = await storage.getPlayer(username);
-
-    // CASE 1: Player does not exist → create new one
-    if (!player) {
-        const newPlayer = {
-            id: username,
-            password: password,
-            level: 1,
-            xp: 0
-        };
-
-        await storage.savePlayer(newPlayer);
-        console.log("New player created:", newPlayer);
-        startGame(newPlayer);
-        return;
-    }
-
-    // CASE 2: Player exists → check password
-    if (player.password !== password) {
-        alert("Wrong password");
-        return;
-    }
-
-    // CASE 3: Login success
-    console.log("Login successful:", player);
-    startGame(player);
-}
-
-
-
-
-
 // Remote DB placeholders (future)
 // These functions do nothing now, but your game already supports them.
 
@@ -110,6 +28,70 @@ async function deleteRemote(key) {
     } catch {}
 }
 
+// Remote DB placeholders (future)
+// These functions do nothing now, but your game already supports them.
+
+// Start of local DB
+
+
+class databaseStorage {
+    constructor() {
+        this.dbName = "PlayerDB";
+        this.storeName = "players";
+        this.currentPlayer = null;   // store only the logged-in player
+    }
+
+
+    open() {
+        return new Promise((resolve, reject) => {
+            const request = indexedDB.open(this.dbName, 2);
+
+            request.onupgradeneeded = () => {
+                const db = request.result;
+				if (!db.objectStoreNames.contains(this.storeName)) {
+					db.createObjectStore(this.storeName, { keyPath: "id" });
+				}
+            };
+
+            request.onsuccess = () => resolve(request.result);
+            request.onerror = () => reject(request.error);
+        });
+    }
+
+	async savePlayer(player) {
+		const db = await this.open();
+
+		return new Promise((resolve, reject) => {
+			const tx = db.transaction(this.storeName, "readwrite");
+			const store = tx.objectStore(this.storeName);
+
+			const req = store.put(player);
+
+			req.onerror = () => reject(req.error);
+			tx.oncomplete = () => resolve(true);
+			tx.onerror = () => reject(tx.error);
+		});
+	}
+
+	async loadPlayer(id) {
+		const db = await this.open();
+
+		return new Promise((resolve, reject) => {
+			const tx = db.transaction(this.storeName, "readonly");
+			const store = tx.objectStore(this.storeName);
+			const request = store.get(id);
+
+			request.onsuccess = () => resolve(request.result || null);
+			request.onerror = () => reject(request.error);
+			tx.onerror = () => reject(tx.error);
+		});
+	}
+}
+
+const storage = new databaseStorage();
+const username = storage.loadPlayer(username);
+
+
 
 async function addNewPlayerData(newPlayer) {
     const response = await fetch('./lore.json');
@@ -129,3 +111,15 @@ async function addNewPlayerData(newPlayer) {
     }
 
 module.exports = addNewPlayerData;
+//let Database
+
+async function startGame(newPlayer) {
+    console.log("Starting game with player:", player);
+
+    //await Database.init();
+    const username = player.id;   // this is the username string
+    const tutor = player.tutor;   // example: use other fields
+
+}
+
+
