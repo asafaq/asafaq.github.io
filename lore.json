@@ -1,4 +1,3 @@
-"NOTICE_TRAILING_COMMAS": true,
 "Adventurer": {
 	"Marilnus":	{
 		"name": "Marilnus",
@@ -24,16 +23,16 @@
 		"inventory3": "string",
 		"inventory4": "string",
 		"inventory1_lock": true,
-		"inventory1_lock": true,
-		"inventory1_lock": false,
-		"inventory1_lock": false,
+		"inventory2_lock": true,
+		"inventory3_lock": false,
+		"inventory4_lock": false,
 		"trait1": "Diplomatic",
 		"trait2": "string",
 		"trait3": "string",
 		"trait4": "string",
 		"trait5": "string",
 		"trait6": "string",
-		"notes": "The old adventurer and the party's horse and buggy, builds the camp, cooks dinner, parles with encouters, guards the loot, doesn't fight monsters.",
+		"notes": "The old adventurer and the party's horse and buggy, builds the camp, cooks dinner, parles with encouters, guards the loot, doesn't fight monsters."
 	},
 	"Hogperson": {
 		"name": "Hogperson",
@@ -61,9 +60,9 @@
 		"inventory3": "string",
 		"inventory4": "string",
 		"inventory1_lock": true,
-		"inventory1_lock": false,
-		"inventory1_lock": false,
-		"inventory1_lock": false,
+		"inventory2_lock": false,
+		"inventory3_lock": false,
+		"inventory4_lock": false,
 		"trait1": "Masocist",
 		"trait1_comment": "Masocist = Gain +1 Hit/Dmg for every 25% HP Missing.",
 		"trait2": "Cheerful",
@@ -94,9 +93,9 @@
 		"Knapsack_comment": "Allows the bearer to hold 4 items without value other than in trade, without spending an inventory slot."
 		"inventory4": "string",
 		"inventory1_lock": true,
-		"inventory1_lock": true,
-		"inventory1_lock": true,
-		"inventory1_lock": false,
+		"inventory2_lock": true,
+		"inventory3_lock": true,
+		"inventory4_lock": false,
 		"trait1": "Appraisal",
 		"Appraisal_comment": "Provide assessment of value.",
 		"trait2": "Tunnel Surveyer",
@@ -104,7 +103,7 @@
 		"trait3": "string",
 		"trait4": "string",
 		"trait5": "string",
-		"trait6": "string",
+		"trait6": "string"
 	}
 	"Claudio": {
 		"name": "Claudio",
@@ -130,9 +129,9 @@
 		"inventory3": "",
 		"inventory4": "",
 		"inventory1_lock": true,
-		"inventory1_lock": false,
-		"inventory1_lock": false,
-		"inventory1_lock": false,
+		"inventory2_lock": false,
+		"inventory3_lock": false,
+		"inventory4_lock": false,
 		"trait1": "Persuasive",
 		"trait2": "Comedian",
 		"Comedian_comment": "This guy is a moral boost and parles with foes otherwise non-talkative. Comedian also preforms at the guild to patrons."
@@ -140,7 +139,7 @@
 		"trait4": "",
 		"trait5": "",
 		"trait6": "",
-		"notes": "Claudio is held prisoner, and can be released in the first tutorial adventure to join the player. Claudio is optimized to active adventures and not AFK auto-adventures.",
+		"notes": "Claudio is held prisoner, and can be released in the first tutorial adventure to join the player. Claudio is optimized to active adventures and not AFK auto-adventures."
 	}
 	"Amyssa": {
 		"name": "Amyssa",
@@ -161,14 +160,14 @@
 		"RacialEnemy": "",
 		"proficiency_armor": "Medium",
 		"proficiency_weapon": "Martial",
-		"inventory1": "",
+		"inventory1": "Scribe Kit",
 		"inventory2": "",
 		"inventory3": "",
 		"inventory4": "",
-		"inventory1_lock": false,
-		"inventory1_lock": false,
-		"inventory1_lock": false,
-		"inventory1_lock": false,
+		"inventory1_lock": true,
+		"inventory2_lock": false,
+		"inventory3_lock": false,
+		"inventory4_lock": false,
 		"trait1": "Spellcaster",
 		"trait2": "Scribe",
 		"Scribe_comment": "While at the guild writes magical scrolls."
@@ -177,7 +176,7 @@
 		"trait4": "",
 		"trait5": "",
 		"trait6": "",
-		"notes": "Amyssa is the first hireling the player may pay for after the tutorial adventure, then they discover the Caste system, and how Amyssa won't join with the commoner but stay in the guild and scribe scrolls instead, until he hires some nobles.",
+		"notes": "Amyssa is the first hireling the player may pay for after the tutorial adventure, then they discover the Caste system, and how Amyssa won't join with the commoner but stay in the guild and scribe scrolls instead, until he hires some nobles."
 	}
 	"Tonica": {
 		"name": "Tonica",
@@ -203,9 +202,9 @@
 		"inventory3": "",
 		"inventory4": "",
 		"inventory1_lock": false,
-		"inventory1_lock": false,
-		"inventory1_lock": false,
-		"inventory1_lock": false,
+		"inventory2_lock": false,
+		"inventory3_lock": false,
+		"inventory4_lock": false,
 		"trait1": "Backstab",
 		"trait2": "Shady",
 		"Shady_comment": "-2 Hit in fights, +2 Hit in Backstabs."
@@ -213,7 +212,7 @@
 		"trait4": "",
 		"trait5": "",
 		"trait6": "",
-		"notes": "Hirling.",
+		"notes": "Hirling."
 	}
 	"Lurch": {
 		"name": "Lurch",
@@ -234,14 +233,14 @@
 		"RacialEnemy": "",
 		"proficiency_armor": "Medium",
 		"proficiency_weapon": "Martial",
-		"inventory1": "Lute",
+		"inventory1": "",
 		"inventory2": "",
 		"inventory3": "",
 		"inventory4": "",
-		"inventory1_lock": true,
 		"inventory1_lock": false,
-		"inventory1_lock": false,
-		"inventory1_lock": false,
+		"inventory2_lock": false,
+		"inventory3_lock": false,
+		"inventory4_lock": false,
 		"trait1": "Independant",
 		"Independant_comment": "Can travel alone",
 		"trait2": "Pickpocket",
@@ -249,7 +248,7 @@
 		"trait4": "",
 		"trait5": "",
 		"trait6": "",
-		"notes": "Lurch is the model solo AFK farmer, he can go off into enemy territory and blend in. He will return with treasure and hints about quests.",
+		"notes": "Lurch is the model solo AFK farmer, he can go off into enemy territory and blend in. He will return with treasure and hints about quests."
 	}
 	"Desmond": {
 		"name": "Desmond",
@@ -276,17 +275,17 @@
 		"inventory3": "",
 		"inventory4": "",
 		"inventory1_lock": false,
-		"inventory1_lock": false,
-		"inventory1_lock": false,
-		"inventory1_lock": false,
+		"inventory2_lock": false,
+		"inventory3_lock": false,
+		"inventory4_lock": false,
 		"trait1": "Immune to Energy drain",
 		"trait2": "Immune to Fear",
 		"trait3": "Turn Undead",
 		"trait4": "Radiant Attack",
 		"trait5": "",
 		"trait6": "",
-		"notes": "The First real fighter the player can hire, cuts through undead.",
-	}
+		"notes": "The First real fighter the player can hire, cuts through undead."
+	},
 	"Aasibelle": {
 		"name": "Aasibelle",
 		"race": "Angel",
@@ -313,9 +312,9 @@
 		"inventory3": "",
 		"inventory4": "",
 		"inventory1_lock": false,
-		"inventory1_lock": false,
-		"inventory1_lock": false,
-		"inventory1_lock": false,
+		"inventory2_lock": false,
+		"inventory3_lock": false,
+		"inventory4_lock": false,
 		"trait1": "Divine",
 		"Divine_comment": "Has (10*Lvl) Radiant points to spend as Smite or Heal.",
 		"trait2": "Holy Aura",
@@ -351,10 +350,10 @@
 		"inventory2": "Apothecary kit",
 		"inventory3": "string",
 		"inventory4": "string",
-		"inventory1_lock": true,
-		"inventory1_lock": true,
 		"inventory1_lock": false,
-		"inventory1_lock": false,
+		"inventory2_lock": false,
+		"inventory3_lock": false,
+		"inventory4_lock": false,
 		"trait1": "Calm",
 		"trait1_comment": "Resistant to drama.",
 		"trait2": "Apothecary",
@@ -388,10 +387,10 @@
 		"inventory2": "string",
 		"inventory3": "string",
 		"inventory4": "string",
-		"inventory1_lock": true,
 		"inventory1_lock": false,
-		"inventory1_lock": false,
-		"inventory1_lock": false,
+		"inventory2_lock": false,
+		"inventory3_lock": false,
+		"inventory4_lock": false,
 		"trait1": "Cheerful",
 		"trait1_comment": "Party members have moral +1.",
 		"trait2": "string",
@@ -399,6 +398,41 @@
 		"trait4": "string",
 		"trait5": "string",
 		"trait6": "string",
+	},
+	"Tinman B-B-TR": {
+		"name": "Tinman B-B-TR",
+		"race": "Warforged",
+		"role": "Clericbot",
+		"hp_die": 8,
+		"hp_modifier": 1,
+		"strengh_mod": 3,
+		"agility_mod": -4,
+		"wisdom_mod": 1,
+		"intelligence_mod": 0,
+		"charisma_mod": 0,
+		"alignment": "Good",
+		"level": 2,
+		"sex": null,
+		"size": "Medium",
+		"caste": "Omni",
+		"RacialEnemy": "",
+		"proficiency_armor": "Heavy",
+		"proficiency_weapon": "Martial",
+		"inventory1": "",
+		"inventory2": "",
+		"inventory3": "",
+		"inventory4": "",
+		"inventory1_lock": false,
+		"inventory2_lock": false,
+		"inventory3_lock": false,
+		"inventory4_lock": false,
+		"trait1": "Faulty Powerpack",
+		"trait2": "Spinning Batter",
+		"trait3": "",
+		"trait4": "",
+		"trait5": "",
+		"trait6": "",
+		"notes": "Tinman is a warforged built to contain the soul of a past noble in service of the realm. His construction wasn't completely finished, and he's still in Beta testing.",
 	}
 },
 "Races": {
@@ -432,6 +466,8 @@
 	"Spy": {"desc": "Tactician adept at espionage and disguise, can pass as an alignment adjacent to their own, meaning neutral could pass as any."},
 	"Paladin": {"desc": "The Divine Knight, sworn servitude to god, and to his king on the earth."},
 	"Fallen Paladin": {"desc": "A fighter, forsaken his oath but still has some providence."},
+	"Clericbot": {"desc": "A warforged able to to channel divine power, but only partially, charging only healing abilities.".
+		"Traits": ["Healer"]}
 },	
 "Traits": {
 	"Diplomatic": {"desc": "Gain advantage in parle."},
@@ -452,13 +488,17 @@
 	"Darkvision": {"desc": "Can see in the darkness like in dim-lit, can see in dim-lit like in normal light."},
 	"Lightphobic": {"desc": "+1 Hit in darkness , -1 Hit in normal light."},
 	"Calm": {"desc": "Resistant to drama."},
-	"Apothecary": {"desc": "While idling at the guild brews potions."}
+	"Apothecary": {"desc": "While idling at the guild brews potions."},
+	"Faulty Powerpack": {"desc": "The Warforged power supply last for only one day, then has to be shut down for a day to be dorment until it regenerates its charge."},
+	"Spinning Batter": {"desc": "The Warforged may execute a powerful battering assault, spinning his body to attack the target 4 times in one round. The target has to be standing, and either grapped or dazed."},
+	"Healer": {"desc": "Has (10*Lvl) Radiant points to spend as Heal."},
+	"Dorment": {"desc": "This patron may not move or make any action. They can idle in the guild or be carried in a Carriage."}
 },
 "Party Traits":{
 	"Trouble Makers": {"desc": "While your party has a Barbarian, a Rogue, and a Bard, gaining better chances to succeed at work-arounds and made-up strategies in Encounters, rather than taking the forward approach or plain fighting."
 		"Requirements": ["Barbarian", "Rogue", "Bard"]},
 	"Family Support": {"desc": "While your party contains family members, they gain +1 to all rolls",
-		"Requirements": ["Hogperson","Hogmother", "Hogfather"]
+		"Requirements": ["Hogperson","Hogmother", "Hogfather"]}
 },
 "Inventory": {
 	"Carriage": {"desc": "A horse and buggy."},
@@ -500,6 +540,6 @@
 		"trait4": "string",
 		"trait5": "string",
 		"trait6": "string",
-		"notes": "The old adventurer and the party's horse and buggy, builds the camp, cooks dinner, parles with encouters, guards the loot, doesn't fight monsters.,
-	},
+		"notes": "The old adventurer and the party's horse and buggy, builds the camp, cooks dinner, parles with encouters, guards the loot, doesn't fight monsters."
+	}
 }

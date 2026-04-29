@@ -14,13 +14,14 @@
 
   mainWindow {
     background: #A28A65;
+	min-height: 100vh
   }
   .app-frame {
     display: none;
     width: 540px;
     height: 960px;
 	transform-origin: top center;
-    background: #f5f5f5;
+    background: #A28A65;
     border-radius: 12px;
     overflow-y: auto;
     position: relative;
@@ -281,7 +282,7 @@
   justify-content: center;
   align-items: center;
   background: rgba(0,0,0,0.4); /* dim background */
-  z-index: 9999;
+  z-index:20;
 }
 
 .window {
@@ -373,4 +374,28 @@ img:not([src]) {
   font-size: 14px;
   display: none; /* hidden by default */
   z-index: 20;
+}
+
+.tutorial-window {
+  position: fixed;
+  top: 200px;
+
+  width: 480px;
+  height: 300px;
+  border-radius: 6px;
+  background: #B2BEB5;
+  font-size: 14px;
+  display: none; /* hidden by default */
+  z-index: 22;
+  color: Navy;
+  
+  
+.tutorial-window.active {
+    display: block;
+}
+  
+#tutorial-choices button {
+    margin-top: 10px;
+    display: block;
+    width: 100%;
 }

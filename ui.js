@@ -9,6 +9,7 @@ function loadPage(page) {
 //	0 is Hidden
 //	1	guild
 //	2	tavern
+//	3	mission
 const patronList = [
   { 
     name: "Patron One", 
@@ -202,10 +203,9 @@ const patronList = [
 	journal: `
       <div id="journal-container">
         <img id="contract_parchment" src="assets/guild/contract_parchment.png" />
-		<p style="margin: 40px; color: black;">Welcome to the guild contracts.<br>
-		this is W.I.P<br>
-		please return after completing the<br>
-		tutorial.</p>
+		<p style="margin: 40px; color: black;">Welcome to the Journal.<br>
+		this is where your adventures are recorded.<br>
+		please return after completing the tutorial.</p>
 		</div>
 		`,
 	mail: `
@@ -253,16 +253,203 @@ const patronList = [
 }
 
 function showTutorialButton() {
-	if (player.tutor === 0) {
+	if (player.data.tutor === 0) {
 		const btn = document.getElementById("tutorial-button");
 		if (btn) {
 			btn.style.display = "block";
-			console.log("tutorial-button:", player.tutor, btn);
+			console.log("tutorial-button:", player.data.tutor,);
+			btn.onclick = function () {
+                console.log("Tutorial button clicked");
+                startTutorial();   // whatever you want to happen
+				}
 		} else {
 			console.warn("tutorial-button element not found");
-		}
+            };
+
 	}
 }
+
+function startTutorial() {
+	if (player.data.tutor === 0) {
+		const win = document.querySelector(".tutorial-window");
+		if (win) {
+			const btn = document.getElementById("tutorial-button");
+			if (btn) {
+				btn.style.display = "none";}
+			console.log("tutorial-window:", win);
+
+			win.style.visibility = "visible";
+			win.style.display = "block";
+			win.classList.add("active");
+
+			
+    setTutorialChoices([
+        {
+            label: "start the Tutorial",
+            action: () => {
+                setTutorialText("Are you ready to start the Tutorial? This is going to take about 5-6 minutes of dialog.");
+                setTutorialChoices([{ label: "OK", action: () => nextTutorialStep(1) }]);
+            }
+        },
+        {
+            label: "Go back",
+            action: () => {
+                setTutorialText("No, let me back.");
+                setTutorialChoices([{ label: "Got it", action: () => closeTutorial() }]);
+            }
+        }
+    ]);
+			
+            }
+
+		}
+	}
+
+function closeTutorial() {
+	console.log("closeTutorial() fired");
+
+    const win = document.querySelector(".tutorial-window");
+    if (win) {
+		win.style.display = "none";
+        win.classList.remove("active");
+	}
+
+	if (player.data.tutor === 0) {
+		const btn = document.getElementById("tutorial-button");
+		if (btn) {
+			btn.style.display = "block";}
+	}
+}
+
+function nextTutorialStep(step) {
+    switch (step) {
+        case 1:
+            setTutorialText("Great! Let's begin. You are the Master of a guild of 'Adventurers', you hire them, send them off to do 'adventuring', and they come back with spoils for you. Simple enough right? Well... there haven't been any spoils for a while now...");
+            setTutorialChoices([
+                { label: "Continue", action: () => nextTutorialStep(2) }
+            ]);
+            break;
+
+        case 2:
+            setTutorialText("NOT THIS AGAIN  ...<BR>WHEN ARE YOU TWO FAT DRUNK BLOBS<BR>ARE EVER GOING TO MAKE ME A PROFIT ???.");
+            setTutorialChoices([
+                { label: "Got it", action: () => nextTutorialStep(3) }
+            ]);
+            break;
+
+        case 3:
+            setTutorialText("WHAT AM I FEEDING AND HOUSING YOU LOT FOR ???<BR>GO AND GET AT IT ALREADY MAKE ME SOME COIN !!!.");
+            setTutorialChoices([
+                { label: "Next", action: () => nextTutorialStep(4) }
+            ]);
+            break
+
+        case 4:
+            setTutorialText("AND TRY FIND THAT WORTHLESS BARD,<BR>CLAUDIO WAS SUPPOSED TO BE BACK HERE BY NOW !!!");
+            setTutorialChoices([
+                { label: "Next", action: () => nextTutorialStep(5) }
+            ]);
+            break;
+
+        case 5:
+            setTutorialText("BUT DON'T GO OFF GETTING YOURSELF KILLED !!!<BR>YOU'RE NOT EVEN INSURED YET ...");
+            setTutorialChoices([
+                { label: "Next", action: () => nextTutorialStep(6) }
+            ]);
+            break;
+
+        case 6:
+            setTutorialText("Now the player will go to the missions window, select Brag+Hog and a mission to 'Make Coin', and head off.<BR>*door slams* ");
+            setTutorialChoices([
+                { label: "Next", action: () => nextTutorialStep(7) }
+            ]);
+            break;
+
+        case 7:
+            setTutorialText("Scenery changed, now the patrons are on their way.");
+            setTutorialChoices([
+                { label: "Next", action: () => nextTutorialStep(8) }
+            ]);
+            break;
+
+        case 8:
+            setTutorialText("Hog:	'Well we've done it now eh 'raggo<BR><BR>Brag:	'Ehhh, that won't be much of a fuss,<BR>I reckon we can go dig up that pot we've saved for later.");
+            setTutorialChoices([
+                { label: "Next", action: () => nextTutorialStep(9) }
+            ]);
+            break;
+
+        case 9:
+            setTutorialText("Hog:	WHAT POT?!<BR><BR>		Brag, have you been holding up on me again?");
+            setTutorialChoices([
+                { label: "Next", action: () => nextTutorialStep(10) }
+            ]);
+            break;
+
+        case 10:
+            setTutorialText("Brag	Noooo I would never! <BR>		Don't you remember we've talked about this.");
+            setTutorialChoices([
+                { label: "Next", action: () => nextTutorialStep(11) }
+            ]);
+            break;
+
+        case 11:
+            setTutorialText("Hog:		'Talked???'");
+            setTutorialChoices([
+                { label: "Next", action: () => nextTutorialStep(12) }
+            ]);
+            break;
+
+        case 12:
+            setTutorialText("Brag:	'Yeah we've said we can't just let the boss have it all or he'll dump us to the curve again.'");
+            setTutorialChoices([
+                { label: "Next", action: () => nextTutorialStep(13) }
+            ]);
+            break;
+
+        case 13:
+            setTutorialText("Hog -	'...........<BR>		?!<BR>		When have WE ever FOUND anything?!'");
+            setTutorialChoices([
+                { label: "Next", action: () => nextTutorialStep(14) }
+            ]);
+            break;
+
+        case 14:
+            setTutorialText("Brag:	'Well, just leave it to me then,<BR>		let's go find our pot o' gold, bring it to the chief,<BR>		And we'll be Ok for a while ... ");
+            setTutorialChoices([
+                { label: "Next", action: () => nextTutorialStep(888) }
+            ]);
+            break;
+
+        case 888:
+            setTutorialText("Tutorial complete!");
+            setTutorialChoices([
+                { label: "Finish", action: () => closeTutorial() }
+            ]);
+            break;
+    }
+}
+
+	
+function setTutorialText(text) {
+    const box = document.getElementById("tutorial-text");
+    if (box) box.innerHTML  = text;
+}
+
+function setTutorialChoices(choices) {
+    const container = document.getElementById("tutorial-choices");
+    if (!container) return;
+
+    container.innerHTML = ""; // clear old buttons
+
+    choices.forEach(choice => {
+        const btn = document.createElement("button");
+        btn.innerHTML  = choice.label;
+        btn.onclick = choice.action;
+        container.appendChild(btn);
+    });
+}
+
 
 function scaleApp() {
   const frame = document.querySelector('.app-frame');

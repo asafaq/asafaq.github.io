@@ -34,13 +34,13 @@ async function deleteRemote(key) {
 // Start of local DB
 
 
+
 class databaseStorage {
     constructor() {
         this.dbName = "PlayerDB";
         this.storeName = "players";
-        this.currentPlayer = null;   // store only the logged-in player
+        this.currentPlayer = null;
     }
-
 
     open() {
         return new Promise((resolve, reject) => {
@@ -48,9 +48,9 @@ class databaseStorage {
 
             request.onupgradeneeded = () => {
                 const db = request.result;
-				if (!db.objectStoreNames.contains(this.storeName)) {
-					db.createObjectStore(this.storeName, { keyPath: "id" });
-				}
+                if (!db.objectStoreNames.contains(this.storeName)) {
+                    db.createObjectStore(this.storeName, { keyPath: "id" });
+                }
             };
 
             request.onsuccess = () => resolve(request.result);
@@ -65,61 +65,67 @@ class databaseStorage {
 			const tx = db.transaction(this.storeName, "readwrite");
 			const store = tx.objectStore(this.storeName);
 
+			// Ensure the keyPath exists
+			if (!player.id) {
+				player.id = crypto.randomUUID();
+			}
+
 			const req = store.put(player);
 
+			req.onsuccess = () => {
+				this.currentPlayer = player;
+				resolve(req.result);
+			};
+
 			req.onerror = () => reject(req.error);
-			tx.oncomplete = () => resolve(true);
-			tx.onerror = () => reject(tx.error);
 		});
 	}
 
-	async loadPlayer(id) {
-		const db = await this.open();
+    async loadPlayer(id) {
+        const db = await this.open();
 
-		return new Promise((resolve, reject) => {
-			const tx = db.transaction(this.storeName, "readonly");
-			const store = tx.objectStore(this.storeName);
-			const request = store.get(id);
+        return new Promise((resolve, reject) => {
+            const tx = db.transaction(this.storeName, "readonly");
+            const store = tx.objectStore(this.storeName);
 
-			request.onsuccess = () => resolve(request.result || null);
-			request.onerror = () => reject(request.error);
-			tx.onerror = () => reject(tx.error);
-		});
-	}
+            const request = store.get(id);
+
+            request.onsuccess = () => resolve(request.result || null);
+            request.onerror = () => reject(request.error);
+        });
+    }
 }
 
 const storage = new databaseStorage();
-const username = storage.loadPlayer(username);
 
+async function addNewPlayerData(username, password) {
+    //const response = await fetch('./lore.json');
+    //const lore = await response.json();
 
+    //const add_adv1 = lore.Adventurer.Hogperson;
+    //const add_adv2 = lore.Adventurer.Bragain;
 
-async function addNewPlayerData(newPlayer) {
-    const response = await fetch('./lore.json');
-    const lore = await response.json();
-    console.log(lore);
+    const newPlayer = {
+        id: username, 
+        auth: {
+            password: password,
+            lastLogin: Date.now()
+        },
+        data: {
+            accountType: 0,
+            tutor: 0,
+            guild_name: "The Adventurers Guild",
+            party_A: "Party A",
+            party_B: "Party B"
+        },
+        patrons: {} // The container for our NPCs/Adventurers
+    };
+
+    // 1. Assign Hogperson to the patrons object under the key 'Hogperson'
+    //newPlayer.patrons["Hogperson"] = add_adv1;
+
+    // 2. Assign Bragain to the patrons object under the key 'Bragain'
+    //newPlayer.patrons["Bragain"] = add_adv2;
+	
+	await storage.savePlayer(newPlayer);
 }
-    // Example: inject adventurer.guy1 data
-    const add_adv1 = lore.Adventurer.Hogperson;
-    const add_adv2 = lore.Adventurer.Bragain;
-
-    // Copy all fields from the template into the new player
-    for (const key in add_adv1) {
-        newPlayer[key] = add_adv1[key];
-	}
-    for (const key in add_adv2) {
-        newPlayer[key] = add_adv2[key];
-    }
-
-module.exports = addNewPlayerData;
-//let Database
-
-async function startGame(newPlayer) {
-    console.log("Starting game with player:", player);
-
-    //await Database.init();
-    const username = player.id;   // this is the username string
-    const tutor = player.tutor;   // example: use other fields
-
-}
-
-
