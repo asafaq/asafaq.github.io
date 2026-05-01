@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Mission System</title>
+    <link rel="stylesheet" href="missions.css">
+</head>
+<body>
+    <div id="game-viewport">
+        <!-- These MUST exist for the JS to work -->
+        <div id="dialog-box" class="glass-panel">
+            <p style="color: gray;">Initial loading...</p>
+        </div>
+        <div id="choices-container"></div>
+        <button onclick="resetGame()" style="margin-top:20px; opacity:0.3;">Reset Progress</button>
+    </div>
+
+    <!-- Script at the BOTTOM so the HTML exists before JS runs -->
+    <script src="missions.js"></script>
+</body>
+</html>

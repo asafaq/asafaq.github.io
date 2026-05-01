@@ -4,12 +4,14 @@
 <meta charset="UTF-8">
 <title>House of Glory, the "Adventurers" Guild</title>
 <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="missions.css">
 
 </head>
 <!-- <button onclick="saveGame()">Save</button> -->
 <!-- <button onclick="loadGame()">Load</button> -->
 
 	<div class="login-box">
+	<p>Login / Register</p>
     <input id="username" type="text" placeholder="Username">
     <input id="password" type="password" placeholder="Password">
     <button onclick="login()">Login</button>
@@ -22,7 +24,6 @@
 	<script src="login.js"></script>
 
     <script src="database.js"></script>
-	<script src="ui.js"></script>
 	
 <div class="app-frame" id="app-frame">
   <div id="window-container"></div>
@@ -37,6 +38,10 @@
     <div class="menu-item" onclick="loadPage('guild')">
       <img src="assets/menu/menu_home.png" class="icon">
       <div class="tooltipmenu">Guild</div>
+    </div>
+	<div class="menu-item" onclick="loadPage('tavern')">
+      <img src="assets/menu/menu_tavern.png" class="icon">
+      <div class="tooltipmenu">Tavern</div>
     </div>
     <div class="menu-item" onclick="loadPage('contracts')">
       <img src="assets/menu/menu_contracts.png" class="icon">
@@ -54,10 +59,6 @@
       <img src="assets/menu/menu_mail.png" class="icon">
       <div class="tooltipmenu">Mail</div>
     </div>
-	<div class="menu-item" onclick="loadPage('tavern')">
-      <img src="assets/menu/menu_tavern.png" class="icon">
-      <div class="tooltipmenu">Tavern</div>
-    </div>
 	<div class="menu-item" onclick="loadPage('lore')">
       <img src="assets/menu/menu_lore.png" class="icon">
       <div class="tooltipmenu">Lore</div>
@@ -68,15 +69,36 @@
     </div>
     </div>
 
-
+  <div class="right-menu-mini">
+    <div class="menu-item" onclick="loadPage('guild')">
+      <img src="assets/menu/menu_home.png" class="icon">
+      <div class="tooltipmenu">Guild</div>
+    </div>
+  </div>
+  
   <div class="tutorial-window">
     <div id="tutorial-text"></div>
     <div id="tutorial-choices"></div>
 
   </div>
+	<!-- Place this inside your existing 540x960 body -->
+	<div id="m-viewport">
+		<!-- The main dialog container -->
+		<div id="m-dialog-box" class="m-glass-panel">
+			<p style="color: rgba(255,255,255,0.5);">Loading Missions...</p>
+		</div>
 
+		<!-- The container for buttons -->
+		<div id="m-choices-container"></div>
+
+		<!-- The Reset Button (Positioned at very bottom right) -->
+		<!-- <button id="m-reset-btn" onclick="resetGame()">RESET PROGRESS</button> -->
+	</div>
   </div>
-</div>
 
+
+</div>
+<script src="missions.js"></script>
+<script src="ui.js"></script>
 </body>
 </html>

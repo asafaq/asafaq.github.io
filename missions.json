@@ -1,0 +1,1032 @@
+[
+  {
+    "id": "scene_001",
+    "speaker": "Commander Vex",
+    "portrait": "https://placeholder.com",
+    "side": "left",
+    "dialog": "The perimeter has been breached. We need a decision, and we need it now.",
+    "interaction_type": "selection",
+    "options": [
+      {
+        "text": "Analyze the breach data.",
+        "target_id": "scene_002_data",
+        "condition": null
+      },
+      {
+        "text": "[SPECIAL] Use Admin Protocols",
+        "target_id": "scene_admin_win",
+        "condition": {
+          "idb_key": "hacker_rank",
+          "value": "gold",
+          "color": "#FFD700"
+        }
+      }
+    ]
+  },
+  {
+    "id": "scene_002_data",
+    "speaker": "AI Core",
+    "portrait": "https://placeholder.com",
+    "side": "right",
+    "dialog": "Scanning... the virus is origin-masked. Recommend immediate isolation.",
+    "interaction_type": "next",
+    "target_id": "scene_001",
+    "options": []
+  },
+  {
+    "id": "scene_admin_win",
+    "speaker": "Commander Vex",
+    "portrait": "https://placeholder.com",
+    "side": "left",
+    "dialog": "Impressive. Those admin codes saved us hours. The threat is neutralized.",
+    "interaction_type": "next",
+    "target_id": "scene_001",
+    "options": []
+  },
+  {
+    "id": "tutor1_101",
+    "speaker": "Tutorial Narrator",
+    "portrait": "",
+    "side": "left",
+    "dialog": "Welcome to the game!\nYou're a humble innkeeper, you've spent your life savings and now you're the proud owner to the land deed of a quaint tavern located on the road in the countryside, far enough to host lodging and close enough to attract patrons.",
+    "interaction_type": "next",
+    "target_id": "tutor1_102",
+    "options": []
+  },
+  {
+    "id": "tutor1_102",
+    "speaker": "Tutorial Narrator",
+    "portrait": "",
+    "side": "left",
+    "dialog": "You've recently come in contact with the lands governor, and applied to participate in establishing a safer environment for your business,",
+    "interaction_type": "next",
+    "target_id": "tutor1_103",
+    "options": []
+  },
+  {
+    "id": "tutor1_103",
+    "speaker": "Tutorial Narrator",
+    "portrait": "",
+    "side": "left",
+    "dialog": "You have been offered partnership! You've signed a contract allowing you to host a guild of adventurers right here in your tavern.",
+    "interaction_type": "next",
+    "target_id": "tutor1_104",
+    "options": []
+  },
+  {
+    "id": "tutor1_104",
+    "speaker": "Tutorial Narrator",
+    "portrait": "",
+    "side": "left",
+    "dialog": "This wonderful business enterprise will surely increase your revenue and your popularity among adventurers greatly! *Wink*",
+    "interaction_type": "next",
+    "target_id": "tutor1_105",
+    "options": []
+  },
+  {
+    "id": "tutor1_105",
+    "speaker": "Tutorial Narrator",
+    "portrait": "",
+    "side": "left",
+    "dialog": "You've already recruited three local patrons and they've signed up a contract with you, and have been staying at the tavern for QUITE some time now . . .",
+    "interaction_type": "next",
+    "target_id": "tutor1_106",
+    "options": []
+  },
+  {
+    "id": "tutor1_106",
+    "speaker": "Guild Master",
+    "portrait": "/assets/guild/guild_master.png",
+    "side": "left",
+    "dialog": "NOT THIS AGAIN  ...\n\nWHEN ARE YOU TWO FAT DRUNK BLOBS\nARE EVER GOING TO MAKE ME A PROFIT ???.",
+    "interaction_type": "next",
+    "target_id": "tutor1_107",
+    "options": []
+  },
+  {
+    "id": "tutor1_107",
+    "speaker": "Guild Master",
+    "portrait": "/assets/guild/guild_master.png",
+    "side": "left",
+    "dialog": "WHAT AM I FEEDING AND HOUSING YOU LOT FOR ???\n\nGO AND GET AT IT ALREADY MAKE ME SOME COIN !!!",
+    "interaction_type": "next",
+    "target_id": "tutor1_108",
+    "options": []
+  },
+  {
+    "id": "tutor1_108",
+    "speaker": "Guild Master",
+    "portrait": "/assets/guild/guild_master.png",
+    "side": "left",
+    "dialog": "AND TRY FIND THAT WORTHLESS BARD,\n\nCLAUDIO WAS SUPPOSED TO BE BACK HERE BY NOW !!!",
+    "interaction_type": "next",
+    "target_id": "tutor1_109",
+    "options": []
+  },
+  {
+    "id": "tutor1_109",
+    "speaker": "Guild Master",
+    "portrait": "/assets/guild/guild_master.png",
+    "side": "left",
+    "dialog": "BUT DON'T GO OFF GETTING YOURSELF KILLED !!!\n\nYOU'RE NOT EVEN INSURED YET ...",
+    "interaction_type": "next",
+    "target_id": "tutor1_110",
+    "options": []
+  },
+  {
+    "id": "tutor1_110",
+    "speaker": "Tutorial Narrator",
+    "portrait": "",
+    "side": "left",
+    "dialog": "Your first adventure is on it's way!\n\n Head over to the missions page, select Hogperson and Bragain (When implemented), select a mission 'Green Fields : Tutorial' and head off!",
+    "interaction_type": "next",
+    "target_id": "END",
+    "options": []
+  },
+  {
+    "id": "green1_101",
+    "speaker": "Hogperson",
+    "portrait": "/assets/patrons/hogperson.png",
+    "side": "left",
+    "dialog": "Well we've done it now eh 'raggo..?",
+    "interaction_type": "next",
+    "target_id": "green1_002",
+    "options": []
+  },
+  {
+    "id": "green1_002",
+    "speaker": "Bragain",
+    "portrait": "/assets/patrons/dwarven_miner.png",
+    "side": "right",
+    "dialog": "Ehhh, that won't be much of a fuss, \nI reckon we can go dig up that pot we've been saving for later.",
+    "interaction_type": "next",
+    "target_id": "green1_003",
+    "options": []
+  },
+  {
+    "id": "green1_003",
+    "speaker": "Hogperson",
+    "portrait": "/assets/patrons/hogperson.png",
+    "side": "left",
+    "dialog": "WHAT POT?! \nBrag, have you been holding up on me again?",
+    "interaction_type": "next",
+    "target_id": "green1_004",
+    "options": []
+  },
+  {
+    "id": "green1_004",
+    "speaker": "Bragain",
+    "portrait": "/assets/patrons/dwarven_miner.png",
+    "side": "right",
+    "dialog": "Noooo I would never! \nDon't you remember we've talked about this.",
+    "interaction_type": "next",
+    "target_id": "green1_005",
+    "options": []
+  },
+  {
+    "id": "green1_005",
+    "speaker": "Hogperson",
+    "portrait": "/assets/patrons/hogperson.png",
+    "side": "left",
+    "dialog": "Talked???",
+    "interaction_type": "next",
+    "target_id": "green1_006",
+    "options": []
+  },
+  {
+    "id": "green1_006",
+    "speaker": "Bragain",
+    "portrait": "/assets/patrons/dwarven_miner.png",
+    "side": "right",
+    "dialog": "Yeah we've said we can't just let the boss have all the spoils, or he'll dump us to the curve again for sure.",
+    "interaction_type": "next",
+    "target_id": "green1_007",
+    "options": []
+  },
+  {
+    "id": "green1_007",
+    "speaker": "Hogperson",
+    "portrait": "/assets/patrons/hogperson.png",
+    "side": "left",
+    "dialog": "...........\n?!\n\nWhen have WE ever FOUND anything?!",
+    "interaction_type": "next",
+    "target_id": "green1_008",
+    "options": []
+  },
+  {
+    "id": "green1_008",
+    "speaker": "Bragain",
+    "portrait": "/assets/patrons/dwarven_miner.png",
+    "side": "right",
+    "dialog": "Well, just leave it to me then,\nlet's go find our pot o' gold, bring it to the chief,\nAnd we'll be Ok for a while ...",
+    "interaction_type": "next",
+    "target_id": "green1_008END",
+    "options": []
+  },
+  {
+    "id": "green1_008END",
+    "speaker": "Bragain",
+    "portrait": "/assets/patrons/dwarven_miner.png",
+    "side": "right",
+    "dialog": "Well, just leave it to me then,\nlet's go find our pot o' gold, bring it to the chief,\nAnd we'll be Ok for a while ...",
+    "interaction_type": "next",
+    "target_id": "END",
+    "options": []
+  },
+  {
+    "id": "green1_201",
+    "speaker": "",
+    "portrait": "",
+    "side": "right",
+    "dialog": "Heading out, on the green path besides the mountain, landslide have toppled a large boulder right in the middle of the road. There's no way around this now.",
+    "interaction_type": "next",
+    "target_id": "green1_011",
+    "options": []
+  },
+  {
+    "id": "green1_011",
+    "speaker": "Hogperson",
+    "portrait": "/assets/patrons/hogperson.png",
+    "side": "left",
+    "dialog": "Oh look, the road is blocked,",
+    "interaction_type": "next",
+    "target_id": "green1_012",
+    "options": []
+  },
+  {
+    "id": "green1_012",
+    "speaker": "Hogperson",
+    "portrait": "/assets/patrons/hogperson.png",
+    "side": "left",
+    "dialog": "Can't catch a break can we Brag?",
+    "interaction_type": "next",
+    "target_id": "green1_013",
+    "options": []
+  },
+  {
+    "id": "green1_013",
+    "speaker": "Bragain",
+    "portrait": "/assets/patrons/dwarven_miner.png",
+    "side": "right",
+    "dialog": "We'll see about that!",
+    "interaction_type": "next",
+    "target_id": "green1_014",
+    "options": []
+  },
+  {
+    "id": "green1_014",
+    "speaker": "Narrator",
+    "portrait": "/assets/missions/boulder.png",
+    "side": "right",
+    "dialog": "A LARGE SOLID ROCK IS BLOCKING THE ROAD",
+    "interaction_type": "selection",
+	"options": [
+    { 
+      "text": "Turn around.", 
+      "target_id": "STAY", 
+      "disabled": true,
+      "frustration_text": "You are considering it, but can't return empty handed!" 
+    },
+    { 
+      "text": "Use free action :cry:, then turn around.", 
+      "target_id": "STAY",
+      "disabled": true,
+      "frustration_text": "You are considering it, but can't return empty handed AND crying!" 
+    },
+    { 
+      "text": "Utilize Bragain's animosity towards [Rocks] and his [Iron Pick].", 
+      "target_id": "green1_015",
+      "disabled": false,
+	  "color": "#FFD700"
+    }
+  ]
+  },
+  {
+    "id": "green1_015",
+    "speaker": "Bragain",
+    "portrait": "/assets/patrons/dwarven_miner.png",
+    "side": "right",
+    "dialog": "That's a large Rock, but it has many weak spots.",
+    "interaction_type": "next",
+    "target_id": "green1_016",
+    "options": []
+  },
+  {
+    "id": "green1_016",
+    "speaker": "Bragain",
+    "portrait": "/assets/patrons/dwarven_miner.png",
+    "side": "right",
+    "dialog": "** Swings the Iron Pick with might and bangs the rocks several times.**",
+    "interaction_type": "next",
+    "target_id": "green1_017",
+    "options": []
+  },
+  {
+    "id": "green1_017",
+    "speaker": "Bragain",
+    "portrait": "/assets/patrons/dwarven_miner.png",
+    "side": "right",
+    "dialog": "** The deliberate hits on surface cause massive fractures across the rock.**",
+    "interaction_type": "next",
+    "target_id": "green1_018",
+    "options": []
+  },
+  {
+    "id": "green1_018",
+    "speaker": "Bragain",
+    "portrait": "/assets/patrons/dwarven_miner.png",
+    "side": "right",
+    "dialog": "** The Rock collapses to bits and clears the path.**",
+    "interaction_type": "next",
+    "target_id": "green1_019",
+    "options": []
+  },
+  {
+    "id": "green1_019",
+    "speaker": "Bragain",
+    "portrait": "/assets/patrons/dwarven_miner.png",
+    "side": "right",
+    "dialog": "Hahahaha. Success!\n\n Let's head on out.",
+    "interaction_type": "next",
+    "target_id": "green1_019END",
+    "options": []
+  },
+  {
+    "id": "green1_019END",
+    "speaker": "Bragain",
+    "portrait": "/assets/patrons/dwarven_miner.png",
+    "side": "right",
+    "dialog": "Hahahaha. Success!\n\n Let's head on out.",
+    "interaction_type": "next",
+    "target_id": "END",
+    "options": []
+  },
+  {
+    "id": "green1_301",
+    "speaker": "Narrator",
+    "portrait": "",
+    "side": "right",
+    "dialog": "Carrying on the green path besides the mountain, a sad traveller is sitting by the side of the road, feeling sorry for himself.",
+    "interaction_type": "selection",
+	"options": [
+    { 
+      "text": "Ignore him and keep going.", 
+      "target_id": "STAY", 
+      "disabled": true,
+      "frustration_text": "It would be too difficult to just ingore the sad traveller!" 
+    },
+    { 
+      "text": "Mock the miserable peasant.", 
+      "target_id": "STAY",
+      "disabled": true,
+      "frustration_text": "You are considering it, but you haven't got the heart for it!" 
+    },
+    { 
+      "text": "Speak to him with Hogperson's [Cheerful] nature to bring a smile to the traveller.", 
+      "target_id": "green1_022",
+      "disabled": false,
+	  "color": "#FFD700"
+    }
+  ]
+  },
+  {
+    "id": "green1_022",
+    "speaker": "Hogperson",
+    "portrait": "/assets/patrons/hogperson.png",
+    "side": "left",
+    "dialog": "Hey there my good lad! That's no day to be weeping! Come on, get on your feet and tell ol' Hoggy what's ailing you.",
+    "interaction_type": "next",
+    "target_id": "green1_023",
+    "options": []
+  },
+  {
+    "id": "green1_023",
+    "speaker": "Traveler",
+    "portrait": "",
+    "side": "right",
+    "dialog": "The Traveller lets loose of what's ailing him, he was traveling with a companion just like you. He was the only friend who could make me laugh - but his friend has fallen captured by a dangerous group up ahead. They're camping on the cross road up ahead.",
+    "interaction_type": "next",
+    "target_id": "green1_024",
+    "options": []
+  },
+  {
+    "id": "green1_024",
+    "speaker": "Narrator",
+    "portrait": "",
+    "side": "right",
+    "dialog": "With this new found information, you consider it may be valueable to you, you carry on your way towards danger, and the captured traveler.",
+    "interaction_type": "next",
+    "target_id": "green1_025",
+    "options": []
+  },
+  {
+    "id": "green1_025",
+    "speaker": "Narrator",
+    "portrait": "",
+    "side": "right",
+    "dialog": "Hogperson may not be the smartest guy, nor *A* smart guy, \nnor being able to appear smart if his life was depending on it, \nbut he's got a big heart! And that counts.",
+    "interaction_type": "next",
+    "target_id": "green1_025END",
+    "options": []
+  },
+  {
+    "id": "green1_025END",
+    "speaker": "Narrator",
+    "portrait": "",
+    "side": "right",
+    "dialog": "",
+    "interaction_type": "next",
+    "target_id": "END",
+    "options": []
+  },
+  {
+    "id": "green1_401",
+    "speaker": "Narrator",
+    "portrait": "",
+    "side": "right",
+    "dialog": "Arriving at the cross. A few Koboldogs with large teeth and pointed tails are holding some sort of toll on passing their road.",
+    "interaction_type": "next",
+    "target_id": "green1_027",
+    "options": []
+  },
+  {
+    "id": "green1_027",
+    "speaker": "Koboldog",
+    "portrait": "/assets/missions/koboldog.png",
+    "side": "right",
+    "dialog": "*bark* Oi bone-heads, this is our territory! *bark* ",
+    "interaction_type": "next",
+    "target_id": "green1_028",
+    "options": []
+  },
+  {
+    "id": "green1_028",
+    "speaker": "Koboldog",
+    "portrait": "/assets/missions/koboldog.png",
+    "side": "right",
+    "dialog": "*bark* We've been marking it all day! *bark*\n*bark* Smell it! SMELL IT !!! *bark*",
+    "interaction_type": "next",
+    "target_id": "green1_029",
+    "options": []
+  },
+  {
+    "id": "green1_029",
+    "speaker": "Narrator",
+    "portrait": "",
+    "side": "right",
+    "dialog": "** The smell in this place tells no lies, this IS THEIR TERRITORY **",
+    "interaction_type": "next",
+    "target_id": "green1_030",
+    "options": []
+  },
+  {
+    "id": "green1_030",
+    "speaker": "Koboldog",
+    "portrait": "/assets/missions/koboldog.png",
+    "side": "right",
+    "dialog": "Pay our toll of mere 100 Silver Coins or enter a cage behind us! *bark*",
+    "interaction_type": "selection",
+	"options": [
+    { 
+      "text": "Promise to pay them 100 Silvcrs.", 
+      "target_id": "STAY", 
+      "disabled": true,
+      "frustration_text": "Ugh, if you could only say that with a straight face." 
+    },
+    { 
+      "text": "Retreat backwards.", 
+      "target_id": "STAY",
+      "disabled": true,
+      "frustration_text": "You are considering it, but retreat doesn't seem much of an option considering they outnumber AND outfeet you." 
+    },
+    { 
+      "text": "Hogperson use [Intimidate] with his [Large Club] on the Koboldogs.", 
+      "target_id": "green1_031",
+      "disabled": false,
+	  "color": "#FFD700"
+    }
+  ]
+  },
+  {
+    "id": "green1_031",
+    "speaker": "Hogperson",
+    "portrait": "/assets/patrons/hogperson.png",
+    "side": "left",
+    "dialog": "Hey! You boys like sticks right!!\nHow do you like them stick!!\n** BRANDISH Large Club **",
+    "interaction_type": "next",
+    "target_id": "green1_032",
+    "options": []
+  },
+  {
+    "id": "green1_032",
+    "speaker": "Narrator",
+    "portrait": "",
+    "side": "right",
+    "dialog": "The koboldog's eyes widen at the sight the [Large Club]",
+    "interaction_type": "next",
+    "target_id": "green1_033",
+    "options": []
+  },
+  {
+    "id": "green1_033",
+    "speaker": "Koboldog",
+    "portrait": "/assets/missions/koboldog.png",
+    "side": "right",
+    "dialog": "Ahh, holder of the magnificent large stick!",
+    "interaction_type": "next",
+    "target_id": "green1_034",
+    "options": []
+  },
+  {
+    "id": "green1_034",
+    "speaker": "Narrator",
+    "portrait": "",
+    "side": "right",
+    "dialog": "The Kobolds quiver and lower their tails, their noses, their ears, and their dominant barks turned into submissive yelps.",
+    "interaction_type": "next",
+    "target_id": "green1_035",
+    "options": []
+  },
+  {
+    "id": "green1_035",
+    "speaker": "Koboldog",
+    "portrait": "/assets/missions/koboldog.png",
+    "side": "right",
+    "dialog": "This road is yours now, o' master of the stick! *whimper* *whimper* *whimper* ",
+    "interaction_type": "next",
+    "target_id": "green1_036",
+    "options": []
+  },
+  {
+    "id": "green1_036",
+    "speaker": "Narrator",
+    "portrait": "",
+    "side": "right",
+    "dialog": "You move towards the cages, just like the traveller tipped you about. There is a person inside! Upon closer inspection . . . ",
+    "interaction_type": "next",
+    "target_id": "green1_037",
+    "options": []
+  },
+  {
+    "id": "green1_037",
+    "speaker": "Narrator",
+    "portrait": "/assets/patrons/Claudio.png",
+    "side": "right",
+    "dialog": "IT'S CLAUDIO !!",
+    "interaction_type": "next",
+    "target_id": "green1_038",
+    "options": []
+  },
+  {
+    "id": "green1_038",
+    "speaker": "Narrator",
+    "portrait": "",
+    "side": "right",
+    "dialog": "You let Claudio out of the cage, catch up on what's been going on lately.",
+    "interaction_type": "next",
+    "target_id": "green1_039",
+    "options": []
+  },
+  {
+    "id": "green1_039",
+    "speaker": "Narrator",
+    "portrait": "",
+    "side": "right",
+    "dialog": "You're all glad to have regrouped once again, and decide not to split up again,\n\nthen you carry on ahead on your way towards the Pot of Gold Bragain stashed for himself.",
+    "interaction_type": "next",
+    "target_id": "green1_039a",
+    "options": []
+  },
+  {
+    "id": "green1_039a",
+    "speaker": "Bragain",
+    "portrait": "/assets/patrons/dwarven_miner.png",
+    "side": "left",
+    "dialog": "** I'VE SAVED IT FOR AN EMERGENCY !! **",
+    "interaction_type": "next",
+    "target_id": "green1_040",
+    "options": []
+  },
+  {
+    "id": "green1_040",
+    "speaker": "Narrator",
+    "portrait": "",
+    "side": "right",
+    "dialog": "SURE BRAG.....\n\n*SURE*",
+    "interaction_type": "next",
+    "target_id": "green1_041",
+    "options": []
+  },
+  {
+    "id": "green1_041",
+    "speaker": "Narrator",
+    "portrait": "/assets/patrons/Claudio.png",
+    "side": "right",
+    "dialog": "INTRODUCTION\n\nClaudio is a lover, not a fighter, while he can participate in combat, his proficiencies lay in his performal talents.",
+    "interaction_type": "next",
+    "target_id": "green1_042",
+    "options": []
+  },
+  {
+    "id": "green1_042",
+    "speaker": "Narrator",
+    "portrait": "",
+    "side": "right",
+    "dialog": "PARTY TRAIT:\n\nWhile your party has a Barbarian, a Rogue, and a Bard, you gain the [TROUBLE MAKERS] trait, gaining better chances to succeed at work-arounds and made-up strategies in Encounters, rather than taking the forward approach or plain fighting.",
+    "interaction_type": "next",
+    "target_id": "green1_043",
+    "options": []
+  },
+  {
+    "id": "green1_043",
+    "speaker": "Bragain",
+    "portrait": "/assets/patrons/dwarven_miner.png",
+    "side": "left",
+    "dialog": "Eh?! But I'm not a Rogue, I'm a Miner!",
+    "interaction_type": "next",
+    "target_id": "green1_044",
+    "options": []
+  },
+  {
+    "id": "green1_044",
+    "speaker": "Claudio",
+    "portrait": "/assets/patrons/Claudio.png",
+    "side": "right",
+    "dialog": "I thought it was just your day job?",
+    "interaction_type": "next",
+    "target_id": "green1_045",
+    "options": []
+  },
+  {
+    "id": "green1_045",
+    "speaker": "Bragain",
+    "portrait": "/assets/patrons/dwarven_miner.png",
+    "side": "left",
+    "dialog": "It *IS* my job-job!",
+    "interaction_type": "next",
+    "target_id": "green1_046",
+    "options": []
+  },
+  {
+    "id": "green1_046",
+    "speaker": "Hogperson",
+    "portrait": "/assets/patrons/hogperson.png",
+    "side": "right",
+    "dialog": "So what, aren't you still stealing from Rocks.",
+    "interaction_type": "next",
+    "target_id": "green1_047",
+    "options": []
+  },
+  {
+    "id": "green1_047",
+    "speaker": "Bragain",
+    "portrait": "/assets/patrons/dwarven_miner.png",
+    "side": "left",
+    "dialog": "Hey, that's called *GEOLOGY*.",
+    "interaction_type": "next",
+    "target_id": "green1_048",
+    "options": []
+  },
+  {
+    "id": "green1_048",
+    "speaker": "Narrator",
+    "portrait": "",
+    "side": "right",
+    "dialog": "SURE BRAG.....\n\n*SURE*",
+    "interaction_type": "next",
+    "target_id": "green1_048END",
+    "options": []
+  },
+  {
+    "id": "green1_048END",
+    "speaker": "Narrator",
+    "portrait": "",
+    "side": "right",
+    "dialog": "SURE BRAG.....\n\n*SURE*",
+    "interaction_type": "next",
+    "target_id": "END",
+    "options": []
+  },
+  {
+    "id": "green1_501",
+    "speaker": "Narrator",
+    "portrait": "",
+    "side": "right",
+    "dialog": "Carrying on onwards, on the road towards the Pot of Gold.",
+    "interaction_type": "next",
+    "target_id": "green1_048a",
+    "options": []
+  },
+  {
+    "id": "green1_048a",
+    "speaker": "Narrator",
+    "portrait": "",
+    "side": "right",
+    "dialog": "Near a tree\nBy the river\nThere's a hole\nIn the ground.",
+    "interaction_type": "next",
+    "target_id": "green1_049",
+    "options": []
+  },
+  {
+    "id": "green1_049",
+    "speaker": "Narrator",
+    "portrait": "/assets/missions/mission_event_coins_s.png",
+    "side": "right",
+    "dialog": "AND THERE'S\nTA-DA! \nYour Pot of Gold!",
+    "interaction_type": "selection",
+	"options": [
+    { 
+      "text": "Head back home to the guild.", 
+      "target_id": "STAY",
+      "disabled": true,
+      "frustration_text": "Hang on a moment, what's that over there?" 
+    },
+    { 
+      "text": "[Tunnel Surveyer] Inspect more of the hole", 
+      "target_id": "green1_050",
+      "disabled": false,
+	  "color": "#FFD700"
+    }
+  ]
+  },
+  {
+    "id": "green1_050",
+    "speaker": "Guild Master",
+    "portrait": "/assets/guild/guild_master.png",
+    "side": "left",
+    "dialog": "HEY BRAGAIN, CHECK MORE OF THAT HOLE WILL YOU.",
+    "interaction_type": "next",
+    "target_id": "green1_051",
+    "options": []
+  },
+  {
+    "id": "green1_051",
+    "speaker": "Bragain",
+    "portrait": "/assets/patrons/dwarven_miner.png",
+    "side": "right",
+    "dialog": "Naa, that's some sketchy founding here.\nThat's enough of this hole for us.",
+    "interaction_type": "next",
+    "target_id": "green1_052",
+    "options": []
+  },
+  {
+    "id": "green1_052",
+    "speaker": "Guild Master",
+    "portrait": "/assets/guild/guild_master.png",
+    "side": "left",
+    "dialog": "WHAT ?!\nI DEMAND THE INSPECTION OF THE HOLE FOR MORE TREASURE !!",
+    "interaction_type": "next",
+    "target_id": "green1_053",
+    "options": []
+  },
+  {
+    "id": "green1_053",
+    "speaker": "Bragain",
+    "portrait": "/assets/patrons/dwarven_miner.png",
+    "side": "right",
+    "dialog": "Ehhhhh, mind yer lip innkeeper!\nI've said this path is not safe.",
+    "interaction_type": "next",
+    "target_id": "green1_054",
+    "options": []
+  },
+  {
+    "id": "green1_054",
+    "speaker": "Guild Master",
+    "portrait": "/assets/guild/guild_master.png",
+    "side": "left",
+    "dialog": "** INNKEEPER ** !? \nI AM THE GUILD MASTER !!\nTHE LORD OF THIS MANOR !!\nI CONTROL EVERYTHING !!",
+    "interaction_type": "next",
+    "target_id": "green1_055",
+    "options": []
+  },
+  {
+    "id": "green1_055",
+    "speaker": "Bragain",
+    "portrait": "/assets/patrons/dwarven_miner.png",
+    "side": "right",
+    "dialog": "It's just a wee basement laddy,\nan' ya payments cover the goose's arse...\nThere's no 'insurance' that'll make me go in there!",
+    "interaction_type": "next",
+    "target_id": "green1_056",
+    "options": []
+  },
+  {
+    "id": "green1_056",
+    "speaker": "Guild Master",
+    "portrait": "/assets/guild/guild_master.png",
+    "side": "left",
+    "dialog": "*pouts*\n\nFINE THEN! HUMPF !!\n\nHead on back to the Guild.",
+    "interaction_type": "next",
+    "target_id": "green1_056END",
+    "options": []
+  },
+  {
+    "id": "green1_056END",
+    "speaker": "Guild Master",
+    "portrait": "/assets/guild/guild_master.png",
+    "side": "left",
+    "dialog": "*pouts*\n\nFINE THEN! HUMPF !!\n\nHead on back to the Guild.",
+    "interaction_type": "next",
+    "target_id": "END",
+    "options": []
+  },
+  {
+    "id": "tutor2_101",
+    "speaker": "Guild Master",
+    "portrait": "/assets/guild/guild_master.png",
+    "side": "left",
+    "dialog": "AH! You're finally back!\nAnd you've brought Claudio! Splendide!\n\nI'm very happy to see you all!",
+    "interaction_type": "next",
+    "target_id": "tutor2_102",
+    "options": []
+  },
+  {
+    "id": "tutor2_102",
+    "speaker": "Guild Master",
+    "portrait": "/assets/guild/guild_master.png",
+    "side": "left",
+    "dialog": "AND there's a pot full of silver coins! Marvelous!\n We're finally starting to look like a Guild!",
+    "interaction_type": "next",
+    "target_id": "tutor2_103",
+    "options": []
+  },
+  {
+    "id": "tutor2_103",
+    "speaker": "Tutorial Narrator",
+    "portrait": "",
+    "side": "left",
+    "dialog": "The next step in the tutorial will be, to spend some coin!\n\nHead on upstairs back to the Tavern, there's a single patron there, she's an adventurer, click her and hire her!",
+    "interaction_type": "next",
+    "target_id": "tutor2_104",
+    "options": []
+  },
+  {
+    "id": "tutor2_104",
+    "speaker": "Tutorial Narrator",
+    "portrait": "",
+    "side": "left",
+    "dialog": "Go to the Tavern and Pick up on Amyssa the Elf for 25 silver coins.\n\nAmyssa is a Swordmage level 2, a capable warrior adept in fighting and spellcraft.",
+    "interaction_type": "next",
+    "target_id": "tutor2_105",
+    "options": []
+  },
+  {
+    "id": "tutor2_105",
+    "speaker": "Guild Master",
+    "portrait": "/assets/guild/guild_master.png",
+    "side": "left",
+    "dialog": "AH!! a new contract to the guild.\nFINALLY A REAL WARRIOR ADVENTURER!!\n\nNOW THIS PARTY WILL ACTUALLY GET SOMEWHERE!!",
+    "interaction_type": "next",
+    "target_id": "tutor2_106",
+    "options": []
+  },
+  {
+    "id": "tutor2_106",
+    "speaker": "Tutorial Narrator",
+    "portrait": "",
+    "side": "left",
+    "dialog": "Add Amyssa to the party, with the rest of the guys.",
+    "interaction_type": "next",
+    "target_id": "tutor2_107",
+    "options": []
+  },
+  {
+    "id": "tutor2_107",
+    "speaker": "Amyssa",
+    "portrait": "/assets/patrons/amyssa_s.png",
+    "side": "right",
+    "dialog": "** EXCUUUUUUUUUUUUUSE ME **",
+    "interaction_type": "next",
+    "target_id": "tutor2_108",
+    "options": []
+  },
+  {
+    "id": "tutor2_108",
+    "speaker": "Amyssa",
+    "portrait": "/assets/patrons/amyssa_s.png",
+    "side": "right",
+    "dialog": "I'm NOT joining THOSE peasants\n\nI am a NOBLE!",
+    "interaction_type": "next",
+    "target_id": "tutor2_109",
+    "options": []
+  },
+  {
+    "id": "tutor2_109",
+    "speaker": "Amyssa",
+    "portrait": "/assets/patrons/amyssa_s.png",
+    "side": "right",
+    "dialog": "I won't risk my precious hide for just any riff-raff!",
+    "interaction_type": "next",
+    "target_id": "tutor2_110",
+    "options": []
+  },
+  {
+    "id": "tutor2_110",
+    "speaker": "Guild Master",
+    "portrait": "/assets/guild/guild_master.png",
+    "side": "left",
+    "dialog": "BUT I'VE JUST HIRED YOU FOR YOUR SERVICES !!",
+    "interaction_type": "next",
+    "target_id": "tutor2_111",
+    "options": []
+  },
+  {
+    "id": "tutor2_111",
+    "speaker": "Amyssa",
+    "portrait": "/assets/patrons/amyssa_s.png",
+    "side": "right",
+    "dialog": "You'll just have to provide me with a party of my own class!",
+    "interaction_type": "next",
+    "target_id": "tutor2_112a",
+    "options": []
+  },
+  {
+    "id": "tutor2_112a",
+    "speaker": "Narrator",
+    "portrait": "",
+    "side": "right",
+    "dialog": "INTRODUCTION\n\nAmyssa has the trait [SNOB]\nWhile normally your commoners and nobles can party together, alas Amyssa is just too uppity for that!",
+    "interaction_type": "next",
+    "target_id": "tutor2_112",
+    "options": []
+  },
+  {
+    "id": "tutor2_112",
+    "speaker": "Amyssa",
+    "portrait": "/assets/patrons/amyssa_s.png",
+    "side": "right",
+    "dialog": "Meanwhile, I'll be chilling here, if you don't mind!\n\nInnkeeper!!! MORE ALE!!",
+    "interaction_type": "next",
+    "target_id": "tutor2_113",
+    "options": []
+  },
+  {
+    "id": "tutor2_113",
+    "speaker": "Guild Master",
+    "portrait": "/assets/guild/guild_master.png",
+    "side": "left",
+    "dialog": "** INNKEEPER ** !?\n** I AM THE . . . **\n** WAHHHHHHH **\nT___T",
+    "interaction_type": "next",
+    "target_id": "tutor2_114",
+    "options": []
+  },
+  {
+    "id": "tutor2_114",
+    "speaker": "Narrator",
+    "portrait": "/assets/patrons/amyssa_s.png",
+    "side": "right",
+    "dialog": "INTRODUCTION\n\nAmyssa is also a [SCRIBE]. While idling, other than just chilling in the guild",
+    "interaction_type": "next",
+    "target_id": "tutor2_115",
+    "options": []
+  },
+  {
+    "id": "tutor2_115",
+    "speaker": "Narrator",
+    "portrait": "/assets/patrons/amyssa_s.png",
+    "side": "right",
+    "dialog": "she will scribe spell scrolls once in a while, that Bragain and Claudio can read and cast spells with,",
+    "interaction_type": "next",
+    "target_id": "tutor2_116",
+    "options": []
+  },
+  {
+    "id": "tutor2_116",
+    "speaker": "Narrator",
+    "portrait": "/assets/patrons/amyssa_s.png",
+    "side": "right",
+    "dialog": "but not Hogperson because he's a big dummy.",
+    "interaction_type": "next",
+    "target_id": "tutor2_117",
+    "options": []
+  },
+  {
+    "id": "tutor2_117",
+    "speaker": "Narrator",
+    "portrait": "",
+    "side": "Left",
+    "dialog": "Amyssa have added 2 new spell scrolls to the Guild Stash, you may now click the stash and supply your adventurers with the new items (When implemented..), however you like.",
+    "interaction_type": "next",
+    "target_id": "tutor2_118",
+    "options": []
+  },
+  {
+    "id": "tutor2_118",
+    "speaker": "Narrator",
+    "portrait": "",
+    "side": "Left",
+    "dialog": "END OF Tutorial\n\nThanks you for playing this far!\nMore info can be read in the Tome of Lore (When implemented..)",
+    "interaction_type": "next",
+    "target_id": "tutor2_118END",
+    "options": []
+  },
+  {
+    "id": "tutor2_118END",
+    "speaker": "Narrator",
+    "portrait": "",
+    "side": "Left",
+    "dialog": "END OF Tutorial\n\nThanks you for playing this far!\nMore info can be read in the Tome of Lore (When implemented..)",
+    "interaction_type": "next",
+    "target_id": "END",
+    "options": []
+  }
+]

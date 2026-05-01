@@ -26,6 +26,10 @@
     overflow-y: auto;
     position: relative;
     box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+    /*overflow: hidden; /* Prevents scrolling if things go out of bounds */
+	overflow-y: auto;
+    overflow-x: hidden;
+
   }
 
   .status-bar {
@@ -52,6 +56,21 @@
     height: 480px;
     background: #444;
     display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 10px;
+    gap: 10px;
+    border-radius: 8px 0 0 8px;
+  }
+
+  .right-menu-mini {
+    position: absolute;
+    top: 80px;
+    right: 0;
+    width: 60px;
+    height: 60px;
+    background: #444;
+    display: none;
     flex-direction: column;
     align-items: center;
     padding-top: 10px;
@@ -362,6 +381,12 @@ img:not([src]) {
   left: 100px;
   color: white;
 }
+
+.mission-selection-button {
+  display: block;
+  margin: 10px 0;
+}
+
 .tutorial-button {
   position: absolute;
   top: 520px;
@@ -376,6 +401,11 @@ img:not([src]) {
   z-index: 20;
 }
 
+#dynamic-mission-list {
+  position: absolute;
+  top: 520px;
+  left: 80px;
+}
 .tutorial-window {
   position: fixed;
   top: 200px;
@@ -398,4 +428,18 @@ img:not([src]) {
     margin-top: 10px;
     display: block;
     width: 100%;
+}
+
+.marching-path {
+  stroke-dashoffset: 0; /* Add this starting point */
+  animation: march 1s linear infinite;
+}
+
+@keyframes march {
+  from {
+    stroke-dashoffset: 0;
+  }
+  to {
+    stroke-dashoffset: -20; /* Moves the pattern by 1 full dash+gap */
+  }
 }

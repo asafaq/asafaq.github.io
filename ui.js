@@ -1,15 +1,5 @@
 
 
-function loadPage(page) {
-  const main = document.getElementById("mainWindow");
-
-// 1. Define your patron data in an array. 
-// You can easily add up to 12 objects here.
-// 1. Single source of truth with the 'location' key
-//	0 is Hidden
-//	1	guild
-//	2	tavern
-//	3	mission
 const patronList = [
   { 
     name: "Patron One", 
@@ -142,11 +132,10 @@ const patronList = [
   // You can fill out all 12 here with location: 0
 ];
 
-  const pages = {
+const pages = {
     guild: `
       <div id="guild-container">
         <img id="guild-image" src="assets/guild/guild.png" />
-
         <div class="guild_License" style="top: 160px; left: 240px;">
           <img src="assets/guild/License_icon.png" class="item-icon">
 
@@ -179,8 +168,9 @@ const patronList = [
 				  </div>
 				`).join('')}
 			</div>
-	<button id="tutorial-button" class="tutorial-button">Start Tutorial</button>
-
+		<button id="tutorial-button" class="tutorial-button" style="display: none;">
+			Tutorial
+		</button>
 		`,
 		// this patrons will open 2 default patrons, but in the future needs to be able to read from DB which partons are inhouse to display.
     contracts: `
@@ -199,6 +189,10 @@ const patronList = [
 		<p class="line2">Party A</p>
 		<p class="line3">Party B</p>
 		</div>
+		<!-- This is where our dynamic buttons will be injected -->
+		<div id="dynamic-mission-list"></div>
+
+		<button id="tutorial-button" class="tutorial-button">Start Mission</button>
 		`,
 	journal: `
       <div id="journal-container">
@@ -238,35 +232,266 @@ const patronList = [
 		`).join('')}
 		  </div>
 		  `,
-		// this patrons will open 2 default patrons, but in the future needs to be able to read from DB which partons are inhouse to display.
+	mission_green_1: `
+	<div id="mission-container" style="position: relative;">
+		<img id="fantasy map" src="assets/missions/fantasy_map_s.png" />
+
+		<!-- Path Layer -->
+		<svg width="100%" height="100%" style="position: absolute; top: 0; left: 0; pointer-events: none;">
+			<!-- 1. The "Hitbox" (Invisible but clickable) -->
+			<path d="M 140 460 C 180 460, 200 300, 240 300" 
+				  stroke="transparent" stroke-width="25" fill="none" 
+				  style="pointer-events: stroke; cursor: pointer;" 
+				  onclick="console.log('Winding path clicked!');
+					runMission(player.missions.current_mission)" />
+			
+			<!-- 2. The Visible Dashed Line -->
+			<path class="marching-path" d="M 140 440 C 300 400, 120 370, 205 315" 
+				  stroke="rgba(0, 0, 0, 0.7)" stroke-width="4" 
+				  stroke-dasharray="10, 10" stroke-linecap="round" fill="none" />
+		</svg>
+
+		<!-- Homebase -->
+		<div class="guild_homebase shine-container" 
+			 style="position: absolute; top: 420px; left: 110px; transform: scale(0.66); transform-origin: top left;">
+			<img src="assets/menu/menu_home.png" class="item-icon">
+		</div>
+
+		<!-- Objective: Fixed Coordinates -->
+		<div class="mission_green_objective shine-container" 
+			 style="position: absolute; top: 300px; left: 195px; transform: scale(0.66); transform-origin: top left;">
+			<img src="assets/missions/mission_event_coins_s.png" class="item-icon">
+		</div>
+	</div>
+	`
+
 
     // other pages...
   };
 
+
+function loadPage(page) {
+  const main = document.getElementById("mainWindow");
+
+// 1. Define your patron data in an array. 
+// You can easily add up to 12 objects here.
+// 1. Single source of truth with the 'location' key
+//	0 is Hidden
+//	1	guild
+//	2	tavern
+//	3	mission
   main.innerHTML = pages[page] || "<p>Unknown page</p>";
 
   if (page === "guild") {
     //loadPhaserScripts();
     initGuildTooltips();   // <-- important
 	showTutorialButton();
+	displayRightMenu();
+  }
+  if (page === "missions") {
+    //loadPhaserScripts();
+    //initGuildTooltips();   // <-- important
+	// add code to manage patrons placement into party/guild. from "invx-grid"
+	
+	loadMissionPage();
+	//showMissionsButton();
+
   }
 }
 
 function showTutorialButton() {
-	if (player.data.tutor === 0) {
-		const btn = document.getElementById("tutorial-button");
+    const btn = document.getElementById("tutorial-button");
+    if (!btn) return console.warn("tutorial-button element not found");
+
+    // 1. Reset: Remove old listeners by cloning the button
+    // This is the cleanest way to clear old 'onclick' or 'addEventListener' logic
+    const newBtn = btn.cloneNode(true);
+    btn.parentNode.replaceChild(newBtn, btn);
+    const refreshedBtn = document.getElementById("tutorial-button");
+
+    // 2. Logic to show and assign action
+    refreshedBtn.style.display = "block";
+
+    if (player.data.tutor === 0) {
+        refreshedBtn.innerText = "Start Tutorial";
+        refreshedBtn.addEventListener('click', () => {
+            console.log("Starting Tutorial 1");
+            startTutorial();
+        });
+    } 
+    else if (player.data.tutor === 1 && player.missions.green_1 === 6) {
+        refreshedBtn.innerText = "continue tutorial";
+        refreshedBtn.addEventListener('click', () => {
+            console.log("Starting Tutorial 2: Recruit Amyssa");
+            startTutorial2();
+        });
+    } else {
+        // Hide if conditions aren't met
+        refreshedBtn.style.display = "none";
+    }
+	}
+
+function startMission() {
+    hideRightMenu();
+
+    // 1. Tutorial block
+    if (player.data.tutor === 0) {
+        const win = document.querySelector(".tutorial-window");
+
+        if (win) {
+            win.style.display = "block";
+            win.classList.add("active");
+
+            setTutorialText("You haven't started the tutorial yet! <br><br> Go back to the Guild to begin.");
+
+            setTutorialChoices([
+                { label: "Back to Guild", action: () => { closeTutorial(); loadPage("guild"); } }
+            ]);
+
+            console.log("Mission blocked: Tutorial not complete.");
+            return; // STOP here
+        }
+    }
+    // READ the mission type the player selected
+    const missionType = player.missions.current_mission;   // e.g. "green"
+
+    // For the tutorial, all stages live in mission_green_1
+    // In the future: mission_blue_1, mission_red_1, etc.    
+	// FORCE green missions to always load mission_green_1
+	if (missionType.startsWith("green")) {
+		loadPage("mission_green_1");
+		return;
+	}
+
+
+
+    // Load the mission shell (map UI, objectives UI, dialog UI)
+	
+	//console.log(missionPage);
+    //loadPage(missionPage);
+
+}
+
+function runMission(current_mission) {
+    // 1. Get the prefix (e.g., 'green1')
+	
+	console.log(current_mission)
+    
+	const startSceneId = getStartSceneId(current_mission)
+    // 2. Combine it with the starting scene suffix
+    //const startSceneId = missionPrefix + "_001"; 
+    
+    console.log("Starting mission scene:", startSceneId); // Will show 'green1_001'
+    
+    // 3. Call the mission system with the new variable
+    startMissionSystem(startSceneId);
+	
+}
+
+function getMissionSuffix(prefix) {
+  const index = Number(prefix.replace("green", ""));
+  return index * 100 + 1; // 101, 201, 301, ...
+}
+
+function getStartSceneId(prefix) {
+  const suffix = getMissionSuffix(prefix);
+  return `green1_${suffix}`;
+}
+
+
+	
+	//logic that progress the missions.
+	//introduce mission tracker.
+	//player.missions.current_mission = {green1}
+	//let currentMission = player.missions.current_mission;
+	
+	//startMissionSystem('green1_001');
+
+	//if currentMission is green1 run	//startMissionSystem('green1_001');
+	//if currentMission === green_1 {
+		//check player.missions.green_1 {which stage}
+		// stage1 load player.missions.green_1{1}
+		
+		// now the player has clicked the path first time in first missions.
+		// cut and preset the last text part of the tutorial steps 8-13
+		// add a marker on the map
+		// set player.missions.green_1 = 2
+	//}
+
+async function loadMissionPage() {
+    console.log("we called loadMissionPage");
+
+    // 1. Ensure mission structure exists
+    if (!player.missions) player.missions = {};
+    //if (!player.missions.current_mission) player.missions.current_mission = "green1";
+
+    const main = document.getElementById("mainWindow");
+    main.innerHTML = pages.missions;
+    const listContainer = document.getElementById("dynamic-mission-list");
+
+    // 2. Build dropdown
+    const missionOptions = [{ id: "green", label: "Green Mission" }];
+    let dropdownHTML = `<select id="mission-select">`;
+    missionOptions.forEach(m => {
+        const selected = (player.missions.current_mission === m.id) ? "selected" : "";
+        dropdownHTML += `<option value="${m.id}" ${selected}>${m.label}</option>`;
+    });
+    dropdownHTML += `</select>`;
+
+    // 3. Build buttons WITHOUT inline 'onclick'
+    let buttonsHTML = "";
+
+    // 4. Inject into DOM
+    listContainer.innerHTML = dropdownHTML + buttonsHTML;
+
+    // 5. Attach the SINGLE event listener for all buttons inside this container
+    listContainer.addEventListener("click", (e) => {
+        // Check if the clicked item is actually one of our buttons
+        if (e.target.classList.contains("mission-selection-button")) {
+            
+            // THE GATEKEEPER: Disable logic
+            if (!player.missions.current_mission) {
+                console.log("Action blocked: No active mission set.");
+                return; // Stop here
+            }
+
+            const missionId = e.target.getAttribute("data-mission");
+            console.log("Mission button clicked, starting:", missionId);
+            startMission(missionId);
+        }
+    });
+
+    // 6. Existing dropdown listener
+    document.getElementById("mission-select").addEventListener("change", async (e) => {
+        player.missions.current_mission = e.target.value;
+        await storage.savePlayer(player);
+        console.log("Current mission set to:", e.target.value);
+    });
+	
+	const btn = document.getElementById("tutorial-button");
 		if (btn) {
 			btn.style.display = "block";
-			console.log("tutorial-button:", player.data.tutor,);
-			btn.onclick = function () {
-                console.log("Tutorial button clicked");
-                startTutorial();   // whatever you want to happen
+			console.log("mission-button:", player.data.tutor,"TESTING LIVE");
+			// Replace btn.onclick = ... with this:
+			btn.addEventListener('click', function () {
+				if (!player.missions.current_mission) {
+					console.log(`mission button clicked, but current_mission is: ${player.missions.current_mission}`);
+					return;
 				}
-		} else {
-			console.warn("tutorial-button element not found");
-            };
+				console.log("mission button clicked");
+				startMission();
+			});
+		}
+}
 
-	}
+function hideRightMenu() {
+  document.querySelector('.right-menu').style.display = 'none';
+  document.querySelector('.right-menu-mini').style.display = 'flex';
+}
+
+function displayRightMenu() {
+  document.querySelector('.right-menu').style.display = 'flex';
+  document.querySelector('.right-menu-mini').style.display = 'none';
 }
 
 function startTutorial() {
@@ -288,7 +513,13 @@ function startTutorial() {
             label: "start the Tutorial",
             action: () => {
                 setTutorialText("Are you ready to start the Tutorial? This is going to take about 5-6 minutes of dialog.");
-                setTutorialChoices([{ label: "OK", action: () => nextTutorialStep(1) }]);
+                setTutorialChoices([
+					{
+						label: "OK",
+						action: () =>	{
+							closeTutorial();
+							startMissionSystem("tutor1_101");}
+							}]);
             }
         },
         {
@@ -304,6 +535,13 @@ function startTutorial() {
 
 		}
 	}
+
+function startTutorial2() {
+	if (player.missions.green_1 === 6) {
+	startMissionSystem("tutor2_101")
+	}
+}
+
 
 function closeTutorial() {
 	console.log("closeTutorial() fired");
@@ -321,8 +559,15 @@ function closeTutorial() {
 	}
 }
 
-function nextTutorialStep(step) {
+async function nextTutorialStep(step) {
     switch (step) {
+        case 0:
+            setTutorialText("You haven't started the tutorial and don't have a mission available yet.<BR><BR>Go back to the guild window and select startTutorial.");
+            setTutorialChoices([
+                { label: "Finish", action: () => closeTutorial() }
+            ]);
+            break;
+
         case 1:
             setTutorialText("Great! Let's begin. You are the Master of a guild of 'Adventurers', you hire them, send them off to do 'adventuring', and they come back with spoils for you. Simple enough right? Well... there haven't been any spoils for a while now...");
             setTutorialChoices([
@@ -359,9 +604,9 @@ function nextTutorialStep(step) {
             break;
 
         case 6:
-            setTutorialText("Now the player will go to the missions window, select Brag+Hog and a mission to 'Make Coin', and head off.<BR>*door slams* ");
+            setTutorialText("Now the player will go to the missions window, select Brag+Hog and a mission to 'Make Coin', and head off.<BR><BR>*door slams*");
             setTutorialChoices([
-                { label: "Next", action: () => nextTutorialStep(7) }
+                { label: "Next", action: () => nextTutorialStep(888) }
             ]);
             break;
 
@@ -421,8 +666,17 @@ function nextTutorialStep(step) {
             ]);
             break;
 
-        case 888:
+        case 888:	//update here mission log and change tutor===1, and save game.
             setTutorialText("Tutorial complete!");
+			if (player.data.tutor === 0) {
+				player.data.tutor = 1; // This sets the value to 1 and removes the tutor button    // This creates 'green' inside 'missions'
+				if (!player.missions) {
+					player.missions = {};
+				}
+				player.missions.green_1 = 1; 	//enables first mission.
+				await storage.savePlayer(player);
+				console.log("Tutorial status updated!");
+			}
             setTutorialChoices([
                 { label: "Finish", action: () => closeTutorial() }
             ]);
@@ -448,6 +702,68 @@ function setTutorialChoices(choices) {
         btn.onclick = choice.action;
         container.appendChild(btn);
     });
+}
+
+function getFullPatronData(id) {
+    const staticAdvData = loreData.adventurers[id];
+    const playerAdvData = player.patrons[id];
+    return { ...staticAdvData, ...playerAdvData };
+}
+
+function getPatronView(advId) {
+    const lore = loreData.adventurers[advId];
+    const state = player.patrons[advId];
+
+    if (!state) return null; // Patron not recruited yet
+
+    // Returns a combined object ready for the UI
+    return {
+        ...lore,
+        ...state,
+        isContractExpired: Date.now() > state.contract_end
+    };
+}
+
+// This is your master "hydration" function
+function getHydratedAdventurer(advId) {
+    const staticLore = loreData.adventurers[advId] || { name: "Unknown", class: "Commoner" };
+    const playerState = player.patrons[advId] || { status: "unrecruited" };
+
+    // This creates a single object merging both
+    return {
+        id: advId,
+        ...staticLore,     // Static data from lore.json
+        ...playerState     // Dynamic data from save file
+    };
+}
+
+function createDefaultPatronState() {	
+	//createDefaultPatronState() acts as a factory function. Its purpose is to guarantee that every new adventurer added to your save file starts with the exact same baseline of properties, preventing "undefined" errors later in your code when you try to access things like status or loyalty.
+    return {
+        status: "idle",
+        contract_expiry: Date.now() + 86400000,
+        custom_terms: null // This field doesn't exist in lore.json, and that's okay!
+    };
+}
+
+async function recruitAdventurer(advId) {
+    // 1. Get the latest player state from your storage
+    // (Assuming you have a function to get player data)
+    let player = await storage.getPlayer(); 
+
+    // 2. Safety check: Prevent overwriting if already recruited
+    if (player.patrons[advId]) {
+        console.warn("Adventurer already recruited!");
+        return;
+    }
+
+    // 3. Inject the new state using your factory
+    player.patrons[advId] = createDefaultPatronState();
+
+    // 4. Save the updated object back to IDB
+    await storage.savePlayer(player);
+    
+    console.log(`Adventurer ${advId} recruited successfully!`);
 }
 
 
@@ -538,15 +854,3 @@ function openWindow(label, imageSrc) {
   });
 
 }
-
-// function loadPhaserScripts() {
-  // const scripts = [
-    // "node_modules/phaser/dist/phaser.js",
-  // ];
-
-  // scripts.forEach(src => {
-    // const s = document.createElement("script");
-    // s.src = src;
-    // document.body.appendChild(s);
-  // });
-// }
