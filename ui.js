@@ -74,7 +74,7 @@ const pages = {
 
           <div class="hover-zone"
                data-label="Guild License"
-               data-large="assets/guild/adventurers_License_50.png">
+               data-large="assets/guild/adventurers_Licence_50.png">
           </div>
 
           <div class="tooltip"></div>
