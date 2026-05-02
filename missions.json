@@ -48,7 +48,17 @@
     "speaker": "Tutorial Narrator",
     "portrait": "",
     "side": "left",
-    "dialog": "Welcome to the game!\nYou're an aspiring entrepreneur looking to start a business in this side of the world, you've spent your life savings and now you're the proud owner to the land deed of a quaint tavern located on the road in the countryside, far enough to host lodging and close enough to attract patrons.",
+    "dialog": "Welcome to the game! As an aspiring entrepreneur looking to start a business in this part of the world, you’ve spent your life savings to become the proud owner of the land deed to this quaint tavern.",
+    "interaction_type": "next",
+    "target_id": "tutor1_101a",
+    "options": []
+  },
+  {
+    "id": "tutor1_101a",
+    "speaker": "Tutorial Narrator",
+    "portrait": "",
+    "side": "left",
+    "dialog": "Located on a countryside road, it is far enough from the township to host travelers and close enough to attract local patrons.",
     "interaction_type": "next",
     "target_id": "tutor1_102",
     "options": []

@@ -111,7 +111,7 @@ color / frustration_text: Safely ignored by the createBtn function unless the bu
   {
     "id": "pattern_004_mission_end",
     "speaker": "Narrator",
-    "dialog": "Mission complete. Thanks for playing!",
+    "dialog": "This message will not be visble. Mission complete. Thanks for playing! ",
     "interaction_type": "next",
     "target_id": "END"
   }
@@ -309,6 +309,7 @@ async function handleMissionEnd(sceneId) {
 
     // 1. Reward Logic
     if (sceneId === "tutor1_110") {
+		player = await storage.loadPlayer(player.id);
         console.log("Logic for Tutorial 1 completion!");
         player.data.tutor = 1;
 		
@@ -327,6 +328,7 @@ async function handleMissionEnd(sceneId) {
 		player.patrons.adv_Hogperson.location = 1;
 		player.patrons.adv_Claudio.location = 0;
 		player.patrons.adv_Amyssa.status = "applicant";
+		
 		Journal.addEntry("You've purchase yourself a Tavern.")
 		Journal.addEntry("You've signed a contract with the government and recieved your Adventurers' Guild Licence.")
 		Journal.addEntry("You've recruited Hogperson, Bragain and Claudio.")
@@ -335,6 +337,7 @@ async function handleMissionEnd(sceneId) {
     } 
   
     if (sceneId === "green1_008END") {
+		player = await storage.loadPlayer(player.id);
 		player.missions.green_1 = 2;
 		player.missions.current_mission = "green2"
 		loadPage("mission_green_1")
@@ -347,6 +350,7 @@ async function handleMissionEnd(sceneId) {
 	}
   
     if (sceneId === "green1_019END") {
+		player = await storage.loadPlayer(player.id);
 		player.missions.green_1 = 3;
 		player.missions.current_mission = "green3"
 		loadPage("mission_green_1")
@@ -355,6 +359,7 @@ async function handleMissionEnd(sceneId) {
 	}
   
     if (sceneId === "green1_025END") {
+		player = await storage.loadPlayer(player.id);
 		player.missions.green_1 = 4;
 		player.missions.current_mission = "green4"
 		loadPage("mission_green_1")
@@ -363,6 +368,7 @@ async function handleMissionEnd(sceneId) {
 	}
   
     if (sceneId === "green1_048END") {
+		player = await storage.loadPlayer(player.id);
 		player.missions.green_1 = 5;
 		player.missions.current_mission = "green5";
 		//recruitAdventurer("adv_Claudio")
@@ -374,6 +380,7 @@ async function handleMissionEnd(sceneId) {
 	}
   
     if (sceneId === "green1_056END") {
+		player = await storage.loadPlayer(player.id);
 		player.missions.green_1 = 6;
 		player.missions.current_mission = null
 		player.patrons.adv_Bragain.location = 1;
@@ -384,12 +391,13 @@ async function handleMissionEnd(sceneId) {
 		player.journal = { entries: Journal.entries };
 	}
     if (sceneId === "tutor2_118END") {
+		player = await storage.loadPlayer(player.id);
         console.log("Logic for Tutorial 2 completion!");
         player.data.tutor = 2; 
         player.missions.green_1 = 7;
 		player.patrons.adv_Amyssa.status = "idle";
         // Add your logic to add Amyssa, deduct money, etc. here
-		Journal.addEntry("You've recruited Amyssa.")
+		Journal.addEntry("You've recruited Amyssa to sign a 25 silver coins contract.")
 		player.journal = { entries: Journal.entries };
     } 
     

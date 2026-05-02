@@ -269,9 +269,6 @@ function renderPatronInventory() {
 }
 
 
-async function loadPage(page) {
-  const main = document.getElementById("mainWindow");
-
 // 1. Define your patron data in an array. 
 // You can easily add up to 12 objects here.
 // 1. Single source of truth with the 'location' key
@@ -279,6 +276,9 @@ async function loadPage(page) {
 //	1	guild
 //	2	tavern
 //	3	mission
+async function loadPage(page) {
+  const main = document.getElementById("mainWindow");
+
   main.innerHTML = pages[page] || "<p>Unknown page</p>";
 
   if (page === "guild") {
@@ -298,8 +298,8 @@ async function loadPage(page) {
 		</div>
 	  `)
 	  .join('');
-		
-	
+
+
     initGuildTooltips();   // <-- important
 	showTutorialButton();
 	displayRightMenu();
