@@ -70,11 +70,11 @@ const pages = {
       <div id="guild-container">
         <img id="guild-image" src="assets/guild/guild.png" />
         <div class="guild_License" style="top: 160px; left: 240px;">
-          <img src="assets/guild/License_icon.png" class="item-icon">
+          <img src="assets/guild/license_icon.png" class="item-icon">
 
           <div class="hover-zone"
                data-label="Guild License"
-               data-large="assets/guild/adventurers_Licence_50.png">
+               data-large="assets/guild/adventurers_licence_50.png">
           </div>
 
           <div class="tooltip"></div>
