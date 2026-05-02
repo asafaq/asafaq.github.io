@@ -32,6 +32,10 @@
     },
     "adv_Hogperson": {
       "name": "Hogperson",
+	  "icon": "assets/patrons/hogperson_s.png",
+	  "top": "300px", 
+      "left": "380px",
+	  "location": 1,
       "race": "Barbarian",
       "race_comment": "Wildmen more of a humanoid than a human. Thick Hide for bonus unarmed AC \tRage +10 tempHP.",
       "role": "Brute",
@@ -65,6 +69,10 @@
     },
     "adv_Bragain": {
       "name": "Bragain",
+	  "icon": "assets/patrons/dwarven_miner_s.png",
+	  "top": "220px", 
+      "left": "380px",
+	  "location": 1,
       "race": "Dwarven",
       "role": "Miner",
       "role_comment": "A rogue with a day job. Like a thief, but less proficient",
@@ -93,6 +101,10 @@
     },
     "adv_Claudio": {
       "name": "Claudio",
+	  "icon": "assets/patrons/Claudio_s.png",
+	  "top": "350px", 
+      "left": "250px",
+	  "location": 2,
       "race": "Human",
       "role": "Bard",
       "hp_die": 8,
@@ -124,6 +136,10 @@
     },
     "adv_Amyssa": {
       "name": "Amyssa",
+	  "icon": "assets/patrons/amyssa_s.png",
+	  "top": "400px", 
+      "left": "120px",
+	  "location": 2,
       "race": "Elf",
       "role": "Swordmage",
       "hp_die": 10,

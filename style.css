@@ -357,25 +357,42 @@ img:not([src]) {
   z-index: 2;
 }
 
+#journal-container {
+  position: relative;
+  width: 100%;
+  height: auto;
+}
+
+#journal-text {
+  position: absolute;
+  top: 15%;      /* adjust to fit your parchment */
+  left: 10%;
+  right: 10%;
+  bottom: 10%;
+  overflow-y: auto;
+  font-family: "YourFancyFont";
+  font-size: 1.1rem;
+  white-space: pre-wrap;
+}
 #missions-container {
   position: relative;
 }
 
-#missions-container .line1 {
+#missions-container #missions_line1 {
   position: absolute;
   top: 83px;
   left: 100px;
   color: white;
 }
 
-#missions-container .line2 {
+#missions-container #missions_line2 {
   position: absolute;
   top: 271px;
   left: 100px;
   color: white;
 }
 
-#missions-container .line3 {
+#missions-container #missions_line3 {
   position: absolute;
   top: 360px;
   left: 100px;
@@ -406,6 +423,7 @@ img:not([src]) {
   top: 520px;
   left: 80px;
 }
+
 .tutorial-window {
   position: fixed;
   top: 200px;
@@ -418,7 +436,7 @@ img:not([src]) {
   display: none; /* hidden by default */
   z-index: 22;
   color: Navy;
-  
+}
   
 .tutorial-window.active {
     display: block;
@@ -442,4 +460,50 @@ img:not([src]) {
   to {
     stroke-dashoffset: -20; /* Moves the pattern by 1 full dash+gap */
   }
+}
+/* Remove the redundant grid styles from the first block */
+#guild-patron-inventory,
+#party-a-patron-inventory,
+#party-b-patron-inventory {
+    display: flex;          /* Use Flexbox */
+    flex-wrap: wrap;        /* Wrap to next line if too many items */
+    gap: 0px;               /* Space between your icons */
+    
+    /* Layout positioning */
+    position: absolute;
+    width: 420px;           /* Defined width */
+    z-index: 5;             /* Ensures it sits above backgrounds */
+}
+
+/* Specific position overrides */
+#guild-patron-inventory { top: 120px; left: 140px; }
+#party-a-patron-inventory { top: 200px; left: 140px; }
+#party-b-patron-inventory { top: 280px; left: 140px; }
+
+.patron-slot {
+    width: 64px;            /* Match your container size */
+    height: 64px;
+    flex: 0 0 auto;         /* Prevents squishing */
+    position: relative;     /* Required so the hover-zone stays inside */
+}
+
+#missions_line1 {
+  position: absolute;
+  top: 120px;
+  left: 180px;
+  z-index: 10;
+}
+
+#missions_line2 {
+  position: absolute;
+  top: 200px;
+  left: 180px;
+  z-index: 10;
+}
+
+#missions_line3 {
+  position: absolute;
+  top: 280px;
+  left: 180px;
+  z-index: 10;
 }

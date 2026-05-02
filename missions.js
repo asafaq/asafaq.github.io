@@ -2,7 +2,9 @@ let db;
 let storyData = [];
 let isTyping = false;
 // Set this to true to skip the typewriter effect for testing
-const SKIP_TYPEWRITER = true;
+//const SKIP_TYPEWRITER = true;
+const SKIP_TYPEWRITER = player?.data?.skip_typewriter ?? false;
+
 
 /*  regarding missions.json = the current templates. Still need to add option choices based on TRAITS, when we get that running.
 Reference Guide for Properties
@@ -204,7 +206,10 @@ async function renderScene(sceneId) {
     if (typeTarget) {
         isTyping = true;
         typeTarget.innerHTML = "";
-        
+		
+        player = await storage.loadPlayer(player.id);
+		// Now read the updated value
+		const SKIP_TYPEWRITER = player?.data?.skip_typewriter ?? false;
         if (SKIP_TYPEWRITER) {
             // INSTANT MODE
             typeTarget.innerHTML = scene.dialog;
@@ -311,38 +316,81 @@ async function handleMissionEnd(sceneId) {
 		if (!player.missions.current_mission) player.missions.current_mission = "green1";
 
         player.missions.green_1 = 1;
-        // Add your logic to add Amyssa, deduct money, etc. here
+		recruitAdventurer("adv_Hogperson")
+		recruitAdventurer("adv_Bragain")
+		recruitAdventurer("adv_Claudio")
+		recruitAdventurer("adv_Amyssa")
+		//change Claudio's location to 0 meaning he is missing, then later set to 2.
+		player.patrons ??= {};
+		player.patrons.adv_Claudio ??= {};
+		player.patrons.adv_Bragain.location = 1;
+		player.patrons.adv_Hogperson.location = 1;
+		player.patrons.adv_Claudio.location = 0;
+		player.patrons.adv_Amyssa.status = "applicant";
+		Journal.addEntry("You've purchase yourself a Tavern.")
+		Journal.addEntry("You've signed a contract with the government and recieved your Adventurers' Guild Licence.")
+		Journal.addEntry("You've recruited Hogperson, Bragain and Claudio.")
+		player.journal = { entries: Journal.entries };
+		loadPage("mission_green_1")
     } 
   
     if (sceneId === "green1_008END") {
 		player.missions.green_1 = 2;
 		player.missions.current_mission = "green2"
+		loadPage("mission_green_1")
+		player.patrons.adv_Bragain.location = 3;
+		player.patrons.adv_Hogperson.location = 3;
+		player.patrons.adv_Claudio.location = 0;
+		Journal.addEntry("You've agreed to head towards a stash of coins.")
+		
+		player.journal = { entries: Journal.entries };
 	}
   
     if (sceneId === "green1_019END") {
 		player.missions.green_1 = 3;
 		player.missions.current_mission = "green3"
+		loadPage("mission_green_1")
+		Journal.addEntry("In the nearby green pastures, you've smashed a rock to bits.")
+		player.journal = { entries: Journal.entries };
 	}
   
     if (sceneId === "green1_025END") {
 		player.missions.green_1 = 4;
 		player.missions.current_mission = "green4"
+		loadPage("mission_green_1")
+		Journal.addEntry("You've cheered up a wandering traveler.")
+		player.journal = { entries: Journal.entries };
 	}
   
     if (sceneId === "green1_048END") {
 		player.missions.green_1 = 5;
-		player.missions.current_mission = "green5"
+		player.missions.current_mission = "green5";
+		//recruitAdventurer("adv_Claudio")
+		player.patrons.adv_Claudio.location = 3;
+		loadPage("mission_green_1")
+		Journal.addEntry("You've successfully demoralized a band of Koboldogs.")
+		Journal.addEntry("You've saved Claudio from a cage.")
+		player.journal = { entries: Journal.entries };
 	}
   
     if (sceneId === "green1_056END") {
 		player.missions.green_1 = 6;
 		player.missions.current_mission = null
+		player.patrons.adv_Bragain.location = 1;
+		player.patrons.adv_Claudio.location = 2;
+		player.patrons.adv_Hogperson.location = 1;
+		loadPage("tavern")
+		Journal.addEntry("You've found 50 silver coins and returned to the guild.")
+		player.journal = { entries: Journal.entries };
 	}
     if (sceneId === "tutor2_118END") {
         console.log("Logic for Tutorial 2 completion!");
         player.data.tutor = 2; 
         player.missions.green_1 = 7;
+		player.patrons.adv_Amyssa.status = "idle";
         // Add your logic to add Amyssa, deduct money, etc. here
+		Journal.addEntry("You've recruited Amyssa.")
+		player.journal = { entries: Journal.entries };
     } 
     
     // 2. Save Player Data

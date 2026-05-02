@@ -48,7 +48,7 @@
     "speaker": "Tutorial Narrator",
     "portrait": "",
     "side": "left",
-    "dialog": "Welcome to the game!\nYou're a humble innkeeper, you've spent your life savings and now you're the proud owner to the land deed of a quaint tavern located on the road in the countryside, far enough to host lodging and close enough to attract patrons.",
+    "dialog": "Welcome to the game!\nYou're an aspiring entrepreneur looking to start a business in this side of the world, you've spent your life savings and now you're the proud owner to the land deed of a quaint tavern located on the road in the countryside, far enough to host lodging and close enough to attract patrons.",
     "interaction_type": "next",
     "target_id": "tutor1_102",
     "options": []
@@ -532,7 +532,7 @@
     "speaker": "Koboldog",
     "portrait": "/assets/missions/koboldog.png",
     "side": "right",
-    "dialog": "Ahh, holder of the magnificent large stick!",
+    "dialog": "Ahh, wielder of the magnificent large stick!",
     "interaction_type": "next",
     "target_id": "green1_034",
     "options": []
@@ -619,10 +619,10 @@
   },
   {
     "id": "green1_041",
-    "speaker": "Narrator",
+    "speaker": "INTRODUCTION",
     "portrait": "/assets/patrons/Claudio.png",
     "side": "right",
-    "dialog": "INTRODUCTION\n\nClaudio is a lover, not a fighter, while he can participate in combat, his proficiencies lay in his performal talents.",
+    "dialog": "Claudio is a lover, not a fighter, while he can participate in combat, his proficiencies lay in his performal talents.",
     "interaction_type": "next",
     "target_id": "green1_042",
     "options": []
@@ -844,7 +844,7 @@
     "speaker": "Guild Master",
     "portrait": "/assets/guild/guild_master.png",
     "side": "left",
-    "dialog": "AND there's a pot full of silver coins! Marvelous!\n We're finally starting to look like a Guild!",
+    "dialog": "AND there's a pot full of silver coins! Marvelous!\nWe're finally starting to look like a Guild!",
     "interaction_type": "next",
     "target_id": "tutor2_103",
     "options": []
@@ -914,7 +914,7 @@
     "speaker": "Amyssa",
     "portrait": "/assets/patrons/amyssa_s.png",
     "side": "right",
-    "dialog": "I won't risk my precious hide for just any riff-raff!",
+    "dialog": "I won't risk MY precious hide for just any riff-raff!",
     "interaction_type": "next",
     "target_id": "tutor2_110",
     "options": []
@@ -941,10 +941,10 @@
   },
   {
     "id": "tutor2_112a",
-    "speaker": "Narrator",
+    "speaker": "INTRODUCTION",
     "portrait": "",
     "side": "right",
-    "dialog": "INTRODUCTION\n\nAmyssa has the trait [SNOB]\nWhile normally your commoners and nobles can party together, alas Amyssa is just too uppity for that!",
+    "dialog": "Amyssa has the trait [SNOB]\n\nWhile normally your commoners and nobles can party together, alas Amyssa is just too uppity for that!",
     "interaction_type": "next",
     "target_id": "tutor2_112",
     "options": []
@@ -971,10 +971,10 @@
   },
   {
     "id": "tutor2_114",
-    "speaker": "Narrator",
+    "speaker": "INTRODUCTION",
     "portrait": "/assets/patrons/amyssa_s.png",
     "side": "right",
-    "dialog": "INTRODUCTION\n\nAmyssa is also a [SCRIBE]. While idling, other than just chilling in the guild",
+    "dialog": "Amyssa is also a [SCRIBE]. While idling, other than just chilling in the guild",
     "interaction_type": "next",
     "target_id": "tutor2_115",
     "options": []
@@ -1004,7 +1004,7 @@
     "speaker": "Narrator",
     "portrait": "",
     "side": "Left",
-    "dialog": "Amyssa have added 2 new spell scrolls to the Guild Stash, you may now click the stash and supply your adventurers with the new items (When implemented..), however you like.",
+    "dialog": "Amyssa has added 2 new spell scrolls to the Guild Stash, you may now click the stash and supply your adventurers with the new items (When implemented..), however you like.",
     "interaction_type": "next",
     "target_id": "tutor2_118",
     "options": []
@@ -1024,7 +1024,7 @@
     "speaker": "Narrator",
     "portrait": "",
     "side": "Left",
-    "dialog": "END OF Tutorial\n\nThanks you for playing this far!\nMore info can be read in the Tome of Lore (When implemented..)",
+    "dialog": "END OF Tutorial\n\nThank you for playing this far!\nMore info can be read in the Tome of Lore (When implemented..)",
     "interaction_type": "next",
     "target_id": "END",
     "options": []

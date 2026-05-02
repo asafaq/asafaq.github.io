@@ -1,136 +1,69 @@
+// 1. A variable that will hold your data
+let loreData = null; 
+
+// 2. A variable for your player data (assuming you have this already)
+//let player = { patrons: {} }; 
+
+// 3. The "Loader" function
+async function initializeGame() {
+    try {
+        const response = await fetch('lore.json');
+        loreData = await response.json(); // THIS parses the JSON into a real object
+        console.log("Lore loaded successfully!", loreData);
+        
+        // NOW you can start your game logic
+        // recruitAdventurer("warrior_01"); // Example
+    } catch (err) {
+        console.error("Failed to load lore.json. Is it in the same folder?", err);
+    }
+}
+
+// 4. Run it immediately when the script loads
+initializeGame();
 
 
-const patronList = [
-  { 
-    name: "Patron One", 
-    location: 1, // 1 = In the guild, 0 = Out
-    top: "300px", 
-    left: "380px", 
-    icon: "assets/patrons/hogperson_s.png", 
-    large: "assets/patrons/p1_full.png" 
-  },
-  { 
-    name: "Patron Two", 
-    location: 1, // If set to 0 = This patron is currently "Out" and won't be rendered
-    top: "220px", 
-    left: "380px", 
-    icon: "assets/patrons/dwarven_miner_s.png", 
-    large: "assets/patrons/p2_full.png" 
-  },
-  { 
-    name: "Future Patron", 
-    location: 2, 
-    top: "400px", 
-    left: "120px", 
-    icon: "assets/patrons/amyssa_s.png", 
-    large: "assets/patrons/p3_full.png" 
-  },
-  { 
-    name: "Future Patron", 
-    location: 0, 
-    top: "550px", 
-    left: "100px", 
-    icon: "assets/patrons/Claudio_s.png", 
-    large: "assets/patrons/p3_full.png" 
-  },
-  { 
-    name: "Future Patron", 
-    location: 0, 
-    top: "550px", 
-    left: "100px", 
-    icon: "assets/patrons/amyssa_s.png", 
-    large: "assets/patrons/p3_full.png" 
-  },
-  { 
-    name: "Future Patron", 
-    location: 0, 
-    top: "550px", 
-    left: "100px", 
-    icon: "assets/patrons/amyssa_s.png", 
-    large: "assets/patrons/p3_full.png" 
-  },
-  { 
-    name: "Future Patron", 
-    location: 0, 
-    top: "550px", 
-    left: "100px", 
-    icon: "assets/patrons/amyssa_s.png", 
-    large: "assets/patrons/p3_full.png" 
-  },
-  { 
-    name: "Future Patron", 
-    location: 0, 
-    top: "550px", 
-    left: "100px", 
-    icon: "assets/patrons/amyssa_s.png", 
-    large: "assets/patrons/p3_full.png" 
-  },
-  { 
-    name: "Future Patron", 
-    location: 0, 
-    top: "550px", 
-    left: "100px", 
-    icon: "assets/patrons/amyssa_s.png", 
-    large: "assets/patrons/p3_full.png" 
-  },
-  { 
-    name: "Future Patron", 
-    location: 0, 
-    top: "550px", 
-    left: "100px", 
-    icon: "assets/patrons/amyssa_s.png", 
-    large: "assets/patrons/p3_full.png" 
-  },
-  { 
-    name: "Future Patron", 
-    location: 0, 
-    top: "550px", 
-    left: "100px", 
-    icon: "assets/patrons/amyssa_s.png", 
-    large: "assets/patrons/p3_full.png" 
-  },
-  { 
-    name: "Future Patron", 
-    location: 0, 
-    top: "550px", 
-    left: "100px", 
-    icon: "assets/patrons/amyssa_s.png", 
-    large: "assets/patrons/p3_full.png" 
-  },
-  { 
-    name: "Future Patron", 
-    location: 0, 
-    top: "550px", 
-    left: "100px", 
-    icon: "assets/patrons/amyssa_s.png", 
-    large: "assets/patrons/p3_full.png" 
-  },
-  { 
-    name: "Future Patron", 
-    location: 0, 
-    top: "550px", 
-    left: "100px", 
-    icon: "assets/patrons/amyssa_s.png", 
-    large: "assets/patrons/p3_full.png" 
-  },
-  { 
-    name: "Future Patron", 
-    location: 0, 
-    top: "550px", 
-    left: "100px", 
-    icon: "assets/patrons/amyssa_s.png", 
-    large: "assets/patrons/p3_full.png" 
-  },
-  { 
-    name: "Future Patron", 
-    location: 0, 
-    top: "550px", 
-    left: "100px", 
-    icon: "assets/patrons/amyssa_s.png", 
-    large: "assets/patrons/p3_full.png" 
-  },
-  // You can fill out all 12 here with location: 0
-];
+// This function takes your Lore list and merges it with current player data
+// The "Hydration" Function: Merges Lore + Player State
+function getVisiblePatrons() {
+    if (!loreData.Adventurer) {
+        console.warn("loreData.Adventurer is missing");
+        return [];
+    }
+
+	const patronKeys = Object.keys(player.patrons);
+
+	const allowed = ["idle", "applicant"];
+
+	const filteredIds = patronKeys.filter(id => {
+		return allowed.includes(player.patrons[id].status);
+	});
+
+    // 2. Map: Convert IDs into the detailed data objects the UI needs
+    return filteredIds.map(id => {
+        const lore = loreData.Adventurer[id];
+        const state = player.patrons[id];
+
+        // If lore is missing for this ID, return null so we can filter it out
+        if (!lore) {
+            console.warn(`No lore found for ID: ${id}`);
+            return null;
+        }
+
+        // THIS IS THE RETURN THAT WAS MISSING
+        return {
+            name: lore.name,
+            location: state.location !== undefined ? state.location : lore.location,
+            top: lore.top,
+            left: lore.left,
+            icon: lore.icon
+        };
+    }).filter(patron => patron !== null); // Remove any null entries
+}
+
+let patronList = []; // This will hold your dynamic data
+
+
+
 
 const pages = {
     guild: `
@@ -155,23 +88,20 @@ const pages = {
           </div>
           <div class="tooltip"></div>
         </div>
-		${patronList
-				.filter(patron => patron.location === 1) 
-				.map(patron => `
-				  <div class="patron-wrapper" style="position: absolute; top: ${patron.top}; left: ${patron.left};">
-					<img src="${patron.icon}" class="item-icon">
-					<div class="hover-zone"
-						 data-label="${patron.name}"
-						 data-large="${patron.large}">
-					</div>
-					<div class="tooltip"></div>
-				  </div>
-				`).join('')}
-			</div>
+		<div id="patron-container"></div>
 		<button id="tutorial-button" class="tutorial-button" style="display: none;">
 			Tutorial
 		</button>
 		`,
+	tavern: `
+      <div id="tavern-container">
+        <img id="contract_parchment" src="assets/guild/tavern.png" />
+		<p style="margin: 40px; color: black;">Welcome to the Tavern! W.I.P<br>
+		this is the room to find new adventurers looking for a contract, and where your past adventurers will wait and tell all their tales and exploits while soaking their sorrows and trauma in ales.<br>
+		please return after completing the tutorial.</p>
+		<div id="patron-container"></div>
+		</div>
+		  `,
 		// this patrons will open 2 default patrons, but in the future needs to be able to read from DB which partons are inhouse to display.
     contracts: `
       <div id="contracts-container">
@@ -185,9 +115,45 @@ const pages = {
     missions: `
       <div id="missions-container">
         <img id="contract_parchment" src="assets/missions/guild_party_party_window.png" />
-		<p class="line1">Guild</p>
-		<p class="line2">Party A</p>
-		<p class="line3">Party B</p>
+			<p id="missions_line1"></p>
+			<p id="missions_line2"></p>
+			<p id="missions_line3"></p>
+
+		<div id="guild-patron-inventory" class="inventory-row">
+  <div class="slot"></div>
+  <div class="slot"></div>
+  <div class="slot"></div>
+  <div class="slot"></div>
+  <div class="slot"></div>
+  <div class="slot"></div>
+</div>
+
+<div id="party-a-patron-inventory" class="inventory-row">
+  <div class="slot"></div>
+  <div class="slot"></div>
+  <div class="slot"></div>
+  <div class="slot"></div>
+  <div class="slot"></div>
+  <div class="slot"></div>
+</div>
+
+<div id="party-b-patron-inventory" class="inventory-row">
+  <div class="slot"></div>
+  <div class="slot"></div>
+  <div class="slot"></div>
+  <div class="slot"></div>
+  <div class="slot"></div>
+  <div class="slot"></div>
+</div>
+
+<div id="party-c-patron-inventory" class="inventory-row">
+  <div class="slot"></div>
+  <div class="slot"></div>
+  <div class="slot"></div>
+  <div class="slot"></div>
+  <div class="slot"></div>
+  <div class="slot"></div>
+</div>
 		</div>
 		<!-- This is where our dynamic buttons will be injected -->
 		<div id="dynamic-mission-list"></div>
@@ -197,9 +163,7 @@ const pages = {
 	journal: `
       <div id="journal-container">
         <img id="contract_parchment" src="assets/guild/contract_parchment.png" />
-		<p style="margin: 40px; color: black;">Welcome to the Journal.<br>
-		this is where your adventures are recorded.<br>
-		please return after completing the tutorial.</p>
+		<div id="journal-text"></div>
 		</div>
 		`,
 	mail: `
@@ -211,27 +175,6 @@ const pages = {
 		tutorial.</p>
 		</div>
 		`,
-	tavern: `
-      <div id="tavern-container">
-        <img id="contract_parchment" src="assets/guild/tavern.png" />
-		<p style="margin: 40px; color: black;">Welcome to the Tavern! W.I.P<br>
-		this is the room to find new adventurers looking for a contract, and where your past adventurers will wait and tell all their tales and exploits while soaking their sorrows and trauma in ales.<br>
-		please return after completing the tutorial.</p>
-		</div>
-		${patronList
-		.filter(patron => patron.location === 2) 
-		.map(patron => `
-		  <div class="patron-wrapper" style="position: absolute; top: ${patron.top}; left: ${patron.left};">
-			<img src="${patron.icon}" class="item-icon">
-			<div class="hover-zone"
-				 data-label="${patron.name}"
-				 data-large="${patron.large}">
-			</div>
-			<div class="tooltip"></div>
-		  </div>
-		`).join('')}
-		  </div>
-		  `,
 	mission_green_1: `
 	<div id="mission-container" style="position: relative;">
 		<img id="fantasy map" src="assets/missions/fantasy_map_s.png" />
@@ -263,14 +206,70 @@ const pages = {
 			<img src="assets/missions/mission_event_coins_s.png" class="item-icon">
 		</div>
 	</div>
-	`
+	`,
+	cogwheel: `
+		<div>
+	  <label>Guild Name:</label>
+	  <input id="guildNameInput" type="text">
+	</div>
+	<div>
+	  <label>Party A:</label>
+	  <input id="partyAInput" type="text">
+	</div>
 
+	<div>
+	  <label>Party B:</label>
+	  <input id="partyBInput" type="text">
+	</div>
+	<div>
+      <label>Text Speed:</label>
+      <select id="typewriterSelect">
+        <option value="false">Normal (typewriter)</option>
+        <option value="true">Instant (skip)</option>
+      </select>
+    </div>
+	<button id="saveBtn">Save Changes</button>
+	<div id="saveStatus" style="margin-top: 6px; color: white; font-weight: bold;"></div>
+
+	`
 
     // other pages...
   };
+  
+function renderPatronInventory() {
+  const guildContainer = document.getElementById("guild-patron-inventory");
+  const partyAContainer = document.getElementById("party-a-patron-inventory");
+  const partyBContainer = document.getElementById("party-b-patron-inventory");
+
+  // Any status in this list will be ignored
+  const excludedStatuses = ["applicant", "retired", "dead"];
+
+  function renderGroup(location) {
+    return patronList
+      .filter(p => p.location === location)
+		.filter(p => {
+			const key = "adv_" + p.name;   // build the correct IDB key
+			const status = player.patrons?.[key]?.status?.trim().toLowerCase();
+			return !excludedStatuses.includes(status);
+		})
+
+      .map(p => `
+        <div class="patron-slot">
+          <img src="${p.icon}" class="item-icon">
+          <div class="hover-zone" data-label="${p.name}"></div>
+          <div class="tooltip"></div>
+        </div>
+      `)
+      .join('');
+  }
+
+  guildContainer.innerHTML = renderGroup(1) + renderGroup(2);
+  partyAContainer.innerHTML = renderGroup(3);
+  partyBContainer.innerHTML = renderGroup(4);
+}
 
 
-function loadPage(page) {
+async function loadPage(page) {
   const main = document.getElementById("mainWindow");
 
 // 1. Define your patron data in an array. 
@@ -284,17 +283,140 @@ function loadPage(page) {
 
   if (page === "guild") {
     //loadPhaserScripts();
+	patronList = getVisiblePatrons();
+	console.log(patronList);
+	const container = document.getElementById("patron-container");
+
+	container.innerHTML = patronList
+	  .filter(patron => patron.location === 1)
+	  .map(patron => `
+		<div class="patron-wrapper" 
+			 style="position: absolute; top: ${patron.top}; left: ${patron.left};">
+		  <img src="${patron.icon}" class="item-icon">
+		  <div class="hover-zone" data-label="${patron.name}"></div>
+		  <div class="tooltip"></div>
+		</div>
+	  `)
+	  .join('');
+		
+	
     initGuildTooltips();   // <-- important
 	showTutorialButton();
 	displayRightMenu();
   }
+  if (page === "tavern") {
+    patronList = getVisiblePatrons();
+	console.log(patronList);
+	const container = document.getElementById("patron-container");
+
+	container.innerHTML = patronList
+	  .filter(patron => patron.location === 2)
+	  .map(patron => `
+		<div class="patron-wrapper" 
+			 style="position: absolute; top: ${patron.top}; left: ${patron.left};">
+		  <img src="${patron.icon}" class="item-icon">
+		  <div class="hover-zone" data-label="${patron.name}"></div>
+		  <div class="tooltip"></div>
+		</div>
+	  `)
+	  .join('');
+		
+  }
+  
   if (page === "missions") {
-    //loadPhaserScripts();
-    //initGuildTooltips();   // <-- important
+	  
+	loadMissionPage();
+    patronList = getVisiblePatrons();
+	renderPatronInventory();
+
 	// add code to manage patrons placement into party/guild. from "invx-grid"
 	
-	loadMissionPage();
-	//showMissionsButton();
+  }
+
+  if (page === "journal") {
+	  // 1. DATA PROCESSING: Grouping
+	  const groupedData = {};
+      player = await storage.loadPlayer(player.id);
+	  if (player.journal && player.journal.entries) {
+		  player.journal.entries.forEach(entry => {
+			// Regex to match your format: [DD/MM/YYYY, HH:mm:ss]
+			const match = entry.match(/\[(\d{2}\/\d{2}\/\d{4}), (\d{2}):\d{2}:\d{2}\]/);
+			if (!match) return;
+
+			const [full, date, hourStr] = match;
+			const hour = parseInt(hourStr, 10);
+			
+			// Categorize time
+			let category = "Nighttime";
+			if (hour >= 5 && hour < 12) category = "Morning";
+			else if (hour >= 12 && hour < 17) category = "Noon";
+			else if (hour >= 17 && hour < 21) category = "Evening";
+
+			const message = entry.split('] ')[1];
+
+			if (!groupedData[date]) groupedData[date] = { "Morning": [], "Noon": [], "Evening": [], "Nighttime": [] };
+			groupedData[date][category].push(message);
+		  });
+	  }
+	  // 2. SORTING: Dates (Newest first)
+	  const sortedDates = Object.keys(groupedData).sort((a, b) => {
+		const [d1, m1, y1] = a.split('/').map(Number);
+		const [d2, m2, y2] = b.split('/').map(Number);
+		return new Date(y2, m2 - 1, d2) - new Date(y1, m1 - 1, d1);
+	  });
+
+	  // 3. RENDERING: Building HTML
+	  let html = "<h1>Journal</h1>";
+	  sortedDates.forEach(date => {
+		html += `<div class="date-group"><h3>${date}</h3>`;
+		
+		// Iterate through categories to maintain custom order
+		["Morning", "Noon", "Evening", "Nighttime"].forEach(cat => {
+		  if (groupedData[date][cat].length > 0) {
+			html += `
+			  <div class="time-category">
+				<h4>${cat}</h4>
+				<ul>${groupedData[date][cat].map(msg => `<li>${msg}</li>`).join('')}</ul>
+			  </div>`;
+		  }
+		});
+		html += `</div>`;
+	  });
+
+	  main.innerHTML = html;
+	}
+
+  if (page === "cogwheel") {
+  
+		console.log(player.data.guild_name, player.data.party_A, player.data.party_B)
+		document.getElementById("guildNameInput").value = player.data.guild_name;
+		document.getElementById("partyAInput").value = player.data.party_A;
+		document.getElementById("partyBInput").value = player.data.party_B;
+		document.getElementById("typewriterSelect").value = String(player.data.skip_typewriter);
+
+
+    // Make the button clickable
+    document.getElementById("saveBtn").addEventListener("click", function () {
+
+        // Update the player object
+        player.data.guild_name = document.getElementById("guildNameInput").value;
+        player.data.party_A = document.getElementById("partyAInput").value;
+        player.data.party_B = document.getElementById("partyBInput").value;
+		player.data.skip_typewriter = document.getElementById("typewriterSelect").value === "true";
+
+
+        // Save to IndexedDB (if you want)
+        
+        storage.savePlayer(player);	//debug
+
+        // Show the "Saved!" message
+        const status = document.getElementById("saveStatus");
+        status.textContent = "Saved!";
+
+        // Optional: fade it out after 2 seconds
+        setTimeout(() => status.textContent = "", 2000);
+    });
+
 
   }
 }
@@ -417,20 +539,26 @@ function getStartSceneId(prefix) {
 		// add a marker on the map
 		// set player.missions.green_1 = 2
 	//}
-
 async function loadMissionPage() {
     console.log("we called loadMissionPage");
 
     // 1. Ensure mission structure exists
     if (!player.missions) player.missions = {};
-    //if (!player.missions.current_mission) player.missions.current_mission = "green1";
 
+    // 2. Insert the missions page HTML FIRST
     const main = document.getElementById("mainWindow");
     main.innerHTML = pages.missions;
-    const listContainer = document.getElementById("dynamic-mission-list");
 
-    // 2. Build dropdown
+    // 3. NOW your <p id="missions_lineX"> elements exist
+    // Fill them with player.data
+    document.getElementById("missions_line1").textContent = player.data.guild_name;
+    document.getElementById("missions_line2").textContent = player.data.party_A;
+    document.getElementById("missions_line3").textContent = player.data.party_B;
+
+    // 4. Build mission dropdown
+    const listContainer = document.getElementById("dynamic-mission-list");
     const missionOptions = [{ id: "green", label: "Green Mission" }];
+
     let dropdownHTML = `<select id="mission-select">`;
     missionOptions.forEach(m => {
         const selected = (player.missions.current_mission === m.id) ? "selected" : "";
@@ -438,50 +566,34 @@ async function loadMissionPage() {
     });
     dropdownHTML += `</select>`;
 
-    // 3. Build buttons WITHOUT inline 'onclick'
+    // 5. No buttons yet
     let buttonsHTML = "";
 
-    // 4. Inject into DOM
+    // 6. Inject dropdown + buttons
     listContainer.innerHTML = dropdownHTML + buttonsHTML;
 
-    // 5. Attach the SINGLE event listener for all buttons inside this container
-    listContainer.addEventListener("click", (e) => {
-        // Check if the clicked item is actually one of our buttons
-        if (e.target.classList.contains("mission-selection-button")) {
-            
-            // THE GATEKEEPER: Disable logic
-            if (!player.missions.current_mission) {
-                console.log("Action blocked: No active mission set.");
-                return; // Stop here
-            }
-
-            const missionId = e.target.getAttribute("data-mission");
-            console.log("Mission button clicked, starting:", missionId);
-            startMission(missionId);
-        }
-    });
-
-    // 6. Existing dropdown listener
+    // 7. Attach dropdown listener
     document.getElementById("mission-select").addEventListener("change", async (e) => {
         player.missions.current_mission = e.target.value;
         await storage.savePlayer(player);
         console.log("Current mission set to:", e.target.value);
     });
-	
-	const btn = document.getElementById("tutorial-button");
-		if (btn) {
-			btn.style.display = "block";
-			console.log("mission-button:", player.data.tutor,"TESTING LIVE");
-			// Replace btn.onclick = ... with this:
-			btn.addEventListener('click', function () {
-				if (!player.missions.current_mission) {
-					console.log(`mission button clicked, but current_mission is: ${player.missions.current_mission}`);
-					return;
-				}
-				console.log("mission button clicked");
-				startMission();
-			});
-		}
+
+    // 8. Mission start button
+    const btn = document.getElementById("tutorial-button");
+    if (btn) {
+        btn.style.display = "block";
+        console.log("mission-button:", player.data.tutor, "TESTING LIVE");
+
+        btn.addEventListener('click', function () {
+            if (!player.missions.current_mission) {
+                console.log(`mission button clicked, but current_mission is: ${player.missions.current_mission}`);
+                return;
+            }
+            console.log("mission button clicked");
+            startMission();
+        });
+    }
 }
 
 function hideRightMenu() {
@@ -703,15 +815,52 @@ function setTutorialChoices(choices) {
         container.appendChild(btn);
     });
 }
+/*
+1. The Data Mergers
+These functions handle "Hydration"—the process of combining permanent lore with player-specific progress.
+
+getFullPatronData(id): A basic helper that merges the static lore with player progress using the spread operator (...). It provides the most raw, combined version of an object.
+
+getPatronView(advId): Designed specifically for the UI layer. In addition to merging data, it adds a calculated field (isContractExpired). This keeps your logic clean by calculating UI states (like whether a button should be disabled) right when you need to display the data.
+
+getHydratedAdventurer(advId): Your "Master" function. It includes fallback safety (using the || operator). If an ID is missing, it returns safe defaults (like "Unknown") instead of crashing the game, which is crucial for preventing bugs when loading save files.
+
+2. The State Factory
+createDefaultPatronState(): This is a factory function. It defines the "schema" for a new patron. By centralizing this, you ensure that every time a player recruits someone, the character has all required fields (like status or contract_expiry) initialized properly, preventing undefined errors elsewhere.
+
+3. The Mutator
+recruitAdventurer(advId): This is an async workflow function that performs a guarded write.
+
+It fetches the current state.
+
+It performs a safety check (preventing accidental duplicate recruitment).
+
+It uses the Factory (createDefaultPatronState) to initialize the new record.
+
+It persists the change to your database (IDB).
+
+Conceptual Summary
+To visualize how these functions interact, think of your game data as two separate layers:
+
+The Bottom Layer (Static): Constants (Name, base class, flavor text) that never change.
+
+The Middle Layer (Dynamic): Variables (Status, expiry time, current health) that change based on gameplay.
+
+The Top Layer (Hydrated Object): The result produced by your functions, providing a complete "current state" for your game logic to act upon.
+
+Key takeaway: This architecture makes your game much easier to maintain. If you want to add a new property to all adventurers (like "Energy Level"), you only have to update your createDefaultPatronState() and the UI logic, rather than modifying every single existing save file.
+*/
+
+
 
 function getFullPatronData(id) {
-    const staticAdvData = loreData.adventurers[id];
+    const staticAdvData = loreData.Adventurer[id];
     const playerAdvData = player.patrons[id];
     return { ...staticAdvData, ...playerAdvData };
 }
 
 function getPatronView(advId) {
-    const lore = loreData.adventurers[advId];
+    const lore = loreData.Adventurer[advId];
     const state = player.patrons[advId];
 
     if (!state) return null; // Patron not recruited yet
@@ -726,7 +875,7 @@ function getPatronView(advId) {
 
 // This is your master "hydration" function
 function getHydratedAdventurer(advId) {
-    const staticLore = loreData.adventurers[advId] || { name: "Unknown", class: "Commoner" };
+    const staticLore = loreData.Adventurer[advId] || { name: "Unknown", class: "Commoner" };
     const playerState = player.patrons[advId] || { status: "unrecruited" };
 
     // This creates a single object merging both
@@ -741,15 +890,15 @@ function createDefaultPatronState() {
 	//createDefaultPatronState() acts as a factory function. Its purpose is to guarantee that every new adventurer added to your save file starts with the exact same baseline of properties, preventing "undefined" errors later in your code when you try to access things like status or loyalty.
     return {
         status: "idle",
-        contract_expiry: Date.now() + 86400000,
-        custom_terms: null // This field doesn't exist in lore.json, and that's okay!
+        //contract_expiry: Date.now() + 86400000,
+        //custom_terms: null // This field doesn't exist in lore.json, and that's okay!
     };
 }
 
 async function recruitAdventurer(advId) {
     // 1. Get the latest player state from your storage
     // (Assuming you have a function to get player data)
-    let player = await storage.getPlayer(); 
+    //let player = await storage.getPlayer(); 
 
     // 2. Safety check: Prevent overwriting if already recruited
     if (player.patrons[advId]) {
@@ -766,6 +915,49 @@ async function recruitAdventurer(advId) {
     console.log(`Adventurer ${advId} recruited successfully!`);
 }
 
+const Journal = {
+    entries: [],
+
+    addEntry(text) {
+        const timestamp = new Date().toLocaleString();
+        this.entries.push(`[${timestamp}] ${text}`);
+    },
+
+    getJournalPage() {
+        return {
+            id: "journal",
+            title: "Journal",
+            content: this.entries.join("\n\n"),
+            scrollable: true
+        };
+    },
+	renderJournal() {
+    return {
+        id: "journal",
+        title: "Journal",
+        content: `
+          <div id="journal-container">
+            <img id="contract_parchment" src="assets/guild/contract_parchment.png" />
+            <div id="journal-text">
+              ${this.entries.join("<br><br>")}
+            </div>
+          </div>
+        `
+    };
+}
+};
+
+
+
+// Journal.addEntry("You discovered a hidden cave.");
+// Journal.addEntry("A strange whisper echoes behind you.");
+
+function getTimeCategory(hour) {
+  if (hour >= 5 && hour < 12) return "Morning";
+  if (hour >= 12 && hour < 17) return "Noon";
+  if (hour >= 17 && hour < 21) return "Evening";
+  return "Nighttime";
+}
 
 function scaleApp() {
   const frame = document.querySelector('.app-frame');

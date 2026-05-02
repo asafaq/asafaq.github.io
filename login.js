@@ -1,5 +1,5 @@
 // Toggle: true = show login screen, false = skip login entirely
-const ENABLE_LOGIN = false;
+const ENABLE_LOGIN = true;
 function initLoginSystem() {
     if (!ENABLE_LOGIN) {
         console.log("LOGIN DISABLED — Auto‑loading player 1");
