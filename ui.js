@@ -96,9 +96,7 @@ const pages = {
 	tavern: `
       <div id="tavern-container">
         <img id="contract_parchment" src="assets/guild/tavern.png" />
-		<p style="margin: 40px; color: black;">Welcome to the Tavern! W.I.P<br>
-		this is the room to find new adventurers looking for a contract, and where your past adventurers will wait and tell all their tales and exploits while soaking their sorrows and trauma in ales.<br>
-		please return after completing the tutorial.</p>
+		<p style="margin: 40px; color: black;"></p>
 		<div id="patron-container"></div>
 		</div>
 		  `,
@@ -159,6 +157,11 @@ const pages = {
 		<div id="dynamic-mission-list"></div>
 		<button id="mission-start-button" class="tutorial-button">Start Mission</button>
 		<div id="current-mission-display" class="mission-displaymission-display">No mission selected.</div>
+		<button id="start-mission-A" onclick="startMission('party_A')">Start Mission (Party A)</button>
+
+		<button id="continue-mission-A" onclick="continueMission('party_A')" style="display:none;">
+			Continue Mission (<span id="continue-party-A-name"></span>)
+		</button>
 		`,
 	journal: `
       <div id="journal-container">
@@ -167,14 +170,22 @@ const pages = {
 		</div>
 		`,
 	mail: `
-      <div id="mail-container">
-        <img id="contract_parchment" src="assets/guild/contract_parchment.png" />
-		<p style="margin: 40px; color: black;">Welcome to the guild contracts.<br>
-		this is W.I.P<br>
-		please return after completing the<br>
-		tutorial.</p>
+		<div id="mailbox-page">
+			<h2>Mailbox</h2>
+			<div id="mailbox-list"></div>
 		</div>
-		`,
+
+		<div id="mail-dialog" class="hidden">
+			<div id="mail-dialog-content">
+				<h2 id="mail-title"></h2>
+				<p id="mail-body"></p>
+				<button id="mail-image-btn" class="hidden">View Image</button>
+				<button id="mail-close-btn">Close</button>
+			</div>
+		</div>
+
+	`,
+
 	mission_green_1: `
 	<div id="mission-container" style="position: relative;">
 		<img id="fantasy map" src="assets/missions/fantasy_map_s.png" />
@@ -268,6 +279,43 @@ function renderPatronInventory() {
   partyBContainer.innerHTML = renderGroup(4);
 }
 
+function showTemporaryImage(src) {
+	// showTemporaryImage("assets/myImage.png");
+
+    // Create overlay container
+    const overlay = document.createElement("div");
+    overlay.style.position = "fixed";
+    overlay.style.top = 0;
+    overlay.style.left = 0;
+    overlay.style.width = "100vw";
+    overlay.style.height = "100vh";
+    overlay.style.display = "flex";
+    overlay.style.alignItems = "center";
+    overlay.style.justifyContent = "center";
+    overlay.style.background = "rgba(0,0,0,0.5)";
+    overlay.style.zIndex = 9999;
+
+    // Create the image
+    const img = document.createElement("img");
+    img.src = src;
+    img.style.maxWidth = "90%";
+    img.style.maxHeight = "90%";
+    img.style.cursor = "pointer";
+
+    overlay.appendChild(img);
+    document.body.appendChild(overlay);
+
+    // Remove overlay on next click anywhere
+    const removeOverlay = () => {
+        overlay.remove();
+        document.removeEventListener("click", removeOverlay);
+    };
+
+    // Delay binding so the initial click that triggered the function doesn't close it instantly
+    setTimeout(() => {
+        document.addEventListener("click", removeOverlay, { once: true });
+    }, 50);
+}
 
 // 1. Define your patron data in an array. 
 // You can easily add up to 12 objects here.
@@ -419,6 +467,88 @@ async function loadPage(page) {
 
 
   }
+
+  if (page === "mail") {
+	renderMailboxPage();
+  }
+}
+
+
+function renderMailboxPage() {
+    const list = document.getElementById("mailbox-list");
+    list.innerHTML = ""; // clear previous list
+
+    const mailbox = player.mailbox || [];
+
+    mailbox.forEach(mail => {
+        const item = renderMailItem(mail);
+        list.appendChild(item);
+    });
+}
+
+
+function renderMailItem(mail) {
+    const row = document.createElement("div");
+    row.className = "mail-item";
+
+    const header = document.createElement("div");
+    header.className = "mail-header";
+    header.textContent = `${mail.from} — ${mail.subject}`;
+    row.appendChild(header);
+
+    const preview = document.createElement("div");
+    preview.className = "mail-preview";
+    preview.textContent = mail.body.slice(0, 60) + "...";
+    row.appendChild(preview);
+
+    // View button
+    const viewBtn = document.createElement("button");
+    viewBtn.textContent = "View";
+    viewBtn.onclick = () => openMailDialog(mail);
+    row.appendChild(viewBtn);
+
+    // Image button (only if exists)
+    if (mail.image) {
+        const imgBtn = document.createElement("button");
+        imgBtn.textContent = "Image";
+        imgBtn.onclick = () => showTemporaryImage(mail.image);
+        row.appendChild(imgBtn);
+    }
+
+    return row;
+}
+
+function openMailDialog(mail) {
+    const dialog = document.getElementById("mail-dialog");
+    const title = document.getElementById("mail-title");
+    const body = document.getElementById("mail-body");
+    const imgBtn = document.getElementById("mail-image-btn");
+    const closeBtn = document.getElementById("mail-close-btn");
+
+    title.textContent = mail.subject;
+    body.textContent = mail.body;
+
+    // If mail has an image, show the button
+    if (mail.image) {
+        imgBtn.classList.remove("hidden");
+        imgBtn.onclick = () => showTemporaryImage(mail.image);
+    } else {
+        imgBtn.classList.add("hidden");
+    }
+
+    // Close dialog
+    closeBtn.onclick = () => {
+        dialog.classList.add("hidden");
+    };
+
+    dialog.classList.remove("hidden");
+}
+
+function addMail(mail) {
+	// correct for this system apparently
+    if (!player.mailbox) player.mailbox = [];
+    player.mailbox.push(mail);
+    return storage.savePlayer(player);
 }
 
 function showTutorialButton() {
@@ -453,8 +583,22 @@ function showTutorialButton() {
     }
 	}
 
-function startMission() {
-    hideRightMenu();
+const missionLabels = {
+	green_1: "Tutorial in the Green Pastures",
+};
+
+async function startMission(partyKey) {
+    // If this party is already on a mission → resume
+    if (player.missions.current_mission.active &&
+        player.missions.current_mission.party === partyKey) {
+
+        continueMission(partyKey);
+        return;
+    }
+
+    // Otherwise → normal start mission flow
+    // (your confirmation window, locking, etc.)
+
 
     // Tutorial block
     if (player.data.tutor === 0) {
@@ -499,19 +643,117 @@ function startMission() {
     }
 
     //console.log("Starting mission:", missionId, "with party:", party);
+	// Determine which mission page should load
+	let missionPage = null;
 
-    if (party === player.data.party_A) player.data.party_A_locked = true;
-    if (party === player.data.party_B) player.data.party_B_locked = true;
+	if (missionId.startsWith("green_1")) missionPage = "mission_green_1";
+	if (missionId.startsWith("green_2")) missionPage = "mission_green_2";
 
-    storage.savePlayer(player);
+	// If no mission page exists → block and DO NOT lock
+	if (!missionPage || !pageExists(missionPage)) {
+		showMessage("This mission is not implemented yet.");
+		return;
+	}
+	
+	//const partyKey = player.missions.current_mission.party;
 
-    if (missionId.startsWith("green")) {
-        loadPage("mission_green_1");
-        return;
-    }
+    // --- NEW: Confirmation window ---
+	//const missionId = player.missions.current_mission.id;
+	const missionLongName = missionLabels[missionId] || "Unknown Mission";
+    const partyName = player.data[partyKey];
+    //const missionLongName = missions[missionId].longName;
+
+    showConfirm(
+        `${partyName} is about to embark on "${missionLongName}".<br><br>` +
+        `They cannot be modified until they return.<br><br>` +
+        `Continue?`,
+        () => {
+			// Hardcoded patron placement for now DEBUG in the future this will be made integral.
+			player.patrons.adv_Bragain.location = 3;
+			player.patrons.adv_Hogperson.location = 3;
+			
+            // YES → lock party and start mission
+            player.data[partyKey + "_locked"] = true;
+			
+			  // NEW: Save mission state
+			player.missions.current_mission.active = true;
+			player.missions.current_mission.page = missionPage;
+			
+            storage.savePlayer(player);
+			
+			hideRightMenu();
+            loadPage(missionPage);
+        },
+        () => {
+            // NO → do nothing
+        }
+    );
+	// If mission page exists → lock party
+	//player.data[partyKey + "_locked"] = true;
+	// await storage.savePlayer(player);
+
+	// Load mission
+	
+    // hideRightMenu();
+	// loadPage(missionPage);
+
 
     showMessage("Mission type not implemented yet.");
 }
+
+function continueMission(partyKey) {
+	
+	updateContinueButton(partyKey)
+    // Only continue if THIS party is the one on a mission
+    if (!player.missions.current_mission.active ||
+        player.missions.current_mission.party !== partyKey) {
+        return;
+    }
+
+    hideRightMenu();
+    loadPage(player.missions.current_mission.page);
+}
+
+
+
+function showConfirm(message, onYes, onNo) {
+    const dialog = document.getElementById("confirm-dialog");
+    const text = document.getElementById("confirm-text");
+    const yesBtn = document.getElementById("confirm-yes");
+    const noBtn = document.getElementById("confirm-no");
+
+    text.innerHTML = message;
+
+    yesBtn.onclick = () => {
+        dialog.classList.add("hidden");
+        onYes();
+    };
+
+    noBtn.onclick = () => {
+        dialog.classList.add("hidden");
+        if (onNo) onNo();
+    };
+
+    dialog.classList.remove("hidden");
+}
+
+
+function pageExists(pageName) {
+    return !!pages[pageName]; // or whatever your page registry is called
+}
+
+
+function setPartyLock(isLocked) {
+	
+	// setPartyLock(true);  // when mission starts
+	// setPartyLock(false); // when mission ends
+
+	
+    const partyKey = player.missions.current_mission.party;
+    player.data[partyKey + "_locked"] = isLocked;
+    return storage.savePlayer(player);
+}
+
 
 function runMission(missionId) {
     console.log("Running mission:", missionId);
@@ -547,41 +789,6 @@ function getStartSceneId(c_mission) {
     return `green1_${suffix}`;
 }
 
-
-
-	
-	//logic that progress the missions.
-	//introduce mission tracker.
-	//player.missions.current_mission = {green1}
-	//let currentMission = player.missions.current_mission;
-	
-	//startMissionSystem('green1_001');
-
-	//if currentMission is green1 run	//startMissionSystem('green1_001');
-	//if currentMission === green_1 {
-		//check player.missions.green_1 {which stage}
-		// stage1 load player.missions.green_1{1}
-		
-		// now the player has clicked the path first time in first missions.
-		// cut and preset the last text part of the tutorial steps 8-13
-		// add a marker on the map
-		// set player.missions.green_1 = 2
-	//}
-
-// player.missions = {
-    // current_mission: {
-        // id: null,       // or "green_1"
-        // party: null     // or "Party A"
-    // },
-
-    // green_1: 7,         // mission progress
-    // future missions...
-	
-// player.data.party_A_locked = true;
-// player.data.party_A_locked = true;
-// player.data.party_B_locked = false;
-// };
-
 async function loadMissionPage() {
     console.log("Loading Mission Page");
 
@@ -602,10 +809,6 @@ async function loadMissionPage() {
 
     // Build mission dropdown
     const listContainer = document.getElementById("dynamic-mission-list");
-
-    const missionLabels = {
-        green_1: "Tutorial in the Green Pastures",
-    };
 
 	let missionHTML = `
 		<label>Choose Mission:</label>
@@ -681,7 +884,42 @@ async function loadMissionPage() {
             startMission();
         });
     }
+	const startA = document.getElementById("start-mission-A");
+	// continue button
+	const contA = document.getElementById("continue-mission-A");
+
+	if (player.missions.current_mission.active && 
+		player.missions.current_mission.party === "party_A") {
+
+		startA.style.display = "none";
+		contA.style.display = "block";
+
+	} else {
+		startA.style.display = "block";
+		contA.style.display = "none";
+	}
+
 }
+
+function updateContinueButton(partyKey) {
+	
+	// updateContinueButton("party_A");
+	// updateContinueButton("party_B");
+
+    const btn = document.getElementById(`continue-mission-${partyKey}`);
+    const nameSpan = document.getElementById(`continue-party-${partyKey}-name`);
+
+    if (player.missions.current_mission.active &&
+        player.missions.current_mission.party === partyKey) {
+
+        btn.style.display = "block";
+        nameSpan.textContent = player.data[partyKey];
+
+    } else {
+        btn.style.display = "none";
+    }
+}
+
 
 function updateMissionDisplay() {
     const missionDisplay = document.getElementById("current-mission-display");

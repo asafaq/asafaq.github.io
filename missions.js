@@ -393,18 +393,36 @@ async function handleMissionEnd(sceneId) {
 		player.patrons.adv_Bragain.location = 1;
 		player.patrons.adv_Claudio.location = 2;
 		player.patrons.adv_Hogperson.location = 1;
+		player.missions.current_mission.active = false;
+		player.missions.current_mission.page = null;
+		player.data[partyKey + "_locked"] = false;
 		loadPage("tavern")
 		Journal.addEntry("You've found 50 silver coins and returned to the guild.")
+		//ending mission so releasing the party lock
+		setPartyLock(false)
 		nextPage = "guild"
 	}
     if (sceneId === "tutor2_118END") {
+		await addMail({
+			id: crypto.randomUUID(),
+			from: "Hogmother",
+			subject: "Dad update",
+			body: "My Dear Hoggy!\n\nYour father has gone missing! He went out to work and never came back.\n\nI'll be travelling to the Township Tavern to gather information and post a missing fliar hoping to recruit investigators to try and find him.\n\nI wish you the best my precious Hoggy\nI'm so proud of you!\nLove and kisses\nHogmother XOXO",
+			timestamp: Date.now(),
+			image: "assets/missions/hogmother_letter.jpg"
+			});
 		player = await storage.loadPlayer(player.id);
+		
         console.log("Logic for Tutorial 2 completion!");
         player.missions.tutorial = 2; 
         player.missions.green_1 = 7;
+        player.missions.green_2 ??= 0; // 0 means the mail arrived.
 		player.patrons.adv_Amyssa.status = "idle";
+
         // Add your logic to add Amyssa, deduct money, etc. here
 		Journal.addEntry("You've recruited Amyssa to sign a 25 silver coins contract.")
+
+		
 		nextPage = "tavern"
     } 
     

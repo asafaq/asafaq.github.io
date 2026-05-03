@@ -1016,7 +1016,7 @@
     "side": "right",
     "dialog": "Amyssa has added 2 new spell scrolls to the Guild Stash, you may now click the stash and supply your adventurers with the new items (When implemented..), however you like.",
     "interaction_type": "next",
-    "target_id": "tutor2_118",
+    "target_id": "tutor2_119",
     "options": []
   },
   {
@@ -1034,7 +1034,7 @@
     "speaker": "Narrator",
     "portrait": "",
     "side": "Left",
-    "dialog": "END OF Tutorial\n\nThank you for playing this far!\nMore info can be read in the Tome of Lore (When implemented..)",
+    "dialog": "",
     "interaction_type": "next",
     "target_id": "END",
     "options": []
@@ -1067,5 +1067,32 @@
     "dialog": "",
     "interaction_type": "next",
     "target_id": "END"
+  },
+  {
+    "id": "tutor2_119",
+    "speaker": "Guild Master",
+    "portrait": "/assets/guild/guild_master.png",
+    "side": "left",
+    "dialog": "Oooooooooooh!!\n\nI've almost forgot!",
+    "interaction_type": "next",
+    "target_id": "tutor2_120"
+  },
+  {
+    "id": "tutor2_120",
+    "speaker": "Guild Master",
+    "portrait": "/assets/guild/guild_master.png",
+    "side": "left",
+    "dialog": "A mail peagon have brought this letter while you were away.\nThis letter is adressed to you Hogperson.",
+    "interaction_type": "next",
+    "target_id": "tutor2_121"
+  },
+  {
+    "id": "tutor2_121",
+    "speaker": "Hogperson",
+    "portrait": "/assets/patrons/hogperson.png",
+    "side": "right",
+    "dialog": "To me..?\n\nWell let's see...",
+    "interaction_type": "next",
+    "target_id": "tutor2_118"
   }
 ]

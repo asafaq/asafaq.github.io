@@ -26,6 +26,16 @@
     <script src="database.js"></script>
 	
 <div class="app-frame" id="app-frame">
+        <!-- ✅ GLOBAL CONFIRM DIALOG (always present, never overwritten) -->
+        <div id="confirm-dialog" class="confirm hidden">
+            <div class="confirm-box">
+                <div id="confirm-text"></div>
+                <div class="confirm-buttons">
+                    <button id="confirm-yes">Yes</button>
+                    <button id="confirm-no">No</button>
+                </div>
+            </div>
+        </div>
   <div id="window-container"></div>
   <div class="status-bar">Status Line</div>
 
