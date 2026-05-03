@@ -404,7 +404,7 @@ img:not([src]) {
   margin: 10px 0;
 }
 
-.tutorial-button {
+.tutorial-button .mission-start-button {
   position: absolute;
   top: 520px;
   right: 80px;
@@ -417,6 +417,28 @@ img:not([src]) {
   display: none; /* hidden by default */
   z-index: 20;
 }
+.current-mission-display {
+  position: absolute;
+  top: 560px;
+  right: 80px;
+  padding: 10px 16px;
+  background: #4a90e2;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  display: none; /* hidden by default */
+  z-index: 20;
+}
+.mission-display {
+    margin-top: 10px;
+    padding: 8px 12px;
+    background: #222;
+    color: #9fdf9f;
+    border-left: 4px solid #4caf50;
+    font-weight: bold;
+}
+
 
 #dynamic-mission-list {
   position: absolute;

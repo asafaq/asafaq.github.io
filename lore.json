@@ -292,7 +292,7 @@
       "inventory2_lock": false,
       "inventory3_lock": false,
       "inventory4_lock": false,
-      "trait": ["Divine", "Holy Aura"],
+      "trait": ["Divine", "Holy Aura", "Eternal"],
       "Divine_comment": "Has (10*Lvl) Radiant points to spend as Smite or Heal.",
       "Holy Aura_comment": "party has +1 hit and Save rolls.",
       "notes": "The premium Pay2Win character."
@@ -361,7 +361,7 @@
       "trait": "Cheerful",
       "trait1_comment": "Party members have moral +1."
     },
-    "adv_Tinman B-B-TR": {
+    "adv_Tinman BB-TR": {
       "name": "Tinman B-B-TR",
       "race": "Warforged",
       "role": "Clericbot",
@@ -533,6 +533,7 @@
     "Holy Aura": {
       "desc": "party has +1 hit and Save rolls."
     },
+    "Eternal": {"desc": "If this patron happens to die, their body will disappear and be Restored completely in their home realm, and return the next day."},
     "Stubborn": {
       "desc": "Gain +1 Endurace, -1 Charisma"
     },

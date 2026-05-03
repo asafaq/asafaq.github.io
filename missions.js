@@ -197,7 +197,7 @@ async function renderScene(sceneId) {
         <div class="m-text-area">
             ${scene.speaker ? `<div class="m-speaker-name">${scene.speaker}</div>` : ''}
             <div id="m-typewriter-container"></div>
-            <div id="m-frustration-display" style="color: darkred; margin-top: 10px; font-style: italic;"></div>
+            <div id="m-frustration-display" style="color: PaleTurquoise; margin-top: 10px; font-style: italic;"></div>
         </div>
     `;
 
@@ -306,16 +306,20 @@ async function startMissionSystem(specificSceneId = null) {
 async function handleMissionEnd(sceneId) {
     console.log("Mission finished. Processing rewards and cleanup...");
     console.log(`Ending triggered by scene: ${sceneId}`);
+	nextPage = {}
 
     // 1. Reward Logic
     if (sceneId === "tutor1_110") {
 		player = await storage.loadPlayer(player.id);
         console.log("Logic for Tutorial 1 completion!");
-        player.data.tutor = 1;
+        player.missions.tutorial = 1;
 		
 		if (!player.missions) player.missions = {};
-		if (!player.missions.current_mission) player.missions.current_mission = "green1";
-
+		//if (!player.missions.current_mission) player.missions.current_mission = "green1";
+		if (!player.missions.current_mission) player.missions.current_mission = {};
+		if (!player.missions.current_mission.id) player.missions.current_mission.id = {};
+		if (!player.missions.current_mission.party) player.missions.current_mission.party = {};
+			
         player.missions.green_1 = 1;
 		recruitAdventurer("adv_Hogperson")
 		recruitAdventurer("adv_Bragain")
@@ -332,73 +336,76 @@ async function handleMissionEnd(sceneId) {
 		Journal.addEntry("You've purchase yourself a Tavern.")
 		Journal.addEntry("You've signed a contract with the government and recieved your Adventurers' Guild Licence.")
 		Journal.addEntry("You've recruited Hogperson, Bragain and Claudio.")
-		player.journal = { entries: Journal.entries };
-		loadPage("mission_green_1")
+		nextPage = "missions"
     } 
   
     if (sceneId === "green1_008END") {
 		player = await storage.loadPlayer(player.id);
 		player.missions.green_1 = 2;
-		player.missions.current_mission = "green2"
+		//player.missions.current_mission.id = "green2"
 		loadPage("mission_green_1")
 		player.patrons.adv_Bragain.location = 3;
 		player.patrons.adv_Hogperson.location = 3;
 		player.patrons.adv_Claudio.location = 0;
 		Journal.addEntry("You've agreed to head towards a stash of coins.")
 		
-		player.journal = { entries: Journal.entries };
+		
+		nextPage = "mission_green_1"
 	}
   
     if (sceneId === "green1_019END") {
 		player = await storage.loadPlayer(player.id);
 		player.missions.green_1 = 3;
-		player.missions.current_mission = "green3"
+		//player.missions.current_mission.id = "green3"
 		loadPage("mission_green_1")
 		Journal.addEntry("In the nearby green pastures, you've smashed a rock to bits.")
-		player.journal = { entries: Journal.entries };
+		
+		nextPage = "mission_green_1"
 	}
   
     if (sceneId === "green1_025END") {
 		player = await storage.loadPlayer(player.id);
 		player.missions.green_1 = 4;
-		player.missions.current_mission = "green4"
+		//player.missions.current_mission.id = "green4"
 		loadPage("mission_green_1")
 		Journal.addEntry("You've cheered up a wandering traveler.")
-		player.journal = { entries: Journal.entries };
+		
+		nextPage = "mission_green_1"
 	}
   
     if (sceneId === "green1_048END") {
 		player = await storage.loadPlayer(player.id);
 		player.missions.green_1 = 5;
-		player.missions.current_mission = "green5";
+		//player.missions.current_mission.id = "green5";
 		//recruitAdventurer("adv_Claudio")
 		player.patrons.adv_Claudio.location = 3;
 		loadPage("mission_green_1")
 		Journal.addEntry("You've successfully demoralized a band of Koboldogs.")
 		Journal.addEntry("You've saved Claudio from a cage.")
-		player.journal = { entries: Journal.entries };
+		nextPage = "mission_green_1"
 	}
   
     if (sceneId === "green1_056END") {
+		
 		player = await storage.loadPlayer(player.id);
 		player.missions.green_1 = 6;
-		player.missions.current_mission = null
+		player.missions.current_mission.id = null
 		player.patrons.adv_Bragain.location = 1;
 		player.patrons.adv_Claudio.location = 2;
 		player.patrons.adv_Hogperson.location = 1;
 		loadPage("tavern")
 		Journal.addEntry("You've found 50 silver coins and returned to the guild.")
-		player.journal = { entries: Journal.entries };
+		nextPage = "guild"
 	}
     if (sceneId === "tutor2_118END") {
 		player = await storage.loadPlayer(player.id);
         console.log("Logic for Tutorial 2 completion!");
-        player.data.tutor = 2; 
+        player.missions.tutorial = 2; 
         player.missions.green_1 = 7;
 		player.patrons.adv_Amyssa.status = "idle";
         // Add your logic to add Amyssa, deduct money, etc. here
 		Journal.addEntry("You've recruited Amyssa to sign a 25 silver coins contract.")
-		player.journal = { entries: Journal.entries };
+		nextPage = "tavern"
     } 
     
     // 2. Save Player Data
@@ -416,7 +423,6 @@ async function handleMissionEnd(sceneId) {
     const viewport = document.getElementById('m-viewport');
     if (viewport) viewport.style.display = 'none';
     
-    if (typeof loadMissionPage === "function") {
-        loadMissionPage(); 
-    }
-}
+	loadPage(nextPage);
+	}
+

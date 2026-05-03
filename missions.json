@@ -632,7 +632,7 @@
     "speaker": "INTRODUCTION",
     "portrait": "/assets/patrons/Claudio.png",
     "side": "right",
-    "dialog": "Claudio is a lover, not a fighter, while he can participate in combat, his proficiencies lay in his performal talents.",
+    "dialog": "Claudio is a lover, not a fighter, while he can participate in combat, his proficiencies lie in his performal talents.",
     "interaction_type": "next",
     "target_id": "green1_042",
     "options": []
@@ -1012,8 +1012,8 @@
   {
     "id": "tutor2_117",
     "speaker": "Narrator",
-    "portrait": "",
-    "side": "Left",
+    "portrait": "/assets/guild/scroll.png",
+    "side": "right",
     "dialog": "Amyssa has added 2 new spell scrolls to the Guild Stash, you may now click the stash and supply your adventurers with the new items (When implemented..), however you like.",
     "interaction_type": "next",
     "target_id": "tutor2_118",
@@ -1038,5 +1038,34 @@
     "interaction_type": "next",
     "target_id": "END",
     "options": []
+  },
+    {
+    "id": "tutor1_000",
+    "speaker": "Tutorial Narrator",
+    "portrait": "",
+    "side": "Left",
+    "dialog": "Are you ready to start the Tutorial? This is going to take about 5-6 minutes of dialog, but there will be many points to stop in between while the progress autosaves.",
+    "interaction_type": "selection",
+    "options": [
+      {
+        "text": "Begin Tutorial.",
+        "target_id": "tutor1_101",
+        "condition": null
+      },
+      {
+        "text": "Go back.",
+        "target_id": "tutor1_000end",
+        "condition": null
+      }
+    ]
+  },
+    {
+    "id": "tutor1_000end",
+    "speaker": "Narrator",
+    "portrait": "",
+    "side": "Left",
+    "dialog": "",
+    "interaction_type": "next",
+    "target_id": "END"
   }
 ]

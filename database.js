@@ -113,12 +113,14 @@ async function addNewPlayerData(username, password) {
         },
         data: {
             accountType: 0,
-            tutor: 0,
-            guild_name: "The Adventurers Guild",
-            party_A: "Party A",
-            party_B: "Party B"
+            guild_name: "The 'Adventurers' Guild",
+            party_A: "Merry Patrons",
+            party_B: "Uppity Smarties"
         },
-        patrons: {} // The container for our NPCs/Adventurers
+        patrons: {}, // The container for our NPCs/Adventurers
+		missions: {
+			tutorial : 0
+		}
     };
 
     // 1. Assign Hogperson to the patrons object under the key 'Hogperson'

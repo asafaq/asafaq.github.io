@@ -9,7 +9,7 @@ async function initializeGame() {
     try {
         const response = await fetch('lore.json');
         loreData = await response.json(); // THIS parses the JSON into a real object
-        console.log("Lore loaded successfully!", loreData);
+        console.log("Lore loaded successfully!");
         
         // NOW you can start your game logic
         // recruitAdventurer("warrior_01"); // Example
@@ -74,7 +74,7 @@ const pages = {
 
           <div class="hover-zone"
                data-label="Guild License"
-               data-large="assets/guild/adventurers_licence_50.png">
+               data-large="assets/guild/adventurers_license_50.png">
           </div>
 
           <div class="tooltip"></div>
@@ -157,8 +157,8 @@ const pages = {
 		</div>
 		<!-- This is where our dynamic buttons will be injected -->
 		<div id="dynamic-mission-list"></div>
-
-		<button id="tutorial-button" class="tutorial-button">Start Mission</button>
+		<button id="mission-start-button" class="tutorial-button">Start Mission</button>
+		<div id="current-mission-display" class="mission-displaymission-display">No mission selected.</div>
 		`,
 	journal: `
       <div id="journal-container">
@@ -186,7 +186,7 @@ const pages = {
 				  stroke="transparent" stroke-width="25" fill="none" 
 				  style="pointer-events: stroke; cursor: pointer;" 
 				  onclick="console.log('Winding path clicked!');
-					runMission(player.missions.current_mission)" />
+					runMission(player.missions.current_mission.id)" />
 			
 			<!-- 2. The Visible Dashed Line -->
 			<path class="marching-path" d="M 140 440 C 300 400, 120 370, 205 315" 
@@ -328,7 +328,7 @@ async function loadPage(page) {
 	loadMissionPage();
     patronList = getVisiblePatrons();
 	renderPatronInventory();
-
+	updateMissionDisplay();
 	// add code to manage patrons placement into party/guild. from "invx-grid"
 	
   }
@@ -434,18 +434,18 @@ function showTutorialButton() {
     // 2. Logic to show and assign action
     refreshedBtn.style.display = "block";
 
-    if (player.data.tutor === 0) {
+    if (player.missions.tutorial === 0) {
         refreshedBtn.innerText = "Start Tutorial";
         refreshedBtn.addEventListener('click', () => {
             console.log("Starting Tutorial 1");
-            startTutorial();
+            startMissionSystem("tutor1_000");
         });
     } 
-    else if (player.data.tutor === 1 && player.missions.green_1 === 6) {
+    else if (player.missions.tutorial === 1 && player.missions.green_1 === 6) {
         refreshedBtn.innerText = "continue tutorial";
         refreshedBtn.addEventListener('click', () => {
             console.log("Starting Tutorial 2: Recruit Amyssa");
-            startTutorial2();
+            startMissionSystem("tutor2_101");
         });
     } else {
         // Hide if conditions aren't met
@@ -456,7 +456,7 @@ function showTutorialButton() {
 function startMission() {
     hideRightMenu();
 
-    // 1. Tutorial block
+    // Tutorial block
     if (player.data.tutor === 0) {
         const win = document.querySelector(".tutorial-window");
 
@@ -471,54 +471,82 @@ function startMission() {
             ]);
 
             console.log("Mission blocked: Tutorial not complete.");
-            return; // STOP here
+            return;
         }
     }
-    // READ the mission type the player selected
-    const missionType = player.missions.current_mission;   // e.g. "green"
 
-    // For the tutorial, all stages live in mission_green_1
-    // In the future: mission_blue_1, mission_red_1, etc.    
-	// FORCE green missions to always load mission_green_1
-	if (missionType.startsWith("green")) {
-		loadPage("mission_green_1");
-		return;
-	}
+    const missionId = player.missions.current_mission.id;
+    const party = player.missions.current_mission.party;
 
+    if (!missionId) {
+        showMessage("Please select a mission first.");
+        return;
+    }
 
+    if (!party) {
+        showMessage("Please select a party first.");
+        return;
+    }
 
-    // Load the mission shell (map UI, objectives UI, dialog UI)
-	
-	//console.log(missionPage);
-    //loadPage(missionPage);
+    if (party === player.data.party_A && player.data.party_A_locked) {
+        showMessage(`${party} is currently locked and cannot be sent.`);
+        return;
+    }
 
+    if (party === player.data.party_B && player.data.party_B_locked) {
+        showMessage(`${party} is currently locked and cannot be sent.`);
+        return;
+    }
+
+    //console.log("Starting mission:", missionId, "with party:", party);
+
+    if (party === player.data.party_A) player.data.party_A_locked = true;
+    if (party === player.data.party_B) player.data.party_B_locked = true;
+
+    storage.savePlayer(player);
+
+    if (missionId.startsWith("green")) {
+        loadPage("mission_green_1");
+        return;
+    }
+
+    showMessage("Mission type not implemented yet.");
 }
 
-function runMission(current_mission) {
-    // 1. Get the prefix (e.g., 'green1')
-	
-	console.log(current_mission)
-    
-	const startSceneId = getStartSceneId(current_mission)
-    // 2. Combine it with the starting scene suffix
-    //const startSceneId = missionPrefix + "_001"; 
-    
-    console.log("Starting mission scene:", startSceneId); // Will show 'green1_001'
-    
-    // 3. Call the mission system with the new variable
+function runMission(missionId) {
+    console.log("Running mission:", missionId);
+
+    const startSceneId = getStartSceneId(missionId);
+
+    console.log("Starting mission scene:", startSceneId);
+
     startMissionSystem(startSceneId);
-	
 }
 
-function getMissionSuffix(prefix) {
-  const index = Number(prefix.replace("green", ""));
-  return index * 100 + 1; // 101, 201, 301, ...
+function getStartSceneId(c_mission) {
+    // c_mission example: "green_1"
+
+    if (typeof c_mission !== "string") {
+        console.warn("Invalid mission ID:", c_mission);
+        return "green1_101"; // safe fallback
+    }
+
+    // Extract mission key, e.g. "green_1"
+    const missionKey = c_mission;
+
+    // Read mission progress from player data
+    const progress = player.missions[missionKey];
+
+    // If progress is missing or invalid, default to 1
+    const stage = Number(progress) || 1;
+
+    // Convert stage → suffix (1 → 101, 2 → 201, 3 → 301)
+    const suffix = stage * 100 + 1;
+
+    // Build final scene ID
+    return `green1_${suffix}`;
 }
 
-function getStartSceneId(prefix) {
-  const suffix = getMissionSuffix(prefix);
-  return `green1_${suffix}`;
-}
 
 
 	
@@ -539,60 +567,143 @@ function getStartSceneId(prefix) {
 		// add a marker on the map
 		// set player.missions.green_1 = 2
 	//}
+
+// player.missions = {
+    // current_mission: {
+        // id: null,       // or "green_1"
+        // party: null     // or "Party A"
+    // },
+
+    // green_1: 7,         // mission progress
+    // future missions...
+	
+// player.data.party_A_locked = true;
+// player.data.party_A_locked = true;
+// player.data.party_B_locked = false;
+// };
+
 async function loadMissionPage() {
-    console.log("we called loadMissionPage");
+    console.log("Loading Mission Page");
 
-    // 1. Ensure mission structure exists
+    // Ensure mission structure exists
     if (!player.missions) player.missions = {};
+    if (!player.missions.current_mission) {
+        player.missions.current_mission = { id: null, party: null };
+    }
 
-    // 2. Insert the missions page HTML FIRST
+    // Insert missions page HTML
     const main = document.getElementById("mainWindow");
     main.innerHTML = pages.missions;
 
-    // 3. NOW your <p id="missions_lineX"> elements exist
-    // Fill them with player.data
+    // Fill static mission info
     document.getElementById("missions_line1").textContent = player.data.guild_name;
     document.getElementById("missions_line2").textContent = player.data.party_A;
     document.getElementById("missions_line3").textContent = player.data.party_B;
 
-    // 4. Build mission dropdown
+    // Build mission dropdown
     const listContainer = document.getElementById("dynamic-mission-list");
-    const missionOptions = [{ id: "green", label: "Green Mission" }];
 
-    let dropdownHTML = `<select id="mission-select">`;
-    missionOptions.forEach(m => {
-        const selected = (player.missions.current_mission === m.id) ? "selected" : "";
-        dropdownHTML += `<option value="${m.id}" ${selected}>${m.label}</option>`;
-    });
-    dropdownHTML += `</select>`;
+    const missionLabels = {
+        green_1: "Tutorial in the Green Pastures",
+    };
 
-    // 5. No buttons yet
-    let buttonsHTML = "";
+	let missionHTML = `
+		<label>Choose Mission:</label>
+		<select id="mission-select">
+	`;
 
-    // 6. Inject dropdown + buttons
-    listContainer.innerHTML = dropdownHTML + buttonsHTML;
+	Object.keys(player.missions).forEach(key => {
+		if (key === "current_mission") return;
+		if (key === "tutorial") return;
 
-    // 7. Attach dropdown listener
+		// NEW RULE: hide green_1 if completed
+		if (key === "green_1" && player.missions.green_1 > 5) return;
+		
+		const label = missionLabels[key] || key;
+		const selected = (player.missions.current_mission.id === key) ? "selected" : "";
+
+		missionHTML += `<option value="${key}" ${selected}>${label}</option>`;
+	});
+
+	missionHTML += `</select>`;
+
+
+
+    // Build party dropdown
+	let partyHTML = `
+		<label>Select Party:</label>
+		<select id="party-select">
+			<option value="party_A" ${player.data.party_A_locked ? "disabled" : ""}>
+				${player.data.party_A} ${player.data.party_A_locked ? "(Locked)" : ""}
+			</option>
+
+			<option value="party_B" ${player.data.party_B_locked ? "disabled" : ""}>
+				${player.data.party_B} ${player.data.party_B_locked ? "(Locked)" : ""}
+			</option>
+		</select>
+	`;
+
+
+    // Inject dropdowns
+    listContainer.innerHTML = missionHTML + "<br><br>" + partyHTML;
+	// FORCE-SAVE the default party on page load
+	const partySelect = document.getElementById("party-select");
+	player.missions.current_mission.party = partySelect.value;
+	await storage.savePlayer(player);
+
+	// FORCE-SAVE mission ID on page load
+	player.missions.current_mission.id = document.getElementById("mission-select").value;
+	await storage.savePlayer(player);
+    // Update mission display
+    updateMissionDisplay();
+
+    // Mission dropdown listener
     document.getElementById("mission-select").addEventListener("change", async (e) => {
-        player.missions.current_mission = e.target.value;
+        player.missions.current_mission.id = e.target.value;
         await storage.savePlayer(player);
-        console.log("Current mission set to:", e.target.value);
+        updateMissionDisplay();
     });
 
-    // 8. Mission start button
-    const btn = document.getElementById("tutorial-button");
-    if (btn) {
-        btn.style.display = "block";
-        console.log("mission-button:", player.data.tutor, "TESTING LIVE");
+    // Party dropdown listener
+    document.getElementById("party-select").addEventListener("change", async (e) => {
+        player.missions.current_mission.party = e.target.value;
+        await storage.savePlayer(player);
+        updateMissionDisplay();
+    });
 
-        btn.addEventListener('click', function () {
-            if (!player.missions.current_mission) {
-                console.log(`mission button clicked, but current_mission is: ${player.missions.current_mission}`);
-                return;
-            }
-            console.log("mission button clicked");
+    // Mission start button
+    const startBtn = document.getElementById("mission-start-button");
+
+    if (startBtn) {
+        startBtn.style.display = "block";
+
+        startBtn.addEventListener("click", () => {
             startMission();
         });
+    }
+}
+
+function updateMissionDisplay() {
+    const missionDisplay = document.getElementById("current-mission-display");
+    if (!missionDisplay) return;
+
+    const missionLabels = {
+        green_1: "Tutorial in the Green Pastures",
+    };
+
+    const id = player.missions.current_mission.id;
+    const partyKey = player.missions.current_mission.party;
+
+    const partyName =
+        partyKey === "party_A" ? player.data.party_A :
+        partyKey === "party_B" ? player.data.party_B :
+        "None";
+
+    if (!id) {
+        missionDisplay.textContent = "No mission selected.";
+    } else {
+        missionDisplay.textContent =
+            `Current Mission: ${missionLabels[id] || id} (Party: ${partyName})`;
     }
 }
 
@@ -607,7 +718,8 @@ function displayRightMenu() {
 }
 
 function startTutorial() {
-	if (player.data.tutor === 0) {
+	// TODO: Replace with mission-based tutorial system
+	if (player.missions.tutorial === 0) {
 		const win = document.querySelector(".tutorial-window");
 		if (win) {
 			const btn = document.getElementById("tutorial-button");
@@ -649,6 +761,7 @@ function startTutorial() {
 	}
 
 function startTutorial2() {
+	// TODO: Replace with mission-based tutorial system
 	if (player.missions.green_1 === 6) {
 	startMissionSystem("tutor2_101")
 	}
@@ -664,7 +777,7 @@ function closeTutorial() {
         win.classList.remove("active");
 	}
 
-	if (player.data.tutor === 0) {
+	if (player.missions.tutorial === 0) {
 		const btn = document.getElementById("tutorial-button");
 		if (btn) {
 			btn.style.display = "block";}
@@ -780,8 +893,8 @@ async function nextTutorialStep(step) {
 
         case 888:	//update here mission log and change tutor===1, and save game.
             setTutorialText("Tutorial complete!");
-			if (player.data.tutor === 0) {
-				player.data.tutor = 1; // This sets the value to 1 and removes the tutor button    // This creates 'green' inside 'missions'
+			if (player.missions.tutorial === 0) {
+				player.missions.tutorial = 1; // This sets the value to 1 and removes the tutor button    // This creates 'green' inside 'missions'
 				if (!player.missions) {
 					player.missions = {};
 				}
@@ -794,6 +907,18 @@ async function nextTutorialStep(step) {
             ]);
             break;
     }
+}
+
+function showMessage(text) {
+    const status = document.getElementById("status");
+    if (!status) return; // silently fail if missing
+
+    status.textContent = text;
+
+    // Fade out after 2 seconds
+    setTimeout(() => {
+        status.textContent = "";
+    }, 2000);
 }
 
 	
@@ -916,35 +1041,43 @@ async function recruitAdventurer(advId) {
 }
 
 const Journal = {
-    entries: [],
-
     addEntry(text) {
+        // Ensure journal exists
+        if (!player.journal || !Array.isArray(player.journal.entries)) {
+            player.journal = { entries: [] };
+        }
+
+        // Timestamp
         const timestamp = new Date().toLocaleString();
-        this.entries.push(`[${timestamp}] ${text}`);
+        const entry = `[${timestamp}] ${text}`;
+
+        // Append to player's journal
+        player.journal.entries.push(entry);
     },
 
     getJournalPage() {
         return {
             id: "journal",
             title: "Journal",
-            content: this.entries.join("\n\n"),
+            content: player.journal.entries.join("\n\n"),
             scrollable: true
         };
     },
-	renderJournal() {
-    return {
-        id: "journal",
-        title: "Journal",
-        content: `
-          <div id="journal-container">
-            <img id="contract_parchment" src="assets/guild/contract_parchment.png" />
-            <div id="journal-text">
-              ${this.entries.join("<br><br>")}
-            </div>
-          </div>
-        `
-    };
-}
+
+    renderJournal() {
+        return {
+            id: "journal",
+            title: "Journal",
+            content: `
+                <div id="journal-container">
+                    <img id="contract_parchment" src="assets/guild/contract_parchment.png" />
+                    <div id="journal-text">
+                        ${player.journal.entries.join("<br><br>")}
+                    </div>
+                </div>
+            `
+        };
+    }
 };
 
 
