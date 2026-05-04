@@ -404,7 +404,7 @@ img:not([src]) {
   margin: 10px 0;
 }
 
-.tutorial-button .mission-start-button {
+#tutorial-button, #mission-start-button {
   position: absolute;
   top: 520px;
   right: 80px;
@@ -417,9 +417,9 @@ img:not([src]) {
   display: none; /* hidden by default */
   z-index: 20;
 }
-.current-mission-display {
+#current-mission-display {
   position: absolute;
-  top: 560px;
+  top: 593px;
   right: 80px;
   padding: 10px 16px;
   background: #4a90e2;
@@ -485,6 +485,7 @@ img:not([src]) {
 }
 /* Remove the redundant grid styles from the first block */
 #guild-patron-inventory,
+#guild2-patron-inventory,
 #party-a-patron-inventory,
 #party-b-patron-inventory {
     display: flex;          /* Use Flexbox */
@@ -493,20 +494,28 @@ img:not([src]) {
     
     /* Layout positioning */
     position: absolute;
-    width: 420px;           /* Defined width */
+    width: 360px;           /* Defined width */
     z-index: 5;             /* Ensures it sits above backgrounds */
 }
 
 /* Specific position overrides */
 #guild-patron-inventory { top: 100px; left: 71px; }
+#guild2-patron-inventory { top: 160px; left: 71px; }
 #party-a-patron-inventory { top: 283px; left: 71px; }
-#party-b-patron-inventory { top: 343px; left: 71px; }
+#party-b-patron-inventory { top: 374px; left: 71px; }
 
 .patron-slot {
     width: 57px;            /* Match your container size */
     height: 57px;
     flex: 0 0 auto;         /* Prevents squishing */
     position: relative;     /* Required so the hover-zone stays inside */
+}
+
+.dropzone {
+    min-height: 60px; /* matches your 57px patron-slot size */
+    background: rgba(255, 255, 255, 0.08); /* faint white tint */
+    border: 1px dashed rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
 }
 
 #missions_line1 {
@@ -588,3 +597,15 @@ img:not([src]) {
     display: flex;
     justify-content: space-around;
 }
+
+/* .hover-zone, */
+/* .tooltip { */
+    /* pointer-events: none; */
+/* } */
+
+.patron-slot img {
+    pointer-events: none;
+    user-drag: none;
+    -webkit-user-drag: none;
+}
+

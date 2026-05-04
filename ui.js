@@ -51,6 +51,7 @@ function getVisiblePatrons() {
 
         // THIS IS THE RETURN THAT WAS MISSING
         return {
+			id,                // ← ADD THIS
             name: lore.name,
             location: state.location !== undefined ? state.location : lore.location,
             top: lore.top,
@@ -117,7 +118,15 @@ const pages = {
 			<p id="missions_line2"></p>
 			<p id="missions_line3"></p>
 
-		<div id="guild-patron-inventory" class="inventory-row">
+		<div id="guild-patron-inventory" class="inventory-row dropzone">
+  <div class="slot"></div>
+  <div class="slot"></div>
+  <div class="slot"></div>
+  <div class="slot"></div>
+  <div class="slot"></div>
+  <div class="slot"></div>
+</div>
+		<div id="guild2-patron-inventory" class="inventory-row dropzone">
   <div class="slot"></div>
   <div class="slot"></div>
   <div class="slot"></div>
@@ -126,7 +135,7 @@ const pages = {
   <div class="slot"></div>
 </div>
 
-<div id="party-a-patron-inventory" class="inventory-row">
+<div id="party-a-patron-inventory" class="inventory-row dropzone">
   <div class="slot"></div>
   <div class="slot"></div>
   <div class="slot"></div>
@@ -135,7 +144,7 @@ const pages = {
   <div class="slot"></div>
 </div>
 
-<div id="party-b-patron-inventory" class="inventory-row">
+<div id="party-b-patron-inventory" class="inventory-row dropzone">
   <div class="slot"></div>
   <div class="slot"></div>
   <div class="slot"></div>
@@ -144,7 +153,7 @@ const pages = {
   <div class="slot"></div>
 </div>
 
-<div id="party-c-patron-inventory" class="inventory-row">
+<div id="party-c-patron-inventory" class="inventory-row dropzone">
   <div class="slot"></div>
   <div class="slot"></div>
   <div class="slot"></div>
@@ -153,11 +162,13 @@ const pages = {
   <div class="slot"></div>
 </div>
 		</div>
+		
+		
+		
 		<!-- This is where our dynamic buttons will be injected -->
 		<div id="dynamic-mission-list"></div>
-		<button id="mission-start-button" class="tutorial-button">Start Mission</button>
-		<div id="current-mission-display" class="mission-displaymission-display">No mission selected.</div>
-		<button id="start-mission-A" onclick="startMission('party_A')">Start Mission (Party A)</button>
+		<button id="mission-start-button" class="venture-key">Start Mission</button>
+		<div id="current-mission-display" class="mission-display">No mission selected.</div>
 
 		<button id="continue-mission-A" onclick="continueMission('party_A')" style="display:none;">
 			Continue Mission (<span id="continue-party-A-name"></span>)
@@ -254,36 +265,116 @@ const pages = {
   };
   
 function renderPatronInventory() {
+	
+// 1. Define your patron data in an array. 
+// You can easily add up to 12 objects here.
+// 1. Single source of truth with the 'location' key
+//	0 is Hidden
+//	1	guild
+//	2	tavern
+//	3	party_A
+//	4	party_B
+	
   const guildContainer = document.getElementById("guild-patron-inventory");
+  const guild2Container = document.getElementById("guild2-patron-inventory");
   const partyAContainer = document.getElementById("party-a-patron-inventory");
   const partyBContainer = document.getElementById("party-b-patron-inventory");
 
-  // Any status in this list will be ignored
   const excludedStatuses = ["applicant", "retired", "dead"];
+
+  // Ensure patronList only contains valid patrons
+  patronList = patronList.filter(p => player.patrons[p.id]);
 
   function renderGroup(location) {
     return patronList
       .filter(p => p.location === location)
-		.filter(p => {
-			const key = "adv_" + p.name;   // build the correct IDB key
-			const status = player.patrons?.[key]?.status?.trim().toLowerCase();
-			return !excludedStatuses.includes(status);
-		})
+      .filter(p => {
+        const status = player.patrons[p.id]?.status?.trim().toLowerCase();
+        return status && !excludedStatuses.includes(status);
+      })
+      .map(p => {
+        const status = player.patrons[p.id]?.status?.trim().toLowerCase();
+        const isIdle = status === "idle";
 
-      .map(p => `
-        <div class="patron-slot">
-          <img src="${p.icon}" class="item-icon">
-          <div class="hover-zone" data-label="${p.name}"></div>
-          <div class="tooltip"></div>
-        </div>
-      `)
-      .join('');
+        return `
+          <div class="patron-slot"
+               draggable="${isIdle}"
+               data-adv="${p.id}">
+            <img src="${p.icon}" class="item-icon" draggable="false">
+            <div class="hover-zone" data-label="${p.name}"></div>
+            <div class="tooltip"></div>
+          </div>
+        `;
+      })
+      .join("");
   }
 
-  guildContainer.innerHTML = renderGroup(1) + renderGroup(2);
+  guildContainer.innerHTML = renderGroup(1);
+  guild2Container.innerHTML = renderGroup(2);
   partyAContainer.innerHTML = renderGroup(3);
   partyBContainer.innerHTML = renderGroup(4);
+
 }
+
+function enablePatronDragDrop() {
+    const slots = document.querySelectorAll(".patron-slot");
+    const zones = document.querySelectorAll(".dropzone");
+
+    // DRAG START
+    slots.forEach(slot => {
+        slot.addEventListener("dragstart", e => {
+            e.dataTransfer.setData("advId", slot.dataset.adv);
+            slot.classList.add("dragging");
+        });
+
+        slot.addEventListener("dragend", () => {
+            slot.classList.remove("dragging");
+        });
+    });
+
+    // DROP ZONES
+    zones.forEach(zone => {
+        zone.addEventListener("dragover", e => {
+            e.preventDefault();
+            zone.classList.add("drag-over");
+        });
+
+        zone.addEventListener("dragleave", () => {
+            zone.classList.remove("drag-over");
+        });
+
+		zone.addEventListener("drop", async e => {
+			e.preventDefault();
+			zone.classList.remove("drag-over");
+
+			const advId = e.dataTransfer.getData("advId");
+			if (!advId) return;
+
+			// 1. Determine new location
+			let newLocation = 1;
+			if (zone.id === "party-a-patron-inventory") newLocation = 3;
+			if (zone.id === "party-b-patron-inventory") newLocation = 4;
+			if (zone.id === "party-c-patron-inventory") newLocation = 5;
+			if (zone.id === "guild-patron-inventory") newLocation = 1;
+			if (zone.id === "guild2-patron-inventory") newLocation = 2;
+
+			// 2. Update patron location in memory
+			player.patrons[advId].location = newLocation;
+
+			// 3. Save to IDB
+			await storage.savePlayer(player);
+
+			// 4. Re-render UI
+			patronList = getVisiblePatrons();
+			renderPatronInventory();
+
+			// 5. Re-bind drag/drop AFTER the DOM is replaced
+			setTimeout(enablePatronDragDrop, 0);
+		});
+
+    });
+}
+
 
 function showTemporaryImage(src) {
 	// showTemporaryImage("assets/myImage.png");
@@ -323,13 +414,6 @@ function showTemporaryImage(src) {
     }, 50);
 }
 
-// 1. Define your patron data in an array. 
-// You can easily add up to 12 objects here.
-// 1. Single source of truth with the 'location' key
-//	0 is Hidden
-//	1	guild
-//	2	tavern
-//	3	mission
 async function loadPage(page) {
   const main = document.getElementById("mainWindow");
 
@@ -554,6 +638,7 @@ function addMail(mail) {
 
 function showTutorialButton() {
     const btn = document.getElementById("tutorial-button");
+	btn.classList.add("venture-key");
     if (!btn) return console.warn("tutorial-button element not found");
 
     // 1. Reset: Remove old listeners by cloning the button
@@ -890,7 +975,7 @@ async function loadMissionPage() {
 
     // Mission start button
     const startBtn = document.getElementById("mission-start-button");
-
+	startBtn.classList.add("venture-key");
     if (startBtn) {
         startBtn.style.display = "block";
 
@@ -899,22 +984,25 @@ async function loadMissionPage() {
 
         });
     }
-	const startA = document.getElementById("start-mission-A");
+	//const startA = document.getElementById("start-mission-A");
 	// continue button
 	const contA = document.getElementById("continue-mission-A");
+	contA.classList.add("venture-key");
 
 	if (player.missions.current_mission.active && 
 		player.missions.current_mission.party === "party_A") {
 
-		startA.style.display = "none";
+		//startA.style.display = "none";
 		contA.style.display = "block";
 
 	} else {
-		startA.style.display = "block";
+		//startA.style.display = "block";
 		contA.style.display = "none";
 	}
 	updateContinueButton("party_A");
 	updateContinueButton("party_B");
+	renderPatronInventory();
+	setTimeout(enablePatronDragDrop, 0);
 
 }
 
@@ -1381,6 +1469,7 @@ function initGuildTooltips() {
 		clickActive = true;
 
 		const label = zone.dataset.label;
+		const largeSrc = zone.dataset.large;   // ← Add this line
 		openWindow(label, largeSrc);
 
 		if (tooltip.style.display === "block") {
