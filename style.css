@@ -609,3 +609,19 @@ img:not([src]) {
     -webkit-user-drag: none;
 }
 
+#portrait-bar {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: 120px;
+    overflow-x: auto;
+    white-space: nowrap;
+    background: rgba(0,0,0,0.6);
+}
+
+#portrait-bar img {
+    height: 100px;
+    margin: 10px;
+    cursor: pointer;
+    border-radius: 6px;
+}

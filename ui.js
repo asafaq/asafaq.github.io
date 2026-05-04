@@ -103,12 +103,10 @@ const pages = {
 		  `,
 		// this patrons will open 2 default patrons, but in the future needs to be able to read from DB which partons are inhouse to display.
     contracts: `
-      <div id="contracts-container">
-        <img id="contract_parchment" src="assets/guild/contract_parchment.png" />
-		<p style="margin: 40px; color: black;">Welcome to the guild contracts.<br>
-		this is W.I.P<br>
-		please return after completing the<br>
-		tutorial.</p>
+		<div id="charsheet"></div>
+
+		<div id="portrait-bar">
+			<div id="portrait-scroll"></div>
 		</div>
 		`,
     missions: `
@@ -460,7 +458,13 @@ async function loadPage(page) {
 	  .join('');
 		
   }
-  
+ 
+  if (page === "contracts") {
+	initContractsPage();
+	}
+
+
+
   if (page === "missions") {
 	  
 	loadMissionPage();
@@ -558,6 +562,24 @@ async function loadPage(page) {
   }
 }
 
+function initContractsPage() {
+    const visible = getVisiblePatrons();
+
+    console.log("VISIBLE:", visible);   // ← ADD THIS HERE
+    const charsheetEl = document.getElementById("charsheet");
+    const scrollEl = document.getElementById("portrait-scroll");
+
+    console.log("charsheet:", charsheetEl);
+    console.log("portrait-scroll:", scrollEl);
+
+    renderPortraitMenu(visible);
+
+    if (visible.length > 0) {
+        const firstId = visible[0].id;
+        const hydrated = getHydratedAdventurer(firstId);
+        renderCharSheet(hydrated);
+    }
+}
 
 function renderMailboxPage() {
     const list = document.getElementById("mailbox-list");
@@ -671,6 +693,8 @@ function showTutorialButton() {
 
 const missionLabels = {
 	green_1: "Tutorial in the Green Pastures",
+	green_2: "Travelling to Townshop Tavern",
+	green_3: "Entering the Dark Forest"
 };
 
 async function startMission(partyKey) {
@@ -1427,6 +1451,58 @@ const Journal = {
         };
     }
 };
+
+function renderPortraitMenu(list) {
+    const container = document.getElementById("portrait-scroll");
+    container.innerHTML = "";
+
+    list.forEach(adv => {
+        const img = document.createElement("img");
+        img.src = adv.icon;
+        img.dataset.id = adv.id;
+
+		img.addEventListener("click", () => {
+			const hydrated = getHydratedAdventurer(adv.id);
+			renderCharSheet(hydrated);
+		});
+
+
+        container.appendChild(img);
+    });
+}
+
+function renderCharSheet(adv) {
+    const sheet = document.getElementById("charsheet");
+    if (!sheet) {
+        console.warn("charsheet not found");
+        return;
+    }
+
+    sheet.innerHTML = `
+        <h1>${adv.name}</h1>
+        <img src="${adv.icon || 'assets/patrons/default.png'}" style="height:150px">
+
+        <p><strong>Race:</strong> ${adv.race ?? "Unknown"}</p>
+        <p><strong>Role:</strong> ${adv.role ?? "Unknown"}</p>
+        <p><strong>Level:</strong> ${adv.level ?? "?"}</p>
+        <p><strong>Alignment:</strong> ${adv.alignment ?? "Neutral"}</p>
+
+        <h3>Stats</h3>
+        <ul>
+            <li>Health: ${adv.hp_modifier ?? 0}</li>
+            <li>Strength: ${adv.strengh_mod ?? 0}</li>
+            <li>Agility: ${adv.agility_mod ?? 0}</li>
+            <li>Wisdom: ${adv.wisdom_mod ?? 0}</li>
+            <li>Intelligence: ${adv.intelligence_mod ?? 0}</li>
+            <li>Charisma: ${adv.charisma_mod ?? 0}</li>
+        </ul>
+
+        <h3>Traits</h3>
+        <ul>
+            ${(adv.trait ?? []).map(t => `<li>${t}</li>`).join("")}
+        </ul>
+    `;
+}
 
 
 
