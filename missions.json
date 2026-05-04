@@ -356,7 +356,7 @@
     "speaker": "Bragain",
     "portrait": "/assets/patrons/dwarven_miner.png",
     "side": "right",
-    "dialog": "Hahahaha. Success!\n\n Let's head on out.",
+    "dialog": "Hahahaha. Success!\n\nLet's head on out.",
     "interaction_type": "next",
     "target_id": "green1_019END",
     "options": []

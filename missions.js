@@ -307,6 +307,7 @@ async function handleMissionEnd(sceneId) {
     console.log("Mission finished. Processing rewards and cleanup...");
     console.log(`Ending triggered by scene: ${sceneId}`);
 	nextPage = {}
+	const partyKey = player.missions.current_mission.party;
 
     // 1. Reward Logic
     if (sceneId === "tutor1_110") {
@@ -328,8 +329,8 @@ async function handleMissionEnd(sceneId) {
 		//change Claudio's location to 0 meaning he is missing, then later set to 2.
 		player.patrons ??= {};
 		player.patrons.adv_Claudio ??= {};
-		player.patrons.adv_Bragain.location = 1;
-		player.patrons.adv_Hogperson.location = 1;
+		player.patrons.adv_Bragain.location = 3;
+		player.patrons.adv_Hogperson.location = 3;
 		player.patrons.adv_Claudio.location = 0;
 		player.patrons.adv_Amyssa.status = "applicant";
 		
@@ -396,6 +397,10 @@ async function handleMissionEnd(sceneId) {
 		player.missions.current_mission.active = false;
 		player.missions.current_mission.page = null;
 		player.data[partyKey + "_locked"] = false;
+		player.missions.current_mission.locked_mission = "";
+		player.missions.current_mission.id = "";
+		player.missions.current_mission.party = "";
+
 		loadPage("tavern")
 		Journal.addEntry("You've found 50 silver coins and returned to the guild.")
 		//ending mission so releasing the party lock

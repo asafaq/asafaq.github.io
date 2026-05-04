@@ -162,6 +162,12 @@ const pages = {
 		<button id="continue-mission-A" onclick="continueMission('party_A')" style="display:none;">
 			Continue Mission (<span id="continue-party-A-name"></span>)
 		</button>
+
+		<button id="continue-mission-B" onclick="continueMission('party_B')" style="display:none;">
+			Continue Mission (<span id="continue-party-B-name"></span>)
+		</button>
+
+
 		`,
 	journal: `
       <div id="journal-container">
@@ -374,11 +380,6 @@ async function loadPage(page) {
   if (page === "missions") {
 	  
 	loadMissionPage();
-    patronList = getVisiblePatrons();
-	renderPatronInventory();
-	updateMissionDisplay();
-	// add code to manage patrons placement into party/guild. from "invx-grid"
-	
   }
 
   if (page === "journal") {
@@ -588,13 +589,6 @@ const missionLabels = {
 };
 
 async function startMission(partyKey) {
-    // If this party is already on a mission → resume
-    if (player.missions.current_mission.active &&
-        player.missions.current_mission.party === partyKey) {
-
-        continueMission(partyKey);
-        return;
-    }
 
     // Otherwise → normal start mission flow
     // (your confirmation window, locking, etc.)
@@ -621,6 +615,13 @@ async function startMission(partyKey) {
 
     const missionId = player.missions.current_mission.id;
     const party = player.missions.current_mission.party;
+	// Prevent starting a mission that is already in progress
+	if (player.missions.current_mission.active &&
+		player.missions.current_mission.locked_mission === missionId) {
+
+		showMessage("This mission is already in progress and cannot be started again.");
+		return;
+	}
 
     if (!missionId) {
         showMessage("Please select a mission first.");
@@ -668,13 +669,12 @@ async function startMission(partyKey) {
         `They cannot be modified until they return.<br><br>` +
         `Continue?`,
         () => {
-			// Hardcoded patron placement for now DEBUG in the future this will be made integral.
-			player.patrons.adv_Bragain.location = 3;
-			player.patrons.adv_Hogperson.location = 3;
-			
             // YES → lock party and start mission
             player.data[partyKey + "_locked"] = true;
 			
+			//also lock mission
+			player.missions.current_mission.locked_mission = missionId; 
+
 			  // NEW: Save mission state
 			player.missions.current_mission.active = true;
 			player.missions.current_mission.page = missionPage;
@@ -697,8 +697,6 @@ async function startMission(partyKey) {
     // hideRightMenu();
 	// loadPage(missionPage);
 
-
-    showMessage("Mission type not implemented yet.");
 }
 
 function continueMission(partyKey) {
@@ -712,6 +710,7 @@ function continueMission(partyKey) {
 
     hideRightMenu();
     loadPage(player.missions.current_mission.page);
+	
 }
 
 
@@ -792,15 +791,26 @@ function getStartSceneId(c_mission) {
 async function loadMissionPage() {
     console.log("Loading Mission Page");
 
-    // Ensure mission structure exists
-    if (!player.missions) player.missions = {};
-    if (!player.missions.current_mission) {
-        player.missions.current_mission = { id: null, party: null };
-    }
+	// Ensure mission structure exists
+	if (!player.missions) player.missions = {};
+	if (!player.missions.current_mission) {
+		player.missions.current_mission = { id: "", party: "", active: false };
+	}
+
+	// Reset selection on page load
+	// player.missions.current_mission.id = "";
+	// player.missions.current_mission.party = "";
+	// await storage.savePlayer(player);
+
 
     // Insert missions page HTML
     const main = document.getElementById("mainWindow");
     main.innerHTML = pages.missions;
+	
+    patronList = getVisiblePatrons();
+	renderPatronInventory();
+	// later add code to manage patrons placement into party/guild. from "invx-grid"
+	
 
     // Fill static mission info
     document.getElementById("missions_line1").textContent = player.data.guild_name;
@@ -849,14 +859,18 @@ async function loadMissionPage() {
 
     // Inject dropdowns
     listContainer.innerHTML = missionHTML + "<br><br>" + partyHTML;
-	// FORCE-SAVE the default party on page load
-	const partySelect = document.getElementById("party-select");
-	player.missions.current_mission.party = partySelect.value;
-	await storage.savePlayer(player);
+	const missionSelect = document.getElementById("mission-select");
 
-	// FORCE-SAVE mission ID on page load
-	player.missions.current_mission.id = document.getElementById("mission-select").value;
-	await storage.savePlayer(player);
+// Only initialize if no mission is saved yet
+	if (!player.missions.current_mission.id) {
+    player.missions.current_mission.id = missionSelect.value;
+    await storage.savePlayer(player);
+	}
+
+	// FORCE-SAVE the default party on page load - REMOVED
+	const partySelect = document.getElementById("party-select");
+
+	// FORCE-SAVE mission ID on page load - REMOVED
     // Update mission display
     updateMissionDisplay();
 
@@ -881,7 +895,8 @@ async function loadMissionPage() {
         startBtn.style.display = "block";
 
         startBtn.addEventListener("click", () => {
-            startMission();
+            startMission(player.missions.current_mission.party);
+
         });
     }
 	const startA = document.getElementById("start-mission-A");
@@ -898,16 +913,21 @@ async function loadMissionPage() {
 		startA.style.display = "block";
 		contA.style.display = "none";
 	}
+	updateContinueButton("party_A");
+	updateContinueButton("party_B");
 
 }
 
 function updateContinueButton(partyKey) {
-	
-	// updateContinueButton("party_A");
-	// updateContinueButton("party_B");
+    const suffix = partyKey === "party_A" ? "A" :
+                   partyKey === "party_B" ? "B" : null;
 
-    const btn = document.getElementById(`continue-mission-${partyKey}`);
-    const nameSpan = document.getElementById(`continue-party-${partyKey}-name`);
+    if (!suffix) return;
+
+    const btn = document.getElementById(`continue-mission-${suffix}`);
+    const nameSpan = document.getElementById(`continue-party-${suffix}-name`);
+
+    if (!btn || !nameSpan) return;
 
     if (player.missions.current_mission.active &&
         player.missions.current_mission.party === partyKey) {
@@ -919,6 +939,8 @@ function updateContinueButton(partyKey) {
         btn.style.display = "none";
     }
 }
+
+
 
 
 function updateMissionDisplay() {
