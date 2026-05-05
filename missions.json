@@ -639,10 +639,10 @@
   },
   {
     "id": "green1_042",
-    "speaker": "Narrator",
+    "speaker": "PARTY TRAIT: TROUBLE MAKERS",
     "portrait": "",
     "side": "right",
-    "dialog": "PARTY TRAIT:\n\nWhile your party has a Barbarian, a Rogue, and a Bard, you gain the [TROUBLE MAKERS] trait, gaining better chances to succeed at work-arounds and made-up strategies in Encounters, rather than taking the forward approach or plain fighting.",
+    "dialog": "While your party has a Barbarian, a Rogue, and a Bard, you gain the [TROUBLE MAKERS] trait, gaining better chances to succeed at work-arounds and made-up strategies in Encounters, rather than taking the forward approach or plain fighting.",
     "interaction_type": "next",
     "target_id": "green1_043",
     "options": []
@@ -1024,7 +1024,7 @@
     "speaker": "Narrator",
     "portrait": "",
     "side": "Left",
-    "dialog": "END OF Tutorial\n\nThanks you for playing this far!\nMore info can be read in the Tome of Lore (When implemented..)",
+    "dialog": "END OF Tutorial\n\nThanks you for playing this far!\nThe letter is in the mail so make sure to read it!\nMore info can be read in the Tome of Lore (When implemented..)",
     "interaction_type": "next",
     "target_id": "tutor2_118END",
     "options": []
@@ -1094,5 +1094,243 @@
     "dialog": "To me..?\n\nWell let's see...",
     "interaction_type": "next",
     "target_id": "tutor2_118"
+  },
+  {
+    "id": "green2_001",
+    "speaker": "Hogperson",
+    "portrait": "/assets/patrons/hogperson.png",
+    "side": "left",
+    "dialog": "Oooooh, Dad's gone? I wonder for how long. I hope he's alright.",
+    "interaction_type": "next",
+    "target_id": "green2_002"
+  },
+  {
+    "id": "green2_002",
+    "speaker": "Bragain",
+    "portrait": "/assets/patrons/dwarven_miner.png",
+    "side": "right",
+    "dialog": "Your dad's a big guy, I doubt any trouble will come to him.",
+    "interaction_type": "next",
+    "target_id": "green2_003"
+  },
+  {
+    "id": "green2_003",
+    "speaker": "Hogperson",
+    "portrait": "/assets/patrons/hogperson.png",
+    "side": "left",
+    "dialog": "That's true, but my mother must be worried, I have to help her.",
+    "interaction_type": "next",
+    "target_id": "green2_004"
+  },
+  {
+    "id": "green2_004",
+    "speaker": "Guild Master",
+    "portrait": "/assets/guild/guild_master.png",
+    "side": "left",
+    "dialog": "Well since business have seem to be quiet down here.",
+    "interaction_type": "next",
+    "target_id": "green2_005"
+  },
+  {
+    "id": "green2_005",
+    "speaker": "Guild Master",
+    "portrait": "/assets/guild/guild_master.png",
+    "side": "left",
+    "dialog": "How about you three will get on that case, I want you to head on East towards the township nearby, wouldn't be more than a day's walk.",
+    "interaction_type": "next",
+    "target_id": "green2_006"
+  },
+  {
+    "id": "green2_006",
+    "speaker": "Guild Master",
+    "portrait": "/assets/guild/guild_master.png",
+    "side": "left",
+    "dialog": "There's a Tavern there just like this one, that's where you'll find Hogmother. You can assess the situation better once we know more.",
+    "interaction_type": "next",
+    "target_id": "green2_007"
+  },
+  {
+    "id": "green2_007",
+    "speaker": "Guild Master",
+    "portrait": "/assets/guild/guild_master.png",
+    "side": "left",
+    "dialog": "There should be business proposals and contacts to make there, so keep me posted.",
+    "interaction_type": "next",
+    "target_id": "green2_008end"
+  },
+  {
+    "id": "green2_008end",
+    "speaker": "Guild Master",
+    "portrait": "/assets/guild/guild_master.png",
+    "side": "left",
+    "dialog": "There should be",
+    "interaction_type": "next",
+    "target_id": "END"
+  },
+  {
+    "id": "green2_101",
+    "speaker": "Narrator",
+    "portrait": "",
+    "side": "left",
+    "dialog": "Well well, not a moment's rest.",
+    "interaction_type": "next",
+    "target_id": "green2_102"
+  },
+  {
+    "id": "green2_102",
+    "speaker": "Narrator",
+    "portrait": "",
+    "side": "left",
+    "dialog": "The long winding road by the mountain and the more-mountains is your path, straight up ahead.",
+    "interaction_type": "next",
+    "target_id": "green2_103"
+  },
+  {
+    "id": "green2_103",
+    "speaker": "Narrator",
+    "portrait": "",
+    "side": "left",
+    "dialog": "That looks like some track! Hope it'll be safe...",
+    "interaction_type": "next",
+    "target_id": "green2_104"
+  },
+  {
+    "id": "green2_104",
+    "speaker": "Amyssa",
+    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "side": "left",
+    "dialog": "Wait up.",
+    "interaction_type": "next",
+    "target_id": "green2_105"
+  },
+  {
+    "id": "green2_105",
+    "speaker": "Amyssa",
+    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "side": "left",
+    "dialog": "You guys, hey wait!",
+    "interaction_type": "next",
+    "target_id": "green2_106"
+  },
+  {
+    "id": "green2_106",
+    "speaker": "Amyssa",
+    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "side": "left",
+    "dialog": "Are you going to make me run???",
+    "interaction_type": "next",
+    "target_id": "green2_107"
+  },
+  {
+    "id": "green2_107",
+    "speaker": "Narrator",
+    "portrait": "",
+    "side": "right",
+    "dialog": "It seems that Amyssa have took off from the Tavern on her own, and have followed in your footsteps...",
+    "interaction_type": "next",
+    "target_id": "green2_108"
+  },
+  {
+    "id": "green2_108",
+    "speaker": "Amyssa",
+    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "side": "left",
+    "dialog": "I was thinking about this and I've came here because my conscious just doesn't allow me to relax back at the Tavern",
+    "interaction_type": "next",
+    "target_id": "green2_109"
+  },
+  {
+    "id": "green2_109",
+    "speaker": "Amyssa",
+    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "side": "left",
+    "dialog": "It doesn't feel right at all!",
+    "interaction_type": "next",
+    "target_id": "green2_110"
+  },
+  {
+    "id": "green2_110",
+    "speaker": "Amyssa",
+    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "side": "left",
+    "dialog": "I'm sorry about my behavior.\nI ask for your forgiveness.",
+    "interaction_type": "next",
+    "target_id": "green2_111"
+  },
+  {
+    "id": "green2_111",
+    "speaker": "Amyssa",
+    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "side": "left",
+    "dialog": "You all may really be COMMONERS, ugh\nbut your cause is NOBLE",
+    "interaction_type": "next",
+    "target_id": "green2_112"
+  },
+  {
+    "id": "green2_112",
+    "speaker": "Amyssa",
+    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "side": "left",
+    "dialog": "Please allow me to join your cause, it would bring me honor to serve alongside you.",
+    "interaction_type": "next",
+    "target_id": "green2_113"
+  },
+  {
+    "id": "green2_113",
+    "speaker": "Amyssa",
+    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "side": "left",
+    "dialog": "If you'll allow me, I will put all my might and magic into finding your father, Hogperson.",
+    "interaction_type": "selection",
+	"options": [
+    { 
+      "text": "Accept Amyssa.", 
+      "target_id": "green2_114a", 
+      "disabled": false,
+	  "color": "#FFD700"
+    },
+    { 
+      "text": "Reject Amyssa.", 
+      "target_id": "green2_114b",
+      "disabled": true
+    }
+  ]
+  },
+  {
+    "id": "green2_114a",
+    "speaker": "Hogperson",
+    "portrait": "/assets/patrons/hogperson.png",
+    "side": "right",
+    "dialog": "Oh, there's nothing to feel sorry about, young lass. You are most welcome in our midst! I'm sure mother would love meeting you.",
+    "interaction_type": "next",
+    "target_id": "green2_115"
+  },
+  {
+    "id": "green2_115",
+    "speaker": "Bragain",
+    "portrait": "/assets/patrons/dwarven_miner.png",
+    "side": "right",
+    "dialog": "You've shown your true colors Missa Myssa, hehehe.",
+    "interaction_type": "next",
+    "target_id": "green2_116"
+  },
+  {
+    "id": "green2_116",
+    "speaker": "Claudio",
+    "portrait": "/assets/patrons/Claudio.png",
+    "side": "right",
+    "dialog": "Oh it's a pleasure to host a lady of stature such as yourself! Mi' lady, I, Claudio, am delighted to have you! Aaaand, I find your scrolls the labor of an artist.",
+    "interaction_type": "next",
+    "target_id": "green2_116end",
+    "options": []
+  },
+  {
+    "id": "green2_116end",
+    "speaker": "Guild Master",
+    "portrait": "/assets/guild/guild_master.png",
+    "side": "left",
+    "dialog": "There should be",
+    "interaction_type": "next",
+    "target_id": "END"
   }
 ]

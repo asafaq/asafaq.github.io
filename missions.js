@@ -228,9 +228,51 @@ async function renderScene(sceneId) {
     if (scene.interaction_type === "next") {
         createBtn("NEXT >>", scene.target_id);
     } else if (scene.options) {
-        scene.options.forEach(opt => {
-            createBtn(opt.text, opt.target_id, opt.color, opt.disabled, opt.frustration_text);
-        });
+		scene.options.forEach(opt => {
+			let isDisabled = false;
+
+			// Condition: requires a trait
+			if (opt.condition) {
+				if (Array.isArray(opt.condition)) {
+					// ANY of the traits must be present
+					const hasAny = opt.condition.some(t => partyHasTrait(t));
+					if (!hasAny) isDisabled = true;
+				} else {
+					// Single trait
+					if (!partyHasTrait(opt.condition)) isDisabled = true;
+				}
+			}
+
+			// Condition: must NOT have a trait
+			if (opt.condition_not) {
+				if (partyHasTrait(opt.condition_not)) {
+					isDisabled = true;
+				}
+			}
+
+			// Respect explicit disabled flag from JSON
+			if (opt.disabled === true) {
+				isDisabled = true;
+			}
+
+			if (opt.condition_alignment) {
+				const hasAlignment = members.some(m => m.alignment === opt.condition_alignment);
+				if (!hasAlignment) isDisabled = true;
+			}
+
+			if (opt.condition_not_alignment) {
+				const hasAlignment = members.some(m => m.alignment === opt.condition_not_alignment);
+				if (hasAlignment) isDisabled = true;
+			}
+
+			createBtn(opt.text, opt.target_id, opt.color, isDisabled, opt.frustration_text);
+		});
+
+		
+		
+		
+		
+		
     }
 }
 let frustrationTimeout; // Keep track of the timer globally
@@ -307,7 +349,8 @@ async function handleMissionEnd(sceneId) {
     console.log("Mission finished. Processing rewards and cleanup...");
     console.log(`Ending triggered by scene: ${sceneId}`);
 	nextPage = {}
-	const partyKey = player.missions.current_mission.party;
+	const partyKey = player.missions.current_mission?.party ?? null;
+
 
     // 1. Reward Logic
     if (sceneId === "tutor1_110") {
@@ -390,17 +433,8 @@ async function handleMissionEnd(sceneId) {
 		
 		player = await storage.loadPlayer(player.id);
 		player.missions.green_1 = 6;
-		player.missions.current_mission.id = null
-		player.patrons.adv_Bragain.location = 1;
-		player.patrons.adv_Claudio.location = 2;
-		player.patrons.adv_Hogperson.location = 1;
-		player.missions.current_mission.active = false;
-		player.missions.current_mission.page = null;
-		player.data[partyKey + "_locked"] = false;
-		player.missions.current_mission.locked_mission = "";
-		player.missions.current_mission.id = "";
-		player.missions.current_mission.party = "";
 
+		endMission(); // ← THE ONLY NEW LINE THAT MATTERS
 		loadPage("tavern")
 		Journal.addEntry("You've found 50 silver coins and returned to the guild.")
 		//ending mission so releasing the party lock
@@ -425,11 +459,29 @@ async function handleMissionEnd(sceneId) {
 		player.patrons.adv_Amyssa.status = "idle";
 
         // Add your logic to add Amyssa, deduct money, etc. here
-		Journal.addEntry("You've recruited Amyssa to sign a 25 silver coins contract.")
-
-		
+		Journal.addEntry("You've recruited Amyssa to sign a 25 silver coins contract.")		
 		nextPage = "tavern"
     } 
+	
+    if (sceneId === "green2_008end") {
+        player.missions.green_2 = 1;
+		Journal.addEntry("You've decided to travel to the Township Tavern and meet up with Hogmother.")
+		nextPage = "missions"
+	}
+    
+	
+	if (sceneId === "green2_116end") {
+		player.missions.green_2 = 2;
+		player.patrons.adv_Amyssa.location = 3;
+
+		Journal.addEntry(
+			`Amyssa has joined the ${player.data.party_A} on their way to ${player.missions.current_mission.id}.`
+		);
+	}
+
+	nextPage = "missions";
+
+	
     
     // 2. Save Player Data
     if (typeof player !== 'undefined' && typeof storage !== 'undefined') {
@@ -448,4 +500,159 @@ async function handleMissionEnd(sceneId) {
     
 	loadPage(nextPage);
 	}
+
+async function handleMissionEnding(sceneId) {
+    const endings = {
+        "tutor1_110": async () => {
+            player = await storage.loadPlayer(player.id);
+            player.missions.tutorial = 1;
+            player.missions.green_1 = 1;
+
+            recruitAdventurer("adv_Hogperson");
+            recruitAdventurer("adv_Bragain");
+            recruitAdventurer("adv_Claudio");
+            recruitAdventurer("adv_Amyssa");
+
+            player.patrons.adv_Bragain.location = 3;
+            player.patrons.adv_Hogperson.location = 3;
+            player.patrons.adv_Claudio.location = 0;
+            player.patrons.adv_Amyssa.status = "applicant";
+
+            Journal.addEntry("You've purchased yourself a Tavern.");
+            Journal.addEntry("You've signed a contract with the government...");
+            Journal.addEntry("You've recruited Hogperson, Bragain and Claudio.");
+
+            resetPartyTraits();
+            loadPage("missions");
+        },
+
+        "green1_008END": async () => {
+            player = await storage.loadPlayer(player.id);
+            player.missions.green_1 = 2;
+
+            player.patrons.adv_Bragain.location = 3;
+            player.patrons.adv_Hogperson.location = 3;
+            player.patrons.adv_Claudio.location = 0;
+
+            Journal.addEntry("You've agreed to head towards a stash of coins.");
+
+            resetPartyTraits();
+            loadPage("mission_green_1");
+        },
+
+        "green1_019END": async () => {
+            player = await storage.loadPlayer(player.id);
+            player.missions.green_1 = 3;
+
+            Journal.addEntry("In the nearby green pastures, you've smashed a rock to bits.");
+
+            resetPartyTraits();
+            loadPage("mission_green_1");
+        },
+
+        "green1_025END": async () => {
+            player = await storage.loadPlayer(player.id);
+            player.missions.green_1 = 4;
+
+            Journal.addEntry("You've cheered up a wandering traveler.");
+
+            resetPartyTraits();
+            loadPage("mission_green_1");
+        },
+
+        "green1_048END": async () => {
+            player = await storage.loadPlayer(player.id);
+            player.missions.green_1 = 5;
+
+            player.patrons.adv_Claudio.location = 3;
+
+            Journal.addEntry("You've demoralized a band of Koboldogs.");
+            Journal.addEntry("You've saved Claudio from a cage.");
+
+            resetPartyTraits();
+            loadPage("mission_green_1");
+        },
+
+        "green1_056END": async () => {
+            player = await storage.loadPlayer(player.id);
+            player.missions.green_1 = 6;
+
+            player.missions.current_mission.active = false;
+            player.missions.current_mission.id = "";
+            player.missions.current_mission.party = "";
+            player.missions.current_mission.page = null;
+            player.missions.current_mission.locked_mission = "";
+
+            player.patrons.adv_Bragain.location = 1;
+            player.patrons.adv_Claudio.location = 2;
+            player.patrons.adv_Hogperson.location = 1;
+
+            resetPartyTraits();
+            setPartyLock(false);
+
+            Journal.addEntry("You've found 50 silver coins and returned to the guild.");
+
+            loadPage("tavern");
+        },
+
+        "tutor2_118END": async () => {
+            await addMail({
+                id: crypto.randomUUID(),
+                from: "Hogmother",
+                subject: "Dad update",
+                body: "...",
+                timestamp: Date.now(),
+                image: "assets/missions/hogmother_letter.jpg"
+            });
+
+            player = await storage.loadPlayer(player.id);
+            player.missions.tutorial = 2;
+            player.missions.green_1 = 7;
+            player.missions.green_2 ??= 0;
+
+            player.patrons.adv_Amyssa.status = "idle";
+
+            Journal.addEntry("You've recruited Amyssa...");
+
+            resetPartyTraits();
+            loadPage("tavern");
+        }
+    };
+
+    // Execute the matching ending if it exists
+    if (endings[sceneId]) {
+        await endings[sceneId]();
+        return true;
+    }
+
+    return false;
+}
+
+function endMission() {
+    const partyKey = player.missions.current_mission.party;
+    const locationValue = {
+        "party_A": 3,
+        "party_B": 4,
+        "party_C": 5
+    }[partyKey];
+
+    // Remove dynamic location from all patrons in this party
+    if (locationValue !== undefined) {
+        for (const [id, patron] of Object.entries(player.patrons)) {
+            if (patron.location === locationValue) {
+                delete patron.location; // ← forces fallback to loreData default
+            }
+        }
+    }
+
+    // Reset mission state
+    player.missions.current_mission.active = false;
+    player.missions.current_mission.id = "";
+    player.missions.current_mission.party = "";
+    player.missions.current_mission.page = null;
+    player.missions.current_mission.locked_mission = "";
+    player.missions.current_mission.party_traits = [];
+
+    setPartyLock(false);
+}
 

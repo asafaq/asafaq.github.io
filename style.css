@@ -417,7 +417,7 @@ img:not([src]) {
   display: none; /* hidden by default */
   z-index: 20;
 }
-#current-mission-display {
+#continue-mission-A {
   position: absolute;
   top: 593px;
   right: 80px;
@@ -443,7 +443,7 @@ img:not([src]) {
 #dynamic-mission-list {
   position: absolute;
   top: 520px;
-  left: 80px;
+  left: 20px;
 }
 
 .tutorial-window {
@@ -624,4 +624,70 @@ img:not([src]) {
     margin: 10px;
     cursor: pointer;
     border-radius: 6px;
+}
+/* Main container */
+.char-container {
+    padding: 20px;
+    font-family: "Georgia", serif;
+    color: #eee;
+}
+
+/* Header layout */
+.char-header {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+/* Portrait */
+.char-portrait {
+    height: 150px;
+    width: 150px;
+    border-radius: 8px;
+    border: 2px solid #666;
+    object-fit: cover;
+}
+
+/* Name + basic info */
+.char-basic-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.char-name {
+    margin: 0;
+    font-size: 28px;
+    color: #fff;
+}
+
+/* Section titles */
+.char-section h3 {
+    margin-top: 20px;
+    margin-bottom: 8px;
+    font-size: 20px;
+    color: #ffd27f;
+}
+
+/* Stats list */
+.char-stats,
+.char-traits {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.char-stats-grid {
+    display: flex;
+    gap: 20px;
+}
+
+.char-stats li,
+.char-traits li {
+    padding: 4px 0;
+    border-bottom: 1px solid #444;
+}
+.char-stats li:last-child {
+    border-bottom: none;
 }

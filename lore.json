@@ -300,7 +300,7 @@
       "trait": ["Divine", "Holy Aura", "Eternal"],
       "Divine_comment": "Has (10*Lvl) Radiant points to spend as Smite or Heal.",
       "Holy Aura_comment": "party has +1 hit and Save rolls.",
-      "notes": "The premium Pay2Win character."
+      "notes": "The premium Pay2Win character. Aasibelle may seem as going out of game balance, but she is a token of gratitude from the development team to the player, and she doesn't have to be played at all as she will cost you no upkeep or space in the tavern."
     },
     "adv_Hogmother": {
       "name": "Hogmother",
@@ -336,6 +336,7 @@
     },
     "adv_Hogfather": {
       "name": "Hogfather",
+	  "icon": "assets/patrons/hogfather.png",
       "race": "Barbarian",
       "race_comment": "Wildmen more of a humanoid than a human. Thick Hide for bonus unarmed AC \tRage +10 tempHP.",
       "role": "Baker",
@@ -366,6 +367,41 @@
       "trait": "Cheerful",
       "trait1_comment": "Party members have moral +1."
     },
+	"adv_Sebastian": {
+      "name": "Sebastian",
+      "race": "Halfling",
+	  "icon": "assets/patrons/halfling_L.png",
+      "role": "Fighter",
+      "hp_die": 10,
+      "hp_modifier": 0,
+      "strengh_mod": -2,
+      "agility_mod": 4,
+      "wisdom_mod": 1,
+      "intelligence_mod": -1,
+      "charisma_mod": 0,
+      "alignment": "Neutral",
+      "level": 2,
+      "sex": 1,
+      "size": "Small",
+      "caste": "Noble",
+      "RacialEnemy": "",
+      "proficiency_armor": "Medium",
+      "proficiency_weapon": "Martial",
+      "inventory1": "Small Rapier",
+      "inventory2": "",
+      "inventory3": "",
+      "inventory4": "",
+      "inventory1_lock": false,
+      "inventory2_lock": false,
+      "inventory3_lock": false,
+      "inventory4_lock": false,
+      "trait": ["Inconspicuous", "Adolescent"],
+      "notes": ""
+    },
+	"adv_Awetruce": {
+      "name": "Awetruce",
+      "race": "Direwolf"
+	},
     "adv_Tinman BB-TR": {
       "name": "Tinman B-B-TR",
       "race": "Warforged",

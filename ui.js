@@ -63,9 +63,6 @@ function getVisiblePatrons() {
 
 let patronList = []; // This will hold your dynamic data
 
-
-
-
 const pages = {
     guild: `
       <div id="guild-container">
@@ -200,7 +197,6 @@ const pages = {
 		</div>
 
 	`,
-
 	mission_green_1: `
 	<div id="mission-container" style="position: relative;">
 		<img id="fantasy map" src="assets/missions/fantasy_map_s.png" />
@@ -230,6 +226,38 @@ const pages = {
 		<div class="mission_green_objective shine-container" 
 			 style="position: absolute; top: 300px; left: 195px; transform: scale(0.66); transform-origin: top left;">
 			<img src="assets/missions/mission_event_coins_s.png" class="item-icon">
+		</div>
+	</div>
+	`,
+	mission_green_2: `
+	<div id="mission-container" style="position: relative;">
+		<img id="fantasy map" src="assets/missions/fantasy_map_s.png" />
+
+		<!-- Path Layer -->
+		<svg width="100%" height="100%" style="position: absolute; top: 0; left: 0; pointer-events: none;">
+			<!-- 1. The "Hitbox" (Invisible but clickable) -->
+			<path d="M 140 460 C 221 324 413 466 480 340"
+				  stroke="transparent" stroke-width="25" fill="none" 
+				  style="pointer-events: stroke; cursor: pointer;" 
+				  onclick="console.log('Winding path clicked!');
+					runMission(player.missions.current_mission.id)" />
+			
+			<!-- 2. The Visible Dashed Line -->
+			<path class="marching-path" d="M 140 460 C 221 324 413 466 480 340" 
+				  stroke="rgba(0, 0, 0, 0.7)" stroke-width="4" 
+				  stroke-dasharray="10, 10" stroke-linecap="round" fill="none" />
+		</svg>
+
+		<!-- Homebase -->
+		<div class="guild_homebase shine-container" 
+			 style="position: absolute; top: 420px; left: 110px; transform: scale(0.66); transform-origin: top left;">
+			<img src="assets/menu/menu_home.png" class="item-icon">
+		</div>
+
+		<!-- Objective: Fixed Coordinates -->
+		<div class="mission_green2_objective shine-container" 
+			 style="position: absolute; top: 300px; left: 455px; transform: scale(0.66); transform-origin: top left;">
+			<img src="assets/menu/menu_home.png" class="item-icon">
 		</div>
 	</div>
 	`,
@@ -348,7 +376,25 @@ function enablePatronDragDrop() {
 			const advId = e.dataTransfer.getData("advId");
 			if (!advId) return;
 
-			// 1. Determine new location
+			const patron = player.patrons[advId];
+			const origin = patron.location;
+
+			// --- PARTY LOCK CHECKS ---
+			if (origin === 3 && player.data.party_A_locked) {
+				console.warn("Party A is locked — cannot move patron.");
+				return;
+			}
+			if (origin === 4 && player.data.party_B_locked) {
+				console.warn("Party B is locked — cannot move patron.");
+				return;
+			}
+			if (origin === 5 && player.data.party_C_locked) {
+				console.warn("Party C is locked — cannot move patron.");
+				return;
+			}
+			// --------------------------
+
+			// Determine new location
 			let newLocation = 1;
 			if (zone.id === "party-a-patron-inventory") newLocation = 3;
 			if (zone.id === "party-b-patron-inventory") newLocation = 4;
@@ -356,19 +402,20 @@ function enablePatronDragDrop() {
 			if (zone.id === "guild-patron-inventory") newLocation = 1;
 			if (zone.id === "guild2-patron-inventory") newLocation = 2;
 
-			// 2. Update patron location in memory
-			player.patrons[advId].location = newLocation;
+			// Update patron location
+			patron.location = newLocation;
 
-			// 3. Save to IDB
+			// Save to IDB
 			await storage.savePlayer(player);
 
-			// 4. Re-render UI
+			// Re-render UI
 			patronList = getVisiblePatrons();
 			renderPatronInventory();
 
-			// 5. Re-bind drag/drop AFTER the DOM is replaced
+			// Re-bind drag/drop AFTER DOM refresh
 			setTimeout(enablePatronDragDrop, 0);
 		});
+
 
     });
 }
@@ -658,38 +705,49 @@ function addMail(mail) {
     return storage.savePlayer(player);
 }
 
+const tutorialStates = [
+    {
+        condition: p => Number(p.tutorial) === 0,
+        text: "Start Tutorial",
+        mission: "tutor1_000"
+    },
+    {
+        condition: p => p.tutorial === 1 && p.green_1 === 6,
+        text: "Continue Tutorial",
+        mission: "tutor2_101"
+    },
+    {
+        condition: p => p.green_2 === 0,
+        text: "Start Green 2",
+        mission: "green2_001"
+    }
+];
+
+
 function showTutorialButton() {
     const btn = document.getElementById("tutorial-button");
-	btn.classList.add("venture-key");
-    if (!btn) return console.warn("tutorial-button element not found");
+    if (!btn) return;
 
-    // 1. Reset: Remove old listeners by cloning the button
-    // This is the cleanest way to clear old 'onclick' or 'addEventListener' logic
+    btn.classList.add("venture-key");
+
     const newBtn = btn.cloneNode(true);
     btn.parentNode.replaceChild(newBtn, btn);
-    const refreshedBtn = document.getElementById("tutorial-button");
 
-    // 2. Logic to show and assign action
-    refreshedBtn.style.display = "block";
+    newBtn.style.display = "block";
 
-    if (player.missions.tutorial === 0) {
-        refreshedBtn.innerText = "Start Tutorial";
-        refreshedBtn.addEventListener('click', () => {
-            console.log("Starting Tutorial 1");
-            startMissionSystem("tutor1_000");
-        });
-    } 
-    else if (player.missions.tutorial === 1 && player.missions.green_1 === 6) {
-        refreshedBtn.innerText = "continue tutorial";
-        refreshedBtn.addEventListener('click', () => {
-            console.log("Starting Tutorial 2: Recruit Amyssa");
-            startMissionSystem("tutor2_101");
-        });
-    } else {
-        // Hide if conditions aren't met
-        refreshedBtn.style.display = "none";
+    const state = tutorialStates.find(s => s.condition(player.missions));
+
+    if (!state) {
+        newBtn.style.display = "none";
+        return;
     }
-	}
+
+    newBtn.innerText = state.text;
+    newBtn.addEventListener("click", () => {
+        console.log("Starting:", state.mission);
+        startMissionSystem(state.mission);
+    });
+}
 
 const missionLabels = {
 	green_1: "Tutorial in the Green Pastures",
@@ -697,7 +755,43 @@ const missionLabels = {
 	green_3: "Entering the Dark Forest"
 };
 
+function buildPartySummary(partyKey) {
+    const members = getPartyMembers(partyKey);
+
+    const summary = {
+        races: members.map(m => m.race),
+        roles: members.map(m => m.role),
+        traits: members.flatMap(m => m.traits)
+    };
+
+    player.missions.current_mission.summary = summary;
+}
+
+function getPartyMembers(partyKey) {
+    let locationValue = 0;
+
+    if (partyKey === "party_A") locationValue = 3;
+    if (partyKey === "party_B") locationValue = 4;
+    if (partyKey === "party_C") locationValue = 5;
+
+    // KEEP the ID by using entries
+    const rawMembers = Object.entries(player.patrons)
+        .filter(([id, p]) => p.location === locationValue);
+
+    // Hydrate properly
+    return rawMembers.map(([id, p]) => getHydratedAdventurer(id));
+}
+
+
 async function startMission(partyKey) {
+	// let missionId = player.missions.current_mission.id;
+
+	// if (typeof missionId !== "string" || missionId.trim() === "") {
+		// showMessage("Please select a mission first.");
+		// return;
+	// }
+	// const validation = validateParty(partyKey);
+
 
     // Otherwise → normal start mission flow
     // (your confirmation window, locking, etc.)
@@ -751,6 +845,10 @@ async function startMission(partyKey) {
         showMessage(`${party} is currently locked and cannot be sent.`);
         return;
     }
+	
+	//const partyKey = player.missions.current_mission.party;
+	const validation = validateParty(partyKey);
+	if (validation !== true) return showMessage(validation);
 
     //console.log("Starting mission:", missionId, "with party:", party);
 	// Determine which mission page should load
@@ -764,8 +862,6 @@ async function startMission(partyKey) {
 		showMessage("This mission is not implemented yet.");
 		return;
 	}
-	
-	//const partyKey = player.missions.current_mission.party;
 
     // --- NEW: Confirmation window ---
 	//const missionId = player.missions.current_mission.id;
@@ -777,7 +873,7 @@ async function startMission(partyKey) {
         `${partyName} is about to embark on "${missionLongName}".<br><br>` +
         `They cannot be modified until they return.<br><br>` +
         `Continue?`,
-        () => {
+        async () => {
             // YES → lock party and start mission
             player.data[partyKey + "_locked"] = true;
 			
@@ -787,8 +883,11 @@ async function startMission(partyKey) {
 			  // NEW: Save mission state
 			player.missions.current_mission.active = true;
 			player.missions.current_mission.page = missionPage;
-			
-            storage.savePlayer(player);
+			// 🔥 INSERT SUMMARY BUILDING HERE
+			buildPartySummary(partyKey);
+			buildPartyTraits(partyKey);
+
+            await storage.savePlayer(player);
 			
 			hideRightMenu();
             loadPage(missionPage);
@@ -850,7 +949,6 @@ function pageExists(pageName) {
     return !!pages[pageName]; // or whatever your page registry is called
 }
 
-
 function setPartyLock(isLocked) {
 	
 	// setPartyLock(true);  // when mission starts
@@ -861,7 +959,6 @@ function setPartyLock(isLocked) {
     player.data[partyKey + "_locked"] = isLocked;
     return storage.savePlayer(player);
 }
-
 
 function runMission(missionId) {
     console.log("Running mission:", missionId);
@@ -874,52 +971,50 @@ function runMission(missionId) {
 }
 
 function getStartSceneId(c_mission) {
-    // c_mission example: "green_1"
-
     if (typeof c_mission !== "string") {
         console.warn("Invalid mission ID:", c_mission);
-        return "green1_101"; // safe fallback
+        return "green1_101"; // fallback
     }
 
-    // Extract mission key, e.g. "green_1"
-    const missionKey = c_mission;
+    // Split mission ID: "green_2" → ["green", "2"]
+    const [color, chapter] = c_mission.split("_");
 
     // Read mission progress from player data
-    const progress = player.missions[missionKey];
-
-    // If progress is missing or invalid, default to 1
+    const progress = player.missions[c_mission];
     const stage = Number(progress) || 1;
 
     // Convert stage → suffix (1 → 101, 2 → 201, 3 → 301)
     const suffix = stage * 100 + 1;
 
-    // Build final scene ID
-    return `green1_${suffix}`;
+    // Build final scene ID: "green2_101"
+    return `${color}${chapter}_${suffix}`;
+
+
+// | Mission ID | Stage | Returned Scene |
+// | --- | --- | --- |
+// | ``"green_1"`` | 1 | ``green1_101`` |
+// | ``"green_1"`` | 2 | ``green1_201`` |
+// | ``"green_2"`` | 1 | ``green2_101`` |
+// | ``"green_2"`` | 3 | ``green2_301`` |
+// | ``"blue_1"`` | 1 | ``blue1_101`` |
 }
+
 
 async function loadMissionPage() {
     console.log("Loading Mission Page");
 
-	// Ensure mission structure exists
-	if (!player.missions) player.missions = {};
-	if (!player.missions.current_mission) {
-		player.missions.current_mission = { id: "", party: "", active: false };
-	}
-
-	// Reset selection on page load
-	// player.missions.current_mission.id = "";
-	// player.missions.current_mission.party = "";
-	// await storage.savePlayer(player);
-
+    // Ensure mission structure exists
+    if (!player.missions) player.missions = {};
+    if (!player.missions.current_mission) {
+        player.missions.current_mission = { id: "", party: "", active: false };
+    }
 
     // Insert missions page HTML
     const main = document.getElementById("mainWindow");
     main.innerHTML = pages.missions;
-	
+
     patronList = getVisiblePatrons();
-	renderPatronInventory();
-	// later add code to manage patrons placement into party/guild. from "invx-grid"
-	
+    renderPatronInventory();
 
     // Fill static mission info
     document.getElementById("missions_line1").textContent = player.data.guild_name;
@@ -929,69 +1024,76 @@ async function loadMissionPage() {
     // Build mission dropdown
     const listContainer = document.getElementById("dynamic-mission-list");
 
-	let missionHTML = `
-		<label>Choose Mission:</label>
-		<select id="mission-select">
-	`;
+    let missionHTML = `
+        <label>Adv:</label>
+        <select id="mission-select">
+    `;
 
-	Object.keys(player.missions).forEach(key => {
-		if (key === "current_mission") return;
-		if (key === "tutorial") return;
+    Object.keys(player.missions).forEach(key => {
+        if (key === "current_mission") return;
+        if (key === "tutorial") return;
 
-		// NEW RULE: hide green_1 if completed
-		if (key === "green_1" && player.missions.green_1 > 5) return;
-		
-		const label = missionLabels[key] || key;
-		const selected = (player.missions.current_mission.id === key) ? "selected" : "";
+        if (key === "green_1" && player.missions.green_1 > 5) return;
 
-		missionHTML += `<option value="${key}" ${selected}>${label}</option>`;
-	});
+        const label = missionLabels[key] || key;
+        const selected = (player.missions.current_mission.id === key) ? "selected" : "";
 
-	missionHTML += `</select>`;
+        missionHTML += `<option value="${key}" ${selected}>${label}</option>`;
+    });
 
-
+    missionHTML += `</select>`;
 
     // Build party dropdown
-	let partyHTML = `
-		<label>Select Party:</label>
-		<select id="party-select">
-			<option value="party_A" ${player.data.party_A_locked ? "disabled" : ""}>
-				${player.data.party_A} ${player.data.party_A_locked ? "(Locked)" : ""}
-			</option>
+    let partyHTML = `
+        <label>Party:</label>
+        <select id="party-select">
+            <option value="party_A" ${player.data.party_A_locked ? "disabled" : ""}>
+                ${player.data.party_A} ${player.data.party_A_locked ? "(Locked)" : ""}
+            </option>
 
-			<option value="party_B" ${player.data.party_B_locked ? "disabled" : ""}>
-				${player.data.party_B} ${player.data.party_B_locked ? "(Locked)" : ""}
-			</option>
-		</select>
-	`;
-
+            <option value="party_B" ${player.data.party_B_locked ? "disabled" : ""}>
+                ${player.data.party_B} ${player.data.party_B_locked ? "(Locked)" : ""}
+            </option>
+        </select>
+    `;
 
     // Inject dropdowns
     listContainer.innerHTML = missionHTML + "<br><br>" + partyHTML;
-	const missionSelect = document.getElementById("mission-select");
 
-// Only initialize if no mission is saved yet
-	if (!player.missions.current_mission.id) {
-    player.missions.current_mission.id = missionSelect.value;
-    await storage.savePlayer(player);
-	}
+    const missionSelect = document.getElementById("mission-select");
+    const partySelect = document.getElementById("party-select");
 
-	// FORCE-SAVE the default party on page load - REMOVED
-	const partySelect = document.getElementById("party-select");
+    // --- FIX #1: Sync mission dropdown with saved state ---
+    if (typeof player.missions.current_mission.id !== "string" ||
+        player.missions.current_mission.id.trim() === "") {
 
-	// FORCE-SAVE mission ID on page load - REMOVED
-    // Update mission display
+        player.missions.current_mission.id = missionSelect.value;
+        await storage.savePlayer(player);
+    } else {
+        missionSelect.value = player.missions.current_mission.id;
+    }
+
+    // --- FIX #2: Sync party dropdown with saved state ---
+    if (!player.missions.current_mission.party) {
+        // Default to party_A if nothing saved
+        player.missions.current_mission.party = "party_A";
+        await storage.savePlayer(player);
+    }
+
+    // Set dropdown to match saved value
+    partySelect.value = player.missions.current_mission.party;
+
     updateMissionDisplay();
 
     // Mission dropdown listener
-    document.getElementById("mission-select").addEventListener("change", async (e) => {
+    missionSelect.addEventListener("change", async (e) => {
         player.missions.current_mission.id = e.target.value;
         await storage.savePlayer(player);
         updateMissionDisplay();
     });
 
     // Party dropdown listener
-    document.getElementById("party-select").addEventListener("change", async (e) => {
+    partySelect.addEventListener("change", async (e) => {
         player.missions.current_mission.party = e.target.value;
         await storage.savePlayer(player);
         updateMissionDisplay();
@@ -999,35 +1101,30 @@ async function loadMissionPage() {
 
     // Mission start button
     const startBtn = document.getElementById("mission-start-button");
-	startBtn.classList.add("venture-key");
+    startBtn.classList.add("venture-key");
+
     if (startBtn) {
         startBtn.style.display = "block";
-
         startBtn.addEventListener("click", () => {
             startMission(player.missions.current_mission.party);
-
         });
     }
-	//const startA = document.getElementById("start-mission-A");
-	// continue button
-	const contA = document.getElementById("continue-mission-A");
-	contA.classList.add("venture-key");
 
-	if (player.missions.current_mission.active && 
-		player.missions.current_mission.party === "party_A") {
+    const contA = document.getElementById("continue-mission-A");
+    contA.classList.add("venture-key");
 
-		//startA.style.display = "none";
-		contA.style.display = "block";
+    if (player.missions.current_mission.active &&
+        player.missions.current_mission.party === "party_A") {
 
-	} else {
-		//startA.style.display = "block";
-		contA.style.display = "none";
-	}
-	updateContinueButton("party_A");
-	updateContinueButton("party_B");
-	renderPatronInventory();
-	setTimeout(enablePatronDragDrop, 0);
+        contA.style.display = "block";
+    } else {
+        contA.style.display = "none";
+    }
 
+    updateContinueButton("party_A");
+    updateContinueButton("party_B");
+    renderPatronInventory();
+    setTimeout(enablePatronDragDrop, 0);
 }
 
 function updateContinueButton(partyKey) {
@@ -1051,9 +1148,6 @@ function updateContinueButton(partyKey) {
         btn.style.display = "none";
     }
 }
-
-
-
 
 function updateMissionDisplay() {
     const missionDisplay = document.getElementById("current-mission-display");
@@ -1156,131 +1250,6 @@ function closeTutorial() {
 	}
 }
 
-async function nextTutorialStep(step) {
-    switch (step) {
-        case 0:
-            setTutorialText("You haven't started the tutorial and don't have a mission available yet.<BR><BR>Go back to the guild window and select startTutorial.");
-            setTutorialChoices([
-                { label: "Finish", action: () => closeTutorial() }
-            ]);
-            break;
-
-        case 1:
-            setTutorialText("Great! Let's begin. You are the Master of a guild of 'Adventurers', you hire them, send them off to do 'adventuring', and they come back with spoils for you. Simple enough right? Well... there haven't been any spoils for a while now...");
-            setTutorialChoices([
-                { label: "Continue", action: () => nextTutorialStep(2) }
-            ]);
-            break;
-
-        case 2:
-            setTutorialText("NOT THIS AGAIN  ...<BR>WHEN ARE YOU TWO FAT DRUNK BLOBS<BR>ARE EVER GOING TO MAKE ME A PROFIT ???.");
-            setTutorialChoices([
-                { label: "Got it", action: () => nextTutorialStep(3) }
-            ]);
-            break;
-
-        case 3:
-            setTutorialText("WHAT AM I FEEDING AND HOUSING YOU LOT FOR ???<BR>GO AND GET AT IT ALREADY MAKE ME SOME COIN !!!.");
-            setTutorialChoices([
-                { label: "Next", action: () => nextTutorialStep(4) }
-            ]);
-            break
-
-        case 4:
-            setTutorialText("AND TRY FIND THAT WORTHLESS BARD,<BR>CLAUDIO WAS SUPPOSED TO BE BACK HERE BY NOW !!!");
-            setTutorialChoices([
-                { label: "Next", action: () => nextTutorialStep(5) }
-            ]);
-            break;
-
-        case 5:
-            setTutorialText("BUT DON'T GO OFF GETTING YOURSELF KILLED !!!<BR>YOU'RE NOT EVEN INSURED YET ...");
-            setTutorialChoices([
-                { label: "Next", action: () => nextTutorialStep(6) }
-            ]);
-            break;
-
-        case 6:
-            setTutorialText("Now the player will go to the missions window, select Brag+Hog and a mission to 'Make Coin', and head off.<BR><BR>*door slams*");
-            setTutorialChoices([
-                { label: "Next", action: () => nextTutorialStep(888) }
-            ]);
-            break;
-
-        case 7:
-            setTutorialText("Scenery changed, now the patrons are on their way.");
-            setTutorialChoices([
-                { label: "Next", action: () => nextTutorialStep(8) }
-            ]);
-            break;
-
-        case 8:
-            setTutorialText("Hog:	'Well we've done it now eh 'raggo<BR><BR>Brag:	'Ehhh, that won't be much of a fuss,<BR>I reckon we can go dig up that pot we've saved for later.");
-            setTutorialChoices([
-                { label: "Next", action: () => nextTutorialStep(9) }
-            ]);
-            break;
-
-        case 9:
-            setTutorialText("Hog:	WHAT POT?!<BR><BR>		Brag, have you been holding up on me again?");
-            setTutorialChoices([
-                { label: "Next", action: () => nextTutorialStep(10) }
-            ]);
-            break;
-
-        case 10:
-            setTutorialText("Brag	Noooo I would never! <BR>		Don't you remember we've talked about this.");
-            setTutorialChoices([
-                { label: "Next", action: () => nextTutorialStep(11) }
-            ]);
-            break;
-
-        case 11:
-            setTutorialText("Hog:		'Talked???'");
-            setTutorialChoices([
-                { label: "Next", action: () => nextTutorialStep(12) }
-            ]);
-            break;
-
-        case 12:
-            setTutorialText("Brag:	'Yeah we've said we can't just let the boss have it all or he'll dump us to the curve again.'");
-            setTutorialChoices([
-                { label: "Next", action: () => nextTutorialStep(13) }
-            ]);
-            break;
-
-        case 13:
-            setTutorialText("Hog -	'...........<BR>		?!<BR>		When have WE ever FOUND anything?!'");
-            setTutorialChoices([
-                { label: "Next", action: () => nextTutorialStep(14) }
-            ]);
-            break;
-
-        case 14:
-            setTutorialText("Brag:	'Well, just leave it to me then,<BR>		let's go find our pot o' gold, bring it to the chief,<BR>		And we'll be Ok for a while ... ");
-            setTutorialChoices([
-                { label: "Next", action: () => nextTutorialStep(888) }
-            ]);
-            break;
-
-        case 888:	//update here mission log and change tutor===1, and save game.
-            setTutorialText("Tutorial complete!");
-			if (player.missions.tutorial === 0) {
-				player.missions.tutorial = 1; // This sets the value to 1 and removes the tutor button    // This creates 'green' inside 'missions'
-				if (!player.missions) {
-					player.missions = {};
-				}
-				player.missions.green_1 = 1; 	//enables first mission.
-				await storage.savePlayer(player);
-				console.log("Tutorial status updated!");
-			}
-            setTutorialChoices([
-                { label: "Finish", action: () => closeTutorial() }
-            ]);
-            break;
-    }
-}
-
 function showMessage(text) {
     const status = document.getElementById("status");
     if (!status) return; // silently fail if missing
@@ -1291,12 +1260,6 @@ function showMessage(text) {
     setTimeout(() => {
         status.textContent = "";
     }, 2000);
-}
-
-	
-function setTutorialText(text) {
-    const box = document.getElementById("tutorial-text");
-    if (box) box.innerHTML  = text;
 }
 
 function setTutorialChoices(choices) {
@@ -1348,8 +1311,6 @@ The Top Layer (Hydrated Object): The result produced by your functions, providin
 Key takeaway: This architecture makes your game much easier to maintain. If you want to add a new property to all adventurers (like "Energy Level"), you only have to update your createDefaultPatronState() and the UI logic, rather than modifying every single existing save file.
 */
 
-
-
 function getFullPatronData(id) {
     const staticAdvData = loreData.Adventurer[id];
     const playerAdvData = player.patrons[id];
@@ -1383,12 +1344,46 @@ function getHydratedAdventurer(advId) {
     };
 }
 
-function createDefaultPatronState() {	
-	//createDefaultPatronState() acts as a factory function. Its purpose is to guarantee that every new adventurer added to your save file starts with the exact same baseline of properties, preventing "undefined" errors later in your code when you try to access things like status or loyalty.
+function createDefaultPatronState(advId) {
+    const lore = loreData.Adventurer[advId];
+
+    // Safety fallback
+    if (!lore) {
+        console.warn("Missing lore for", advId);
+        return { status: "idle" };
+    }
+
+    // Armor proficiency → numeric bonus
+    const armorBonus = {
+        Light: 2,
+        Medium: 4,
+        Havy: 6
+    };
+
+    const agility = lore.agility_mod ?? 0;
+    const hpDie = lore.hp_die ?? 0;
+    const hpMod = lore.hp_modifier ?? 0;
+    const level = lore.level ?? 1;
+    const prof = lore.proficiency_armor ?? "light";
+
+    // Compute AC
+    let AC = 10 + agility + (armorBonus[prof] || 0);
+
+    // Barbarian racial bonus
+    if (lore.race?.toLowerCase() === "barbarian") {
+        AC += hpMod;
+    }
+
+    // Compute MaxHP
+    const MaxHP = (hpDie + hpMod) * level;
+
     return {
         status: "idle",
-        //contract_expiry: Date.now() + 86400000,
-        //custom_terms: null // This field doesn't exist in lore.json, and that's okay!
+        AC,
+        MaxHP,
+        currentHP: MaxHP,   // optional: start full
+        //fatigue: 0,         // optional future field
+        //injury: 0           // optional future field
     };
 }
 
@@ -1404,7 +1399,7 @@ async function recruitAdventurer(advId) {
     }
 
     // 3. Inject the new state using your factory
-    player.patrons[advId] = createDefaultPatronState();
+    player.patrons[advId] = createDefaultPatronState(advId);
 
     // 4. Save the updated object back to IDB
     await storage.savePlayer(player);
@@ -1479,31 +1474,95 @@ function renderCharSheet(adv) {
     }
 
     sheet.innerHTML = `
-        <h1>${adv.name}</h1>
-        <img src="${adv.icon || 'assets/patrons/default.png'}" style="height:150px">
+        <div class="char-container">
+            <div class="char-header">
+                <img class="char-portrait" src="${adv.icon}">
+                <div class="char-basic-info">
+                    <h1 class="char-name">${adv.name}</h1>
+                    <p><strong>Race:</strong> ${adv.race ?? "Unknown"}</p>
+                    <p><strong>Role:</strong> ${adv.role ?? "Unknown"} Lvl: ${adv.level ?? "?"}</p>
+                    <p><strong>Alignment:</strong> ${adv.alignment ?? "Neutral"}</p>
+                    <p><strong>Caste:</strong> ${adv.caste ?? "Omni"}</p>
+                </div>
+            </div>
 
-        <p><strong>Race:</strong> ${adv.race ?? "Unknown"}</p>
-        <p><strong>Role:</strong> ${adv.role ?? "Unknown"}</p>
-        <p><strong>Level:</strong> ${adv.level ?? "?"}</p>
-        <p><strong>Alignment:</strong> ${adv.alignment ?? "Neutral"}</p>
+		<div class="char-section">
+			<h3>Stats</h3>
 
-        <h3>Stats</h3>
-        <ul>
-            <li>Health: ${adv.hp_modifier ?? 0}</li>
-            <li>Strength: ${adv.strengh_mod ?? 0}</li>
-            <li>Agility: ${adv.agility_mod ?? 0}</li>
-            <li>Wisdom: ${adv.wisdom_mod ?? 0}</li>
-            <li>Intelligence: ${adv.intelligence_mod ?? 0}</li>
-            <li>Charisma: ${adv.charisma_mod ?? 0}</li>
-        </ul>
+			<div class="char-stats-grid">
 
-        <h3>Traits</h3>
-        <ul>
-            ${(adv.trait ?? []).map(t => `<li>${t}</li>`).join("")}
-        </ul>
+				<div class="char-stats-block">
+					<ul class="char-stats">
+						<li>Health: ${adv.hp_modifier ?? 0}</li>
+						<li>Strength: ${adv.strengh_mod ?? 0}</li>
+						<li>Agility: ${adv.agility_mod ?? 0}</li>
+						<li>Wisdom: ${adv.wisdom_mod ?? 0}</li>
+						<li>Intelligence: ${adv.intelligence_mod ?? 0}</li>
+						<li>Charisma: ${adv.charisma_mod ?? 0}</li>
+					</ul>
+				</div>
+
+				<div class="char-stats-block">
+					<ul class="char-stats">
+						<li><strong>AC:</strong> ${adv.AC}</li>
+						<li><strong>MxHP:</strong> ${adv.MaxHP}</li>
+						<li><strong>HP:</strong> ${adv.currentHP}</li>
+					</ul>
+				</div>
+
+				<div class="char-stats-block">
+					<ul class="char-stats">
+						<li><strong>Profeciencies:</strong></li>
+						<li><strong>Armor:</strong> ${adv.proficiency_armor}</li>
+						<li><strong>Weapon:</strong> ${adv.proficiency_weapon}</li>
+					</ul>
+				</div>
+
+			</div>
+		</div>
+
+
+            <div class="char-section">
+			
+				<div class="char-stats-grid">
+
+					<div class="char-stats-block">
+						<h3>Traits</h3>
+						<ul class="char-traits">
+						  ${(adv.trait ?? []).map(t => `<li>${t}</li>`).join("")}
+						</ul>
+
+						${(() => {
+							const innate = getInnateTraits(adv);
+							if (!innate.length) return "";
+
+							return `
+							  <h3>Innate</h3>
+							  <ul class="char-traits">
+								${innate.map(t => `<li>${t}</li>`).join("")}
+							  </ul>
+							`;
+						})()}
+
+
+				
+					</div>
+					
+					
+					<div class="char-stats-block">
+					
+						<h3>
+							Contract - ${ { idle: "Signed", mission: "Signed" }[adv.status] || adv.status }
+						</h3>
+
+					</div>
+				</div>
+            </div>
+
+        </div>
     `;
-}
 
+}
 
 
 // Journal.addEntry("You discovered a hidden cave.");
