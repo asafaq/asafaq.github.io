@@ -21,6 +21,74 @@ async function initializeGame() {
 // 4. Run it immediately when the script loads
 initializeGame();
 
+const noticeRules = [
+    {
+        condition: (player) => player.missions.tutorial === 0,
+        message: "Welcome to my game. Visit the Guild to start the tutorial"
+    },
+    {
+        condition: (player) => player.missions.green_1 === 1,
+        message: "It's time for your first mission."
+    }
+];
+
+function evaluateNotices() {
+    for (const rule of noticeRules) {
+        if (rule.condition(player)) {
+            pushStatus(rule.message, 0); // persistent
+            return; // show only the highest priority
+        }
+    }
+
+    // If no notices apply
+    pushStatus("", 0);
+}
+
+let statusQueue = [];
+let statusIndex = 0;
+
+function queueStatus(messages, interval = 4000) {
+    statusQueue = messages;
+    statusIndex = 0;
+
+    function rotate() {
+        if (statusQueue.length === 0) return;
+        pushStatus(statusQueue[statusIndex]);
+        statusIndex = (statusIndex + 1) % statusQueue.length;
+        setTimeout(rotate, interval);
+    }
+
+    rotate();
+}
+
+const DEFAULT_STATUS = "Ready.";
+
+function pushStatus(message, duration = 5000) {
+    const bar = document.querySelector(".status-bar");
+    if (!bar) return;
+
+    if (!message || message.trim() === "") {
+        bar.textContent = DEFAULT_STATUS;
+        bar.classList.remove("hidden");
+        return;
+    }
+
+    bar.textContent = message;
+    bar.classList.remove("hidden");
+
+    if (duration > 0) {
+        setTimeout(() => {
+            bar.textContent = DEFAULT_STATUS;
+        }, duration);
+    }
+}
+
+//queueStatus(["Hello", "World"]);
+//queueStatus(["Fast", "Messages"], 1500);
+//pushStatus("Hello, this is your new status bar!");
+
+
+
 
 // This function takes your Lore list and merges it with current player data
 // The "Hydration" Function: Merges Lore + Player State
@@ -379,21 +447,6 @@ function enablePatronDragDrop() {
 			const patron = player.patrons[advId];
 			const origin = patron.location;
 
-			// --- PARTY LOCK CHECKS ---
-			if (origin === 3 && player.data.party_A_locked) {
-				console.warn("Party A is locked — cannot move patron.");
-				return;
-			}
-			if (origin === 4 && player.data.party_B_locked) {
-				console.warn("Party B is locked — cannot move patron.");
-				return;
-			}
-			if (origin === 5 && player.data.party_C_locked) {
-				console.warn("Party C is locked — cannot move patron.");
-				return;
-			}
-			// --------------------------
-
 			// Determine new location
 			let newLocation = 1;
 			if (zone.id === "party-a-patron-inventory") newLocation = 3;
@@ -402,19 +455,40 @@ function enablePatronDragDrop() {
 			if (zone.id === "guild-patron-inventory") newLocation = 1;
 			if (zone.id === "guild2-patron-inventory") newLocation = 2;
 
+			// --- PARTY LOCK CHECKS (origin + destination) ---
+			const isLocked = loc => ({
+				3: player.data.party_A_locked,
+				4: player.data.party_B_locked,
+				5: player.data.party_C_locked
+			}[loc] || false);
+
+			// Block leaving a locked party
+			if (isLocked(origin)) {
+				
+				pushStatus("Cannot move patron — origin party is locked.");
+				console.warn("Cannot move patron — origin party is locked.");
+				return;
+			}
+
+			// Block entering a locked party
+			if (isLocked(newLocation)) {
+				pushStatus("Cannot move patron — destination party is locked.");
+				console.warn("Cannot move patron — destination party is locked.");
+				return;
+			}
+			// -------------------------------------------------
+
 			// Update patron location
 			patron.location = newLocation;
 
-			// Save to IDB
 			await storage.savePlayer(player);
 
-			// Re-render UI
 			patronList = getVisiblePatrons();
 			renderPatronInventory();
 
-			// Re-bind drag/drop AFTER DOM refresh
 			setTimeout(enablePatronDragDrop, 0);
 		});
+
 
 
     });
@@ -509,8 +583,6 @@ async function loadPage(page) {
   if (page === "contracts") {
 	initContractsPage();
 	}
-
-
 
   if (page === "missions") {
 	  
@@ -607,6 +679,7 @@ async function loadPage(page) {
   if (page === "mail") {
 	renderMailboxPage();
   }
+  evaluateNotices()
 }
 
 function initContractsPage() {
@@ -784,10 +857,15 @@ function getPartyMembers(partyKey) {
 
 
 async function startMission(partyKey) {
+	
+	    if (partyKey === "party_B") {
+        pushStatus("party_B isn't implemented yet.");
+        return;
+    }
 	// let missionId = player.missions.current_mission.id;
 
 	// if (typeof missionId !== "string" || missionId.trim() === "") {
-		// showMessage("Please select a mission first.");
+		// pushStatus("Please select a mission first.");
 		// return;
 	// }
 	// const validation = validateParty(partyKey);
@@ -815,24 +893,28 @@ async function startMission(partyKey) {
             return;
         }
     }
+    // 🔴 TEMPORARY BLOCK: prevent party_B from starting missions
 
     const missionId = player.missions.current_mission.id;
     const party = player.missions.current_mission.party;
+	
+
+
 	// Prevent starting a mission that is already in progress
 	if (player.missions.current_mission.active &&
 		player.missions.current_mission.locked_mission === missionId) {
 
-		showMessage("This mission is already in progress and cannot be started again.");
+		pushStatus("This mission is already in progress and cannot be started again.");
 		return;
 	}
 
     if (!missionId) {
-        showMessage("Please select a mission first.");
+        pushStatus("Please select a mission first.");
         return;
     }
 
     if (!party) {
-        showMessage("Please select a party first.");
+        pushStatus("Please select a party first.");
         return;
     }
 
@@ -859,7 +941,7 @@ async function startMission(partyKey) {
 
 	// If no mission page exists → block and DO NOT lock
 	if (!missionPage || !pageExists(missionPage)) {
-		showMessage("This mission is not implemented yet.");
+		pushStatus("This mission is not implemented yet.");
 		return;
 	}
 
@@ -1155,6 +1237,8 @@ function updateMissionDisplay() {
 
     const missionLabels = {
         green_1: "Tutorial in the Green Pastures",
+		green_2: "Travelling to Townshop Tavern",
+		green_3: "Entering the Dark Forest"
     };
 
     const id = player.missions.current_mission.id;
@@ -1165,11 +1249,28 @@ function updateMissionDisplay() {
         partyKey === "party_B" ? player.data.party_B :
         "None";
 
+    /* ============================================================
+       ORIGINAL MISSION DISPLAY (Legacy)
+       Remove this block later if you retire missionDisplay
+       ============================================================ */
     if (!id) {
         missionDisplay.textContent = "No mission selected.";
     } else {
         missionDisplay.textContent =
             `Current Mission: ${missionLabels[id] || id} (Party: ${partyName})`;
+    }
+
+
+    /* ============================================================
+       NEW: PUSH STATUS MESSAGE (Add‑on)
+       Remove this block later if you retire pushStatus
+       ============================================================ */
+    if (!id) {
+		console.log("new push started")
+        pushStatus("No mission selected.");
+    } else {
+		console.log("new push started")
+        pushStatus(`Mission: ${missionLabels[id] || id} — Party: ${partyName}`);
     }
 }
 
@@ -1347,44 +1448,73 @@ function getHydratedAdventurer(advId) {
 function createDefaultPatronState(advId) {
     const lore = loreData.Adventurer[advId];
 
-    // Safety fallback
     if (!lore) {
         console.warn("Missing lore for", advId);
         return { status: "idle" };
     }
 
-    // Armor proficiency → numeric bonus
+    // Armor proficiency → numeric bonus (all lowercase keys)
     const armorBonus = {
-        Light: 2,
-        Medium: 4,
-        Havy: 6
+        unarmed: 0,
+        light: 2,
+        medium: 4,
+        heavy: 6
     };
 
     const agility = lore.agility_mod ?? 0;
+    const wisdom = lore.wisdom_mod ?? 0;
     const hpDie = lore.hp_die ?? 0;
     const hpMod = lore.hp_modifier ?? 0;
     const level = lore.level ?? 1;
-    const prof = lore.proficiency_armor ?? "light";
 
-    // Compute AC
+    // Normalize armor proficiency
+    let prof = (lore.proficiency_armor || "unarmed").toLowerCase();
+    if (!armorBonus.hasOwnProperty(prof)) {
+        prof = "unarmed";
+    }
+
+    // Normalize race + role
+    const race = lore.race?.toLowerCase() || "";
+    const role = lore.role?.toLowerCase() || "";
+
+    // --- Compute AC ---
     let AC = 10 + agility + (armorBonus[prof] || 0);
 
-    // Barbarian racial bonus
-    if (lore.race?.toLowerCase() === "barbarian") {
+    // Barbarian bonus only when unarmed
+    if (race === "barbarian" && prof === "unarmed") {
         AC += hpMod;
     }
 
-    // Compute MaxHP
-    const MaxHP = (hpDie + hpMod) * level;
+    // Monk AC formula (only when unarmed)
+    if (role === "monk" && prof === "unarmed") {
+        AC = 10 + agility + wisdom;
+    }
+
+    // --- Compute MaxHP ---
+    function rollAdvantage(die) {
+        const a = Math.ceil(Math.random() * die);
+        const b = Math.ceil(Math.random() * die);
+        return Math.max(a, b);
+    }
+
+    let MaxHP = hpDie + hpMod; // Level 1 guaranteed max
+
+    for (let lvl = 2; lvl <= level; lvl++) {
+        MaxHP += rollAdvantage(hpDie) + hpMod;
+    }
 
     return {
         status: "idle",
         AC,
         MaxHP,
-        currentHP: MaxHP,   // optional: start full
-        //fatigue: 0,         // optional future field
-        //injury: 0           // optional future field
+        currentHP: MaxHP
     };
+}
+
+function rollAdvantage(die) {
+    const a = Math.ceil(Math.random() * die);
+    const b = Math.ceil(Math.random() * die);
+    return Math.max(a, b);
 }
 
 async function recruitAdventurer(advId) {

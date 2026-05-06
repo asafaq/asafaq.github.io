@@ -468,8 +468,7 @@ async function handleMissionEnd(sceneId) {
 		Journal.addEntry("You've decided to travel to the Township Tavern and meet up with Hogmother.")
 		nextPage = "missions"
 	}
-    
-	
+
 	if (sceneId === "green2_116end") {
 		player.missions.green_2 = 2;
 		player.patrons.adv_Amyssa.location = 3;
@@ -619,11 +618,14 @@ async function handleMissionEnding(sceneId) {
         }
     };
 
-    // Execute the matching ending if it exists
-    if (endings[sceneId]) {
-        await endings[sceneId]();
-        return true;
-    }
+	if (endings[sceneId]) {
+		await endings[sceneId]();
+
+		// 🔥 THIS is the missing piece
+		await storage.savePlayer(player);
+
+		return true;
+	}
 
     return false;
 }

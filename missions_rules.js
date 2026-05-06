@@ -158,63 +158,111 @@ function getInnateTraits(patron) {
     return raceData.Traits; // array of strings
 }
 
+const PartySynergies = {
+    "Trouble Makers": {
+        requirements: {
+            roles: ["barbarian", "bard"],	//roles → all must be present
+            anyOfRoles: ["rogue", "miner"]	//anyOfRoles → at least one must be present
+        }
+    },
+
+    "Hogfamily first": {
+        requirements: {
+            adventurers: [					//adventurers → specific IDs must be present
+                "Adv_Hogperson",
+                "Adv_Hogmother",
+                "Adv_Hogfather"
+            ]
+        }
+    }
+};
+
+
 function buildPartyTraits(partyKey) {
     const members = getPartyMembers(partyKey);
 
-    const allTraits = [];
-	
-    let hasBarbarian = false;
-    let hasRogue = false;
-    let hasBard = false;
-    let hasMiner = false;
+    const visibleTraits = [];
+    const hiddenTraits = [];
+
+    // Pre-calc lookup tables
+    const roles = new Set();
+    const adventurerIds = new Set();
 
     for (const m of members) {
-        // DEBUG LOG — this is where you inspect the data
-        console.log("Member:", m.name, "Race:", m.race, "Role:", m.role);
+        const role = m.role?.toLowerCase();
+        if (role) roles.add(role);
 
-        // Track race/roles for synergy traits
-        if (m.race?.toLowerCase() === "barbarian") {
-            hasBarbarian = true;
+        if (m.id) adventurerIds.add(m.id);
+
+        // Visible personal traits
+        if (Array.isArray(m.traits)) {
+            visibleTraits.push(...m.traits);
         }
 
-        const role = m.role?.toLowerCase();
-        if (role === "rogue") hasRogue = true;
-        if (role === "bard") hasBard = true;
-        if (role === "miner") hasMiner = true;
-
-        // Personal traits
-        if (m.traits && Array.isArray(m.traits)) {
-            allTraits.push(...m.traits);
+        // Secret traits
+        if (Array.isArray(m.secretTraits)) {
+            hiddenTraits.push(...m.secretTraits);
         }
 
         // Innate racial traits
         const innate = getInnateTraits(m);
-        allTraits.push(...innate);
+        visibleTraits.push(...innate);
     }
 
-    // --- Synergy Trait: Trouble Makers ---
-    // Condition A: Barbarian + Rogue + Bard
-    // Condition B: Barbarian + Miner + Bard (if you want Miner instead of Rogue)
-    if (
-        hasBarbarian &&
-        hasBard &&
-        (hasRogue || hasMiner)
-    ) {
-        allTraits.push("Trouble Makers");
+    // --- Evaluate Synergies ---
+    for (const [synergyName, synergy] of Object.entries(PartySynergies)) {
+        const req = synergy.requirements;
+
+        let qualifies = true;
+
+        // Required roles
+        if (req.roles) {
+            for (const r of req.roles) {
+                if (!roles.has(r.toLowerCase())) {
+                    qualifies = false;
+                    break;
+                }
+            }
+        }
+
+        // Any-of roles
+        if (qualifies && req.anyOfRoles) {
+            const match = req.anyOfRoles.some(r => roles.has(r.toLowerCase()));
+            if (!match) qualifies = false;
+        }
+
+        // Required adventurers
+        if (qualifies && req.adventurers) {
+            for (const adv of req.adventurers) {
+                if (!adventurerIds.has(adv)) {
+                    qualifies = false;
+                    break;
+                }
+            }
+        }
+
+        if (qualifies) {
+            visibleTraits.push(synergyName);
+        }
     }
 
     // Remove duplicates
-    const uniqueTraits = [...new Set(allTraits)];
+    const uniqueVisible = [...new Set(visibleTraits)];
+    const uniqueHidden = [...new Set(hiddenTraits)];
 
-    player.missions.current_mission.party_traits = uniqueTraits;
+    player.missions.current_mission.party_traits_visible = uniqueVisible;
+    player.missions.current_mission.party_traits_hidden = uniqueHidden;
 }
 
 function partyHasTrait(traitName) {
-    const traits = player.missions.current_mission.party_traits;
-    if (!traits) return false;
+    const visible = player.missions.current_mission.party_traits_visible || [];
+    const hidden = player.missions.current_mission.party_traits_hidden || [];
 
-    return traits.some(t => t.toLowerCase() === traitName.toLowerCase());
+    const all = [...visible, ...hidden];
+
+    return all.some(t => t.toLowerCase() === traitName.toLowerCase());
 }
+
 
 // if (partyHasTrait("Rage")) {
     // addMissionOption({
@@ -224,10 +272,12 @@ function partyHasTrait(traitName) {
 // }
 
 function partyHasAnyTrait(traitList) {
-    const traits = player.missions.current_mission.party_traits;
-    if (!traits) return false;
+    const visible = player.missions.current_mission.party_traits_visible || [];
+    const hidden = player.missions.current_mission.party_traits_hidden || [];
 
-    return traitList.some(t => traits.includes(t));
+    const all = [...visible, ...hidden];
+
+    return traitList.some(t => all.includes(t));
 }
 
 // if (partyHasAnyTrait(["Rage", "Berserker", "Bloodlust"])) {
@@ -235,11 +285,14 @@ function partyHasAnyTrait(traitList) {
 // }
 
 function partyHasAllTraits(traitList) {
-    const traits = player.missions.current_mission.party_traits;
-    if (!traits) return false;
+    const visible = player.missions.current_mission.party_traits_visible || [];
+    const hidden = player.missions.current_mission.party_traits_hidden || [];
 
-    return traitList.every(t => traits.includes(t));
+    const all = [...visible, ...hidden];
+
+    return traitList.every(t => all.includes(t));
 }
+
 
 // if (partyHasAllTraits(["Calm", "Wise"])) {
     // unlockMeditationOption();
