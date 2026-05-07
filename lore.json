@@ -580,7 +580,8 @@
         "Ferocious",
         "Postposed Death"
       ]
-    },
+    }
+  },
     "Roles": {
       "Carriagefarer": {
         "desc": "the party's horse and buggy, builds the camp, cooks dinner, carries the loot, doesn't fight monsters."
