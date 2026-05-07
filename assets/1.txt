@@ -1,0 +1,99 @@
+ Volume in drive C is Windows
+ Volume Serial Number is 8248-B4CA
+
+ Directory of C:\Users\1\Code\Guild\assets
+
+05/06/2026  07:23 PM    <DIR>          .
+05/06/2026  07:24 PM    <DIR>          ..
+05/06/2026  07:24 PM                 0 1.txt
+04/21/2026  10:56 PM    <DIR>          Contracts
+05/06/2026  03:47 PM    <DIR>          guild
+05/02/2026  09:32 AM    <DIR>          menu
+05/03/2026  02:53 PM    <DIR>          missions
+05/06/2026  03:47 PM    <DIR>          patrons
+               1 File(s)              0 bytes
+
+ Directory of C:\Users\1\Code\Guild\assets\Contracts
+
+04/21/2026  10:56 PM    <DIR>          .
+05/06/2026  07:23 PM    <DIR>          ..
+04/21/2026  10:56 PM            47,216 parchment.jpg
+               1 File(s)         47,216 bytes
+
+ Directory of C:\Users\1\Code\Guild\assets\guild
+
+05/06/2026  03:47 PM    <DIR>          .
+05/06/2026  07:23 PM    <DIR>          ..
+04/22/2026  09:35 PM           465,287 adventurers_license_50.png
+04/25/2026  11:10 AM             6,042 chest60.png
+04/26/2026  06:48 PM           427,751 contract_parchment.png
+05/01/2026  08:40 PM            40,452 default.png
+04/22/2026  09:53 PM           485,301 guild.png
+05/01/2026  08:40 PM            40,452 guild_master.png
+04/25/2026  02:49 PM               543 inventory.png
+04/21/2026  06:10 PM             3,933 license_icon.png
+04/25/2026  07:16 AM            31,840 satchel.png
+05/04/2026  12:28 PM            80,068 scroll.png
+04/26/2026  04:09 AM           471,639 tavern.png
+              11 File(s)      2,053,308 bytes
+
+ Directory of C:\Users\1\Code\Guild\assets\menu
+
+05/02/2026  09:32 AM    <DIR>          .
+05/06/2026  07:23 PM    <DIR>          ..
+05/02/2026  09:32 AM            56,588 cogwheel_L.png
+04/21/2026  06:40 PM             4,803 menu3o.png
+04/21/2026  06:10 PM             3,933 menu_contracts.png
+04/21/2026  06:21 PM             5,700 menu_home.png
+04/26/2026  05:46 PM             6,133 menu_journal.png
+04/24/2026  07:10 PM             3,584 menu_lore.png
+04/24/2026  03:55 PM             4,742 menu_mail.png
+04/21/2026  07:01 PM             5,588 menu_missions.png
+04/24/2026  10:01 PM             4,155 menu_quill.png
+04/21/2026  06:36 PM             4,713 menu_store.png
+04/26/2026  03:53 PM             4,720 menu_tavern.png
+              11 File(s)        104,659 bytes
+
+ Directory of C:\Users\1\Code\Guild\assets\missions
+
+05/03/2026  02:53 PM    <DIR>          .
+05/06/2026  07:23 PM    <DIR>          ..
+04/30/2026  10:59 PM            21,421 boulder.png
+04/29/2026  11:43 AM           606,931 fantasy_map_s.png
+04/26/2026  03:37 PM            47,200 guild_party_party_window.png
+05/03/2026  02:53 PM           352,183 hogmother_letter.jpg
+05/01/2026  09:06 PM            31,012 koboldog.png
+04/29/2026  03:00 PM             6,179 mission_event_coins_s.png
+04/29/2026  03:07 PM               553 mission_indicator_encounter.png
+04/29/2026  02:46 PM             2,773 mission_tutur_road1.png
+               8 File(s)      1,068,252 bytes
+
+ Directory of C:\Users\1\Code\Guild\assets\patrons
+
+05/06/2026  03:47 PM    <DIR>          .
+05/06/2026  07:23 PM    <DIR>          ..
+04/26/2026  06:16 AM             9,440 Aasibelle_s.png
+05/02/2026  08:41 PM            19,219 Aasibelle_s2.png
+04/26/2026  01:18 AM             9,562 amyssa_s.png
+04/26/2026  01:17 AM            33,181 amyssa_smaller.png
+05/04/2026  05:06 PM            62,979 Claudio.png
+05/04/2026  05:03 PM             8,756 Claudio_s.png
+05/01/2026  08:40 PM            40,452 default.png
+05/04/2026  08:59 PM            75,783 direwolf.png
+05/04/2026  09:00 PM             9,016 direwolf_s.png
+04/26/2026  02:10 AM           637,824 dwarven_miner.png
+04/26/2026  02:10 AM             8,600 dwarven_miner_s.png
+05/02/2026  11:22 AM           348,031 halfling_L.png
+05/04/2026  03:31 PM           436,576 hogfather.png
+05/04/2026  03:30 PM           419,134 hogmother.png
+04/20/2026  06:09 PM            41,171 hogperson.png
+04/25/2026  07:47 PM             6,343 hogperson_s.png
+04/26/2026  01:58 AM            32,175 lurch.png
+04/26/2026  01:58 AM             5,627 lurch_s.png
+05/03/2026  12:46 PM            83,759 scroll.png
+05/02/2026  08:39 PM            19,978 Tinman.png
+              20 File(s)      2,307,606 bytes
+
+     Total Files Listed:
+              52 File(s)      5,581,041 bytes
+              17 Dir(s)  344,335,802,368 bytes free
