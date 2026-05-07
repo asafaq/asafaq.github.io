@@ -582,214 +582,157 @@
       ]
     }
   },
-    "Roles": {
-      "Carriagefarer": {
-        "desc": "the party's horse and buggy, builds the camp, cooks dinner, carries the loot, doesn't fight monsters."
-      },
-      "Brute": {
-        "desc": "less proficient fighter, higher critical rate for recklessness.",
-        "Traits": [
-          "Reckless"
-        ]
-      },
-      "Baker": {
-        "desc": "A brute, higher critical rate for recklessness.",
-        "Traits": [
-          "Reckless"
-        ]
-      },
-      "Miner": {
-        "desc": "A rogue with a day job. Like a thief, but less proficient"
-      },
-      "Bard": {
-        "desc": "The Jack of all trades, at your service!"
-      },
-      "Swordmage": {
-        "desc": "Elf specific class, a fighter proficient in spell casting."
-      },
-      "Thief": {
-        "desc": "Rogue adept at indirect approach to challenges."
-      },
-      "Spy": {
-        "desc": "Tactician adept at espionage and disguise, can pose as an alignment adjacent to their own, meaning neutral could pose as any."
-      },
-      "Paladin": {
-        "desc": "The Divine Knight, sworn servitude to god, and to his king on the earth."
-      },
-      "Fallen Paladin": {
-        "desc": "A fighter, forsaken his oath but still has some providence."
-      },
-      "Clericbot": {
-        "desc": "A warforged able to to channel divine power, but only partially, charging only healing abilities.",
-        "Traits": [
-          "Healer"
-        ]
-      }
+  "Roles": {
+    "Carriagefarer": {
+      "desc": "the party's horse and buggy, builds the camp, cooks dinner, carries the loot, doesn't fight monsters."
     },
-    "Traits": {
-      "Diplomatic": {
-        "desc": "Gain advantage in parle."
-      },
-      "Masocist": {
-        "desc": "Gain +1 Hit/Dmg for every 25% HP Missing."
-      },
-      "Cheerful": {
-        "desc": "Party members have moral +1."
-      },
-      "Appraisal": {
-        "desc": "Provide assessment of value."
-      },
-      "Tunnel Surveyer": {
-        "desc": "Travel safely underground where cave-ins are bound."
-      },
-      "Persuasive": {
-        "desc": "Higher chance at parle."
-      },
-      "Comedian": {
-        "desc": "Provides the party a moral boost. Comedian also preforms at the guild to entertain the patrons."
-      },
-      "Scribe": {
-        "desc": "While idling at the guild writes magical scrolls."
-      },
-      "Snob": {
-        "desc": "Won't party with lower castes."
-      },
-      "Shady": {
-        "desc": "-2 Hit in fights, +2 Hit in Backstabs."
-      },
-      "Independant": {
-        "desc": "Can travel alone, in a party of one."
-      },
-      "Divine": {
-        "desc": "Has (10*Lvl) Radiant points to spend as Smite or Heal."
-      },
-      "Holy Aura": {
-        "desc": "party has +1 hit and Save rolls."
-      },
-      "Eternal": {
-        "desc": "If this patron happens to die, their body will disappear quickly and be Restored completely in their home realm, and return the next day."
-      },
-      "Stubborn": {
-        "desc": "Gain +1 Endurace, -1 Charisma"
-      },
-      "Nimble": {
-        "desc": "Gain +1 Dexterity, -1 Endurace"
-      },
-      "Darkvision": {
-        "desc": "Can see in the darkness like in dim-lit, can see in dim-lit like in normal light."
-      },
-      "Lightphobic": {
-        "desc": "+1 Hit in darkness , -1 Hit in normal light."
-      },
-      "Calm": {
-        "desc": "Resistant to drama."
-      },
-      "Apothecary": {
-        "desc": "While idling at the guild brews potions."
-      },
-      "Faulty Powerpack": {
-        "desc": "The Warforged power supply last for only one day, then has to be shut down for a day to be dorment until it regenerates its charge. Dorment state also 'ressurects' the warforged unit."
-      },
-      "Spinning Batter": {
-        "desc": "The Warforged may execute a powerful battering assault, spinning his body to attack the target 4 times in one round. The target has to be standing, and either grapped or dazed."
-      },
-      "Healer": {
-        "desc": "Has (10*Lvl) Radiant points to spend as Heal."
-      },
-      "Dorment": {
-        "desc": "This patron may not move or make any action. They can idle in the guild or be carried in a Carriage."
-      },
-      "Adolescent": {
-        "desc": "Experience worse reactions with adults, but better reactions with children."
-      },
-      "Gardener": {
-        "desc": "Adept at flora care."
-      },
-      "Postposed Death": {
-        "desc": "If this character dies, even a catastophic dismemberment death, it may still act and attack for 2 rounds, with +4 to all rolls."
-      }
+    "Brute": {
+      "desc": "less proficient fighter, higher critical rate for recklessness.",
+      "Traits": [
+        "Reckless"
+      ]
     },
-    "Party Traits": {
-      "Trouble Makers": {
-        "desc": "While your party has a Barbarian, a Rogue, and a Bard, gaining better chances to succeed at work-arounds and made-up strategies in Encounters, rather than taking the forward approach or plain fighting.",
-        "Requirements": [
-          "Barbarian",
-          "Rogue",
-          "Bard"
-        ]
-      },
-      "Hogfamily first": {
-        "desc": "While your party contains family members, they gain +1 to all rolls",
-        "Requirements": [
-          "Adv_Hogperson",
-          "Adv_Hogmother",
-          "Adv_Hogfather"
-        ]
-      }
+    "Baker": {
+      "desc": "A brute, higher critical rate for recklessness.",
+      "Traits": [
+        "Reckless"
+      ]
     },
-    "Inventory": {
-      "Carriage": {
-        "desc": "A horse and buggy."
-      },
-      "Camp": {
-        "desc": "builds the camp, cooks dinner"
-      }
+    "Miner": {
+      "desc": "A rogue with a day job. Like a thief, but less proficient"
     },
-    "Patzi": {
-      "Fighter": {
-        "name": [
-          "Roland",
-          "Harold"
-        ],
-        "race": [
-          "Human",
-          "Elf",
-          "Half Elf",
-          "Dwarf",
-          "Hobbit",
-          "Merkin",
-          "Vampirborn",
-          "Warforged",
-          "Celestial",
-          "Demonborn",
-          "Dryad",
-          "Draconian",
-          "Werewolf",
-          "Insectoid",
-          "Genie",
-          "Goliath"
-        ],
-        "prefix": "",
-        "suffix": "",
-        "role": "Carriagefarer",
-        "hp_die": 6,
-        "hp_modifier": 1,
-        "strengh_mod": 0,
-        "agility_mod": -1,
-        "wisdom_mod": 1,
-        "intelligence_mod": 1,
-        "charisma_mod": 2,
-        "alignment": "Neutral",
-        "level": 1,
-        "sex": 1,
-        "size": "Large",
-        "caste": "Noble",
-        "RacialEnemy": "string",
-        "proficiency_armor": "Light",
-        "proficiency_weapon": "Light",
-        "inventory1": "Camp",
-        "inventory2": "Carriage",
-        "inventory3": "string",
-        "inventory4": "string",
-        "inventory1_lock": false,
-        "trait1": "Diplomatic",
-        "trait2": "string",
-        "trait3": "string",
-        "trait4": "string",
-        "trait5": "string",
-        "trait6": "string",
-        "notes": "The old adventurer and the party's horse and buggy, builds the camp, cooks dinner, parles with encouters, guards the loot, doesn't fight monsters."
-      }
+    "Bard": {
+      "desc": "The Jack of all trades, at your service!"
+    },
+    "Swordmage": {
+      "desc": "Elf specific class, a fighter proficient in spell casting."
+    },
+    "Thief": {
+      "desc": "Rogue adept at indirect approach to challenges."
+    },
+    "Spy": {
+      "desc": "Tactician adept at espionage and disguise, can pose as an alignment adjacent to their own, meaning neutral could pose as any."
+    },
+    "Paladin": {
+      "desc": "The Divine Knight, sworn servitude to god, and to his king on the earth."
+    },
+    "Fallen Paladin": {
+      "desc": "A fighter, forsaken his oath but still has some providence."
+    },
+    "Clericbot": {
+      "desc": "A warforged able to to channel divine power, but only partially, charging only healing abilities.",
+      "Traits": [
+        "Healer"
+      ]
+    }
+  },
+  "Traits": {
+    "Diplomatic": {
+      "desc": "Gain advantage in parle."
+    },
+    "Masocist": {
+      "desc": "Gain +1 Hit/Dmg for every 25% HP Missing."
+    },
+    "Cheerful": {
+      "desc": "Party members have moral +1."
+    },
+    "Appraisal": {
+      "desc": "Provide assessment of value."
+    },
+    "Tunnel Surveyer": {
+      "desc": "Travel safely underground where cave-ins are bound."
+    },
+    "Persuasive": {
+      "desc": "Higher chance at parle."
+    },
+    "Comedian": {
+      "desc": "Provides the party a moral boost. Comedian also preforms at the guild to entertain the patrons."
+    },
+    "Scribe": {
+      "desc": "While idling at the guild writes magical scrolls."
+    },
+    "Snob": {
+      "desc": "Won't party with lower castes."
+    },
+    "Shady": {
+      "desc": "-2 Hit in fights, +2 Hit in Backstabs."
+    },
+    "Independant": {
+      "desc": "Can travel alone, in a party of one."
+    },
+    "Divine": {
+      "desc": "Has (10*Lvl) Radiant points to spend as Smite or Heal."
+    },
+    "Holy Aura": {
+      "desc": "party has +1 hit and Save rolls."
+    },
+    "Eternal": {
+      "desc": "If this patron happens to die, their body will disappear quickly and be Restored completely in their home realm, and return the next day."
+    },
+    "Stubborn": {
+      "desc": "Gain +1 Endurace, -1 Charisma"
+    },
+    "Nimble": {
+      "desc": "Gain +1 Dexterity, -1 Endurace"
+    },
+    "Darkvision": {
+      "desc": "Can see in the darkness like in dim-lit, can see in dim-lit like in normal light."
+    },
+    "Lightphobic": {
+      "desc": "+1 Hit in darkness , -1 Hit in normal light."
+    },
+    "Calm": {
+      "desc": "Resistant to drama."
+    },
+    "Apothecary": {
+      "desc": "While idling at the guild brews potions."
+    },
+    "Faulty Powerpack": {
+      "desc": "The Warforged power supply last for only one day, then has to be shut down for a day to be dorment until it regenerates its charge. Dorment state also 'ressurects' the warforged unit."
+    },
+    "Spinning Batter": {
+      "desc": "The Warforged may execute a powerful battering assault, spinning his body to attack the target 4 times in one round. The target has to be standing, and either grapped or dazed."
+    },
+    "Healer": {
+      "desc": "Has (10*Lvl) Radiant points to spend as Heal."
+    },
+    "Dorment": {
+      "desc": "This patron may not move or make any action. They can idle in the guild or be carried in a Carriage."
+    },
+    "Adolescent": {
+      "desc": "Experience worse reactions with adults, but better reactions with children."
+    },
+    "Gardener": {
+      "desc": "Adept at flora care."
+    },
+    "Postposed Death": {
+      "desc": "If this character dies, even a catastophic dismemberment death, it may still act and attack for 2 rounds, with +4 to all rolls."
+    }
+  },
+  "Party Traits": {
+    "Trouble Makers": {
+      "desc": "While your party has a Barbarian, a Rogue, and a Bard, gaining better chances to succeed at work-arounds and made-up strategies in Encounters, rather than taking the forward approach or plain fighting.",
+      "Requirements": [
+        "Barbarian",
+        "Rogue",
+        "Bard"
+      ]
+    },
+    "Hogfamily First": {
+      "desc": "While your party contains family members, they gain +1 to all rolls",
+      "Requirements": [
+        "Adv_Hogperson",
+        "Adv_Hogmother",
+        "Adv_Hogfather"
+      ]
+    }
+  },
+  "Inventory": {
+    "Carriage": {
+      "desc": "A horse and buggy."
+    },
+    "Camp": {
+      "desc": "builds the camp, cooks dinner"
     }
   }
 }
