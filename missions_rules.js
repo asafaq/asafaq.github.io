@@ -67,7 +67,7 @@ function ruleCasteCompatibility(members, mission) {
     const castes = members.map(m => ({
         id: m.id,
         caste: getEffectiveCaste(m),
-        snob: m.traits?.includes("Snob")
+        snob: m.trait?.includes("Snob")
     }));
 
     for (let i = 0; i < castes.length; i++) {
@@ -85,13 +85,23 @@ function ruleCasteCompatibility(members, mission) {
             if (diff > 1) {
                 return `Caste mismatch: ${members[i].name} and ${members[j].name} cannot associate.`;
             }
+			// Hydration warnings
+			for (const c of castes) {
+				if (c.caste === undefined || c.caste === null || Number.isNaN(c.caste)) {
+					console.warn(
+						`[HYDRATION WARNING] Patron "${c.id}" has invalid caste value:`,
+						c.caste,
+						" | Raw caste:", members.find(m => m.id === c.id)?.caste
+					);
+				}
+			}
 
             // Snob rule: cannot associate with lower caste
-            if (A.snob && A.caste < B.caste) {
+            if (A.snob && A.caste > B.caste) {
                 return `${members[i].name} is a Snob and refuses to associate with lower castes.`;
             }
 
-            if (B.snob && B.caste < A.caste) {
+            if (B.snob && B.caste > A.caste) {
                 return `${members[j].name} is a Snob and refuses to associate with lower castes.`;
             }
         }
@@ -367,14 +377,50 @@ const validationRules = [
 ];
 
 function validateParty(partyKey) {
+    const errors = validatePartyAllErrors(partyKey);
+
+    if (errors.length === 0) {
+        return true; // all good
+    }
+
+    // Show the first error in the status bar
+    pushStatus("Party cannot depart:\n• " + errors[0]);
+
+    // Also store all errors for UI popups or debugging
+    player.missions.current_mission.lastValidationErrors = errors;
+
+    return false;
+}
+
+
+
+function validatePartyAllErrors(partyKey) {
     const members = getPartyMembers(partyKey);
     const missionId = player.missions.current_mission.id;
     const rules = missionRules[missionId] || {};
 
+    const errors = [];
+
     for (const rule of validationRules) {
         const result = rule(members, rules);
-        if (result !== true) return result;
+
+        // If rule returns a string → it's an error
+        if (result !== true) {
+            errors.push(result);
+        }
     }
 
-    return true;
+    return errors;
+}
+
+function showAllPartyErrors() {
+    const errors = player.missions.current_mission.lastValidationErrors || [];
+
+    if (errors.length === 0) {
+        pushStatus("No validation errors.");
+        return;
+    }
+
+    const msg = "Party cannot depart:\n" + errors.map(e => "• " + e).join("\n");
+    pushStatus(msg, 8000);
 }

@@ -432,13 +432,13 @@ async function handleMissionEnd(sceneId) {
     if (sceneId === "green1_056END") {
 		
 		player = await storage.loadPlayer(player.id);
+		setPartyLock(false)
 		player.missions.green_1 = 6;
 
 		endMission(); // ← THE ONLY NEW LINE THAT MATTERS
 		loadPage("tavern")
 		Journal.addEntry("You've found 50 silver coins and returned to the guild.")
 		//ending mission so releasing the party lock
-		setPartyLock(false)
 		nextPage = "guild"
 	}
     if (sceneId === "tutor2_118END") {
@@ -648,6 +648,13 @@ function endMission() {
     }
 
     // Reset mission state
+	// Restore party members to idle
+	Object.values(player.patrons).forEach(p => { 
+		if (p.party === player.missions.current_mission.party) 
+			p.status = "idle"; 
+	});
+
+    setPartyLock(false);
     player.missions.current_mission.active = false;
     player.missions.current_mission.id = "";
     player.missions.current_mission.party = "";
@@ -655,6 +662,5 @@ function endMission() {
     player.missions.current_mission.locked_mission = "";
     player.missions.current_mission.party_traits = [];
 
-    setPartyLock(false);
 }
 

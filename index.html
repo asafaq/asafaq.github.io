@@ -26,6 +26,11 @@
     <script src="database.js"></script>
 	
 <div class="app-frame" id="app-frame">
+<div id="loadingScreen">
+    Loading assets...
+</div>
+
+
         <!-- ✅ GLOBAL CONFIRM DIALOG (always present, never overwritten) -->
         <div id="confirm-dialog" class="confirm hidden">
             <div class="confirm-box">
@@ -37,7 +42,10 @@
             </div>
         </div>
   <div id="window-container"></div>
-  <div class="status-bar">Status Line</div>
+	<div class="status-bar">
+		<span class="status-bar-text"></span>
+	</div>
+
 
   <div class="main-window" id="mainWindow">
     <h2>Welcome</h2>

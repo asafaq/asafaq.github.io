@@ -2,6 +2,8 @@
   "Adventurer": {
     "adv_Marilnus": {
       "name": "Marilnus",
+      "icon": "assets/patrons/default.png",
+      "large": "assets/patrons/default.png",
       "race": "Human",
       "role": "Carriagefarer",
       "hp_die": 6,
@@ -35,6 +37,7 @@
     "adv_Hogperson": {
       "name": "Hogperson",
       "icon": "assets/patrons/hogperson_s.png",
+      "large": "assets/patrons/default.png",
       "top": "300px",
       "left": "380px",
       "location": 1,
@@ -75,6 +78,7 @@
     "adv_Bragain": {
       "name": "Bragain",
       "icon": "assets/patrons/dwarven_miner_s.png",
+      "large": "assets/patrons/default.png",
       "top": "220px",
       "left": "380px",
       "location": 1,
@@ -119,6 +123,7 @@
     "adv_Claudio": {
       "name": "Claudio",
       "icon": "assets/patrons/Claudio_s.png",
+      "large": "assets/patrons/default.png",
       "top": "350px",
       "left": "250px",
       "location": 2,
@@ -157,6 +162,7 @@
     "adv_Amyssa": {
       "name": "Amyssa",
       "icon": "assets/patrons/amyssa_s.png",
+      "large": "assets/patrons/default.png",
       "top": "400px",
       "left": "120px",
       "location": 2,
@@ -196,6 +202,7 @@
     },
     "adv_Tonica": {
       "name": "Tonica",
+      "large": "assets/patrons/default.png",
       "race": "Half-Elf",
       "role": "Thief",
       "hp_die": 8,
@@ -310,7 +317,7 @@
       "intelligence_mod": -1,
       "charisma_mod": 4,
       "alignment": "Lawful",
-      "Lawful_commend": "Won't party with Evil or Chaotic.",
+      "Lawful_commend": "Won't party with Chaotic.",
       "level": 4,
       "sex": null,
       "size": "Medium",

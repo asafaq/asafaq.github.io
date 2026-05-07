@@ -1332,5 +1332,23 @@
     "dialog": "There should be",
     "interaction_type": "next",
     "target_id": "END"
+  },
+  {
+    "id": "green2_201",
+    "speaker": "Narrator",
+    "portrait": "",
+    "side": "left",
+    "dialog": "The party has reached the Township Tavern.\nThe place is bustling, travellers and entertainment fill the air with they pressence.",
+    "interaction_type": "next",
+    "target_id": "green2_202"
+  },
+  {
+    "id": "green2_202",
+    "speaker": "Narrator",
+    "portrait": "",
+    "side": "left",
+    "dialog": "The party has reached the Township Tavern.\nThe place is bustling, travellers and entertainment fill the air with they pressence\n\n** END OF CURRENT DEVELOPMENT **.",
+    "interaction_type": "next",
+    "target_id": "green2_203"
   }
 ]

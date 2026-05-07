@@ -700,6 +700,7 @@ img:not([src]) {
     list-style: none;
     padding: 0;
     margin: 0;
+    min-width: 90px;   /* adjust to your layout */
 }
 
 .char-stats-grid {
@@ -714,4 +715,65 @@ img:not([src]) {
 }
 .char-stats li:last-child {
     border-bottom: none;
+}
+
+.patron-window {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.patron-portrait {
+  width: 180px;
+  border-radius: 6px;
+}
+
+.patron-stats p {
+  margin: 4px 0;
+}
+
+.infoPopupPatron {
+  position: fixed;
+  top: 25%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  background: rgba(255, 255, 255, 0.60); /* 25% opacity */
+
+}
+
+
+.status-bar {
+    display: flex;
+    align-items: center;        /* vertically center the text block */
+    justify-content: flex-start;/* no horizontal centering */
+
+    min-height: 24px;
+    line-height: 24px;
+
+    overflow: hidden;
+}
+
+/* Inner text: max 2 lines with ellipsis */
+.status-bar-text {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;      /* limit to 2 lines */
+    -webkit-box-orient: vertical;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal;        /* allow wrapping */
+}
+
+#loadingScreen {
+    display: none; /* default hidden */
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.6);
+    color: white;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    z-index: 99999;
 }

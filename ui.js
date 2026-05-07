@@ -1,25 +1,40 @@
 // 1. A variable that will hold your data
-let loreData = null; 
+let loreData = null;
+let lorePromise = null;
 
-// 2. A variable for your player data (assuming you have this already)
-//let player = { patrons: {} }; 
-
-// 3. The "Loader" function
-async function initializeGame() {
-    try {
-        const response = await fetch('lore.json');
-        loreData = await response.json(); // THIS parses the JSON into a real object
-        console.log("Lore loaded successfully!");
-        
-        // NOW you can start your game logic
-        // recruitAdventurer("warrior_01"); // Example
-    } catch (err) {
-        console.error("Failed to load lore.json. Is it in the same folder?", err);
-    }
+function loadLore() {
+    lorePromise = fetch("lore.json")
+        .then(r => r.json())
+        .then(json => {
+            loreData = json;
+            console.log("Lore loaded.");
+        });
 }
 
-// 4. Run it immediately when the script loads
+function updateLoadingText(loaded, total) {
+    const el = document.getElementById("loadingScreen");
+    if (el) el.textContent = `Loading assets... ${loaded}/${total}`;
+}
+
+function initializeGame() {
+    console.log("Game engine ready.");
+}
+
+function startGame(assets) {
+    console.log("Game starting with assets:", assets);
+    // Your UI/game logic goes here
+}
+
+function showLoadingScreen() {
+  const el = document.getElementById("loadingScreen");
+  if (el) el.style.display = "flex";
+}
+
 initializeGame();
+
+// Unified initialization
+
+// Run initialization
 
 const noticeRules = [
     {
@@ -65,23 +80,25 @@ const DEFAULT_STATUS = "Ready.";
 
 function pushStatus(message, duration = 5000) {
     const bar = document.querySelector(".status-bar");
-    if (!bar) return;
+    const textEl = bar?.querySelector(".status-bar-text");
+    if (!bar || !textEl) return;
 
     if (!message || message.trim() === "") {
-        bar.textContent = DEFAULT_STATUS;
+        textEl.textContent = DEFAULT_STATUS;
         bar.classList.remove("hidden");
         return;
     }
 
-    bar.textContent = message;
+    textEl.textContent = message;
     bar.classList.remove("hidden");
 
     if (duration > 0) {
         setTimeout(() => {
-            bar.textContent = DEFAULT_STATUS;
+            textEl.textContent = DEFAULT_STATUS;
         }, duration);
     }
 }
+
 
 //queueStatus(["Hello", "World"]);
 //queueStatus(["Fast", "Messages"], 1500);
@@ -273,7 +290,7 @@ const pages = {
 		<svg width="100%" height="100%" style="position: absolute; top: 0; left: 0; pointer-events: none;">
 			<!-- 1. The "Hitbox" (Invisible but clickable) -->
 			<path d="M 140 460 C 180 460, 200 300, 240 300" 
-				  stroke="transparent" stroke-width="25" fill="none" 
+				  stroke="transparent" stroke-width="75" fill="none" 
 				  style="pointer-events: stroke; cursor: pointer;" 
 				  onclick="console.log('Winding path clicked!');
 					runMission(player.missions.current_mission.id)" />
@@ -304,14 +321,14 @@ const pages = {
 		<!-- Path Layer -->
 		<svg width="100%" height="100%" style="position: absolute; top: 0; left: 0; pointer-events: none;">
 			<!-- 1. The "Hitbox" (Invisible but clickable) -->
-			<path d="M 140 460 C 221 324 413 466 480 340"
-				  stroke="transparent" stroke-width="25" fill="none" 
+			<path d="M 140 450 C 221 324 413 466 480 340"
+				  stroke="transparent" stroke-width="75" fill="none" 
 				  style="pointer-events: stroke; cursor: pointer;" 
 				  onclick="console.log('Winding path clicked!');
 					runMission(player.missions.current_mission.id)" />
 			
 			<!-- 2. The Visible Dashed Line -->
-			<path class="marching-path" d="M 140 460 C 221 324 413 466 480 340" 
+			<path class="marching-path" d="M 140 450 C 221 324 413 466 480 340" 
 				  stroke="rgba(0, 0, 0, 0.7)" stroke-width="4" 
 				  stroke-dasharray="10, 10" stroke-linecap="round" fill="none" />
 		</svg>
@@ -546,20 +563,29 @@ async function loadPage(page) {
 
 	container.innerHTML = patronList
 	  .filter(patron => patron.location === 1)
-	  .map(patron => `
-		<div class="patron-wrapper" 
-			 style="position: absolute; top: ${patron.top}; left: ${patron.left};">
-		  <img src="${patron.icon}" class="item-icon">
-		  <div class="hover-zone" data-label="${patron.name}"></div>
-		  <div class="tooltip"></div>
-		</div>
-	  `)
+	  .map(patron => {
+		const large = patron.large || patron.icon || "assets/patrons/default.png";
+
+		return `
+		  <div class="patron-wrapper" 
+			   style="position: absolute; top: ${patron.top}; left: ${patron.left};">
+			<img src="${patron.icon}" class="item-icon">
+			<div class="hover-zone"
+				 data-id="${patron.id}"
+				 data-large="${patron.large || patron.icon || 'assets/patrons/default.png'}">
+			</div>
+			<div class="tooltip"></div>
+		  </div>
+		`;
+	  })
 	  .join('');
+
 
 
     initGuildTooltips();   // <-- important
 	showTutorialButton();
 	displayRightMenu();
+	initPatronClicks();
   }
   if (page === "tavern") {
     patronList = getVisiblePatrons();
@@ -568,16 +594,24 @@ async function loadPage(page) {
 
 	container.innerHTML = patronList
 	  .filter(patron => patron.location === 2)
-	  .map(patron => `
-		<div class="patron-wrapper" 
-			 style="position: absolute; top: ${patron.top}; left: ${patron.left};">
-		  <img src="${patron.icon}" class="item-icon">
-		  <div class="hover-zone" data-label="${patron.name}"></div>
-		  <div class="tooltip"></div>
-		</div>
-	  `)
+	  .map(patron => {
+		const large = patron.large || "assets/patrons/default.png";
+
+		return `
+		  <div class="patron-wrapper" 
+			   style="position: absolute; top: ${patron.top}; left: ${patron.left};">
+			<img src="${patron.icon}" class="item-icon">
+			<div class="hover-zone"
+				 data-id="${patron.id}"
+				 data-large="${patron.large || patron.icon || 'assets/patrons/default.png'}">
+			</div>
+			<div class="tooltip"></div>
+		  </div>
+		`;
+	  })
 	  .join('');
-		
+
+		initPatronClicks();
   }
  
   if (page === "contracts") {
@@ -681,6 +715,55 @@ async function loadPage(page) {
   }
   evaluateNotices()
 }
+
+function initPatronClicks() {
+  document.querySelectorAll('.patron-wrapper').forEach(wrapper => {
+    const zone = wrapper.querySelector('.hover-zone');
+    if (!zone) return;
+
+    zone.addEventListener('mousedown', () => {
+	  const id = zone.dataset.id;
+	  const adv = getHydratedAdventurer(id); // refresh data
+      const large = zone.dataset.large || adv.icon || "assets/patrons/default.png";
+
+      openPatronWindow(adv, large);
+    });
+  });
+}
+
+function openPatronWindow(adv, portrait) {
+  const container = document.getElementById("window-container");
+
+  container.innerHTML = `
+    <div class="infoPopupPatron">
+      <div class="window-header">
+        <span>${adv.name}</span>
+        <button class="close-window">X</button>
+      </div>
+
+      <div class="window-body patron-window">
+        <img class="patron-portrait" src="${portrait}">
+
+        <div class="patron-stats">
+          <p><strong>Status:</strong> ${adv.status}</p>
+        </div>
+      </div>
+    </div>
+  `;
+
+  container.style.display = "block";
+
+  container.querySelector(".close-window").addEventListener("click", () => {
+    container.style.display = "none";
+  });
+
+  container.addEventListener("mousedown", (e) => {
+    if (e.target === container) {
+      container.style.display = "none";
+    }
+  });
+}
+
 
 function initContractsPage() {
     const visible = getVisiblePatrons();
@@ -961,6 +1044,11 @@ async function startMission(partyKey) {
 			
 			//also lock mission
 			player.missions.current_mission.locked_mission = missionId; 
+			// Mark party members as on mission
+			Object.values(player.patrons).forEach(p => { 
+				if (p.party === player.missions.current_mission.party) 
+					p.status = "mission"; 
+			});
 
 			  // NEW: Save mission state
 			player.missions.current_mission.active = true;
@@ -987,6 +1075,15 @@ async function startMission(partyKey) {
     // hideRightMenu();
 	// loadPage(missionPage);
 
+}
+
+// Utility: Set status for all patrons in a given party
+function setPartyStatus(party, status) {
+    Object.values(player.patrons).forEach(p => {
+        if (p.party === party) {
+            p.status = status;
+        }
+    });
 }
 
 function continueMission(partyKey) {
@@ -1175,11 +1272,21 @@ async function loadMissionPage() {
     });
 
     // Party dropdown listener
-    partySelect.addEventListener("change", async (e) => {
-        player.missions.current_mission.party = e.target.value;
-        await storage.savePlayer(player);
-        updateMissionDisplay();
-    });
+	partySelect.addEventListener("change", async (e) => {
+
+		// Prevent changing party during an active mission
+		if (player.missions.current_mission.active === true) {
+			// Revert dropdown to the saved value
+			partySelect.value = player.missions.current_mission.party;
+			return;
+		}
+
+		// Otherwise allow change
+		player.missions.current_mission.party = e.target.value;
+		await storage.savePlayer(player);
+		updateMissionDisplay();
+	});
+
 
     // Mission start button
     const startBtn = document.getElementById("mission-start-button");
@@ -1603,94 +1710,103 @@ function renderCharSheet(adv) {
         return;
     }
 
-    sheet.innerHTML = `
-        <div class="char-container">
-            <div class="char-header">
-                <img class="char-portrait" src="${adv.icon}">
-                <div class="char-basic-info">
-                    <h1 class="char-name">${adv.name}</h1>
-                    <p><strong>Race:</strong> ${adv.race ?? "Unknown"}</p>
-                    <p><strong>Role:</strong> ${adv.role ?? "Unknown"} Lvl: ${adv.level ?? "?"}</p>
-                    <p><strong>Alignment:</strong> ${adv.alignment ?? "Neutral"}</p>
-                    <p><strong>Caste:</strong> ${adv.caste ?? "Omni"}</p>
-                </div>
+const show = v => v !== null && v !== undefined && v !== "";
+
+sheet.innerHTML = `
+    <div class="char-container">
+
+        <div class="char-header">
+            <img class="char-portrait" src="${adv.icon}">
+            <div class="char-basic-info">
+                <h1 class="char-name">${adv.name}</h1>
+
+                <p><strong>Race:</strong> ${adv.race ?? "Unknown"}</p>
+                <p><strong>Role:</strong> ${adv.role ?? "Unknown"} Lvl: ${adv.level ?? "?"}</p>
+                <p><strong>Alignment:</strong> ${adv.alignment ?? "Neutral"}</p>
+                <p><strong>Caste:</strong> ${adv.caste ?? "Omni"}</p>
             </div>
-
-		<div class="char-section">
-			<h3>Stats</h3>
-
-			<div class="char-stats-grid">
-
-				<div class="char-stats-block">
-					<ul class="char-stats">
-						<li>Health: ${adv.hp_modifier ?? 0}</li>
-						<li>Strength: ${adv.strengh_mod ?? 0}</li>
-						<li>Agility: ${adv.agility_mod ?? 0}</li>
-						<li>Wisdom: ${adv.wisdom_mod ?? 0}</li>
-						<li>Intelligence: ${adv.intelligence_mod ?? 0}</li>
-						<li>Charisma: ${adv.charisma_mod ?? 0}</li>
-					</ul>
-				</div>
-
-				<div class="char-stats-block">
-					<ul class="char-stats">
-						<li><strong>AC:</strong> ${adv.AC}</li>
-						<li><strong>MxHP:</strong> ${adv.MaxHP}</li>
-						<li><strong>HP:</strong> ${adv.currentHP}</li>
-					</ul>
-				</div>
-
-				<div class="char-stats-block">
-					<ul class="char-stats">
-						<li><strong>Profeciencies:</strong></li>
-						<li><strong>Armor:</strong> ${adv.proficiency_armor}</li>
-						<li><strong>Weapon:</strong> ${adv.proficiency_weapon}</li>
-					</ul>
-				</div>
-
-			</div>
-		</div>
-
-
-            <div class="char-section">
-			
-				<div class="char-stats-grid">
-
-					<div class="char-stats-block">
-						<h3>Traits</h3>
-						<ul class="char-traits">
-						  ${(adv.trait ?? []).map(t => `<li>${t}</li>`).join("")}
-						</ul>
-
-						${(() => {
-							const innate = getInnateTraits(adv);
-							if (!innate.length) return "";
-
-							return `
-							  <h3>Innate</h3>
-							  <ul class="char-traits">
-								${innate.map(t => `<li>${t}</li>`).join("")}
-							  </ul>
-							`;
-						})()}
-
-
-				
-					</div>
-					
-					
-					<div class="char-stats-block">
-					
-						<h3>
-							Contract - ${ { idle: "Signed", mission: "Signed" }[adv.status] || adv.status }
-						</h3>
-
-					</div>
-				</div>
-            </div>
-
         </div>
-    `;
+
+
+        <div class="char-section">
+            <h3>Stats</h3>
+
+            <div class="char-stats-grid">
+
+                <!-- Primary Stats -->
+                <div class="char-stats-block">
+                    <ul class="char-stats">
+                        ${show(adv.hp_modifier)        ? `<li>Hlth: ${adv.hp_modifier}</li>` : ""}
+                        ${show(adv.strengh_mod)        ? `<li>Stgh: ${adv.strengh_mod}</li>` : ""}
+                        ${show(adv.agility_mod)        ? `<li>Agil: ${adv.agility_mod}</li>` : ""}
+                        ${show(adv.wisdom_mod)         ? `<li>Wisd: ${adv.wisdom_mod}</li>` : ""}
+                        ${show(adv.intelligence_mod)   ? `<li>Intl: ${adv.intelligence_mod}</li>` : ""}
+                        ${show(adv.charisma_mod)       ? `<li>Char: ${adv.charisma_mod}</li>` : ""}
+                    </ul>
+                </div>
+
+                <!-- HP / AC Block -->
+                <div class="char-stats-block">
+                    <ul class="char-stats">
+                        ${show(adv.AC)        ? `<li><strong>AC:</strong> ${adv.AC}</li>` : ""}
+                        ${show(adv.MaxHP)     ? `<li><strong>MxHP:</strong> ${adv.MaxHP}</li>` : ""}
+                        ${show(adv.currentHP) ? `<li><strong>HP:</strong> ${adv.currentHP}</li>` : ""}
+                    </ul>
+                </div>
+
+                <!-- Proficiencies -->
+                <div class="char-stats-block">
+                    <ul class="char-stats">
+                        <li><strong>Proficiencies:</strong></li>
+
+                        ${show(adv.proficiency_armor)  ? `<li><strong>Armor:</strong> ${adv.proficiency_armor}</li>` : ""}
+                        ${show(adv.proficiency_weapon) ? `<li><strong>Weapon:</strong> ${adv.proficiency_weapon}</li>` : ""}
+                        ${show(adv.RacialEnemy)        ? `<li><strong>Racial Enemy:</strong> ${adv.RacialEnemy}</li>` : ""}
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+
+
+        <div class="char-section">
+            <div class="char-stats-grid">
+
+                <!-- Traits -->
+                <div class="char-stats-block">
+                    <h3>Traits</h3>
+
+                    <ul class="char-traits">
+                        ${(adv.trait ?? []).map(t => `<li>${t}</li>`).join("")}
+                    </ul>
+
+                    ${(() => {
+                        const innate = getInnateTraits(adv);
+                        if (!innate.length) return "";
+
+                        return `
+                            <h3>Innate</h3>
+                            <ul class="char-traits">
+                                ${innate.map(t => `<li>${t}</li>`).join("")}
+                            </ul>
+                        `;
+                    })()}
+                </div>
+
+                <!-- Contract -->
+                <div class="char-stats-block">
+                    <h3>
+                        Contract - ${ { idle: "Signed", mission: "Signed" }[adv.status] || adv.status }
+                    </h3>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+`;
+
+
 
 }
 
@@ -1723,49 +1839,49 @@ window.addEventListener('load', scaleApp);
 
 
 function initGuildTooltips() {
-  document.querySelectorAll('.guild_License').forEach(unit => {
+  document.querySelectorAll('.guild_License, .guild_stash').forEach(unit => {
     const zone = unit.querySelector('.hover-zone');
     const tooltip = unit.querySelector('.tooltip');
 
-	let clickActive = false;
-	
-	zone.addEventListener('mousedown', (e) => {
-		e.preventDefault(); // stops right-click menu
-		clickActive = true;
+    if (!zone || !tooltip) return;
 
-		const label = zone.dataset.label;
-		const largeSrc = zone.dataset.large;   // ← Add this line
-		openWindow(label, largeSrc);
+    const showTooltip = () => {
+      const largeSrc = zone.dataset.large || "assets/patrons/default.png";
+      tooltip.innerHTML = `<img src="${largeSrc}">`;
+      tooltip.style.display = "block";
+    };
 
-		if (tooltip.style.display === "block") {
-			tooltip.style.display = "none";
-		} else {
-			tooltip.innerHTML = `<img src="${largeSrc}">`;
-			tooltip.style.display = "block";
-		}
-	});
-    zone.addEventListener('mouseenter', () => {
-		if (!clickActive) {
-		  const largeSrc = zone.dataset.large;
-		  tooltip.innerHTML = `<img src="${largeSrc}">`;
-		  tooltip.style.display = "block";
-		}
-	});
-    zone.addEventListener('mouseleave', () => {
-		if (!clickActive) {
-		  tooltip.style.display = "none";
-		}
-	});
-	document.addEventListener('mousedown', (e) => {		//this makes sure the window closes when user clicks elsewhere.
-	  if (!unit.contains(e.target)) {
-		tooltip.style.display = "none";
-	  }
-	});		
+    const hideTooltip = () => {
+      tooltip.style.display = "none";
+    };
+
+    // Hover: show/hide tooltip
+    zone.addEventListener('mouseenter', showTooltip);
+    zone.addEventListener('mouseleave', hideTooltip);
+
+    // Click: same behavior as hover (just ensure it's visible)
+    zone.addEventListener('mousedown', (e) => {
+      e.preventDefault(); // avoid text selection / context menu
+      if (tooltip.style.display === "block") {
+        hideTooltip();
+      } else {
+        showTooltip();
+      }
+    });
+
+    // Click outside: hide tooltip
+    document.addEventListener('mousedown', (e) => {
+      if (!unit.contains(e.target)) {
+        hideTooltip();
+      }
+    });
   });
 }
 
 // data-label="Guild licence"
 // data-large="assets/guild/adventurers_licence_50.png"
+
+
 function openWindow(label, imageSrc) {
   const container = document.getElementById("window-container");
 
@@ -1793,3 +1909,4 @@ function openWindow(label, imageSrc) {
   });
 
 }
+
