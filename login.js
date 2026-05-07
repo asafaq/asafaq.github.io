@@ -141,6 +141,14 @@ if (!ENABLE_LOGIN) {
     loadLore();
 }
 
+function loadLore() {
+    lorePromise = fetch("lore.json")
+        .then(r => r.json())
+        .then(json => {
+            loreData = json;
+            console.log("Lore loaded.");
+        });
+}
 
 let player
 

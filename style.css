@@ -739,9 +739,12 @@ img:not([src]) {
   transform: translateX(-50%);
   z-index: 9999;
   background: rgba(255, 255, 255, 0.60); /* 25% opacity */
+  max-width: 360px; /* keeps normal windows tidy */
 
 }
-
+.infoPopupPatron.applicant-mode {
+  max-width: 450px; /* expands ONLY for applicants */
+}
 
 .status-bar {
     display: flex;
