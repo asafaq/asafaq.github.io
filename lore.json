@@ -60,14 +60,12 @@
       "RacialEnemy": "",
       "proficiency_armor": "unarmored",
       "proficiency_weapon": "Martial",
-      "inventory1": "Large Club",
-      "inventory2": "string",
-      "inventory3": "string",
-      "inventory4": "string",
-      "inventory1_lock": true,
-      "inventory2_lock": false,
-      "inventory3_lock": false,
-      "inventory4_lock": false,
+      "inventory" : [
+		  { "item": "Large Club", "qty": 1, "locked": true },
+		  { "item": null, "qty": 0, "locked": false },
+		  { "item": null, "qty": 0, "locked": false },
+		  { "item": null, "qty": 0, "locked": false }
+		],
       "trait": [
         "Masocist",
         "Cheerful"

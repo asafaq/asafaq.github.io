@@ -15,6 +15,9 @@
     line-height: 24px;
 }
 
+.hidden {
+  display: none !important;
+}
     color: #fff;
     padding: 6px 12px;
     border-bottom: 2px solid #444;
@@ -229,7 +232,8 @@
 
 .tooltip {
     position: fixed;
-	transform: translateX(-150px);
+    left: 50%;
+    transform: translate(-50%, -50%); /* centers it horizontally + vertically */
     display: none;
     background: rgba(0,0,0,0.8);
     padding: 4px 8px;
@@ -779,4 +783,46 @@ img:not([src]) {
     justify-content: center;
     font-size: 24px;
     z-index: 99999;
+}
+
+#guild-stash {
+	position: absolute;
+	top: 200px; 
+	left: 80px;
+}
+
+.stash-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 64px);
+  grid-gap: 2px;
+}
+
+.stash-slot {
+  width: 64px;
+  height: 64px;
+  position: relative;
+  background: rgba(0,0,0,0.3);
+  border: 1px solid #555;
+}
+
+.stash-slot .qty {
+  position: absolute;
+  bottom: 2px;
+  right: 4px;
+  color: white;
+  font-size: 14px;
+  text-shadow: 1px 1px 2px black;
+}
+
+.lock-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+}
+
+#stash-chest-icon:hover {
+  cursor: pointer;
 }

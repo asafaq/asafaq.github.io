@@ -154,14 +154,11 @@ const pages = {
           <div class="tooltip"></div>
         </div>
 		
-		<div class="guild_stash" style="top: 200px; left: 80px;">
-          <img src="assets/guild/chest60.png" class="item-icon">
-          <div class="hover-zone"
-               data-label="Guild Stash"
-               data-large="assets/guild/inventory.png">
-          </div>
-          <div class="tooltip"></div>
-        </div>
+		<div id="guild-stash">
+			<img src="assets/guild/chest60.png" id="stash-chest-icon" class="item-icon chest-icon">
+			<div class="stash-grid hidden"></div>
+		</div>
+
 		<div id="patron-container"></div>
 		<button id="tutorial-button" class="tutorial-button" style="display: none;">
 			Tutorial
@@ -546,38 +543,44 @@ async function loadPage(page) {
 
   main.innerHTML = pages[page] || "<p>Unknown page</p>";
 
-  if (page === "guild") {
-    //loadPhaserScripts();
-	patronList = getVisiblePatrons();
-	console.log(patronList);
-	const container = document.getElementById("patron-container");
+if (page === "guild") {
+  patronList = getVisiblePatrons();
+  console.log(patronList);
 
-	container.innerHTML = patronList
-	  .filter(patron => patron.location === 1)
-	  .map(patron => {
-		const large = patron.large || patron.icon || "assets/patrons/default.png";
+  const container = document.getElementById("patron-container");
 
-		return `
-		  <div class="patron-wrapper" 
-			   style="position: absolute; top: ${patron.top}; left: ${patron.left};">
-			<img src="${patron.icon}" class="item-icon">
-			<div class="hover-zone"
-				 data-id="${patron.id}"
-				 data-large="${patron.large || patron.icon || 'assets/patrons/default.png'}">
-			</div>
-			<div class="tooltip"></div>
-		  </div>
-		`;
-	  })
-	  .join('');
+  container.innerHTML = patronList
+    .filter(patron => patron.location === 1)
+    .map(patron => {
+      const large = patron.large || patron.icon || "assets/patrons/default.png";
 
+      return `
+        <div class="patron-wrapper" 
+             style="position: absolute; top: ${patron.top}; left: ${patron.left};">
+          <img src="${patron.icon}" class="item-icon">
+          <div class="hover-zone"
+               data-id="${patron.id}"
+               data-large="${large}">
+          </div>
+          <div class="tooltip"></div>
+        </div>
+      `;
+    })
+    .join('');
 
+  // NEW: Render stash
+  renderGuildStash();
+  initStashChestClick();
 
-    initGuildTooltips();   // <-- important
-	showTutorialButton();
-	displayRightMenu();
-	initPatronClicks();
-  }
+  // NEW: Enable right-click assignment
+  initStashRightClicks();
+
+  initGuildTooltips();
+  showTutorialButton();
+  displayRightMenu();
+  initPatronClicks();
+}
+
   if (page === "tavern") {
     patronList = getVisiblePatrons();
 	console.log(patronList);
@@ -707,6 +710,110 @@ async function loadPage(page) {
   evaluateNotices()
 }
 
+
+
+//inventory section
+function renderGuildStash() {
+  if (!player?.data?.stash || player.data.stash.length === 0) {
+  player.data.stash = Array.from({ length: 12 }, () => ({
+    item: null,
+    qty: 0,
+    locked: false
+  }));
+}
+  const stashGrid = document.querySelector("#guild-stash .stash-grid");
+
+  stashGrid.innerHTML = player.data.stash
+    .map((slot, index) => {
+      const icon = slot.item ? getItemIcon(slot.item) : "assets/guild/inventory_empty.png";
+      const qty = slot.qty > 1 ? `<div class="qty">${slot.qty}</div>` : "";
+      const lock = slot.locked ? `<div class="lock-overlay"></div>` : "";
+
+      return `
+        <div class="stash-slot" data-slot="${index}">
+          <img src="${icon}" class="item-icon">
+          ${qty}
+          ${lock}
+        </div>
+      `;
+    })
+    .join("");
+}
+
+function assignStashItemToAdventurer(stashIndex, adv) {
+  const slot = player.data.stash[stashIndex];
+  if (!slot.item) return false;
+
+  for (let i = 0; i < adv.loreData.inventory.length; i++) {
+    const invSlot = adv.loreData.inventory[i];
+
+    if (!invSlot.locked && invSlot.item === null) {
+      invSlot.item = slot.item;
+      invSlot.qty = slot.qty;
+
+      slot.item = null;
+      slot.qty = 0;
+
+      return true;
+    }
+  }
+
+  return false;
+}
+
+function initStashRightClicks() {
+  const stashContainer = document.getElementById("guild-stash");
+
+  stashContainer.addEventListener("contextmenu", (e) => {
+    e.preventDefault();
+
+    const slotDiv = e.target.closest(".stash-slot");
+    if (!slotDiv) return;
+
+    const slotIndex = parseInt(slotDiv.dataset.slot);
+
+    if (!selectedAdventurer) {
+      console.warn("No adventurer selected");
+      return;
+    }
+
+    const success = assignStashItemToAdventurer(slotIndex, selectedAdventurer);
+
+    if (success) {
+      renderGuildStash();
+      renderAdventurerInventory(selectedAdventurer);
+    } else {
+      console.warn("No space in adventurer inventory");
+    }
+  });
+}
+
+function initStashChestClick() {
+  const chest = document.getElementById("stash-chest-icon");
+  const grid = document.querySelector("#guild-stash .stash-grid");
+
+  console.log("Chest element:", chest);
+  console.log("Grid element:", grid);
+  if (!chest) {
+    console.warn("Chest icon NOT FOUND in DOM");
+    return;
+  }
+
+  if (!grid) {
+    console.warn("Stash grid NOT FOUND in DOM");
+    return;
+  }
+
+  chest.addEventListener("click", () => {
+    console.log("Chest clicked — toggling stash");
+    grid.classList.toggle("hidden");
+  });
+}
+
+
+
+
+
 function getIdleDescription(adv, player) {
   const hydrated = getHydratedAdventurer(adv.id);
 
@@ -721,7 +828,6 @@ function getIdleDescription(adv, player) {
   // 2. Otherwise → use normal idle descriptions
   return globalIdle[hydrated.status] || globalIdle.default;
 }
-
 
 function getTraitReferral(adv) {
   const hydrated = getHydratedAdventurer(adv.id);
