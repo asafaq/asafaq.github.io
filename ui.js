@@ -108,7 +108,7 @@ function getVisiblePatrons() {
 
 	const patronKeys = Object.keys(player.patrons);
 
-	const allowed = ["idle", "applicant"];
+	const allowed = ["idle", "applicant", "mission"];
 
 	const filteredIds = patronKeys.filter(id => {
 		return allowed.includes(player.patrons[id].status);
@@ -179,12 +179,27 @@ const pages = {
 			<div id="portrait-scroll"></div>
 		</div>
 		`,
+    satchel_guild: `	
+		<div id="satchel" class="satchel-window">
+		<div class="close-btn" id="close-satchel">X</div>
+			<img src="assets/menu/satchel.png" id="satchel-icon" class="item-icon chest-icon">
+			<div class="satchel-grid hidden"></div>
+		</div>
+		`,
+    satchel_mission: `	
+		<div id="satchel" class="satchel-window">
+		<div class="close-btn" id="close-satchel">X</div>
+			<img src="assets/menu/satchel.png" id="satchel-icon" class="item-icon chest-icon">
+			<div class="satchel-grid hidden"></div>
+		</div>
+		`,
     missions: `
       <div id="missions-container">
         <img id="contract_parchment" src="assets/missions/guild_party_party_window.png" />
 			<p id="missions_line1"></p>
 			<p id="missions_line2"></p>
 			<p id="missions_line3"></p>
+			<p id="missions_line9"></p>
 
 		<div id="guild-patron-inventory" class="inventory-row dropzone">
   <div class="slot"></div>
@@ -227,6 +242,9 @@ const pages = {
   <div class="slot"></div>
   <div class="slot"></div>
   <div class="slot"></div>
+  <div class="slot"></div>
+</div>
+<div id="secret-patron-inventory">
   <div class="slot"></div>
 </div>
 		</div>
@@ -378,6 +396,8 @@ function renderPatronInventory() {
   const guild2Container = document.getElementById("guild2-patron-inventory");
   const partyAContainer = document.getElementById("party-a-patron-inventory");
   const partyBContainer = document.getElementById("party-b-patron-inventory");
+  const partyCContainer = document.getElementById("party-c-patron-inventory");
+  const secretContainer = document.getElementById("secret-patron-inventory");
 
   const excludedStatuses = ["applicant", "retired", "dead"];
 
@@ -412,6 +432,8 @@ function renderPatronInventory() {
   guild2Container.innerHTML = renderGroup(2);
   partyAContainer.innerHTML = renderGroup(3);
   partyBContainer.innerHTML = renderGroup(4);
+  partyCContainer.innerHTML = renderGroup(5);
+  secretContainer.innerHTML = renderGroup(9);
 
 }
 
@@ -454,11 +476,12 @@ function enablePatronDragDrop() {
 
 			// Determine new location
 			let newLocation = 1;
+			if (zone.id === "guild-patron-inventory") newLocation = 1;
+			if (zone.id === "guild2-patron-inventory") newLocation = 2;
 			if (zone.id === "party-a-patron-inventory") newLocation = 3;
 			if (zone.id === "party-b-patron-inventory") newLocation = 4;
 			if (zone.id === "party-c-patron-inventory") newLocation = 5;
-			if (zone.id === "guild-patron-inventory") newLocation = 1;
-			if (zone.id === "guild2-patron-inventory") newLocation = 2;
+			if (zone.id === "secret-patron-inventory") newLocation = 9;
 
 			// --- PARTY LOCK CHECKS (origin + destination) ---
 			const isLocked = loc => ({
@@ -498,7 +521,6 @@ function enablePatronDragDrop() {
 
     });
 }
-
 
 function showTemporaryImage(src) {
 	// showTemporaryImage("assets/myImage.png");
@@ -617,6 +639,12 @@ if (page === "guild") {
 	loadMissionPage();
   }
 
+
+  if (page === "satchel_guild") {
+	  
+	"renderGuildSatchelPage()";
+  }
+
   if (page === "journal") {
 	  // 1. DATA PROCESSING: Grouping
 	  const groupedData = {};
@@ -710,110 +738,6 @@ if (page === "guild") {
   evaluateNotices()
 }
 
-
-
-//inventory section
-function renderGuildStash() {
-  if (!player?.data?.stash || player.data.stash.length === 0) {
-  player.data.stash = Array.from({ length: 12 }, () => ({
-    item: null,
-    qty: 0,
-    locked: false
-  }));
-}
-  const stashGrid = document.querySelector("#guild-stash .stash-grid");
-
-  stashGrid.innerHTML = player.data.stash
-    .map((slot, index) => {
-      const icon = slot.item ? getItemIcon(slot.item) : "assets/guild/inventory_empty.png";
-      const qty = slot.qty > 1 ? `<div class="qty">${slot.qty}</div>` : "";
-      const lock = slot.locked ? `<div class="lock-overlay"></div>` : "";
-
-      return `
-        <div class="stash-slot" data-slot="${index}">
-          <img src="${icon}" class="item-icon">
-          ${qty}
-          ${lock}
-        </div>
-      `;
-    })
-    .join("");
-}
-
-function assignStashItemToAdventurer(stashIndex, adv) {
-  const slot = player.data.stash[stashIndex];
-  if (!slot.item) return false;
-
-  for (let i = 0; i < adv.loreData.inventory.length; i++) {
-    const invSlot = adv.loreData.inventory[i];
-
-    if (!invSlot.locked && invSlot.item === null) {
-      invSlot.item = slot.item;
-      invSlot.qty = slot.qty;
-
-      slot.item = null;
-      slot.qty = 0;
-
-      return true;
-    }
-  }
-
-  return false;
-}
-
-function initStashRightClicks() {
-  const stashContainer = document.getElementById("guild-stash");
-
-  stashContainer.addEventListener("contextmenu", (e) => {
-    e.preventDefault();
-
-    const slotDiv = e.target.closest(".stash-slot");
-    if (!slotDiv) return;
-
-    const slotIndex = parseInt(slotDiv.dataset.slot);
-
-    if (!selectedAdventurer) {
-      console.warn("No adventurer selected");
-      return;
-    }
-
-    const success = assignStashItemToAdventurer(slotIndex, selectedAdventurer);
-
-    if (success) {
-      renderGuildStash();
-      renderAdventurerInventory(selectedAdventurer);
-    } else {
-      console.warn("No space in adventurer inventory");
-    }
-  });
-}
-
-function initStashChestClick() {
-  const chest = document.getElementById("stash-chest-icon");
-  const grid = document.querySelector("#guild-stash .stash-grid");
-
-  console.log("Chest element:", chest);
-  console.log("Grid element:", grid);
-  if (!chest) {
-    console.warn("Chest icon NOT FOUND in DOM");
-    return;
-  }
-
-  if (!grid) {
-    console.warn("Stash grid NOT FOUND in DOM");
-    return;
-  }
-
-  chest.addEventListener("click", () => {
-    console.log("Chest clicked — toggling stash");
-    grid.classList.toggle("hidden");
-  });
-}
-
-
-
-
-
 function getIdleDescription(adv, player) {
   const hydrated = getHydratedAdventurer(adv.id);
 
@@ -848,9 +772,6 @@ function getTraitReferral(adv) {
   // If none of the traits match → fallback
   return traits.default;
 }
-
-
-
 
 function initPatronClicks() {
   document.querySelectorAll('.patron-wrapper').forEach(wrapper => {
@@ -939,8 +860,6 @@ async function openPatronWindow(adv, portrait) {
   }
 }
 
-
-
 function initContractsPage() {
     const visible = getVisiblePatrons();
 
@@ -971,7 +890,6 @@ function renderMailboxPage() {
         list.appendChild(item);
     });
 }
-
 
 function renderMailItem(mail) {
     const row = document.createElement("div");
@@ -1055,7 +973,6 @@ const tutorialStates = [
     }
 ];
 
-
 function showTutorialButton() {
     const btn = document.getElementById("tutorial-button");
     if (!btn) return;
@@ -1113,7 +1030,6 @@ function getPartyMembers(partyKey) {
     // Hydrate properly
     return rawMembers.map(([id, p]) => getHydratedAdventurer(id));
 }
-
 
 async function startMission(partyKey) {
 	
@@ -1276,8 +1192,6 @@ function continueMission(partyKey) {
 	
 }
 
-
-
 function showConfirm(message, onYes, onNo) {
     const dialog = document.getElementById("confirm-dialog");
     const text = document.getElementById("confirm-text");
@@ -1370,11 +1284,20 @@ async function loadMissionPage() {
 
     patronList = getVisiblePatrons();
     renderPatronInventory();
+	updateSecretMissionLine();
 
     // Fill static mission info
     document.getElementById("missions_line1").textContent = player.data.guild_name;
     document.getElementById("missions_line2").textContent = player.data.party_A;
     document.getElementById("missions_line3").textContent = player.data.party_B;
+	const hasSecretPatron = Object.values(player.patrons)
+		.some(p => p.location === 9);
+	if (hasSecretPatron) {
+		document.getElementById("missions_line9").textContent = "Secret";
+	} else {
+		document.getElementById("missions_line9").textContent = "";
+	}
+
 
     // Build mission dropdown
     const listContainer = document.getElementById("dynamic-mission-list");
@@ -1490,6 +1413,19 @@ async function loadMissionPage() {
     updateContinueButton("party_B");
     renderPatronInventory();
     setTimeout(enablePatronDragDrop, 0);
+}
+
+function updateSecretMissionLine() {
+    const hasSecretPatron = Object.values(player.patrons)
+        .some(p => p.location === 9);
+
+    const line = document.getElementById("missions_line9");
+
+    if (hasSecretPatron) {
+        line.textContent = "Secret";
+    } else {
+        line.textContent = "";
+    }
 }
 
 function updateContinueButton(partyKey) {
@@ -1616,7 +1552,6 @@ function startTutorial2() {
 	startMissionSystem("tutor2_101")
 	}
 }
-
 
 function closeTutorial() {
 	console.log("closeTutorial() fired");
@@ -1984,7 +1919,6 @@ sheet.innerHTML = `
 
 
 }
-
 
 // Journal.addEntry("You discovered a hidden cave.");
 // Journal.addEntry("A strange whisper echoes behind you.");

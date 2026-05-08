@@ -1,0 +1,47 @@
+"inventory": {
+	"Large_Club": {
+		"name": "Large Club",
+		"icon": "/assets/inventory/largeclub.png",
+		"type": "weapon",
+		"dmg": 4
+	},
+	"Apple": {
+		"name": "Apple",
+		"icon": "/assets/inventory/apple.png",
+		"type": "food",
+		"heal": 2
+	},
+    "Carriage": {
+		"name": "Carriage",
+      "desc": "A horse and buggy."
+    },
+    "Iron_Pick": {
+		"name": "Iron Pick",
+      "desc": "decription"
+    }
+    "Lantern": {
+		"name": "Lantern",
+      "desc": "decription"
+    }
+    "Knapsack": {
+		"name": "Knapsack",
+      "desc": "decription"
+    }
+    "Lute": {
+		"name": "Lute",
+      "desc": "decription"
+    }
+    "Scribe_Kit": {
+		"name": "Scribe Kit",
+      "desc": "decription"
+    }
+    "Amyssa_Spellbook": {
+		"name": "Amyssa's Spellbook",
+      "desc": "decription"
+    }
+    "Camp": {
+		"name": "Camp",
+      "desc": "decription"
+    }
+
+  } 

@@ -371,7 +371,6 @@ async function handleMissionEnd(sceneId) {
 		recruitAdventurer("adv_Amyssa")
 		//change Claudio's location to 0 meaning he is missing, then later set to 2.
 		player.patrons ??= {};
-		player.patrons.adv_Claudio ??= {};
 		player.patrons.adv_Bragain.location = 3;
 		player.patrons.adv_Hogperson.location = 3;
 		player.patrons.adv_Claudio.location = 0;
@@ -469,16 +468,36 @@ async function handleMissionEnd(sceneId) {
 		nextPage = "missions"
 	}
 
-	if (sceneId === "green2_116end") {
+	if (sceneId === "green2_117end") {
 		player.missions.green_2 = 2;
 		player.patrons.adv_Amyssa.location = 3;
-
+		// add spellscrolls management logic, if her scrolls remained in the stash back in the guild, she'll bring them along.
 		Journal.addEntry(
 			`Amyssa has joined the ${player.data.party_A} on their way to ${player.missions.current_mission.id}.`
 		);
+		nextPage = "mission_green_2"
 	}
 
-	nextPage = "missions";
+	if (sceneId === "green2_240a_end") {
+		player.missions.green_2 = 3;
+		recruitAdventurer("adv_Hogmother")
+		player.patrons.adv_Hogmother.location = 3;
+		player.patrons.adv_Hogmother.status = "mission";
+
+		nextPage = "mission_green_2"
+	}
+
+	if (sceneId === "green2_245b_end") {
+		player.missions.green_2 = 3;
+		recruitAdventurer("adv_Hogmother")
+		player.patrons.adv_Hogmother.location = 3;
+		player.patrons.adv_Hogmother.status = "mission";
+		recruitAdventurer("adv_Lurch")
+		player.patrons.adv_Lurch.location = 9;
+		player.patrons.adv_Lurch.status = "mission";
+		
+		nextPage = "mission_green_2"
+	}
 
 	
     
@@ -585,7 +604,11 @@ async function handleMissionEnding(sceneId) {
             player.patrons.adv_Bragain.location = 1;
             player.patrons.adv_Claudio.location = 2;
             player.patrons.adv_Hogperson.location = 1;
-
+			player.data.treasury = { "Silver Coins": 50 };
+			//const itemName = "Silver Coins";
+			// player.data.treasury.itemName += 50;
+			// player.data.treasury.itemName = (player.data.treasury.silver_coins || 0) + 50;
+			
             resetPartyTraits();
             setPartyLock(false);
 
@@ -608,6 +631,7 @@ async function handleMissionEnding(sceneId) {
             player.missions.tutorial = 2;
             player.missions.green_1 = 7;
             player.missions.green_2 ??= 0;
+			player.data.inventory = { "Spell Scroll: Magic Missle": 2 };
 
             player.patrons.adv_Amyssa.status = "idle";
 

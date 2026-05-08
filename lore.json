@@ -98,15 +98,13 @@
       "RacialEnemy": "Rocks",
       "proficiency_armor": "Medium",
       "proficiency_weapon": "Martial",
-      "inventory1": "Iron Pick",
-      "inventory2": "Lantern",
-      "inventory3": "Knapsack",
+		"inventory" : [
+		  { "item": "Iron Pick", "qty": 1, "locked": true },
+		  { "item": "Lantern", "qty": 1, "locked": true },
+		  { "item": "Knapsack", "qty": 1, "locked": true },
+		  { "item": null, "qty": 0, "locked": false }
+		],
       "Knapsack_comment": "Allows the bearer to hold 4 items without value other than in trade, without spending an inventory slot.",
-      "inventory4": "string",
-      "inventory1_lock": true,
-      "inventory2_lock": true,
-      "inventory3_lock": true,
-      "inventory4_lock": false,
       "trait": [
         "Appraisal",
         "Tunnel Surveyer"
@@ -142,14 +140,12 @@
       "RacialEnemy": "",
       "proficiency_armor": "Medium",
       "proficiency_weapon": "Light",
-      "inventory1": "Lute",
-      "inventory2": "",
-      "inventory3": "",
-      "inventory4": "",
-      "inventory1_lock": true,
-      "inventory2_lock": false,
-      "inventory3_lock": false,
-      "inventory4_lock": false,
+	  "inventory" : [
+		  { "item": "Lute", "qty": 1, "locked": true },
+		  { "item": null, "qty": 0, "locked": false },
+		  { "item": null, "qty": 0, "locked": false },
+		  { "item": null, "qty": 0, "locked": false }
+		],
       "trait": [
         "Persuasive",
         "Comedian"
@@ -181,14 +177,12 @@
       "RacialEnemy": "",
       "proficiency_armor": "Medium",
       "proficiency_weapon": "Martial",
-      "inventory1": "Scribe Kit",
-      "inventory2": "",
-      "inventory3": "",
-      "inventory4": "",
-      "inventory1_lock": true,
-      "inventory2_lock": false,
-      "inventory3_lock": false,
-      "inventory4_lock": false,
+	  	"inventory" : [
+		  { "item": "Scribe Kit", "qty": 1, "locked": true },
+		  { "item": "Amyssa's Spellbook", "qty": 1, "locked": true },
+		  { "item": null, "qty": 0, "locked": false },
+		  { "item": null, "qty": 0, "locked": false }
+		],
       "trait": [
         "Spellcaster",
         "Scribe",
@@ -235,6 +229,8 @@
     },
     "adv_Lurch": {
       "name": "Lurch",
+      "icon": "assets/patrons/lurch_s.png",
+      "large": "assets/patrons/lurch.png",
       "race": "Goblin",
       "role": "Spy",
       "hp_die": 8,
@@ -245,7 +241,7 @@
       "intelligence_mod": 1,
       "charisma_mod": 0,
       "alignment": "Evil",
-      "level": 1,
+      "level": 3,
       "sex": 1,
       "size": "",
       "caste": "Underclass",
@@ -343,11 +339,13 @@
     },
     "adv_Hogmother": {
       "name": "Hogmother",
+      "icon": "assets/patrons/hogmother.png",
+      "large": "assets/patrons/hogmother.png",
       "race": "Barbarian",
       "race_comment": "Wildmen more of a humanoid than a human. Thick Hide for bonus unarmed AC \tRage +10 tempHP.",
       "role": "Shaman",
       "role_comment": "A cleric channeling spirits.",
-      "hp_die": 10,
+      "hp_die": 8,
       "hp_modifier": 3,
       "strengh_mod": 1,
       "agility_mod": 0,
@@ -355,8 +353,8 @@
       "intelligence_mod": 0,
       "charisma_mod": 1,
       "alignment": "Neutral",
-      "level": 2,
-      "sex": 1,
+      "level": 3,
+      "sex": 0,
       "size": "Medium",
       "caste": "Commoner",
       "RacialEnemy": "Knolls",
@@ -504,6 +502,7 @@
       "inventory4_lock": false,
       "trait": [
         "Faulty Powerpack",
+		"Immortal Protocol",
         "Spinning Batter"
       ],
       "notes": "Tinman is a warforged built to contain the soul of a past noble in service of the realm. His construction wasn't completely finished, and he's still in Beta testing. A paid Adventurer, unlocks his unique mission, to travel far to the temple of god, pray for full ressurection, in the temple a Patzi will be haunted by a fey spirit, and forge an Artifact, a replacement Powerpack that fix that Faulty one."
@@ -686,7 +685,10 @@
       "desc": "While idling at the guild brews potions."
     },
     "Faulty Powerpack": {
-      "desc": "The Warforged power supply last for only one day, then has to be shut down for a day to be dorment until it regenerates its charge. Dorment state also 'ressurects' the warforged unit."
+      "desc": "While idling at the guild brews potions."
+    },
+    "Immortal Protocol": {
+      "desc": "If taking any fatal damage, this Warforged can go dorment until it internally ressurects the vital processing unit."
     },
     "Spinning Batter": {
       "desc": "The Warforged may execute a powerful battering assault, spinning his body to attack the target 4 times in one round. The target has to be standing, and either grapped or dazed."
@@ -704,7 +706,7 @@
       "desc": "Adept at flora care."
     },
     "Postposed Death": {
-      "desc": "If this character dies, even a catastophic dismemberment death, it may still act and attack for 2 rounds, with +4 to all rolls."
+      "desc": "If this character takes fatal damage, even a catastophic dismemberment death, it may still act and attack for 2 rounds, with +4 to all rolls."
     }
   },
   "Party Traits": {
@@ -725,14 +727,6 @@
       ]
     }
   },
-  "Inventory": {
-    "Carriage": {
-      "desc": "A horse and buggy."
-    },
-    "Camp": {
-      "desc": "builds the camp, cooks dinner"
-    }
-  },
   "passive": {
     "idleDescriptions": {
       "resting": "They seem relaxed, taking a quiet moment to themselves.",
@@ -741,12 +735,65 @@
       "default": "They are idle, waiting for something to happen."
     },
     "traitReferrals": {
-      "Tunnel Surveyer": "Bragain can be assigned to a mining location, but he currently enjoying his free time socializing and drinking.",
+      "Tunnel Surveyer": "Bragain can be assigned to a mining location, but he's currently enjoying his leisure time socializing and drinking.",
       "Scribe": "Amyssa is focused on her scrolls scribing.",
       "Comedian": "The joyful Claudio is working the crowd, and playing his lute between sessions.",
       "Cheerful": "The Cheerful Hogperson is a pleasant company to be around.",
       "default": "They possess unique qualities that set them apart."
     }
+  },
+  "inventory": {
+	  "Large_Club": {
+		"name": "Large Club",
+		"icon": "/assets/inventory/apple.png",
+		"type": "weapon",
+		"dmg": 4
+	  },
+	  "Apple": {
+		"name": "Apple",
+		"icon": "/assets/inventory/apple.png",
+		"type": "food",
+		"heal": 2
+	  },
+	  "Carriage": {
+		"name": "Carriage",
+		"icon": "/assets/inventory/apple.png",
+		"desc": "A horse and buggy."
+	  },
+	  "Iron_Pick": {
+		"name": "Iron Pick",
+		"icon": "/assets/inventory/apple.png",
+		"desc": "decription"
+	  },
+	  "Lantern": {
+		"name": "Lantern",
+		"icon": "/assets/inventory/apple.png",
+		"desc": "decription"
+	  },
+	  "Knapsack": {
+		"name": "Knapsack",
+		"icon": "/assets/inventory/apple.png",
+		"desc": "decription"
+	  },
+	  "Lute": {
+		"name": "Lute",
+		"icon": "/assets/inventory/apple.png",
+		"desc": "decription"
+	  },
+	  "Scribe_Kit": {
+		"name": "Scribe Kit",
+		"icon": "/assets/inventory/apple.png",
+		"desc": "decription"
+	  },
+	  "Amyssa_Spellbook": {
+		"name": "Amyssa's Spellbook",
+		"icon": "/assets/inventory/apple.png",
+		"desc": "decription"
+	  },
+	  "Camp": {
+		"name": "Camp",
+		"icon": "/assets/inventory/apple.png",
+		"desc": "decription"
+	  }
   }
-
 }

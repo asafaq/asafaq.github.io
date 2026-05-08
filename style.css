@@ -531,6 +531,7 @@ img:not([src]) {
 #guild2-patron-inventory { top: 160px; left: 71px; }
 #party-a-patron-inventory { top: 283px; left: 71px; }
 #party-b-patron-inventory { top: 374px; left: 71px; }
+#secret-patron-inventory { top: 674px; left: 21px; }
 
 .patron-slot {
     width: 57px;            /* Match your container size */
@@ -564,6 +565,13 @@ img:not([src]) {
   position: absolute;
   top: 280px;
   left: 180px;
+  z-index: 10;
+}
+
+#missions_line9 {
+  position: absolute;
+  top: 612px;
+  left: 4px;
   z-index: 10;
 }
 
@@ -793,7 +801,7 @@ img:not([src]) {
 
 .stash-grid {
   display: grid;
-  grid-template-columns: repeat(3, 64px);
+  grid-template-columns: repeat(4, 64px);
   grid-gap: 2px;
 }
 
@@ -825,4 +833,132 @@ img:not([src]) {
 
 #stash-chest-icon:hover {
   cursor: pointer;
+}
+
+#overlay {
+    position: fixed;
+    top: 60px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    background: rgba(0,0,0,0.3);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    z-index: 9999;
+}
+
+
+#overlay.hidden {
+    display: none;
+}
+
+.close-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 32px;
+    cursor: pointer;
+    color: white;
+}
+
+.slot {
+    width: 48px;
+    height: 48px;
+    border: 2px solid #444;
+    margin: 4px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.slot.empty {
+    background: rgba(255,255,255,0.1);
+}
+
+.slot.locked {
+    background: rgba(100,100,100,0.4);
+    pointer-events: none; /* cannot click */
+}
+
+.lock-icon {
+    filter: grayscale(100%) brightness(60%);
+    opacity: 0.6; /* optional */
+}
+
+#satchel {
+    background: #222;
+    padding: 20px;
+    border-radius: 8px;
+    width: 500px;
+    max-width: 90vw;
+}
+
+.satchel-window {
+    position: relative;
+    background: #2a2a2a;
+    border: 2px solid #444;
+    border-radius: 8px;
+
+    padding: 20px;
+    width: 600px;
+    min-height: 400px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+
+    z-index: 9999;
+}
+
+.close-btn {
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    cursor: pointer;
+    font-size: 20px;
+    color: white;
+    z-index: 10000;
+}
+
+.satchel-grid {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.adv-satchel {
+    background: #1e1e1e;
+    padding: 10px;
+    border-radius: 6px;
+}
+
+.adv-items {
+    display: flex;
+    gap: 6px;
+}
+
+/* .slot { */
+    /* width: 48px; */
+    /* height: 48px; */
+    /* background: #333; */
+    /* border: 1px solid #555; */
+    /* border-radius: 4px; */
+    /* position: relative; */
+/* } */
+
+.slot.locked {
+    background: #222;
+    border-color: #666;
+}
+
+.lock-icon {
+    width: 100%;
+    height: 100%;
+    opacity: 0.6;
 }
