@@ -67,7 +67,7 @@
       <div class="tooltipmenu">Missions</div>
     </div>
     <div class="menu-item" onclick="renderGuildSatchelPage()">
-      <img src="assets/menu/satchel.png" class="icon">
+      <img src="assets/inventory/knabsack.png" class="icon">
       <div class="tooltipmenu">Satchel</div>
     </div>
 	<div class="menu-item" onclick="loadPage('journal')">
@@ -98,7 +98,7 @@
       <div class="tooltipmenu">Guild</div>
     </div>
     <div class="menu-item" onclick="renderGuildSatchelPage()">
-      <img src="assets/menu/satchel.png" class="icon">
+      <img src="assets/inventory/knabsack.png" class="icon">
       <div class="tooltipmenu">Satchel</div>
     </div>
   </div>
@@ -139,13 +139,14 @@ templates.satchel_guild = `
 templates.satchel_mission = `
     <div id="satchel" class="satchel-window">
         <div class="close-btn" id="close-satchel">X</div>
-        <img src="assets/menu/satchel.png" id="satchel-icon" class="item-icon chest-icon">
+        <img src="assets/inventory/knabsack.png" id="satchel-icon" class="item-icon chest-icon">
         <div class="satchel-grid hidden"></div>
     </div>
 `;
 </script>
 
 <script src="login.js"></script>
+<script src="battlelauncher.js"></script>
 <script src="inventory.js"></script>
 <script src="database.js"></script>
 <script src="missions_rules.js" defer></script>

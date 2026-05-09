@@ -108,7 +108,7 @@ function getVisiblePatrons() {
 
 	const patronKeys = Object.keys(player.patrons);
 
-	const allowed = ["idle", "applicant", "mission"];
+	const allowed = ["idle", "applicant", "mission", "secret"];
 
 	const filteredIds = patronKeys.filter(id => {
 		return allowed.includes(player.patrons[id].status);
@@ -182,14 +182,14 @@ const pages = {
     satchel_guild: `	
 		<div id="satchel" class="satchel-window">
 		<div class="close-btn" id="close-satchel">X</div>
-			<img src="assets/menu/satchel.png" id="satchel-icon" class="item-icon chest-icon">
+			<img src="assets/inventory/knabsack.png" id="satchel-icon" class="item-icon chest-icon">
 			<div class="satchel-grid hidden"></div>
 		</div>
 		`,
     satchel_mission: `	
 		<div id="satchel" class="satchel-window">
 		<div class="close-btn" id="close-satchel">X</div>
-			<img src="assets/menu/satchel.png" id="satchel-icon" class="item-icon chest-icon">
+			<img src="assets/inventory/knabsack.png" id="satchel-icon" class="item-icon chest-icon">
 			<div class="satchel-grid hidden"></div>
 		</div>
 		`,
@@ -199,6 +199,7 @@ const pages = {
 			<p id="missions_line1"></p>
 			<p id="missions_line2"></p>
 			<p id="missions_line3"></p>
+			<p id="missions_line6"></p>
 			<p id="missions_line9"></p>
 
 		<div id="guild-patron-inventory" class="inventory-row dropzone">
@@ -218,6 +219,7 @@ const pages = {
   <div class="slot"></div>
 </div>
 
+<div id="party-a-guide-inventory"></div>
 <div id="party-a-patron-inventory" class="inventory-row dropzone">
   <div class="slot"></div>
   <div class="slot"></div>
@@ -352,6 +354,38 @@ const pages = {
 		</div>
 	</div>
 	`,
+	mission_green_3: `
+	<div id="mission-container" style="position: relative;">
+		<img id="fantasy map" src="assets/missions/fantasy_map_s.png" />
+
+		<!-- Path Layer -->
+		<svg width="100%" height="100%" style="position: absolute; top: 0; left: 0; pointer-events: none;">
+			<!-- 1. The "Hitbox" (Invisible but clickable) -->
+			<path d="M 480 340 C 221 324 413 466 480 340"
+				  stroke="transparent" stroke-width="75" fill="none" 
+				  style="pointer-events: stroke; cursor: pointer;" 
+				  onclick="console.log('Winding path clicked!');
+					runMission(player.missions.current_mission.id)" />
+			
+			<!-- 2. The Visible Dashed Line -->
+			<path class="marching-path" d="MM 480 340 C 221 324 413 466 480 340" 
+				  stroke="rgba(0, 0, 0, 0.7)" stroke-width="4" 
+				  stroke-dasharray="10, 10" stroke-linecap="round" fill="none" />
+		</svg>
+
+		<!-- Dark Forest Objective -->
+		<div class="guild_homebase shine-container" 
+			 style="position: absolute; top: 220px; left: 310px; transform: scale(0.66); transform-origin: top left;">
+			<img src="assets/menu/menu_home.png" class="item-icon">
+		</div>
+
+		<!-- Township DepartureObjective: Fixed Coordinates -->
+		<div class="mission_green2_objective shine-container" 
+			 style="position: absolute; top: 300px; left: 455px; transform: scale(0.66); transform-origin: top left;">
+			<img src="assets/menu/menu_home.png" class="item-icon">
+		</div>
+	</div>
+	`,
 	cogwheel: `
 		<div>
 	  <label>Guild Name:</label>
@@ -390,11 +424,18 @@ function renderPatronInventory() {
 //	1	guild
 //	2	tavern
 //	3	party_A
+//	***	party_A_Companion (This is for the carriage handler)
 //	4	party_B
+//	5	party_C
+//	6	party_A_Guide
+//	4	party_B
+//	4	party_B
+//	9	Secret
 	
   const guildContainer = document.getElementById("guild-patron-inventory");
   const guild2Container = document.getElementById("guild2-patron-inventory");
   const partyAContainer = document.getElementById("party-a-patron-inventory");
+  const partyAGuideContainer = document.getElementById("party-a-guide-inventory");
   const partyBContainer = document.getElementById("party-b-patron-inventory");
   const partyCContainer = document.getElementById("party-c-patron-inventory");
   const secretContainer = document.getElementById("secret-patron-inventory");
@@ -433,6 +474,7 @@ function renderPatronInventory() {
   partyAContainer.innerHTML = renderGroup(3);
   partyBContainer.innerHTML = renderGroup(4);
   partyCContainer.innerHTML = renderGroup(5);
+  partyAGuideContainer.innerHTML = renderGroup(6);
   secretContainer.innerHTML = renderGroup(9);
 
 }
@@ -481,6 +523,7 @@ function enablePatronDragDrop() {
 			if (zone.id === "party-a-patron-inventory") newLocation = 3;
 			if (zone.id === "party-b-patron-inventory") newLocation = 4;
 			if (zone.id === "party-c-patron-inventory") newLocation = 5;
+			if (zone.id === "party-a-guide-inventory") newLocation = 6;
 			if (zone.id === "secret-patron-inventory") newLocation = 9;
 
 			// --- PARTY LOCK CHECKS (origin + destination) ---
@@ -1143,6 +1186,8 @@ async function startMission(partyKey) {
 			});
 
 			  // NEW: Save mission state
+			  
+			setPartyStatus(partyKey, "mission");
 			player.missions.current_mission.active = true;
 			player.missions.current_mission.page = missionPage;
 			// 🔥 INSERT SUMMARY BUILDING HERE
@@ -1285,11 +1330,19 @@ async function loadMissionPage() {
     patronList = getVisiblePatrons();
     renderPatronInventory();
 	updateSecretMissionLine();
+	updatePartyAGuideLine();
 
     // Fill static mission info
     document.getElementById("missions_line1").textContent = player.data.guild_name;
     document.getElementById("missions_line2").textContent = player.data.party_A;
     document.getElementById("missions_line3").textContent = player.data.party_B;
+	const hasPartyAGuide = Object.values(player.patrons)
+		.some(p => p.location === 6);
+	if (hasPartyAGuide) {
+		document.getElementById("missions_line6").textContent = "Guide";
+	} else {
+		document.getElementById("missions_line6").textContent = "";
+	}
 	const hasSecretPatron = Object.values(player.patrons)
 		.some(p => p.location === 9);
 	if (hasSecretPatron) {
@@ -1423,6 +1476,19 @@ function updateSecretMissionLine() {
 
     if (hasSecretPatron) {
         line.textContent = "Secret";
+    } else {
+        line.textContent = "";
+    }
+}
+
+function updatePartyAGuideLine() {
+    const hasPartyAGuidePatron = Object.values(player.patrons)
+        .some(p => p.location === 6);
+
+    const line = document.getElementById("missions_line6");
+
+    if (hasPartyAGuidePatron) {
+        line.textContent = "Guide";
     } else {
         line.textContent = "";
     }
@@ -1679,7 +1745,7 @@ function createDefaultPatronState(advId) {
         heavy: 6
     };
 
-    const agility = lore.agility_mod ?? 0;
+    const Dexterity = lore.Dexterity_mod ?? 0;
     const wisdom = lore.wisdom_mod ?? 0;
     const hpDie = lore.hp_die ?? 0;
     const hpMod = lore.hp_modifier ?? 0;
@@ -1696,7 +1762,7 @@ function createDefaultPatronState(advId) {
     const role = lore.role?.toLowerCase() || "";
 
     // --- Compute AC ---
-    let AC = 10 + agility + (armorBonus[prof] || 0);
+    let AC = 10 + Dexterity + (armorBonus[prof] || 0);
 
     // Barbarian bonus only when unarmed
     if (race === "barbarian" && prof === "unarmed") {
@@ -1705,7 +1771,7 @@ function createDefaultPatronState(advId) {
 
     // Monk AC formula (only when unarmed)
     if (role === "monk" && prof === "unarmed") {
-        AC = 10 + agility + wisdom;
+        AC = 10 + Dexterity + wisdom;
     }
 
     // --- Compute MaxHP ---
@@ -1848,7 +1914,7 @@ sheet.innerHTML = `
                     <ul class="char-stats">
                         ${show(adv.hp_modifier)        ? `<li>HP: ${adv.hp_modifier}</li>` : ""}
                         ${show(adv.strengh_mod)        ? `<li>STR: ${adv.strengh_mod}</li>` : ""}
-                        ${show(adv.agility_mod)        ? `<li>AGI: ${adv.agility_mod}</li>` : ""}
+                        ${show(adv.Dexterity_mod)        ? `<li>DEX: ${adv.Dexterity_mod}</li>` : ""}
                         ${show(adv.wisdom_mod)         ? `<li>WIS: ${adv.wisdom_mod}</li>` : ""}
                         ${show(adv.intelligence_mod)   ? `<li>INT: ${adv.intelligence_mod}</li>` : ""}
                         ${show(adv.charisma_mod)       ? `<li>CHA: ${adv.charisma_mod}</li>` : ""}
@@ -1871,7 +1937,7 @@ sheet.innerHTML = `
 
                         ${show(adv.proficiency_armor)  ? `<li><strong>Armor:</strong> ${adv.proficiency_armor}</li>` : ""}
                         ${show(adv.proficiency_weapon) ? `<li><strong>Weapon:</strong> ${adv.proficiency_weapon}</li>` : ""}
-                        ${show(adv.RacialEnemy)        ? `<li><strong>Racial Enemy:</strong> ${adv.RacialEnemy}</li>` : ""}
+                        ${show(adv.RacialEnemy)        ? `<li><strong>Favored Enemy:</strong> ${adv.RacialEnemy}</li>` : ""}
                     </ul>
                 </div>
 

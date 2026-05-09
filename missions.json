@@ -724,6 +724,36 @@
     "side": "right",
     "dialog": "Carrying on onwards, on the road towards the Pot of Gold.",
     "interaction_type": "next",
+    "target_id": "green1_502",
+    "options": []
+  },
+  {
+    "id": "green1_502",
+    "speaker": "Narrator",
+    "portrait": "",
+    "side": "right",
+    "dialog": "The bushes rustle at your path, they are aggressivly drawing out branches in a menacing, it's time for your introduction to the battle system.\n\nIn the standard Virtual Tabletop Battle Grid, use Move / Attack / Magic against the Animated Bushes to clain your victory.\n\nYou will need to login again after the battle but don't worry it will be saved.",
+    "interaction_type": "next",
+    "target_id": "green1_502end",
+    "options": []
+  },
+  {
+    "id": "green1_502end",
+    "speaker": "Narrator",
+    "portrait": "",
+    "side": "right",
+    "dialog": "The bushes rustle at your path, they are aggressivly drawing out branches in a menacing, it's time for your introduction to the battle system.\n\nIn the standard Virtual Tabletop Battle Grid, use Move / Attack / Magic against the Animated Bushes to clain your victory.",
+    "interaction_type": "next",
+    "target_id": "END",
+    "options": []
+  },
+  {
+    "id": "green1_601",
+    "speaker": "Narrator",
+    "portrait": "",
+    "side": "right",
+    "dialog": "Carrying on onwards, on the road towards the Pot of Gold.",
+    "interaction_type": "next",
     "target_id": "green1_048a",
     "options": []
   },
@@ -1792,7 +1822,7 @@
     "speaker": "Bragain",
     "portrait": "/assets/patrons/dwarven_miner.png",
     "side": "left",
-    "dialog": "Oh dear Hommond, may your hammer protect us. I hope we're not straight waltzing to our doom AND our bankrupcy.",
+    "dialog": "Oh dear Hommond, may the glory of your hammer protect us. I hope we're not straight waltzing to our doom AND our bankrupcy.",
     "interaction_type": "next",
     "target_id": "green2_302"
   },
@@ -1828,7 +1858,7 @@
     "speaker": "Bragain",
     "portrait": "/assets/patrons/dwarven_miner.png",
     "side": "left",
-    "dialog": "Oh I mean, not ANY elf, not always",
+    "dialog": "Oh I mean, not ALLS elves, not always",
     "interaction_type": "next",
     "target_id": "green2_306"
   },
@@ -1849,5 +1879,244 @@
     "dialog": "But lives are on the line here. There are greater matters ahead and it's no time to picky.",
     "interaction_type": "next",
     "target_id": "green2_308"
+  },
+  {
+    "id": "green2_308",
+    "speaker": "Narrator",
+    "portrait": "",
+    "side": "left",
+    "dialog": "The party marches on, towards the forest entrence.",
+    "interaction_type": "next",
+    "target_id": "green3_201"
+  },
+  {
+    "id": "green3_201",
+    "speaker": "Narrator",
+    "portrait": "",
+    "side": "left",
+    "dialog": "The party has reached the forest entrence.",
+    "interaction_type": "next",
+    "target_id": "green3_202"
+  },
+  {
+    "id": "green3_202",
+    "speaker": "Narrator",
+    "portrait": "",
+    "side": "left",
+    "dialog": "The looks of the trees barks and the grass growing around doesn't fill you with much assurace, this forest looks sick.",
+    "interaction_type": "next",
+    "target_id": "green3_203"
+  },
+  {
+    "id": "green3_203",
+    "speaker": "Narrator",
+    "portrait": "",
+    "dialog": "The path leads from the entrence quickly to a crossroads with a risen rocky platform overlook.",
+    "side": "left",
+    "interaction_type": "next",
+    "target_id": "green3_204"
+  },
+  {
+    "id": "green3_203",
+    "speaker": "Narrator",
+    "portrait": "",
+    "dialog": "As the party makes its way carefully onwards, a menacing face appears from above the platform.",
+    "side": "left",
+    "interaction_type": "next",
+    "target_id": "green3_204"
+  },
+  {
+    "id": "green3_204",
+    "speaker": "Narrator",
+    "portrait": "direwolf.png",
+    "dialog": "Looking down upon you and letting off a roaring growl, a large face of a dire-wolf presents his canines and beaming yellow eyes.",
+    "side": "right",
+    "interaction_type": "next",
+    "target_id": "green3_205"
+  },
+  {
+    "id": "green3_205",
+    "speaker": "Dark Figure",
+    "portrait": "direwolf.png",
+    "dialog": "More intruders passing through my woods, have you come here for your doom as well?",
+    "side": "right",
+    "interaction_type": "next",
+    "target_id": "green3_206"
+  },
+  {
+    "id": "green3_206",
+    "speaker": "Dark Figure",
+    "portrait": "direwolf.png",
+    "dialog": "Or have you come to serve me a meal? Answer me strangers...",
+    "side": "right",
+    "interaction_type": "next",
+    "target_id": "green3_207"
+  },
+  {
+    "id": "green3_207",
+    "speaker": "Narrator",
+    "portrait": "",
+    "dialog": "The menacing figure demands an answer.",
+    "side": "left",
+    "interaction_type": "selection",
+    "options": [
+      {
+        "text": "Feeling intimidated, you excuse yourself and retreat backwards.",
+        "target_id": "green3_208b",
+        "frustration_text": "Get a grip, you didn't come here all this way just to turn back now.",
+        "disabled": true
+      },
+      {
+        "text": "[Calm] Have Hogmother Speak softly to the figure and explain your motivation.",
+        "target_id": "green3_208a",
+        "disabled": false,
+        "color": "#FFD700"
+      }
+    ]
+  },
+  {
+    "id": "green3_208a",
+    "speaker": "Hogmother",
+    "portrait": "/assets/patrons/hogmother.png",
+    "side": "left",
+    "dialog": "We haven't come here to intrude, not to find doom nor to serve a meal, Master Wolf.",
+    "interaction_type": "next",
+    "target_id": "green3_209"
+  },
+  {
+    "id": "green3_209",
+    "speaker": "Hogmother",
+    "portrait": "/assets/patrons/hogmother.png",
+    "side": "left",
+    "dialog": "We're on a mission of urgency to find my husband who has gone missing around this area, and having no other way we've come to pass through here.",
+    "interaction_type": "next",
+    "target_id": "green3_210"
+  },
+  {
+    "id": "green3_210",
+    "speaker": "Hogmother",
+    "portrait": "/assets/patrons/hogmother.png",
+    "side": "left",
+    "dialog": "We merely request to keep passing through.",
+    "interaction_type": "next",
+    "target_id": "green3_211"
+  },
+  {
+    "id": "green3_211",
+    "speaker": "Dark Figure",
+    "portrait": "direwolf.png",
+    "dialog": "I decide what passes through here. I am Awotruce. I've been the guardian of those woods since anyone alive can remember.",
+    "side": "right",
+    "interaction_type": "next",
+    "target_id": "green3_212"
+  },
+  {
+    "id": "green3_212",
+    "speaker": "Awotruce",
+    "portrait": "direwolf.png",
+    "dialog": "There have been dark gatherings here preforming rituals desecrating the peaceful of nature in my woods of late. Have you any inclusion this that?",
+    "side": "right",
+    "interaction_type": "next",
+    "target_id": "green3_213"
+  },
+  {
+    "id": "green3_213",
+    "speaker": "Hogmother",
+    "portrait": "/assets/patrons/hogmother.png",
+    "side": "left",
+    "dialog": "None. Master Awetruce. This is news to us.",
+    "interaction_type": "next",
+    "target_id": "green3_214"
+  },
+  {
+    "id": "green3_214",
+    "speaker": "Awotruce",
+    "portrait": "direwolf.png",
+    "dialog": "Well then, say I allow you passage through my woods, what are you planning to do when you get to the dark folks?",
+    "side": "right",
+    "interaction_type": "next",
+    "target_id": "green3_213"
+  },
+  {
+    "id": "green3_214",
+    "speaker": "Hogmother",
+    "portrait": "/assets/patrons/hogmother.png",
+    "side": "left",
+    "dialog": "We haven't got a plan, all I want is to find my husband and be off.",
+    "interaction_type": "next",
+    "target_id": "green3_215"
+  },
+  {
+    "id": "green3_215",
+    "speaker": "Awotruce",
+    "portrait": "direwolf.png",
+    "dialog": "Then your plan is certain death, wanderers. Only the lost find their way to my woods and you truely are lost.",
+    "side": "right",
+    "interaction_type": "next",
+    "target_id": "green3_216"
+  },
+  {
+    "id": "green3_216",
+    "speaker": "Awotruce",
+    "portrait": "direwolf.png",
+    "dialog": "There's a cult of dark being barricading themselves up ahead, and they have been bringing in more people with them. I cannot breach their pointy spears in my form. I don't see how you can do any better.",
+    "side": "right",
+    "interaction_type": "next",
+    "target_id": "green3_217"
+  },
+  {
+    "id": "green3_217",
+    "speaker": "Hogmother",
+    "portrait": "/assets/patrons/hogmother.png",
+    "side": "left",
+    "dialog": "Better of worse my way is through those barricades, and I will find Hogfather.",
+    "interaction_type": "next",
+    "target_id": "green3_218"
+  },
+  {
+    "id": "green3_218",
+    "speaker": "Awotruce",
+    "portrait": "direwolf.png",
+    "dialog": "It's been an eternity or so since I've seen such determination.\n\nFine, I will allow you passage in my woods, and I will watch you closely.",
+    "side": "right",
+    "interaction_type": "next",
+    "target_id": "green3_219"
+  },
+  {
+    "id": "green3_219",
+    "speaker": "Awotruce",
+    "portrait": "direwolf.png",
+    "dialog": "If you really do happen to breach their borders, leave their leader to me. I have an unsettled debt with that mongrel.",
+    "side": "right",
+    "interaction_type": "next",
+    "target_id": "green3_220"
+  },
+  {
+    "id": "green3_220",
+    "speaker": "Awotruce",
+    "portrait": "direwolf.png",
+    "dialog": "I will crunch that foul monstrosity's head in my jaws even if it's the last thing I'll do.",
+    "side": "right",
+    "interaction_type": "next",
+    "target_id": "green3_221"
+  },
+  {
+    "id": "green3_221",
+    "speaker": "Hogmother",
+    "portrait": "/assets/patrons/hogmother.png",
+    "side": "left",
+    "dialog": "We humbley accept your benelovence, Master Awotruce.",
+    "interaction_type": "next",
+    "target_id": "green3_222end"
+  },
+  {
+    "id": "green3_222end",
+    "speaker": "Hogmother",
+    "portrait": "/assets/patrons/hogmother.png",
+    "side": "left",
+    "dialog": "We humbly accept your benevolence, Master Awotruce.",
+    "interaction_type": "next",
+    "target_id": "END"
   }
+
 ]

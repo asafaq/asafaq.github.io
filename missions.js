@@ -416,6 +416,16 @@ async function handleMissionEnd(sceneId) {
 		nextPage = "mission_green_1"
 	}
   
+    if (sceneId === "green1_502end") {
+		launchBattle("tutor_test");
+		
+		player.missions.green_1 = 7;
+		nextPage = "mission_green_1"
+		
+		
+	}
+  
+  
     if (sceneId === "green1_048END") {
 		player = await storage.loadPlayer(player.id);
 		player.missions.green_1 = 5;
@@ -483,7 +493,9 @@ async function handleMissionEnd(sceneId) {
 		recruitAdventurer("adv_Hogmother")
 		player.patrons.adv_Hogmother.location = 3;
 		player.patrons.adv_Hogmother.status = "mission";
-
+		Journal.addEntry(
+			`You've met up with Hogmother and she has joined the ${player.data.party_A} on their way to ${player.missions.current_mission.id}.`
+		);
 		nextPage = "mission_green_2"
 	}
 
@@ -494,9 +506,27 @@ async function handleMissionEnd(sceneId) {
 		player.patrons.adv_Hogmother.status = "mission";
 		recruitAdventurer("adv_Lurch")
 		player.patrons.adv_Lurch.location = 9;
-		player.patrons.adv_Lurch.status = "mission";
+		player.patrons.adv_Lurch.status = "secret";
+		Journal.addEntry(
+			`You've met up with Hogmother and she has joined the ${player.data.party_A} on their way to ${player.missions.current_mission.id}.`
+		);
+		Journal.addEntry(
+			`You've dealth with Lurch who has agreed on to spy for the ${player.data.party_A} and meet them later as they make their own way to ${player.missions.current_mission.id}.`
+		);
+		nextPage = "mission_green_3"
+	}
+
+	
+	if (sceneId === "green3_222end") {
+		player.missions.green_2 = 4;
+		recruitAdventurer("adv_Awetruce")
+		player.patrons.adv_Awetruce.location = 6; //guide _A position
+		player.patrons.adv_Awetruce.status = "mission";
 		
-		nextPage = "mission_green_2"
+		Journal.addEntry(
+			`You've met with Awetruce who have agreed to overwatch the ${player.data.party_A} on their way to ${player.missions.current_mission.id}, and will participate in their final fight.`
+		);
+		nextPage = "mission_green_3"
 	}
 
 	
@@ -673,6 +703,8 @@ function endMission() {
 
     // Reset mission state
 	// Restore party members to idle
+	
+	setPartyStatus(partyKey, "idle");		//currently it's set to run twice as we can see but it's yet unknown which code block is obsolete yet.
 	Object.values(player.patrons).forEach(p => { 
 		if (p.party === player.missions.current_mission.party) 
 			p.status = "idle"; 
