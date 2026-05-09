@@ -347,28 +347,41 @@ function monsterAI() {
 function checkVictory() {
     const monstersAlive = units.filter(u => u.type === 'monster' && u.hp > 0);
     
-	if (monstersAlive.length === 0) {
-			Bus.emit('LOG', "VICTORY! Transmitting results...");
-			
-			// 1. Mark that we are returning from a battle
-			localStorage.setItem('returningFromBattle', 'true');
+    if (monstersAlive.length === 0) {
+        // Keep the log so the player feels the win
+        Bus.emit('LOG', "VICTORY! Transmitting results...");
 
-			const resultData = {
-				type: "BATTLE_COMPLETE",
-				result: units.filter(u => u.type === 'pc')
-			};
+        // Keep the data bundle
+        const resultData = {
+            type: "BATTLE_COMPLETE",
+            result: units.filter(u => u.type === 'pc')
+        };
 
-			const target = window.opener || window.parent;
-			target.postMessage(resultData, "*"); 
+        // Send the signal to the Parent (index.html)
+        // Since we are in an iframe, window.parent is our target
+        const target = window.parent;
+        target.postMessage(resultData, "*"); 
 
-			setTimeout(() => { 
-				window.location.href = "index.html"; 
-			}, 2000);
-		}
+        // NOTE: We removed the redirect! 
+        // The parent will see the 'BATTLE_COMPLETE' message and 
+        // hide this window automatically.
+    }
+}
+function scaleApp() {
+    const screen = document.getElementById('screen');
+    const width = 540;
+    const height = 960;
+    const scale = Math.min(window.innerWidth / width, window.innerHeight / height);
+    
+    // Centers the 540x960 screen and scales it to fit
+    screen.style.transform = `scale(${scale})`;
+    screen.style.transformOrigin = 'top center';
 }
 
-
 init();
+
+window.addEventListener('resize', scaleApp);
+window.addEventListener('load', scaleApp);
 </script>
 </body>
 </html>

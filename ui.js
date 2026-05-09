@@ -1005,7 +1005,7 @@ const tutorialStates = [
         mission: "tutor1_000"
     },
     {
-        condition: p => p.tutorial === 1 && p.green_1 === 6,
+        condition: p => p.tutorial === 1 && p.green_1 === 7,
         text: "Continue Tutorial",
         mission: "tutor2_101"
     },

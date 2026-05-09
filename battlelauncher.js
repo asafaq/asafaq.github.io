@@ -107,6 +107,55 @@ function launchBattle(encounterKey) {
     };
 
     localStorage.setItem('currentBattle', JSON.stringify(payload));
-    window.location.href = "battle.html";
+    openBattleOverlay();
+	
+    // --- OVERLAY LOGIC ---
+    let overlay = document.getElementById('battle-overlay');
+    if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.id = 'battle-overlay';
+        // Styles to make it cover the whole screen
+        overlay.style = "position:fixed; top:0; left:0; width:100vw; height:100vh; z-index:10000; background:#000; display:block;";
+        overlay.innerHTML = `<iframe id="battle-frame" src="battle.html" style="width:100%; height:100%; border:none;"></iframe>`;
+        document.body.appendChild(overlay);
+    } else {
+        overlay.style.display = "block";
+        document.getElementById('battle-frame').src = "battle.html";
+    }
 }
 
+function openBattleOverlay() {
+    // Create the overlay div if it doesn't exist
+    let overlay = document.getElementById('battle-overlay');
+    if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.id = 'battle-overlay';
+        overlay.style = "position:fixed; top:0; left:0; width:100%; height:100%; z-index:10000; background:#000;";
+        overlay.innerHTML = `<iframe id="battle-frame" src="battle.html" style="width:100%; height:100%; border:none;"></iframe>`;
+        document.body.appendChild(overlay);
+    } else {
+        overlay.style.display = "block";
+        document.getElementById('battle-frame').src = "battle.html";
+    }
+}
+
+window.addEventListener("message", (event) => {
+    // Only respond to our specific battle signal
+    if (event.data && event.data.type === "BATTLE_COMPLETE") {
+        console.log("Battle Victory received. Closing overlay...");
+        
+        // 1. Hide the overlay
+        const overlay = document.getElementById('battle-overlay');
+        if (overlay) overlay.style.display = "none";
+        
+        // 2. Clear the iframe source to stop any background sounds/logic
+        const frame = document.getElementById('battle-frame');
+        if (frame) frame.src = "";
+
+        // 3. Update your parent data
+        // Since child saved to IDB, we just need to refresh our local player object
+        if (typeof syncDataFromIDB === "function") {
+            syncDataFromIDB();
+        }
+    }
+});

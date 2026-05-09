@@ -419,7 +419,7 @@ async function handleMissionEnd(sceneId) {
     if (sceneId === "green1_502end") {
 		launchBattle("tutor_test");
 		
-		player.missions.green_1 = 7;
+		player.missions.green_1 = 6;
 		nextPage = "mission_green_1"
 		
 		
@@ -623,7 +623,7 @@ async function handleMissionEnding(sceneId) {
 
         "green1_056END": async () => {
             player = await storage.loadPlayer(player.id);
-            player.missions.green_1 = 6;
+            player.missions.green_1 = 7;
 
             player.missions.current_mission.active = false;
             player.missions.current_mission.id = "";
