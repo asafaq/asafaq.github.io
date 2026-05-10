@@ -19,7 +19,7 @@
         #log { height: 140px; background: #111; padding: 15px; overflow-y: auto; color: #00ff00; font-family: monospace; border-bottom: 2px solid #444; display: flex; flex-direction: column-reverse; }
         #controls { flex: 1; padding: 20px; background: #2c2c2c; display: flex; flex-direction: column; justify-content: space-between; }
 
-        .grid-overlay { position: absolute; width: 100%; height: 100%; background-image: linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px); background-size: 54px 54px; pointer-events: none; z-index: 1; }
+        .grid-overlay { position: absolute; width: 100%; height: 100%; background-image: linear-gradient(rgba(255,255,255,0.2) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.2) 1px, transparent 1px); background-size: 54px 54px; pointer-events: none; z-index: 1000; }
         .cell { width: 54px; height: 54px; float: left; z-index: 2; position: relative; cursor: pointer; }
 		.token { width: 46px; height: 46px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; position: absolute; z-index: 3; transition: 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28); pointer-events: none; box-shadow: 0 4px 10px rgba(0,0,0,0.5); font-size: 14px; color: white; text-shadow: 1px 1px 2px #000; background-size: cover; background-position: center; background-repeat: no-repeat; border: 1px solid white; }
         .active-ring { position: absolute; width: 50px; height: 50px; border: 3px solid #f1c40f; border-radius: 50%; transition: 0.3s; pointer-events: none; z-index: 2; box-shadow: 0 0 15px #f1c40f; }
@@ -148,7 +148,10 @@ function init() {
     const missionId = data.missionId || "default";
     const bgUrl = mapUrls[missionId] || mapUrls["default"];
     const grid = document.getElementById('grid');
-
+    grid.innerHTML = `
+        <div class="grid-overlay"></div>
+        <div id="active-ring" class="active-ring"></div>
+    `;
     if (bgUrl && bgUrl !== "undefined") {
         grid.style.backgroundImage = `url('${bgUrl}')`;
         grid.style.backgroundSize = "cover";
@@ -162,7 +165,7 @@ function init() {
     units = [...data.party, ...data.monsters];
 
     // 3. Grid Construction
-    grid.innerHTML = ''; // Clear grid before building
+    //grid.innerHTML = ''; // Clear grid before building
     for (let i = 0; i < 100; i++) {
         let cell = document.createElement('div');
         cell.className = 'cell';
@@ -343,28 +346,28 @@ function monsterAI() {
     }
     setTimeout(endTurn, 1000);
 }
-
 function checkVictory() {
     const monstersAlive = units.filter(u => u.type === 'monster' && u.hp > 0);
     
     if (monstersAlive.length === 0) {
-        // Keep the log so the player feels the win
+        // 1. Local Log (Visible inside the battle iframe)
         Bus.emit('LOG', "VICTORY! Transmitting results...");
 
-        // Keep the data bundle
+        // 2. Parent Log (Visible on the main game screen)
+        // We check window.parent.Bus to see if the main page is listening
+        if (window.parent && window.parent.Bus) {
+            window.parent.Bus.emit('LOG', "The party has returned from combat.");
+        } else {
+            console.warn("Parent Bus not found. Is window.Bus defined in index.html?");
+        }
+
+        // 3. The Data Bundle (Tells parent to close the window and save HP)
         const resultData = {
             type: "BATTLE_COMPLETE",
             result: units.filter(u => u.type === 'pc')
         };
 
-        // Send the signal to the Parent (index.html)
-        // Since we are in an iframe, window.parent is our target
-        const target = window.parent;
-        target.postMessage(resultData, "*"); 
-
-        // NOTE: We removed the redirect! 
-        // The parent will see the 'BATTLE_COMPLETE' message and 
-        // hide this window automatically.
+        window.parent.postMessage(resultData, "*"); 
     }
 }
 function scaleApp() {

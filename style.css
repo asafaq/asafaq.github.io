@@ -189,7 +189,7 @@
   );
   transform: skewX(-25deg);
   pointer-events: none;
-  z-index: 10;
+  z-index: 10000;
   
   /* This starts the 15-second loop automatically */
   animation: idleShine 15s infinite;
@@ -530,7 +530,7 @@ img:not([src]) {
 #guild-patron-inventory { top: 100px; left: 71px; }
 #guild2-patron-inventory { top: 160px; left: 71px; }
 #party-a-patron-inventory { top: 283px; left: 71px; }
-#party-a-guide-inventory { top: 283px; left: 4px; }
+#party-a-guide-inventory { top: 285px; left: 14px; }
 #party-b-patron-inventory { top: 374px; left: 71px; }
 #secret-patron-inventory { top: 714px; left: 4px; }
 
@@ -555,10 +555,14 @@ img:not([src]) {
   z-index: 10;
 }
 #missions_line6 {
+  color: white;
+  background: #52463A;
   position: absolute;
-  top: 120px;
-  left: 40px;
+  top: 270px;
+  left: 18px;
   z-index: 10;
+  padding: 2px 4px;
+  border-radius: 4px;
 }
 
 #missions_line2 {
@@ -576,10 +580,14 @@ img:not([src]) {
 }
 
 #missions_line9 {
+  color: white;
+  background: #52463A;
   position: absolute;
   top: 697px;
   left: 4px;
   z-index: 10;
+  padding: 2px 4px;
+  border-radius: 4px;
 }
 
 
@@ -810,6 +818,10 @@ img:not([src]) {
   display: grid;
   grid-template-columns: repeat(4, 64px);
   grid-gap: 2px;
+  position: absolute;
+  top: 70px;   /* below the chest */
+  left: 0;
+  z-index: 19999; /* above everything */
 }
 
 .stash-slot {

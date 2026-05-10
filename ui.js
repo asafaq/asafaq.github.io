@@ -155,9 +155,13 @@ const pages = {
         </div>
 		
 		<div id="guild-stash">
-			<img src="assets/guild/chest60.png" id="stash-chest-icon" class="item-icon chest-icon">
+			<div class="guild_stash">
+				<img src="assets/guild/chest60.png" id="stash-chest-icon" class="item-icon chest-icon">
+			</div>
+
 			<div class="stash-grid hidden"></div>
 		</div>
+
 
 		<div id="patron-container"></div>
 		<button id="tutorial-button" class="tutorial-button" style="display: none;">
@@ -1005,7 +1009,7 @@ const tutorialStates = [
         mission: "tutor1_000"
     },
     {
-        condition: p => p.tutorial === 1 && p.green_1 === 7,
+        condition: p => p.tutorial === 1 && p.green_1 === 6,
         text: "Continue Tutorial",
         mission: "tutor2_101"
     },
@@ -1769,9 +1773,14 @@ function createDefaultPatronState(advId) {
         AC += hpMod;
     }
 
+    // Barbarian bonus only when unarmed
+    if (race === "direwolf" && prof === "unarmed") {
+        AC += hpMod;
+    }
+
     // Monk AC formula (only when unarmed)
     if (role === "monk" && prof === "unarmed") {
-        AC = 10 + Dexterity + wisdom;
+        AC = 10 + wisdom;
     }
 
     // --- Compute MaxHP ---
@@ -1925,8 +1934,11 @@ sheet.innerHTML = `
                 <div class="char-stats-block">
                     <ul class="char-stats">
                         ${show(adv.AC)        ? `<li><strong>AC:</strong> ${adv.AC}</li>` : ""}
-                        ${show(adv.MaxHP)     ? `<li><strong>MxHP:</strong> ${adv.MaxHP}</li>` : ""}
-                        ${show(adv.currentHP) ? `<li><strong>HP:</strong> ${adv.currentHP}</li>` : ""}
+                        ${show(adv.currentHP) && show(adv.MaxHP)
+							  ? `<li><strong>HP:</strong> ${adv.currentHP} / ${adv.MaxHP}</li>`
+							  : ""}
+                        ${show(adv.size)        ? `<li><strong>Size:</strong> ${adv.size}</li>` : ""}
+
                     </ul>
                 </div>
 

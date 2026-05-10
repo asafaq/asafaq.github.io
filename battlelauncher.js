@@ -29,8 +29,13 @@ window.addEventListener("message", (event) => {
         // Call your existing Save/IDB function here
         // saveToIDB(player); 
 
-        Bus.emit('LOG', "The party has returned from combat."); // If your main page has a log too
-    }
+        // Check if the parent and the Bus exist before calling
+		if (window.parent && window.parent.Bus) {
+			window.parent.Bus.emit('LOG', "The party has returned from combat.");
+		} else {
+			console.error("Could not find the Event Bus on the parent window.");
+		}
+		}
 });
 
 // Example function to start a fight
@@ -39,8 +44,23 @@ window.addEventListener("message", (event) => {
    //Redirect or show the battle iframe
     // window.location.href = "battle.html"; 
 // }
+// At the top of battlelauncher.js
+const Bus = window.parent.Bus;
 
+// Now your old code works again!
+if (Bus) {
+    Bus.emit('LOG', "The party has returned from combat.");
+}
 
+// In index.html - Make sure it looks like this!
+window.Bus = { 
+    events: {},
+    on(event, cb) { /* ... */ },
+    emit(event, data) { 
+        /* ... your existing emit code ... */
+        console.log("Main Page Bus received:", event, data);
+    }
+};
 
 // Example Bestiary in your Parent code
 const EncounterTemplates = {
@@ -159,3 +179,4 @@ window.addEventListener("message", (event) => {
         }
     }
 });
+

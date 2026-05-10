@@ -732,7 +732,7 @@
     "speaker": "Narrator",
     "portrait": "",
     "side": "right",
-    "dialog": "The bushes rustle at your path, they are aggressivly drawing out branches in a menacing, it's time for your introduction to the battle system.\n\nIn the standard Virtual Tabletop Battle Grid, use Move / Attack / Magic against the Animated Bushes to clain your victory.\n\nYou will need to login again after the battle but don't worry it will be saved.",
+    "dialog": "The bushes rustle at your path, they are aggressivly drawing out branches in a menacing, it's time for your introduction to the battle system.\n\nIn the standard Virtual Tabletop Battle Grid, use Move / Attack / Magic against the Animated Bushes to clain your victory.",
     "interaction_type": "next",
     "target_id": "green1_502end",
     "options": []
@@ -1431,7 +1431,7 @@
     "speaker": "Hogperson",
     "portrait": "/assets/patrons/hogperson.png",
     "side": "left",
-    "dialog": "Well mother, if dad's away nothing is too important to keep me busy from seeing to it.",
+    "dialog": "Well mother, if dad's away nothing is too important to keep me from seeing to it.",
     "interaction_type": "next",
     "target_id": "green2_208"
   },
@@ -1440,7 +1440,7 @@
     "speaker": "Hogmother",
     "portrait": "/assets/patrons/hogmother.png",
     "side": "right",
-    "dialog": "Oh that's just splendide! And you've brought some friends along, what a true pleasure to meet you all! Lets me fill you in what's been happening.",
+    "dialog": "Oh that's just splendide! And you've brought some friends along, what a pleasure to meet you all! Let me fill you in on what's been happening.",
     "interaction_type": "next",
     "target_id": "green2_209"
   },
@@ -1449,7 +1449,7 @@
     "speaker": "Hogmother",
     "portrait": "/assets/patrons/hogmother.png",
     "side": "right",
-    "dialog": "It appears there's quite some unrest at town right now as dangerous group have been taking up territory up north across the river, and folks have begone missing!",
+    "dialog": "It appears there's quite some unrest at town right now as a dangerous group have been taking up territory up north across the river, and folks have begone missing!",
     "interaction_type": "next",
     "target_id": "green2_210"
   },
@@ -1458,7 +1458,7 @@
     "speaker": "Hogmother",
     "portrait": "/assets/patrons/hogmother.png",
     "side": "right",
-    "dialog": "I still don't quite know what's the offical authority policy regarding that, word is they might have voluntarily went there to join with them.",
+    "dialog": "I still don't quite know what's the offical authorities policy regarding that, word is they might have voluntarily went there to join with them.",
     "interaction_type": "next",
     "target_id": "green2_211"
   },
@@ -1467,7 +1467,7 @@
     "speaker": "Hogmother",
     "portrait": "/assets/patrons/hogmother.png",
     "side": "right",
-    "dialog": "I certainly have no intention of sitting here waiting for a new word. I'm going right in there and find Hogfather!",
+    "dialog": "I certainly have no intention of sitting here waiting for anyone. I'm going right in there and find Hogfather!",
     "interaction_type": "next",
     "target_id": "green2_212"
   },
@@ -1476,7 +1476,7 @@
     "speaker": "Hogperson",
     "portrait": "/assets/patrons/hogperson.png",
     "side": "left",
-    "dialog": "Right mow. And I'm coming with you.",
+    "dialog": "Right ma'. And I'm coming with you.",
     "interaction_type": "next",
     "target_id": "green2_213"
   },
@@ -1485,7 +1485,7 @@
     "speaker": "Bragain",
     "portrait": "/assets/patrons/dwarven_miner.png",
     "side": "right",
-    "dialog": "Aye, that seems like a mission to me. I'll be by you side madam.",
+    "dialog": "Aye, that seems like a mission to me. I'll be by your side madam.",
     "interaction_type": "next",
     "target_id": "green2_214"
   },
@@ -1494,7 +1494,7 @@
     "speaker": "Claudio",
     "portrait": "/assets/patrons/Claudio.png",
     "side": "right",
-    "dialog": "Oh it would be a opportunity I will not miss out on, you will have every ability in my satchel as your side madam Hogmother.",
+    "dialog": "Oh it would be a opportunity I will not miss out on, you will have every ability in my satchel at your side madam Hogmother.",
     "interaction_type": "next",
     "target_id": "green2_215",
     "options": []
@@ -1558,7 +1558,7 @@
     "speaker": "Narrator",
     "portrait": "",
     "side": "left",
-    "dialog": "The party throws surprised looks to each other, trying to process what just happened.",
+    "dialog": "The party throws surprised looks at each other, trying to process what just happened.",
     "interaction_type": "next",
     "target_id": "green2_222"
   },
@@ -1603,7 +1603,7 @@
     "speaker": "Lurch",
     "portrait": "/assets/patrons/lurch.png",
     "side": "right",
-    "dialog": "The group out in the woods are no stranger to me. Although I do not affiliate with them, I can walk in and out of their territory with no problem.",
+    "dialog": "The group out in the woods are no strangers to me. Although I do not affiliate with them, I can walk in and out of their territory with no problem.",
     "interaction_type": "next",
     "target_id": "green2_227"
   },
@@ -1648,7 +1648,7 @@
     "speaker": "Bragain",
     "portrait": "/assets/patrons/dwarven_miner.png",
     "side": "left",
-    "dialog": "Bah! I don't like this. That's a steep amount with nothing to show for? Your folk are all tricks and mayhem! This is a robbery!",
+    "dialog": "Bah! I don't like this. That's a steep amount with nothing to show for? Your goblin-folk are all tricks and mayhem! This is a robbery!",
     "interaction_type": "next",
     "target_id": "green2_233"
   },
@@ -1684,7 +1684,7 @@
     "speaker": "Bragain",
     "portrait": "/assets/patrons/dwarven_miner.png",
     "side": "right",
-    "dialog": "There's nothing I'd like to do more than that, goblinoid!",
+    "dialog": "There's nothing I'd like to do more, goblinoid!",
     "interaction_type": "next",
     "target_id": "green2_237"
   },
@@ -1777,7 +1777,7 @@
     "speaker": "Narrator",
     "portrait": "",
     "side": "left",
-    "dialog": "That't it then. The deal signed with handshakes and coin. I hope you know what you're doing dealings with Goblins!",
+    "dialog": "That's it then. The deal has signed with handshakes and coin. I hope you know what you're doing dealing with Goblins!",
     "interaction_type": "next",
     "target_id": "green2_244b"
   },
@@ -1867,7 +1867,7 @@
     "speaker": "Amyssa",
     "portrait": "/assets/patrons/amyssa_smaller.png",
     "side": "right",
-    "dialog": "...\n\nThat's alright. You're not the only one having second thoughts.",
+    "dialog": "............\n\nThat's alright. You're not the only one having second thoughts.",
     "interaction_type": "next",
     "target_id": "green2_307"
   },
@@ -1876,7 +1876,7 @@
     "speaker": "Amyssa",
     "portrait": "/assets/patrons/amyssa_smaller.png",
     "side": "right",
-    "dialog": "But lives are on the line here. There are greater matters ahead and it's no time to picky.",
+    "dialog": "But lives are on the line here. There are greater matters ahead and it's no time to be picky.",
     "interaction_type": "next",
     "target_id": "green2_308"
   },
@@ -1928,7 +1928,7 @@
   {
     "id": "green3_204",
     "speaker": "Narrator",
-    "portrait": "direwolf.png",
+    "portrait": "/assets/patrons/direwolf.png",
     "dialog": "Looking down upon you and letting off a roaring growl, a large face of a dire-wolf presents his canines and beaming yellow eyes.",
     "side": "right",
     "interaction_type": "next",
@@ -1937,7 +1937,7 @@
   {
     "id": "green3_205",
     "speaker": "Dark Figure",
-    "portrait": "direwolf.png",
+    "portrait": "/assets/patrons/direwolf.png",
     "dialog": "More intruders passing through my woods, have you come here for your doom as well?",
     "side": "right",
     "interaction_type": "next",
@@ -1946,7 +1946,7 @@
   {
     "id": "green3_206",
     "speaker": "Dark Figure",
-    "portrait": "direwolf.png",
+    "portrait": "/assets/patrons/direwolf.png",
     "dialog": "Or have you come to serve me a meal? Answer me strangers...",
     "side": "right",
     "interaction_type": "next",
@@ -1988,7 +1988,7 @@
     "speaker": "Hogmother",
     "portrait": "/assets/patrons/hogmother.png",
     "side": "left",
-    "dialog": "We're on a mission of urgency to find my husband who has gone missing around this area, and having no other way we've come to pass through here.",
+    "dialog": "We're on a mission of urgency to find my husband who may has gone missing around this area, and having no other way we've come to pass through here.",
     "interaction_type": "next",
     "target_id": "green3_210"
   },
@@ -2004,7 +2004,7 @@
   {
     "id": "green3_211",
     "speaker": "Dark Figure",
-    "portrait": "direwolf.png",
+    "portrait": "/assets/patrons/direwolf.png",
     "dialog": "I decide what passes through here. I am Awotruce. I've been the guardian of those woods since anyone alive can remember.",
     "side": "right",
     "interaction_type": "next",
@@ -2013,8 +2013,8 @@
   {
     "id": "green3_212",
     "speaker": "Awotruce",
-    "portrait": "direwolf.png",
-    "dialog": "There have been dark gatherings here preforming rituals desecrating the peaceful of nature in my woods of late. Have you any inclusion this that?",
+    "portrait": "/assets/patrons/direwolf.png",
+    "dialog": "There have been dark gatherings here preforming rituals desecrating the peace of nature in my woods of late. Have you any inclusion this that?",
     "side": "right",
     "interaction_type": "next",
     "target_id": "green3_213"
@@ -2024,21 +2024,21 @@
     "speaker": "Hogmother",
     "portrait": "/assets/patrons/hogmother.png",
     "side": "left",
-    "dialog": "None. Master Awetruce. This is news to us.",
+    "dialog": "None. Master Awetruce, this is news to us.",
     "interaction_type": "next",
     "target_id": "green3_214"
   },
   {
     "id": "green3_214",
     "speaker": "Awotruce",
-    "portrait": "direwolf.png",
-    "dialog": "Well then, say I allow you passage through my woods, what are you planning to do when you get to the dark folks?",
+    "portrait": "/assets/patrons/direwolf.png",
+    "dialog": "Well then, say I allow you passage through my woods, what are you planning to do when you get to the dark-folk who settled on the holy grounds of the woods?",
     "side": "right",
     "interaction_type": "next",
-    "target_id": "green3_213"
+    "target_id": "green3_214a"
   },
   {
-    "id": "green3_214",
+    "id": "green3_214a",
     "speaker": "Hogmother",
     "portrait": "/assets/patrons/hogmother.png",
     "side": "left",
@@ -2049,7 +2049,7 @@
   {
     "id": "green3_215",
     "speaker": "Awotruce",
-    "portrait": "direwolf.png",
+    "portrait": "/assets/patrons/direwolf.png",
     "dialog": "Then your plan is certain death, wanderers. Only the lost find their way to my woods and you truely are lost.",
     "side": "right",
     "interaction_type": "next",
@@ -2058,8 +2058,8 @@
   {
     "id": "green3_216",
     "speaker": "Awotruce",
-    "portrait": "direwolf.png",
-    "dialog": "There's a cult of dark being barricading themselves up ahead, and they have been bringing in more people with them. I cannot breach their pointy spears in my form. I don't see how you can do any better.",
+    "portrait": "/assets/patrons/direwolf.png",
+    "dialog": "There's a cult of dark beings barricading themselves up ahead, and they have been bringing in more people with them. I cannot breach their pointy spears in my form. I don't see how you can do any better.",
     "side": "right",
     "interaction_type": "next",
     "target_id": "green3_217"
@@ -2069,14 +2069,14 @@
     "speaker": "Hogmother",
     "portrait": "/assets/patrons/hogmother.png",
     "side": "left",
-    "dialog": "Better of worse my way is through those barricades, and I will find Hogfather.",
+    "dialog": "Better or worse my way is through those barricades, and I will find Hogfather.",
     "interaction_type": "next",
     "target_id": "green3_218"
   },
   {
     "id": "green3_218",
     "speaker": "Awotruce",
-    "portrait": "direwolf.png",
+    "portrait": "/assets/patrons/direwolf.png",
     "dialog": "It's been an eternity or so since I've seen such determination.\n\nFine, I will allow you passage in my woods, and I will watch you closely.",
     "side": "right",
     "interaction_type": "next",
@@ -2085,7 +2085,7 @@
   {
     "id": "green3_219",
     "speaker": "Awotruce",
-    "portrait": "direwolf.png",
+    "portrait": "/assets/patrons/direwolf.png",
     "dialog": "If you really do happen to breach their borders, leave their leader to me. I have an unsettled debt with that mongrel.",
     "side": "right",
     "interaction_type": "next",
@@ -2094,7 +2094,7 @@
   {
     "id": "green3_220",
     "speaker": "Awotruce",
-    "portrait": "direwolf.png",
+    "portrait": "/assets/patrons/direwolf.png",
     "dialog": "I will crunch that foul monstrosity's head in my jaws even if it's the last thing I'll do.",
     "side": "right",
     "interaction_type": "next",
@@ -2105,16 +2105,260 @@
     "speaker": "Hogmother",
     "portrait": "/assets/patrons/hogmother.png",
     "side": "left",
-    "dialog": "We humbley accept your benelovence, Master Awotruce.",
+    "dialog": "We humbley accept your guidance, Master Awotruce.",
     "interaction_type": "next",
-    "target_id": "green3_222end"
+    "target_id": "green3_221a"
   },
   {
-    "id": "green3_222end",
+    "id": "green3_221a",
+    "speaker": "Awotruce",
+    "portrait": "/assets/patrons/direwolf.png",
+    "dialog": "I will certainly love that little halfling snack too, but I'll refrain for now, the Hunger only sharpens my wits.",
+    "side": "right",
+    "interaction_type": "next",
+    "target_id": "green3_221b"
+  },
+  {
+    "id": "green3_221b",
+    "speaker": "Guild Master",
+    "portrait": "/assets/guild/guild_master.png",
+    "side": "left",
+    "dialog": "** What halfling ?! **",
+    "interaction_type": "next",
+    "target_id": "green3_222"
+  },
+  {
+    "id": "green3_222",
     "speaker": "Hogmother",
     "portrait": "/assets/patrons/hogmother.png",
     "side": "left",
-    "dialog": "We humbly accept your benevolence, Master Awotruce.",
+    "dialog": "???",
+    "interaction_type": "next",
+    "target_id": "green3_223"
+  },
+  {
+    "id": "green3_223",
+    "speaker": "Hogperson",
+    "portrait": "/assets/patrons/hogperson.png",
+    "side": "left",
+    "dialog": "???",
+    "interaction_type": "next",
+    "target_id": "green3_224"
+  },
+  {
+    "id": "green3_224",
+    "speaker": "Bragain",
+    "portrait": "/assets/patrons/dwarven_miner.png",
+    "side": "left",
+    "dialog": "???",
+    "interaction_type": "next",
+    "target_id": "green3_225"
+  },
+  {
+    "id": "green3_225",
+    "speaker": "Claudio",
+    "portrait": "/assets/patrons/Claudio.png",
+    "side": "right",
+    "dialog": "???",
+    "interaction_type": "next",
+    "target_id": "green3_226",
+    "options": []
+  },
+  {
+    "id": "green3_226",
+    "speaker": "Amyssa",
+    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "side": "right",
+    "dialog": "???",
+    "interaction_type": "next",
+    "target_id": "green3_227"
+  },
+  {
+    "id": "green3_227",
+    "speaker": "Narrator",
+    "portrait": "",
+    "dialog": "The party members are all appearing puzzled exchanging looks around and at each other, trying to see if they've missed something.",
+    "side": "right",
+    "interaction_type": "next",
+    "target_id": "green3_228"
+  },
+  {
+    "id": "green3_228",
+    "speaker": "Narrator",
+    "portrait": "",
+    "dialog": "But Awotruce's nostrails suck in the air, with an expression of a salivating hungry wolf.",
+    "side": "right",
+    "interaction_type": "next",
+    "target_id": "green3_229"
+  },
+  {
+    "id": "green3_229",
+    "speaker": "Awotruce",
+    "portrait": "/assets/patrons/direwolf.png",
+    "dialog": "Come out and show yourself halfling, or I'll get down there and catch you myself.",
+    "side": "right",
+    "interaction_type": "next",
+    "target_id": "green3_230"
+  },
+  {
+    "id": "green3_230",
+    "speaker": "Narrator",
+    "portrait": "",
+    "dialog": "A small figure appears from the nearby overgrowth.\n\nIt does appear like a halfling.",
+    "side": "right",
+    "interaction_type": "next",
+    "target_id": "green3_230a"
+  },
+  {
+    "id": "green3_230a",
+    "speaker": "Halfling",
+    "portrait": "/assets/patrons/halfling_L.png",
+    "dialog": "I do beg your pardon to be sneaking around like that, but this place is far from safe, I'm sure you'll understand.",
+    "side": "left",
+    "interaction_type": "next",
+    "target_id": "green3_231"
+  },
+  {
+    "id": "green3_231",
+    "speaker": "Narrator",
+    "portrait": "",
+    "dialog": "This little guy must have been following alongside you...\n\nWho knows for how long.",
+    "side": "right",
+    "interaction_type": "next",
+    "target_id": "green3_232"
+  },
+  {
+    "id": "green3_232",
+    "speaker": "Halfling",
+    "portrait": "/assets/patrons/halfling_L.png",
+    "dialog": "Allow me to introduce myself, I'm Sebastian the Young. I'm a humble scout from the farmers settlement nearby.",
+    "side": "left",
+    "interaction_type": "next",
+    "target_id": "green3_232a"
+  },
+  {
+    "id": "green3_232a",
+    "speaker": "Sebastian",
+    "portrait": "/assets/patrons/halfling_L.png",
+    "dialog": "I hope you don't think me an intruder, but it's been hard not to notice your business in the Tavern and follow you here.",
+    "side": "left",
+    "interaction_type": "next",
+    "target_id": "green3_232b"
+  },
+  {
+    "id": "green3_232b",
+    "speaker": "Awotruce",
+    "portrait": "/assets/patrons/direwolf.png",
+    "dialog": "Well there's no harm done yet little guy. There I was thinking you were with THEM, but as it turns out, you're just another intruder through my woods.",
+    "side": "right",
+    "interaction_type": "next",
+    "target_id": "green3_233"
+  },
+  {
+    "id": "green3_233",
+    "speaker": "Awotruce",
+    "portrait": "/assets/patrons/direwolf.png",
+    "dialog": "State your business before me, least I'll devour you whole.",
+    "side": "right",
+    "interaction_type": "next",
+    "target_id": "green3_234"
+  },
+  {
+    "id": "green3_234",
+    "speaker": "Sebastian",
+    "portrait": "/assets/patrons/halfling_L.png",
+    "dialog": "*Gulp* Hopefully it won't come to this. I've been sent to this forest by my people. Our fields bloomed and flourished under the rule of goddess Narlia.",
+    "side": "left",
+    "interaction_type": "next",
+    "target_id": "green3_235"
+  },
+  {
+    "id": "green3_235",
+    "speaker": "Sebastian",
+    "portrait": "/assets/patrons/halfling_L.png",
+    "dialog": "But alas, the crops grow stale now, and decay hurts the earth and the earthworms and butterflies and the bees.",
+    "side": "left",
+    "interaction_type": "next",
+    "target_id": "green3_236"
+  },
+  {
+    "id": "green3_236",
+    "speaker": "Sebastian",
+    "portrait": "/assets/patrons/halfling_L.png",
+    "dialog": "Even the water don't seem so fresh anymore.",
+    "side": "left",
+    "interaction_type": "next",
+    "target_id": "green3_237"
+  },
+  {
+    "id": "green3_237",
+    "speaker": "Sebastian",
+    "portrait": "/assets/patrons/halfling_L.png",
+    "dialog": "I've been appointed by the council elders to investigate this matter and report back. Their prime suspicion is the temple of the goddess at the edge of the forest have been overrun by vile forces.",
+    "side": "left",
+    "interaction_type": "next",
+    "target_id": "green3_238"
+  },
+  {
+    "id": "green3_238",
+    "speaker": "Sebastian",
+    "portrait": "/assets/patrons/halfling_L.png",
+    "dialog": "We'll have to leave these lands unless it changes...",
+    "side": "left",
+    "interaction_type": "next",
+    "target_id": "green3_239"
+  },
+  {
+    "id": "green3_239",
+    "speaker": "Hogmother",
+    "portrait": "/assets/patrons/hogmother.png",
+    "side": "right",
+    "dialog": "We're searching for missing people, namely my husband. Would you have any knowledge about that?",
+    "interaction_type": "next",
+    "target_id": "green3_240"
+  },
+  {
+    "id": "green3_240",
+    "speaker": "Sebastian",
+    "portrait": "/assets/patrons/halfling_L.png",
+    "dialog": "I'm afraid not my lady, but it would be safe to assume the cases are linked.",
+    "side": "left",
+    "interaction_type": "next",
+    "target_id": "green3_241"
+  },
+  {
+    "id": "green3_241",
+    "speaker": "Hogmother",
+    "portrait": "/assets/patrons/hogmother.png",
+    "side": "right",
+    "dialog": "Yes it would. Master Awotruce, we would like to accept Master Sebastian under our wing, and away from your jaws if that's acceptable with you.",
+    "interaction_type": "next",
+    "target_id": "green3_242"
+  },
+  {
+    "id": "green3_242",
+    "speaker": "Narrator",
+    "portrait": "",
+    "dialog": "The direwolf nods.",
+    "side": "right",
+    "interaction_type": "next",
+    "target_id": "green3_243"
+  },
+  {
+    "id": "green3_243",
+    "speaker": "Hogmother",
+    "portrait": "/assets/patrons/hogmother.png",
+    "side": "left",
+    "dialog": "We humbly accept your benevolence, Master Awotruce. It would seem our lead is the Temple. Lead the way Master Sebastian.",
+    "interaction_type": "next",
+    "target_id": "green3_243END"
+  },
+  {
+    "id": "green3_243END",
+    "speaker": "Hogmother",
+    "portrait": "/assets/patrons/hogmother.png",
+    "side": "left",
+    "dialog": "We humbly accept your benevolence, Master Awotruce. It would seem our lead is the Temple. Lead the way Master Sebastian.",
     "interaction_type": "next",
     "target_id": "END"
   }

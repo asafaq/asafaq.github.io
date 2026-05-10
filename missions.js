@@ -517,15 +517,23 @@ async function handleMissionEnd(sceneId) {
 	}
 
 	
-	if (sceneId === "green3_222end") {
+	if (sceneId === "green3_243END") {
 		player.missions.green_2 = 4;
 		recruitAdventurer("adv_Awetruce")
 		player.patrons.adv_Awetruce.location = 6; //guide _A position
 		player.patrons.adv_Awetruce.status = "mission";
 		
+		recruitAdventurer("adv_Sebastian")
+		player.patrons.adv_Sebastian.location = 3;
+		player.patrons.adv_Sebastian.status = "mission";
+		
 		Journal.addEntry(
 			`You've met with Awetruce who have agreed to overwatch the ${player.data.party_A} on their way to ${player.missions.current_mission.id}, and will participate in their final fight.`
 		);
+		Journal.addEntry(
+			`You've met with Sebastian the Young who joined the ${player.data.party_A} on their way to ${player.missions.current_mission.id}, and will investigate the Temple alongside you.`
+		);
+		
 		nextPage = "mission_green_3"
 	}
 

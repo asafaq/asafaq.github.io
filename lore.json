@@ -243,7 +243,7 @@
       "alignment": "Evil",
       "level": 3,
       "sex": 1,
-      "size": "",
+      "size": "Small",
       "caste": "Underclass",
       "RacialEnemy": "",
       "proficiency_armor": "Light",
@@ -445,7 +445,7 @@
     "adv_Awetruce": {
       "name": "Awetruce",
       "race": "Direwolf",
-      "icon": "assets/patrons/direwolf.png",
+      "icon": "assets/patrons/direwolf_s.png",
       "role": "Druid",
       "hp_die": 12,
       "hp_modifier": 4,
@@ -506,6 +506,42 @@
         "Spinning Batter"
       ],
       "notes": "Tinman is a warforged built to contain the soul of a past noble in service of the realm. His construction wasn't completely finished, and he's still in Beta testing. A paid Adventurer, unlocks his unique mission, to travel far to the temple of god, pray for full ressurection, in the temple a Patzi will be haunted by a fey spirit, and forge an Artifact, a replacement Powerpack that fix that Faulty one."
+    },
+	"adv_Trollkin": {
+      "name": "Trollkin",
+      "icon": "",
+      "large": "",
+      "top": "350px",
+      "left": "250px",
+      "location": 2,
+      "race": "Trollkin",
+      "role": "Arcane Trixter",
+      "hp_die": 6,
+      "hp_modifier": -2,
+      "strengh_mod": -3,
+      "Dexterity_mod": 2,
+      "wisdom_mod": -2,
+      "intelligence_mod": 3,
+      "charisma_mod": 0,
+      "alignment": "Chaotic",
+      "level": 5,
+      "sex": 1,
+      "size": "Medium",
+      "caste": "Underclass",
+      "RacialEnemy": "",
+      "proficiency_armor": "Light",
+      "proficiency_weapon": "Light",
+	  "inventory" : [
+		  { "item": "Amulet of Fire Warding", "qty": 1, "locked": true },
+		  { "item": null, "qty": 0, "locked": false },
+		  { "item": null, "qty": 0, "locked": false },
+		  { "item": null, "qty": 0, "locked": false }
+		],
+      "trait": [
+        "",
+        ""
+      ],
+      "notes": "."
     }
   },
   "Races": {
@@ -517,7 +553,7 @@
       ]
     },
     "Barbarian": {
-      "desc": "Wildmen more of a humanoid than a human. Thick Hide for bonus unarmed AC Rage +10 tempHP.",
+      "desc": "Wildmen more of a humanoid than a human.",
       "Traits": [
         "Thick Hide",
         "Rage"
@@ -539,7 +575,7 @@
       ]
     },
     "Half-Elf": {
-      "desc": "Love child of a human and an elf."
+      "desc": "Descended of a human and an elf."
     },
     "Goblin": {
       "desc": "Smaller humanoids, subterrain and evil.",
@@ -572,10 +608,15 @@
     "Direwolf": {
       "desc": "Quad-pedal predator, more interested in nature than in adventures.",
       "Traits": [
-        "Kin senses",
-        "Thick Hide",
-        "Ferocious",
-        "Postposed Death"
+        ""
+      ]
+    },
+    "Trollkin": {
+      "desc": "Demihuman decendants of Trolls. Territorial, native to swamps and under bridges.",
+      "Traits": [
+        "Regeneration",
+		"Vigor",
+        "Fire-Phobic"
       ]
     }
   },
