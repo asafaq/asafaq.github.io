@@ -283,16 +283,28 @@ function handleAttack() {
     if (!u.hasAction) return;
 
     const target = units.find(t => t.type !== u.type && t.hp > 0 && Math.max(Math.abs(t.x - u.x), Math.abs(t.y - u.y)) <= 1);
+    
     if (target) {
-        const d = Math.floor(Math.random() * 10) + 5;
+        // 1. Define different damage ranges
+        let d;
+        if (u.type === 'player') { 
+            // Player deals 10-20 damage
+            d = Math.floor(Math.random() * 11) + 10; 
+        } else {
+            // Enemy deals only 2-5 damage
+            d = Math.floor(Math.random() * 4) + 0; 
+        }
+
         target.hp -= d;
-        u.hasAction = false; // Spend Action
+        u.hasAction = false; 
+        
         Bus.emit('LOG', `⚔️ ${u.name} strikes ${target.name} for ${d}.`);
         if(target.hp <= 0) Bus.emit('LOG', `💀 ${target.name} defeated.`);
         update();
-    } else Bus.emit('LOG', "No enemy in reach.");
+    } else {
+        Bus.emit('LOG', "No enemy in reach.");
+    }
 }
-
 function handleSpell() {
     const u = units[turn];
     if (!u.hasAction) return;
