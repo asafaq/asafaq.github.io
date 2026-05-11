@@ -1494,7 +1494,7 @@
     "speaker": "Claudio",
     "portrait": "/assets/patrons/Claudio.png",
     "side": "right",
-    "dialog": "Oh it would be a opportunity I will not miss out on, you will have every ability in my satchel at your side madam Hogmother.",
+    "dialog": "Oh it would be a opportunity I will not miss out on, you will have every ability in my satchel at your disposal madam Hogmother.",
     "interaction_type": "next",
     "target_id": "green2_215",
     "options": []

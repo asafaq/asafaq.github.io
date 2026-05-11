@@ -254,9 +254,6 @@ const pages = {
   <div class="slot"></div>
 </div>
 		</div>
-		
-		
-		
 		<!-- This is where our dynamic buttons will be injected -->
 		<div id="dynamic-mission-list"></div>
 		<button id="mission-start-button" class="venture-key">Start Mission</button>
@@ -365,14 +362,14 @@ const pages = {
 		<!-- Path Layer -->
 		<svg width="100%" height="100%" style="position: absolute; top: 0; left: 0; pointer-events: none;">
 			<!-- 1. The "Hitbox" (Invisible but clickable) -->
-			<path d="M 480 340 C 221 324 413 466 480 340"
+			<path d="M 480 340 C 480 240 300 300 340 240"
 				  stroke="transparent" stroke-width="75" fill="none" 
 				  style="pointer-events: stroke; cursor: pointer;" 
 				  onclick="console.log('Winding path clicked!');
 					runMission(player.missions.current_mission.id)" />
 			
 			<!-- 2. The Visible Dashed Line -->
-			<path class="marching-path" d="MM 480 340 C 221 324 413 466 480 340" 
+			<path class="marching-path" d="M 480 340 C 480 240 300 300 340 240" 
 				  stroke="rgba(0, 0, 0, 0.7)" stroke-width="4" 
 				  stroke-dasharray="10, 10" stroke-linecap="round" fill="none" />
 		</svg>
@@ -388,6 +385,36 @@ const pages = {
 			 style="position: absolute; top: 300px; left: 455px; transform: scale(0.66); transform-origin: top left;">
 			<img src="assets/menu/menu_home.png" class="item-icon">
 		</div>
+	</div>
+	`,
+		mission_dwoods_1: `
+	<div id="mission-container" style="position: relative;">
+		<img id="fantasy map" src="assets/missions/dark_woods_map_s.png" />
+		<!-- Dark Forest Objective -->
+		<div id="dwood_fort" style="position: absolute; top: 168px; left: 373px; transform: scale(0.5); transform-origin: top left;">
+			<img src="assets/missions/mission_indicator_encounter.png" class="item-icon">
+		</div>
+		<div id="dwood_swamp" style="position: absolute; top: 144px; left: 182px; transform: scale(0.5); transform-origin: top left;">
+			<img src="assets/missions/mission_indicator_encounter.png" class="item-icon">
+		</div>
+		<div id="dwood_shrine" style="position: absolute; top: 415px; left: 105px; transform: scale(0.5); transform-origin: top left;">
+			<img src="assets/missions/mission_indicator_encounter.png" class="item-icon">
+		</div>
+		<!-- Path Layer -->
+		<svg width="100%" height="100%" style="position: absolute; top: 0; left: 0; pointer-events: none;">
+			<!-- 1. The "Hitbox" (Invisible but clickable) -->
+			<path d="M 460 410 C 370 330 240 330 320 240"
+				  stroke="transparent" stroke-width="75" fill="none" 
+				  style="pointer-events: stroke; cursor: pointer;" 
+				  onclick="console.log('Winding path clicked!');
+					runMission(player.missions.current_mission.id)" />
+			
+			<!-- 2. The Visible Dashed Line -->
+			<path class="marching-path" d="M 460 410 C 370 330 240 330 320 240"
+				  stroke="rgba(0, 0, 0, 0.7)" stroke-width="4" 
+				  stroke-dasharray="10, 10" stroke-linecap="round" fill="none" />
+		</svg>
+
 	</div>
 	`,
 	cogwheel: `
@@ -1160,6 +1187,7 @@ async function startMission(partyKey) {
 
 	if (missionId.startsWith("green_1")) missionPage = "mission_green_1";
 	if (missionId.startsWith("green_2")) missionPage = "mission_green_2";
+	if (missionId.startsWith("green_3")) missionPage = "mission_green_3";
 
 	// If no mission page exists → block and DO NOT lock
 	if (!missionPage || !pageExists(missionPage)) {
