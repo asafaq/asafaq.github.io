@@ -2349,7 +2349,7 @@
     "speaker": "Hogmother",
     "portrait": "/assets/patrons/hogmother.png",
     "side": "left",
-    "dialog": "We humbly accept your benevolence, Master Awotruce. It would seem our lead is the Temple. Lead the way Master Sebastian.",
+    "dialog": "We humbly accept your benevolence, Master Awotruce. It would seem our lead is the Temple. Let us be on our way.",
     "interaction_type": "next",
     "target_id": "green3_243END"
   },
@@ -2358,7 +2358,487 @@
     "speaker": "Hogmother",
     "portrait": "/assets/patrons/hogmother.png",
     "side": "left",
-    "dialog": "We humbly accept your benevolence, Master Awotruce. It would seem our lead is the Temple. Lead the way Master Sebastian.",
+    "dialog": "We humbly accept your benevolence, Master Awotruce. It would seem our lead is the Temple.",
+    "interaction_type": "next",
+    "target_id": "END"
+  },
+  {
+    "id": "dwood1_101",
+    "speaker": "Hogmother",
+    "portrait": "/assets/patrons/hogmother.png",
+    "side": "left",
+    "dialog": "Those woods sure look bad........\nOh Hogfather where did you get to.",
+    "interaction_type": "next",
+    "target_id": "dwood1_102"
+  },
+  {
+    "id": "dwood1_102",
+    "speaker": "Amyssa",
+    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "side": "right",
+    "dialog": "Excuse me, Madam Hogmother",
+    "interaction_type": "selection",
+    "options": [
+      {
+        "text": "Carry on, ignore Amyssa-Hogmother dialog",
+        "target_id": "dwood1_150",
+        "disabled": false
+      },
+      {
+        "text": "Watch Hogmother Speak with Amyssa.",
+        "target_id": "dwood1_103",
+        "disabled": false,
+        "color": "#FFD700"
+      }
+    ]
+  },
+  {
+    "id": "dwood1_103",
+    "speaker": "Hogmother",
+    "portrait": "/assets/patrons/hogmother.png",
+    "side": "left",
+    "dialog": "Yes dear? Is something wrong?",
+    "interaction_type": "next",
+    "target_id": "dwood1_104"
+  },
+  {
+    "id": "dwood1_104",
+    "speaker": "Amyssa",
+    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "side": "right",
+    "dialog": "I'm curious, since you're a Shaman, what is it like, seeing the spirits world?",
+    "interaction_type": "next",
+    "target_id": "dwood1_105"
+  },
+  {
+    "id": "dwood1_105",
+    "speaker": "Hogmother",
+    "portrait": "/assets/patrons/hogmother.png",
+    "side": "left",
+    "dialog": "Well here in the material plane you can either have a big object or shatter it, where for spirits they wouldn't see much difference.",
+    "interaction_type": "next",
+    "target_id": "dwood1_106"
+  },
+  {
+    "id": "dwood1_106",
+    "speaker": "Hogmother",
+    "portrait": "/assets/patrons/hogmother.png",
+    "side": "left",
+    "dialog": "Things that are whole or completely warped and broken are still just receptacle for spirits, and its integrity doesn't matter to them.",
+    "interaction_type": "next",
+    "target_id": "dwood1_107"
+  },
+  {
+    "id": "dwood1_107",
+    "speaker": "Amyssa",
+    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "side": "right",
+    "dialog": "And the sights, and scenery, are they not different?",
+    "interaction_type": "next",
+    "target_id": "dwood1_108"
+  },
+  {
+    "id": "dwood1_108",
+    "speaker": "Hogmother",
+    "portrait": "/assets/patrons/hogmother.png",
+    "side": "left",
+    "dialog": "Oh it's a lot like this world, except the roads aren't as straight as they are here, they are winding and twisting, and they go forth and back at the same time.",
+    "interaction_type": "next",
+    "target_id": "dwood1_109"
+  },
+  {
+    "id": "dwood1_109",
+    "speaker": "Amyssa",
+    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "side": "right",
+    "dialog": "Oh, how is that?",
+    "interaction_type": "next",
+    "target_id": "dwood1_110"
+  },
+  {
+    "id": "dwood1_110",
+    "speaker": "Hogmother",
+    "portrait": "/assets/patrons/hogmother.png",
+    "side": "left",
+    "dialog": "Because the living think they're making their own path when it's been set by destiny long before them.",
+    "interaction_type": "next",
+    "target_id": "dwood1_111"
+  },
+  {
+    "id": "dwood1_111",
+    "speaker": "Amyssa",
+    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "side": "right",
+    "dialog": "Oh, but what if they don't go in their path?",
+    "interaction_type": "next",
+    "target_id": "dwood1_112"
+  },
+  {
+    "id": "dwood1_112",
+    "speaker": "Hogmother",
+    "portrait": "/assets/patrons/hogmother.png",
+    "side": "left",
+    "dialog": "Oh, you'd shouldn't talk about that, better just find your destiny and pursue it.",
+    "interaction_type": "next",
+    "target_id": "dwood1_113"
+  },
+  {
+    "id": "dwood1_113",
+    "speaker": "Amyssa",
+    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "side": "right",
+    "dialog": "But what if they're wrong?",
+    "interaction_type": "next",
+    "target_id": "dwood1_114"
+  },
+  {
+    "id": "dwood1_114",
+    "speaker": "Hogmother",
+    "portrait": "/assets/patrons/hogmother.png",
+    "side": "left",
+    "dialog": "They can't be, all the ways will lead them there, it's just a matter, of how many accidents and how much suffering they're willing to endure before adjusting their path.",
+    "interaction_type": "next",
+    "target_id": "dwood1_115"
+  },
+  {
+    "id": "dwood1_115",
+    "speaker": "Amyssa",
+    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "side": "right",
+    "dialog": "And what if they die before they reach it?",
+    "interaction_type": "next",
+    "target_id": "dwood1_116"
+  },
+  {
+    "id": "dwood1_116",
+    "speaker": "Hogmother",
+    "portrait": "/assets/patrons/hogmother.png",
+    "side": "left",
+    "dialog": "Oh, that's just one step in the journey for the spirit, they keep going until their destiny is reached.",
+    "interaction_type": "next",
+    "target_id": "dwood1_117"
+  },
+  {
+    "id": "dwood1_117",
+    "speaker": "Amyssa",
+    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "side": "right",
+    "dialog": "And what happens then? Do they finally die too?",
+    "interaction_type": "next",
+    "target_id": "dwood1_118"
+  },
+  {
+    "id": "dwood1_118",
+    "speaker": "Hogmother",
+    "portrait": "/assets/patrons/hogmother.png",
+    "side": "left",
+    "dialog": "That I do not know.",
+    "interaction_type": "next",
+    "target_id": "dwood1_150"
+  },
+  {
+    "id": "dwood1_150",
+    "speaker": "Hogmother",
+    "portrait": "/assets/patrons/hogmother.png",
+    "side": "left",
+    "dialog": "There's seems to be a clearing up ahead.",
+    "interaction_type": "next",
+    "target_id": "dwood1_151"
+  },
+  {
+    "id": "dwood1_151",
+    "speaker": "Hogmother",
+    "portrait": "/assets/patrons/hogmother.png",
+    "side": "left",
+    "dialog": "This must be the forest glade.",
+    "interaction_type": "next",
+    "target_id": "dwood1_152"
+  },
+  {
+    "id": "dwood1_152",
+    "speaker": "Narrator",
+    "portrait": "",
+    "dialog": "The party reaches a central raisen location in the woods, they can  overlook the different paths from here",
+    "side": "right",
+    "interaction_type": "next",
+    "target_id": "dwood1_153"
+  },
+  {
+    "id": "dwood1_153",
+    "speaker": "Narrator",
+    "portrait": "",
+    "dialog": "While resting and recuperating from the journey, a figure shows up to the party.",
+    "side": "right",
+    "interaction_type": "next",
+    "target_id": "dwood1_154"
+  },
+  {
+    "id": "dwood1_154",
+    "speaker": "Trollkin",
+    "portrait": "/assets/patrons/trollkin_l.png",
+    "dialog": "Hello, visitors to the Dark Woods!\n\nI am Trollkin the Trollkin and I love Trollkin! Haaaaaaaa hehehehe.",
+    "side": "left",
+    "interaction_type": "next",
+    "target_id": "dwood1_155"
+  },
+  {
+    "id": "dwood1_155",
+    "speaker": "Trollkin",
+    "portrait": "/assets/patrons/trollkin_l.png",
+    "dialog": "I am da King of this place, and my palace is right by there near the swamp. I am looking for a queen to come live with me.",
+    "side": "left",
+    "interaction_type": "next",
+    "target_id": "dwood1_156"
+  },
+  {
+    "id": "dwood1_156",
+    "speaker": "Trollkin",
+    "portrait": "/assets/patrons/trollkin_l.png",
+    "dialog": "I couldn't help but listening to your conversation about the spirits world. My family comes from a long line of spiritual folks",
+    "side": "left",
+    "interaction_type": "next",
+    "target_id": "dwood1_157"
+  },
+  {
+    "id": "dwood1_157",
+    "speaker": "Trollkin",
+    "portrait": "/assets/patrons/trollkin_l.png",
+    "dialog": "I want you to come be my queen, lady Amyssa.",
+    "side": "left",
+    "interaction_type": "next",
+    "target_id": "dwood1_158"
+  },
+  {
+    "id": "dwood1_158",
+    "speaker": "Amyssa",
+    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "side": "right",
+    "dialog": "What?! . . . . How do you know my name?! . . . . \nHow did you eavesdropped on our conversation?",
+    "interaction_type": "next",
+    "target_id": "dwood1_159"
+  },
+  {
+    "id": "dwood1_159",
+    "speaker": "Trollkin",
+    "portrait": "/assets/patrons/trollkin_l.png",
+    "dialog": "This is my kingdom your highness, you are just a visitor here. For now!",
+    "side": "left",
+    "interaction_type": "next",
+    "target_id": "dwood1_160"
+  },
+  {
+    "id": "dwood1_160",
+    "speaker": "Amyssa",
+    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "side": "right",
+    "dialog": "You trollkin are truly vile. Don't you dare come near me",
+    "interaction_type": "next",
+    "target_id": "dwood1_161"
+  },
+  {
+    "id": "dwood1_161",
+    "speaker": "Amyssa",
+    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "side": "right",
+    "dialog": "I would burn you with my fire darts before you can even spell 'hello'",
+    "interaction_type": "next",
+    "target_id": "dwood1_162"
+  },
+  {
+    "id": "dwood1_162",
+    "speaker": "Trollkin",
+    "portrait": "/assets/patrons/trollkin_l.png",
+    "dialog": "You don't know any fire spells",
+    "side": "left",
+    "interaction_type": "next",
+    "target_id": "dwood1_163"
+  },
+  {
+    "id": "dwood1_163",
+    "speaker": "Amyssa",
+    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "side": "right",
+    "dialog": "WHAT?! .............",
+    "interaction_type": "next",
+    "target_id": "dwood1_164"
+  },
+  {
+    "id": "dwood1_164",
+    "speaker": "Amyssa",
+    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "side": "right",
+    "dialog": "How would you know what are the spells I master?",
+    "interaction_type": "next",
+    "target_id": "dwood1_165"
+  },
+  {
+    "id": "dwood1_165",
+    "speaker": "Trollkin",
+    "portrait": "/assets/patrons/trollkin_l.png",
+    "dialog": "Because I have your spellbook.",
+    "side": "left",
+    "interaction_type": "next",
+    "target_id": "dwood1_166"
+  },
+  {
+    "id": "dwood1_164",
+    "speaker": "Amyssa",
+    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "side": "right",
+    "dialog": "WHHAAAAATTTT?!!!!!! ..............",
+    "interaction_type": "next",
+    "target_id": "dwood1_165"
+  },
+  {
+    "id": "dwood1_165",
+    "speaker": "Amyssa",
+    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "side": "right",
+    "dialog": "It's true my spellbook has gone missing!",
+    "interaction_type": "next",
+    "target_id": "dwood1_166"
+  },
+  {
+    "id": "dwood1_166",
+    "speaker": "Amyssa",
+    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "side": "right",
+    "dialog": "You monster! You've pickpocket me! Bring it back this instance!",
+    "interaction_type": "next",
+    "target_id": "dwood1_167"
+  },
+  {
+    "id": "dwood1_167",
+    "speaker": "Trollkin",
+    "portrait": "/assets/patrons/trollkin_l.png",
+    "dialog": "Oh... so now you'll have dealings with me?",
+    "side": "left",
+    "interaction_type": "next",
+    "target_id": "dwood1_168"
+  },
+  {
+    "id": "dwood1_168",
+    "speaker": "Trollkin",
+    "portrait": "/assets/patrons/trollkin_l.png",
+    "dialog": "Well... you know what I want!! Come to my hut by the swamp later...",
+    "side": "left",
+    "interaction_type": "next",
+    "target_id": "dwood1_169"
+  },
+  {
+    "id": "dwood1_169",
+    "speaker": "Trollkin",
+    "portrait": "/assets/patrons/trollkin_l_vanish.png",
+    "dialog": "HEH.. HEH.. HEH.. HEH.. \n\n*the trollkin is turning transparent...*",
+    "side": "left",
+    "interaction_type": "next",
+    "target_id": "dwood1_170"
+  },
+  {
+    "id": "dwood1_170",
+    "speaker": "Narrator",
+    "portrait": "",
+    "dialog": "The Trollkin vanishes from sight...",
+    "side": "right",
+    "interaction_type": "next",
+    "target_id": "dwood1_171"
+  },
+  {
+    "id": "dwood1_171",
+    "speaker": "Amyssa",
+    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "side": "right",
+    "dialog": "NO TROLL!! I WILL BURN YOUR ENTIRE FOREST DOWN!! DO YOU HEAR ME !!!!!",
+    "interaction_type": "next",
+    "target_id": "dwood1_172"
+  },
+  {
+    "id": "dwood1_172",
+    "speaker": "Amyssa",
+    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "side": "right",
+    "dialog": "I WILL HAVE YOUR SWAMP DREDGED DRY AND YOUR SKIN FLAYED ALIVE !!!!",
+    "interaction_type": "next",
+    "target_id": "dwood1_173"
+  },
+  {
+    "id": "dwood1_173",
+    "speaker": "Narrator",
+    "portrait": "",
+    "dialog": "Amyssa's voice is thoundering through the woods, but there's no answer...",
+    "side": "right",
+    "interaction_type": "next",
+    "target_id": "dwood1_174"
+  },
+  {
+    "id": "dwood1_174",
+    "speaker": "Bragain",
+    "portrait": "/assets/patrons/dwarven_miner.png",
+    "side": "left",
+    "dialog": "Oh, remind me to never piss you off Amyssa.",
+    "interaction_type": "next",
+    "target_id": "dwood1_175"
+  },
+  {
+    "id": "dwood1_175",
+    "speaker": "Amyssa",
+    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "dialog": "Oh do shut up. How did I ever get involved with this villain.\n\nNow my spellbook is gone and I'm so far from home...",
+    "side": "right",
+    "interaction_type": "next",
+    "target_id": "dwood1_176"
+  },
+  {
+    "id": "dwood1_176",
+    "speaker": "Hogmother",
+    "portrait": "/assets/patrons/hogmother.png",
+    "side": "left",
+    "dialog": "There there my girl. This forest is home to the godess Narlia.",
+    "interaction_type": "next",
+    "target_id": "dwood1_177"
+  },
+  {
+    "id": "dwood1_177",
+    "speaker": "Hogmother",
+    "portrait": "/assets/patrons/hogmother.png",
+    "side": "left",
+    "dialog": "She will never have such crimes commit freely on her blessed grounds.",
+    "interaction_type": "next",
+    "target_id": "dwood1_178"
+  },
+  {
+    "id": "dwood1_178",
+    "speaker": "Hogmother",
+    "portrait": "/assets/patrons/hogmother.png",
+    "side": "left",
+    "dialog": "Come, let us go to the shrine, we'll pray to her and await answers.",
+    "interaction_type": "next",
+    "target_id": "dwood1_179"
+  },
+  {
+    "id": "dwood1_179",
+    "speaker": "Amyssa",
+    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "side": "right",
+    "dialog": "But it's the opposite way from where Hogfather is?",
+    "interaction_type": "next",
+    "target_id": "dwood1_180"
+  },
+  {
+    "id": "dwood1_180",
+    "speaker": "Hogmother",
+    "portrait": "/assets/patrons/hogmother.png",
+    "side": "left",
+    "dialog": "Hogfather would have none of that if he knew. It's alright child. We won't find Hogfather but that's where we'll find some peace.",
+    "interaction_type": "next",
+    "target_id": "dwood1_181end"
+  },
+  {
+    "id": "dwood1_181end",
+    "speaker": "Hogmother",
+    "portrait": "/assets/patrons/hogmother.png",
+    "side": "left",
+    "dialog": ".",
     "interaction_type": "next",
     "target_id": "END"
   }

@@ -292,22 +292,23 @@ const pages = {
 
 	`,
 	mission_green_1: `
-	<div id="mission-container" style="position: relative;">
-		<img id="fantasy map" src="assets/missions/fantasy_map_s.png" />
+	<div id="mission-container"
+			style="position: relative;">
+			<img id="fantasy map" src="assets/missions/fantasy_map_s.png" />
 
 		<!-- Path Layer -->
-		<svg width="100%" height="100%" style="position: absolute; top: 0; left: 0; pointer-events: none;">
-			<!-- 1. The "Hitbox" (Invisible but clickable) -->
-			<path d="M 140 460 C 180 460, 200 300, 240 300" 
-				  stroke="transparent" stroke-width="75" fill="none" 
-				  style="pointer-events: stroke; cursor: pointer;" 
-				  onclick="console.log('Winding path clicked!');
-					runMission(player.missions.current_mission.id)" />
+		<svg width="100%" height="100%" style="position:absolute; top:0; left:0; pointer-events:none;">
+			<path d="M 140 460 C 180 460, 200 300, 240 300"
+				  stroke="transparent" stroke-width="75"
+				  style="pointer-events: all; cursor: pointer;"
+				  class="poi" fill="none"
+				  data-node="green_1_path" />
+
 			
 			<!-- 2. The Visible Dashed Line -->
 			<path class="marching-path" d="M 140 440 C 300 400, 120 370, 205 315" 
-				  stroke="rgba(0, 0, 0, 0.7)" stroke-width="4" 
-				  stroke-dasharray="10, 10" stroke-linecap="round" fill="none" />
+				   stroke="rgba(0, 0, 0, 0.7)" stroke-width="4" 
+				   stroke-dasharray="10, 10" stroke-linecap="round" fill="none" />
 		</svg>
 
 		<!-- Homebase -->
@@ -331,10 +332,10 @@ const pages = {
 		<svg width="100%" height="100%" style="position: absolute; top: 0; left: 0; pointer-events: none;">
 			<!-- 1. The "Hitbox" (Invisible but clickable) -->
 			<path d="M 140 450 C 221 324 413 466 480 340"
-				  stroke="transparent" stroke-width="75" fill="none" 
-				  style="pointer-events: stroke; cursor: pointer;" 
-				  onclick="console.log('Winding path clicked!');
-					runMission(player.missions.current_mission.id)" />
+              stroke="transparent" stroke-width="75" fill="none"
+              style="pointer-events: stroke; cursor: pointer;"
+              class="poi"
+              data-node="green_2_path" />
 			
 			<!-- 2. The Visible Dashed Line -->
 			<path class="marching-path" d="M 140 450 C 221 324 413 466 480 340" 
@@ -363,10 +364,10 @@ const pages = {
 		<svg width="100%" height="100%" style="position: absolute; top: 0; left: 0; pointer-events: none;">
 			<!-- 1. The "Hitbox" (Invisible but clickable) -->
 			<path d="M 480 340 C 480 240 300 300 340 240"
-				  stroke="transparent" stroke-width="75" fill="none" 
-				  style="pointer-events: stroke; cursor: pointer;" 
-				  onclick="console.log('Winding path clicked!');
-					runMission(player.missions.current_mission.id)" />
+              stroke="transparent" stroke-width="75" fill="none"
+              style="pointer-events: stroke; cursor: pointer;"
+              class="poi"
+              data-node="green_3_path" />
 			
 			<!-- 2. The Visible Dashed Line -->
 			<path class="marching-path" d="M 480 340 C 480 240 300 300 340 240" 
@@ -387,27 +388,43 @@ const pages = {
 		</div>
 	</div>
 	`,
-		mission_dwoods_1: `
+		mission_dwood_1: `
 	<div id="mission-container" style="position: relative;">
 		<img id="fantasy map" src="assets/missions/dark_woods_map_s.png" />
 		<!-- Dark Forest Objective -->
-		<div id="dwood_fort" style="position: absolute; top: 168px; left: 373px; transform: scale(0.5); transform-origin: top left;">
-			<img src="assets/missions/mission_indicator_encounter.png" class="item-icon">
+		
+		<!-- POI: Fort -->
+		<div id="dwood_fort"
+			 class="poi"
+			 data-node="dwood_fort"
+			 style="position:absolute; top:174px; left:373px; transform:scale(1.5);">
+			 <img src="assets/missions/mission_indicator_encounter.png">
 		</div>
-		<div id="dwood_swamp" style="position: absolute; top: 144px; left: 182px; transform: scale(0.5); transform-origin: top left;">
-			<img src="assets/missions/mission_indicator_encounter.png" class="item-icon">
+
+		<!-- POI: Swamp -->
+		<div id="dwood_swamp"
+			 class="poi"
+			 data-node="dwood_swamp"
+			 style="position:absolute; top:149px; left:147px; transform:scale(1.5);">
+			 <img src="assets/missions/mission_indicator_encounter.png">
 		</div>
-		<div id="dwood_shrine" style="position: absolute; top: 415px; left: 105px; transform: scale(0.5); transform-origin: top left;">
-			<img src="assets/missions/mission_indicator_encounter.png" class="item-icon">
+
+		<!-- POI: Shrine -->
+		<div id="dwood_shrine"
+			 class="poi"
+			 data-node="dwood_shrine"
+			 style="position:absolute; top:421px; left:111px; transform:scale(1.5);">
+			 <img src="assets/missions/mission_indicator_encounter.png">
 		</div>
+
 		<!-- Path Layer -->
 		<svg width="100%" height="100%" style="position: absolute; top: 0; left: 0; pointer-events: none;">
 			<!-- 1. The "Hitbox" (Invisible but clickable) -->
 			<path d="M 460 410 C 370 330 240 330 320 240"
-				  stroke="transparent" stroke-width="75" fill="none" 
-				  style="pointer-events: stroke; cursor: pointer;" 
-				  onclick="console.log('Winding path clicked!');
-					runMission(player.missions.current_mission.id)" />
+              stroke="transparent" stroke-width="75" fill="none"
+              style="pointer-events: stroke; cursor: pointer;"
+              class="poi"
+              data-node="dwood_path" />
 			
 			<!-- 2. The Visible Dashed Line -->
 			<path class="marching-path" d="M 460 410 C 370 330 240 330 320 240"
@@ -1075,7 +1092,8 @@ function showTutorialButton() {
 const missionLabels = {
 	green_1: "Tutorial in the Green Pastures",
 	green_2: "Travelling to Townshop Tavern",
-	green_3: "Entering the Dark Forest"
+	green_3: "Entering the Dark Forest",
+	dwood_1: "In the Dark Forest"
 };
 
 function buildPartySummary(partyKey) {
@@ -1188,6 +1206,7 @@ async function startMission(partyKey) {
 	if (missionId.startsWith("green_1")) missionPage = "mission_green_1";
 	if (missionId.startsWith("green_2")) missionPage = "mission_green_2";
 	if (missionId.startsWith("green_3")) missionPage = "mission_green_3";
+	if (missionId.startsWith("dwood_1")) missionPage = "mission_dwood_1";
 
 	// If no mission page exists → block and DO NOT lock
 	if (!missionPage || !pageExists(missionPage)) {
@@ -1395,8 +1414,10 @@ async function loadMissionPage() {
     Object.keys(player.missions).forEach(key => {
         if (key === "current_mission") return;
         if (key === "tutorial") return;
-
-        if (key === "green_1" && player.missions.green_1 > 5) return;
+		//here we are setting where do those missions end and exist visability.
+        if (key === "green_1" && player.missions.green_1 > 6) return;
+        if (key === "green_2" && player.missions.green_2 > 2) return;
+        if (key === "green_3" && player.missions.green_3 > 2) return;
 
         const label = missionLabels[key] || key;
         const selected = (player.missions.current_mission.id === key) ? "selected" : "";
@@ -1555,7 +1576,8 @@ function updateMissionDisplay() {
     const missionLabels = {
         green_1: "Tutorial in the Green Pastures",
 		green_2: "Travelling to Townshop Tavern",
-		green_3: "Entering the Dark Forest"
+		green_3: "Entering the Dark Forest",
+		dwood_1: "The Dark Forest"
     };
 
     const id = player.missions.current_mission.id;
@@ -1924,9 +1946,14 @@ function renderCharSheet(adv) {
         return;
     }
 
-const show = v => v !== null && v !== undefined && v !== "";
+    const show = v => v !== null && v !== undefined && v !== "";
 
-sheet.innerHTML = `
+    // 1. Extract Lore Descriptions
+    // We use optional chaining and a fallback string just in case the key is missing
+    const roleDesc = loreData.Roles[adv.role]?.desc || "No role description available.";
+    const raceDesc = loreData.Races[adv.race]?.desc || "No race description available.";
+
+    sheet.innerHTML = `
     <div class="char-container">
 
         <div class="char-header">
@@ -1946,7 +1973,6 @@ sheet.innerHTML = `
 
             <div class="char-stats-grid">
 
-                <!-- Primary Stats -->
                 <div class="char-stats-block">
                     <ul class="char-stats">
                         ${show(adv.hp_modifier)        ? `<li>HP: ${adv.hp_modifier}</li>` : ""}
@@ -1958,19 +1984,17 @@ sheet.innerHTML = `
                     </ul>
                 </div>
 
-                <!-- HP / AC Block -->
                 <div class="char-stats-block">
                     <ul class="char-stats">
                         ${show(adv.AC)        ? `<li><strong>AC:</strong> ${adv.AC}</li>` : ""}
                         ${show(adv.currentHP) && show(adv.MaxHP)
-							  ? `<li><strong>HP:</strong> ${adv.currentHP} / ${adv.MaxHP}</li>`
-							  : ""}
+                              ? `<li><strong>HP:</strong> ${adv.currentHP} / ${adv.MaxHP}</li>`
+                              : ""}
                         ${show(adv.size)        ? `<li><strong>Size:</strong> ${adv.size}</li>` : ""}
 
                     </ul>
                 </div>
 
-                <!-- Proficiencies -->
                 <div class="char-stats-block">
                     <ul class="char-stats">
                         <li><strong>Proficiencies:</strong></li>
@@ -1988,7 +2012,6 @@ sheet.innerHTML = `
         <div class="char-section">
             <div class="char-stats-grid">
 
-                <!-- Traits -->
                 <div class="char-stats-block">
                     <h3>Traits</h3>
 
@@ -2009,11 +2032,15 @@ sheet.innerHTML = `
                     })()}
                 </div>
 
-                <!-- Contract -->
                 <div class="char-stats-block">
                     <h3>
                         Contract - ${ { idle: "Signed", mission: "Signed" }[adv.status] || adv.status }
                     </h3>
+                    
+                    <div class="char-lore-info" style="margin-top: 10px; border-top: 1px solid #ccc; padding-top: 5px;">
+                        <p><strong>${adv.role}:</strong> ${roleDesc}</p>
+                        <p><strong>${adv.race}:</strong> ${raceDesc}</p>
+                    </div>
                 </div>
 
             </div>
@@ -2021,11 +2048,7 @@ sheet.innerHTML = `
 
     </div>
 `;
-
-
-
 }
-
 // Journal.addEntry("You discovered a hidden cave.");
 // Journal.addEntry("A strange whisper echoes behind you.");
 
@@ -2125,3 +2148,10 @@ function openWindow(label, imageSrc) {
 
 }
 
+document.addEventListener("click", function (e) {
+    const node = e.target.closest(".poi");
+    if (!node) return;
+
+    const nodeId = node.dataset.node;
+    missionController(nodeId);
+});

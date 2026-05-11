@@ -424,3 +424,91 @@ function showAllPartyErrors() {
     const msg = "Party cannot depart:\n" + errors.map(e => "• " + e).join("\n");
     pushStatus(msg, 8000);
 }
+
+const missionNodes = {
+    dwood_fort: {
+        title: "Darkwood Fort",
+        desc: "A fortified outpost deep in the Dark Woods.",
+        missionId: "dwoods_fort_1",
+        requires: "dwoods_swamp_1"
+    },
+
+    dwood_swamp: {
+        title: "Murkwater Swamp",
+        desc: "The swamp home to the Trollkin Trixter.",
+        missionId: "dwoods_swamp_1",
+        requires: "dwoods_shrine_1"
+    },
+
+    dwood_shrine: {
+        title: "Ancient Shrine",
+        desc: "The Shrine to Narlia.",
+        missionId: "dwoods_shrine_1",
+        requires: "dwood_1"
+    },
+
+    dwood_path: {
+        title: "The Dark Woods",
+        desc: "You make your way through the dark woods.",
+        missionId: "dwood_1",
+        requires: null
+    }
+};
+
+function missionController(nodeId) {
+    const current = player.missions.current_mission;
+    const missionId = current.id;
+
+    console.log("Mission Controller:", missionId, "Node:", nodeId);
+
+    // 1. Dark Woods / node-based missions
+    if (missionNodes[nodeId]) {
+        return openMissionNode(nodeId);
+    }
+
+    // 2. Green missions: clicking the path
+    if (nodeId === "green_1_path" ||
+        nodeId === "green_2_path" ||
+        nodeId === "green_3_path") {
+
+        pushStatus("Continuing your journey...");
+        // Use your existing progression logic
+        runMission(missionId);
+        return;
+    }
+
+    pushStatus("Nothing interesting happens here.");
+    console.warn("Unknown mission node clicked:", nodeId);
+}
+
+function openMissionNode(nodeId) {
+    const node = missionNodes[nodeId];
+
+    if (!node) {
+        pushStatus("Unknown mission node: " + nodeId);
+        return;
+    }
+
+    // Check progression requirement
+    if (node.requires && !player.missions.completed?.includes(node.requires)) {
+        pushStatus(`You cannot access ${node.title} yet.`);
+        return;
+    }
+
+    // Show a short message instead of a popup
+    pushStatus(`${node.title}: ${node.desc}`);
+    // Store selected node for engagement
+    selectedNode = node;
+	runMission(node.missionId);
+}
+
+function engageMission() {
+    if (!selectedNode) {
+        pushStatus("No mission node selected.");
+        return;
+    }
+
+    pushStatus(`Entering ${selectedNode.title}...`);
+    runMission(selectedNode.missionId);
+}
+

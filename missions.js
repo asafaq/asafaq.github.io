@@ -415,7 +415,7 @@ async function handleMissionEnd(sceneId) {
 		
 		nextPage = "mission_green_1"
 	}
-  
+
     if (sceneId === "green1_502end") {
 		launchBattle("tutor_test");
 		
@@ -424,8 +424,7 @@ async function handleMissionEnd(sceneId) {
 		
 		
 	}
-  
-  
+
     if (sceneId === "green1_048END") {
 		player = await storage.loadPlayer(player.id);
 		player.missions.green_1 = 5;
@@ -501,6 +500,10 @@ async function handleMissionEnd(sceneId) {
 
 	if (sceneId === "green2_245b_end") {
 		player.missions.green_2 = 3;
+		player.missions.green_3 = 2;
+		player.missions.current_mission.id = "green_3";
+		player.missions.current_mission.locked_mission = "green_3";
+		player.missions.current_mission.page = "mission_green_3"
 		recruitAdventurer("adv_Hogmother")
 		player.patrons.adv_Hogmother.location = 3;
 		player.patrons.adv_Hogmother.status = "mission";
@@ -518,7 +521,11 @@ async function handleMissionEnd(sceneId) {
 
 	
 	if (sceneId === "green3_243END") {
-		player.missions.green_2 = 4;
+		player.missions.green_3 = 3;
+		player.missions.dwood_1 = 0;
+		player.missions.current_mission.id = "dwood_1";
+		player.missions.current_mission.locked_mission = "dwood_1";
+		player.missions.current_mission.page = "mission_dwood_1"
 		recruitAdventurer("adv_Awetruce")
 		player.patrons.adv_Awetruce.location = 6; //guide _A position
 		player.patrons.adv_Awetruce.status = "mission";
@@ -534,7 +541,8 @@ async function handleMissionEnd(sceneId) {
 			`You've met with Sebastian the Young who joined the ${player.data.party_A} on their way to ${player.missions.current_mission.id}, and will investigate the Temple alongside you.`
 		);
 		
-		nextPage = "mission_green_3"
+		
+		nextPage = "mission_dwood_1"
 	}
 
 	
@@ -604,6 +612,19 @@ async function handleMissionEnding(sceneId) {
 
             resetPartyTraits();
             loadPage("mission_green_1");
+        },
+
+        "dwood_081end": async () => {
+            player = await storage.loadPlayer(player.id);
+            player.missions.dwood_1 ??= 1;
+
+            Journal.addEntry("You've been approched by the vile Trollkin, and Amyssa lost her spellbook.");
+
+            recruitAdventurer("adv_Trollkin");
+            player.patrons.adv_Trollkin.location = 0;
+            player.patrons.adv_Trollkin.status = "rival";
+			
+            loadPage("mission_dwood_1");
         },
 
         "green1_025END": async () => {

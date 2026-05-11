@@ -1029,3 +1029,13 @@ img:not([src]) {
 #portrait-scroll::-webkit-scrollbar-track {
     background: #222;
 }
+
+
+.poi {
+    /* transition: transform 0.2s ease, filter 0.2s ease; */
+}
+
+.poi-icon:hover {
+    animation: shinePulse 1s infinite alternate;
+    cursor: pointer;
+}
