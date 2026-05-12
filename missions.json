@@ -2367,7 +2367,7 @@
     "speaker": "Hogmother",
     "portrait": "/assets/patrons/hogmother.png",
     "side": "left",
-    "dialog": "Those woods sure look bad........\nOh Hogfather where did you get to.",
+    "dialog": "Those woods sure look bad........\nOh Hogfather where did you get yourself into...",
     "interaction_type": "next",
     "target_id": "dwood1_102"
   },
@@ -2576,7 +2576,7 @@
     "id": "dwood1_154",
     "speaker": "Trollkin",
     "portrait": "/assets/patrons/trollkin_l.png",
-    "dialog": "Hello, visitors to the Dark Woods!\n\nI am Trollkin the Trollkin and I love Trollkin! Haaaaaaaa hehehehe.",
+    "dialog": "Hello, visitors to the Dark Woods!\n\nI am Trollkin the Trollkin\n\nNice Trollkin to you! Haaaaaaaa hehehehe.",
     "side": "left",
     "interaction_type": "next",
     "target_id": "dwood1_155"
@@ -2594,7 +2594,7 @@
     "id": "dwood1_156",
     "speaker": "Trollkin",
     "portrait": "/assets/patrons/trollkin_l.png",
-    "dialog": "I couldn't help but listening to your conversation about the spirits world. My family comes from a long line of spiritual folks",
+    "dialog": "I couldn't help but listening to your conversation about the spirits world. My ancestors comes from a long line of spiritual folks",
     "side": "left",
     "interaction_type": "next",
     "target_id": "dwood1_157"
@@ -2631,7 +2631,7 @@
     "speaker": "Amyssa",
     "portrait": "/assets/patrons/amyssa_smaller.png",
     "side": "right",
-    "dialog": "You trollkin are truly vile. Don't you dare come near me",
+    "dialog": "You trollkin truly are vile. Don't you dare come near me",
     "interaction_type": "next",
     "target_id": "dwood1_161"
   },
@@ -2658,7 +2658,7 @@
     "speaker": "Amyssa",
     "portrait": "/assets/patrons/amyssa_smaller.png",
     "side": "right",
-    "dialog": "WHAT?! .............",
+    "dialog": "WHAT?! ............",
     "interaction_type": "next",
     "target_id": "dwood1_164"
   },
@@ -2678,19 +2678,19 @@
     "dialog": "Because I have your spellbook.",
     "side": "left",
     "interaction_type": "next",
-    "target_id": "dwood1_166"
+    "target_id": "dwood1_165a"
   },
   {
-    "id": "dwood1_164",
+    "id": "dwood1_165a",
     "speaker": "Amyssa",
     "portrait": "/assets/patrons/amyssa_smaller.png",
     "side": "right",
-    "dialog": "WHHAAAAATTTT?!!!!!! ..............",
+    "dialog": "WHHAAAAATTTT?!!!!!! ......................",
     "interaction_type": "next",
-    "target_id": "dwood1_165"
+    "target_id": "dwood1_165b"
   },
   {
-    "id": "dwood1_165",
+    "id": "dwood1_165b",
     "speaker": "Amyssa",
     "portrait": "/assets/patrons/amyssa_smaller.png",
     "side": "right",
@@ -2736,6 +2736,15 @@
   },
   {
     "id": "dwood1_170",
+    "speaker": "Trollkin",
+    "portrait": "/assets/patrons/trollkin_l_vanish.png",
+    "dialog": "'SEE' YA!!! \n\nHAAAAAAAAAAAA hahahahaha",
+    "side": "left",
+    "interaction_type": "next",
+    "target_id": "dwood1_170b"
+  },
+  {
+    "id": "dwood1_170b",
     "speaker": "Narrator",
     "portrait": "",
     "dialog": "The Trollkin vanishes from sight...",
@@ -2802,7 +2811,7 @@
     "speaker": "Hogmother",
     "portrait": "/assets/patrons/hogmother.png",
     "side": "left",
-    "dialog": "She will never have such crimes commit freely on her blessed grounds.",
+    "dialog": "She will never have such crimes committed freely on her blessed grounds.",
     "interaction_type": "next",
     "target_id": "dwood1_178"
   },
@@ -2841,6 +2850,15 @@
     "dialog": ".",
     "interaction_type": "next",
     "target_id": "END"
+  }
+  {
+    "id": "dwood1_201",
+    "speaker": "Hogmother",
+    "portrait": "/assets/patrons/hogmother.png",
+    "side": "left",
+    "dialog": "There's the shrine. Let's clean it up a bit. I wish I had more to offer as tribute to the godess.",
+    "interaction_type": "next",
+    "target_id": "dwood1_202"
   }
 
 ]

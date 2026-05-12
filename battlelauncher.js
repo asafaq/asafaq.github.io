@@ -101,20 +101,34 @@ function launchBattle(encounterKey) {
             // Use your specific hydration function for final stats
             const hydrated = getHydratedAdventurer(key); 
 
-            missionParty.push({
-                name: hydrated.name,
-                type: 'pc',
-                icon: hydrated.icon,
-                hp: hydrated.currentHP,
-                maxHp: hydrated.MaxHP,
-                ac: hydrated.AC,
-                x: 1, 
-                y: 2 + missionParty.length,
-                color: '#3498db',
-                speed: hydrated.speed || 6,
-                maxMove: hydrated.speed || 6,
-                hasAction: true
-            });
+			missionParty.push({
+				name: hydrated.name,
+				type: 'pc',
+				icon: hydrated.icon,
+				hp: hydrated.currentHP,
+				maxHp: hydrated.MaxHP,
+				// --- NEW DATA INJECTION ---
+				race: hydrated.race,
+				role: hydrated.role,
+				level: hydrated.level,
+				// Full Stats
+				stats: {
+					str: hydrated.strengh_mod,
+					dex: hydrated.Dexterity_mod,
+					wis: hydrated.wisdom_mod,
+					int: hydrated.intelligence_mod,
+					cha: hydrated.charisma_mod
+				},
+				traits: hydrated.trait || [],
+				inventory: hydrated.inventory || [],
+				// --------------------------
+				ac: hydrated.AC,
+				x: 1, 
+				y: 2 + missionParty.length,
+				speed: hydrated.speed || 6,
+				maxMove: hydrated.speed || 6,
+				hasAction: true
+			});
         }
     }
 

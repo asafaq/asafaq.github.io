@@ -429,22 +429,22 @@ const missionNodes = {
     dwood_fort: {
         title: "Darkwood Fort",
         desc: "A fortified outpost deep in the Dark Woods.",
-        missionId: "dwoods_fort_1",
-        requires: "dwoods_swamp_1"
+        missionId: "dwood_1",
+        requires: null
     },
 
     dwood_swamp: {
         title: "Murkwater Swamp",
         desc: "The swamp home to the Trollkin Trixter.",
-        missionId: "dwoods_swamp_1",
-        requires: "dwoods_shrine_1"
+        missionId: "dwood_1",
+        requires: null
     },
 
     dwood_shrine: {
         title: "Ancient Shrine",
         desc: "The Shrine to Narlia.",
-        missionId: "dwoods_shrine_1",
-        requires: "dwood_1"
+        missionId: "dwood_1",
+        requires: null
     },
 
     dwood_path: {
@@ -490,7 +490,7 @@ function openMissionNode(nodeId) {
     }
 
     // Check progression requirement
-    if (node.requires && !player.missions.completed?.includes(node.requires)) {
+    if (node.requires && !player.missions[node.requires]) {
         pushStatus(`You cannot access ${node.title} yet.`);
         return;
     }
@@ -501,14 +501,3 @@ function openMissionNode(nodeId) {
     selectedNode = node;
 	runMission(node.missionId);
 }
-
-function engageMission() {
-    if (!selectedNode) {
-        pushStatus("No mission node selected.");
-        return;
-    }
-
-    pushStatus(`Entering ${selectedNode.title}...`);
-    runMission(selectedNode.missionId);
-}
-

@@ -1,25 +1,26 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>D&D Mobile Virtual Table Top: Action Economy</title>
+    <title>D&D Mobile VTT: Action Economy</title>
     <meta name="viewport" content="width=540, user-scalable=no" charset="UTF-8">
-    <style>
-        body { margin: 0; background: #121212; color: #eee; display: flex; justify-content: center; font-family: 'Segoe UI', sans-serif; }
-        #screen { width: 540px; height: 960px; background: #222; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 0 50px #000; }
-        #grid { width: 540px; height: 540px; position: relative; background-color: #333; background-size: 54px 54px, cover; border-bottom: 2px solid #444; transition: 0.3s; }
-        #log { height: 140px; background: #111; padding: 15px; overflow-y: auto; color: #00ff00; font-family: monospace; border-bottom: 2px solid #444; display: flex; flex-direction: column-reverse; }
-        #controls { flex: 1; padding: 20px; background: #2c2c2c; display: flex; flex-direction: column; justify-content: space-between; }
-        .grid-overlay { position: absolute; width: 100%; height: 100%; background-image: linear-gradient(rgba(255,255,255,0.2) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.2) 1px, transparent 1px); background-size: 54px 54px; pointer-events: none; z-index: 1000; }
-        .cell { width: 54px; height: 54px; float: left; z-index: 2; position: relative; cursor: pointer; }
-        .token { width: 46px; height: 46px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; position: absolute; z-index: 3; transition: 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28); pointer-events: none; box-shadow: 0 4px 10px rgba(0,0,0,0.5); font-size: 14px; color: white; text-shadow: 1px 1px 2px #000; background-size: cover; background-position: center; background-repeat: no-repeat; border: 1px solid white; }
-        .active-ring { position: absolute; width: 50px; height: 50px; border: 3px solid #f1c40f; border-radius: 50%; transition: 0.3s; pointer-events: none; z-index: 2; box-shadow: 0 0 15px #f1c40f; }
-        .status-bar { background: #3d3d3d; padding: 15px; border-radius: 8px; border-left: 8px solid #3498db; margin-bottom: 10px; }
-        .btn-group { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-        button { padding: 18px; border-radius: 6px; border: none; font-weight: bold; background: #444; color: white; cursor: pointer; font-size: 13px; text-transform: uppercase; transition: 0.2s; }
-        button:disabled { opacity: 0.3; filter: grayscale(1); cursor: not-allowed; }
-        .btn-move-active { background: #27ae60 !important; box-shadow: 0 0 10px #27ae60; }
-        .btn-util { background: #34495e !important; font-size: 11px; padding: 10px; text-transform: none; }
-    </style>
+<style>
+    body { margin: 0; background: #121212; color: #eee; display: flex; justify-content: center; font-family: 'Segoe UI', sans-serif; min-height: 100vw ; overflow: auto; }
+    #screen { width: 540px; height: 960px; background: #222; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 0 50px #000; position: relative; }
+    #grid { width: 540px; height: 540px; position: relative; background-color: #333; border-bottom: 2px solid #444; flex-shrink: 0; overflow: hidden; background-size: cover; background-position: center; }
+    #log { height: 140px; background: #111; padding: 15px; overflow-y: auto; color: #00ff00; font-family: monospace; border-bottom: 2px solid #444; display: flex; flex-direction: column-reverse; box-sizing: border-box; flex-shrink: 0; }
+    #controls { display: flex; flex-direction: row; flex: 1; background: #1a1a1a; padding: 10px; gap: 10px; align-items: stretch; box-sizing: border-box; }
+    #stats-panel { width: 85px; display: flex; flex-direction: column; justify-content: center; background: #2c3e50; border-radius: 4px; padding: 8px; font-size: 0.7rem; color: white; flex-shrink: 0; border-left: 4px solid #3498db; box-sizing: border-box; }
+    #stats-panel strong { display: block; margin-bottom: 2px; color: #f1c40f; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .btn-group { display: grid; flex: 1; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(2, 1fr); gap: 8px; min-width: 0; }
+    .btn-group button { width: 100%; height: 100%; font-size: 0.85rem; background: #444; color: white; border: 1px solid #555; border-radius: 4px; cursor: pointer; }
+    #end-turn-btn { width: 45px; background: #d35400; color: white; font-weight: bold; writing-mode: vertical-lr; text-orientation: upright; border: none; border-radius: 4px; flex-shrink: 0; cursor: pointer; display: flex; align-items: center; justify-content: center; letter-spacing: 2px; font-size: 0.8rem; }
+    .token { width: 46px; height: 46px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; position: absolute; z-index: 3; transition: 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28); pointer-events: none; box-shadow: 0 4px 10px rgba(0,0,0,0.5); font-size: 14px; color: white; border: 2px solid white; background-size: cover; background-position: center; }
+    .active-ring { position: absolute; width: 50px; height: 50px; border: 3px solid #f1c40f; border-radius: 50%; transition: 0.3s; pointer-events: none; z-index: 2; box-shadow: 0 0 15px #f1c40f; }
+    .grid-overlay { position: absolute; width: 100%; height: 100%; background-image: linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px); background-size: 54px 54px; pointer-events: none; z-index: 10; }
+    .cell { width: 54px; height: 54px; float: left; z-index: 1; position: relative; cursor: pointer; }
+    .btn-move-active { background-color: #27ae60 !important; border: 2px solid white !important; }
+    button:disabled { opacity: 0.4; filter: grayscale(1); cursor: not-allowed; }
+</style>
 </head>
 <body>
 
@@ -28,25 +29,15 @@
         <div class="grid-overlay"></div>
         <div id="active-ring" class="active-ring"></div>
     </div>
-    <div id="log">> Battle Ready.</div>
+    <div id="log">> Battle Initialized.</div>
     <div id="controls">
-        <div class="status-bar">
-            <div style="display:flex; justify-content:space-between; align-items: center;">
-                <h3 id="turn-name" style="margin:0">Hero</h3>
-                <div style="display:flex; gap: 5px;">
-                    <button class="btn-util" onclick="StateStore.save()">💾 Save</button>
-                    <button class="btn-util" onclick="StateStore.load()">📂 Load</button>
-                </div>
-            </div>
-            <p id="stats" style="margin:5px 0 0 0; color:#bbb; font-weight: bold; font-size: 13px;">HP: -- | SPEED: -- | ACTION: [READY]</p>
+        <div id="stats-panel">
+            <strong id="unit-name">Name</strong>
+            <span id="unit-hp">HP: 0</span>
+            <span id="unit-speed">SPD: 0</span>
         </div>
-        <div class="btn-group">
-            <button id="move-btn" onclick="toggleMove()">📍 Move</button>
-            <button id="atk-btn" onclick="handleAttack()">⚔️ Attack</button>
-            <button id="spell-btn" onclick="handleSpell()">🔥 Spell</button>
-            <button id="map-btn" onclick="changeMap()">🗺️ Map</button>
-        </div>
-        <button onclick="endTurn()" style="background:#d35400; width:100%; border: 1px solid #e67e22;">END TURN</button>
+        <div class="btn-group" id="action-bar"></div>
+        <button id="end-turn-btn" onclick="endTurn()">END</button>
     </div>
 </div>
 
@@ -57,135 +48,103 @@ const Bus = {
     emit(event, data) { if(this.events[event]) this.events[event].forEach(cb => cb(data)); }
 };
 
-const StateStore = {
-    snapshot: null,
-    save() {
-        this.snapshot = { units: JSON.parse(JSON.stringify(units)), turn: turn, map: mapIdx };
-        Bus.emit('LOG', "Snapshot stored in memory.");
-    },
-    load() {
-        if (!this.snapshot) return Bus.emit('LOG', "No save found.");
-        units = JSON.parse(JSON.stringify(this.snapshot.units));
-        turn = this.snapshot.turn; mapIdx = this.snapshot.map;
-        Bus.emit('LOG', "State restored.");
-        update();
-    }
-};
-
-let staticObstacles = [];
-let units = []; 
-let turn = 0, isMoving = false, mapIdx = 0;
-const mapUrls = { "default": "assets/missions/combat_green_1.png" };
-
-function getOccupiedSquares() {
-    const map = Array(10).fill().map(() => Array(10).fill(false));
-    units.filter(u => u.hp > 0).forEach((u) => {
-        if (u.x >= 0 && u.x < 10 && u.y >= 0 && u.y < 10) map[u.x][u.y] = true;
-    });
-    staticObstacles.forEach(obs => {
-        if (obs.x >= 0 && obs.x < 10 && obs.y >= 0 && obs.y < 10) map[obs.x][obs.y] = true;
-    });
-    return map;
-}
+let staticObstacles = [], units = [], turn = 0, isMoving = false;
 
 function init() {
-    // 1. Load Data FIRST
     const savedData = localStorage.getItem('currentBattle');
     if (!savedData) return Bus.emit('LOG', "ERR: No battle data found!");
     const data = JSON.parse(savedData);
 
-    // 2. Map Handling (Now 'data' is defined)
-    const missionId = data.missionId || "default";
-    // Using your original map URLs
+    const grid = document.getElementById('grid');
+    staticObstacles = data.obstacles || [];
+    
     const mapUrls = {
         "green_1": "assets/missions/combat_green_1.png",
-        "green_2": "assets/missions/combat_green_1.png",
-        "green_3": "assets/missions/combat_green_1.png",
         "default": "assets/missions/combat_green_1.png"
     };
-    const bgUrl = mapUrls[missionId] || mapUrls["default"];
-    const grid = document.getElementById('grid');
-    
-    if (bgUrl && bgUrl !== "undefined") {
-        grid.style.backgroundImage = `url('${bgUrl}')`;
-        grid.style.backgroundSize = "cover";
-        grid.style.backgroundPosition = "center";
-    }
+    const bgUrl = mapUrls[data.missionId] || mapUrls["default"];
+    grid.style.backgroundImage = `url('${bgUrl}')`;
 
-    // 3. Data Unpacking
-    staticObstacles = data.obstacles || [];
-    // Restoring your unit mapping
     units = [
-        ...data.party.map(p => ({...p, type: 'pc', maxMove: 3, speed: 3, hasAction: true, maxHp: p.hp})), 
-        ...data.monsters.map(m => ({...m, type: 'monster', maxMove: 2, speed: 2, hasAction: true, maxHp: m.hp}))
+        ...data.party.map(p => ({...p, type: 'pc', speed: 6, maxSpeed: 6, hasAction: true, isHiding: false, maxHp: p.hp})), 
+        ...data.monsters.map(m => ({...m, type: 'monster', speed: 6, maxSpeed: 6, hasAction: true, maxHp: m.hp}))
     ];
 
-    // 4. Grid Construction
     grid.innerHTML = '<div class="grid-overlay"></div><div id="active-ring" class="active-ring"></div>';
-    
     for (let i = 0; i < 100; i++) {
         let cell = document.createElement('div');
         cell.className = 'cell';
         let cx = i % 10, cy = Math.floor(i / 10);
-        if (staticObstacles.some(o => o.x === cx && o.y === cy)) {
-            cell.style.backgroundColor = "rgba(0,0,0,0.5)";
-        }
         cell.onclick = () => processMove(cx, cy);
         grid.appendChild(cell);
     }
 
-    // 5. Token Construction (With Image Support)
     units.forEach((u, i) => {
         let t = document.createElement('div');
         t.id = `t-${i}`;
         t.className = `token`;
         t.style.backgroundColor = u.type === 'pc' ? "#3498db" : "#c0392b";
-
-        if (u.icon) {
-            const img = new Image();
-            img.src = u.icon;
-            img.onload = () => {
-                t.style.backgroundImage = `url('${u.icon}')`;
-                t.innerText = ""; 
-            };
-            img.onerror = () => {
-                t.innerText = u.name.substring(0,2).toUpperCase();
-            };
-        } else {
-            t.innerText = u.name.substring(0,2).toUpperCase();
-        }
+        if (u.icon) t.style.backgroundImage = `url('${u.icon}')`;
+        else t.innerText = u.name.substring(0,2).toUpperCase();
         grid.appendChild(t);
     });
 
     update();
 }
 
-
 function update() {
     const active = units[turn];
     if (!active) return;
+
+    document.getElementById('unit-name').innerText = active.name;
+    document.getElementById('unit-hp').innerText = `HP: ${active.hp}`;
+    document.getElementById('unit-speed').innerText = `SPD: ${active.speed}`;
+
+    const ring = document.getElementById('active-ring');
+    ring.style.left = (active.x * 54 + 2) + 'px';
+    ring.style.top = (active.y * 54 + 2) + 'px';
+
     units.forEach((u, i) => {
         const t = document.getElementById(`t-${i}`);
         if (t) {
-            t.style.left = (u.x * 54 + 4) + 'px'; t.style.top = (u.y * 54 + 4) + 'px';
-            t.style.display = u.hp > 0 ? 'flex' : 'none';
+            t.style.display = u.hp <= 0 ? 'none' : 'flex';
+            t.style.left = (u.x * 54 + 4) + 'px';
+            t.style.top = (u.y * 54 + 4) + 'px';
+            t.style.opacity = u.isHiding ? "0.5" : "1";
         }
     });
-    document.getElementById('turn-name').innerText = active.name;
-    document.getElementById('stats').innerText = `HP: ${active.hp}/${active.maxHp} | SPEED: ${active.speed*5}FT | ACTION: ${active.hasAction ? '[READY]' : '[SPENT]'}`;
-    const ring = document.getElementById('active-ring');
-    ring.style.left = (active.x * 54 + 2) + 'px'; ring.style.top = (active.y * 54 + 2) + 'px';
+
+    const bar = document.getElementById('action-bar');
+    bar.innerHTML = '';
+    createBtn(bar, "📍 Move", toggleMove, isMoving ? 'btn-move-active' : '', "move-btn");
+    
+    if (active.role === "Miner") {
+        if (active.isHiding) createBtn(bar, "🗡️ Sneak", handleSneakAttack);
+        else { 
+            createBtn(bar, "⛏️ Attack", handleAttack); 
+            createBtn(bar, "🌫️ Hide", handleHide); 
+        }
+    } else {
+        createBtn(bar, "⚔️ Strike", handleAttack);
+        createBtn(bar, "🔥 Spell", handleSpell);
+    }
+
+    const endBtn = document.getElementById('end-turn-btn');
+    if (endBtn) endBtn.disabled = (active.type === 'monster');
     checkVictory();
 }
 
-Bus.on('LOG', (msg) => {
-    const l = document.getElementById('log');
-    const entry = document.createElement('div');
-    entry.innerHTML = `> ${msg}`;
-    l.prepend(entry);
-});
+function createBtn(parent, text, func, className = '', id = '') {
+    const btn = document.createElement('button');
+    btn.innerText = text;
+    btn.onclick = func;
+    if(className) btn.className = className;
+    if(id) btn.id = id;
+    if (!units[turn].hasAction && text !== "📍 Move") btn.disabled = true;
+    parent.appendChild(btn);
+}
 
-function toggleMove() { isMoving = !isMoving; document.getElementById('move-btn').className = isMoving ? 'btn-move-active' : ''; }
+function toggleMove() { isMoving = !isMoving; update(); }
 
 function processMove(tx, ty) {
     if (!isMoving) return;
@@ -197,84 +156,119 @@ function processMove(tx, ty) {
     else Bus.emit('LOG', "Out of speed!");
 }
 
+function getOccupiedSquares() {
+    const map = Array(10).fill().map(() => Array(10).fill(false));
+    units.filter(u => u.hp > 0).forEach(u => { map[u.x][u.y] = true; });
+    staticObstacles.forEach(obs => { map[obs.x][obs.y] = true; });
+    return map;
+}
+
+// FULL RESTORATION OF ATTACK LOGIC (With Mods and Racial Checks)
 function handleAttack() {
     const u = units[turn];
     if (!u.hasAction) return;
     const target = units.find(t => t.type !== u.type && t.hp > 0 && Math.max(Math.abs(t.x - u.x), Math.abs(t.y - u.y)) <= 1);
-    if (target) {
-        let d = u.type === 'pc' ? Math.floor(Math.random() * 11) + 10 : Math.floor(Math.random() * 4) + 2;
-        target.hp -= d; u.hasAction = false;
-        Bus.emit('LOG', `⚔️ ${u.name} hits ${target.name} for ${d}.`);
-        if(target.hp <= 0) { Bus.emit('LOG', `💀 ${target.name} defeated.`); target.x = -1; target.y = -1; }
-        update();
-    } else Bus.emit('LOG', "No enemy in reach.");
+    if (!target) return Bus.emit('LOG', "No enemy in reach.");
+
+    let attackMod = u.stats?.str || 0;
+    if (u.role === "Miner" && (u.stats?.dex > u.stats?.str)) attackMod = u.stats.dex;
+
+    let racialBonus = 0;
+    if (u.RacialEnemy && target.name.includes(u.RacialEnemy)) {
+        racialBonus = 2; Bus.emit('LOG', `🎯 Racial Advantage!`);
+    }
+
+    const roll = Math.floor(Math.random() * 20) + 1;
+    const totalToHit = roll + attackMod + racialBonus;
+    const targetAC = target.ac || 10;
+
+    if (roll === 20 || (roll !== 1 && totalToHit >= targetAC)) {
+        let dmg = (u.type === 'pc' ? Math.floor(Math.random() * 6) + 1 : Math.floor(Math.random() * 3) + 1) + attackMod;
+        target.hp -= dmg;
+        Bus.emit('LOG', `⚔️ ${u.name} hits ${target.name} for ${dmg}!`);
+        if (target.hp <= 0) { target.x = -1; target.y = -1; Bus.emit('LOG', `💀 ${target.name} defeated.`); }
+    } else {
+        Bus.emit('LOG', `🛡️ ${u.name} misses (${totalToHit} vs AC ${targetAC}).`);
+    }
+    u.hasAction = false; update();
 }
 
 function handleSpell() {
     const u = units[turn];
-    if (!u.hasAction) return;
     const target = units.find(t => t.type !== u.type && t.hp > 0);
-    if (target) {
-        const d = Math.floor(Math.random() * 8) + 2;
-        target.hp -= d; u.hasAction = false;
-        Bus.emit('LOG', `🔥 Firebolt hits ${target.name} for ${d}.`);
+    if (!target || !u.hasAction) return;
+    const d = Math.floor(Math.random() * 8) + 2;
+    target.hp -= d; u.hasAction = false;
+    Bus.emit('LOG', `🔥 Spell hits ${target.name} for ${d}.`);
+    if (target.hp <= 0) { target.x = -1; target.y = -1; }
+    update();
+}
+
+function handleHide() {
+    const u = units[turn];
+    if (!u.hasAction) return;
+    u.isHiding = true; u.hasAction = false;
+    Bus.emit('LOG', `${u.name} vanishes...`);
+    update();
+}
+
+function handleSneakAttack() {
+    const u = units[turn];
+    if (!u.hasAction || !u.isHiding) return;
+    const target = units.find(t => t.type !== u.type && t.hp > 0 && Math.max(Math.abs(t.x - u.x), Math.abs(t.y - u.y)) <= 1);
+    if (!target) return Bus.emit('LOG', "Must be in melee.");
+
+    const mod = Math.max(u.stats?.str || 0, u.stats?.dex || 0);
+    const roll = Math.floor(Math.random() * 20) + 1;
+    if (roll + mod + 2 >= (target.ac || 10)) {
+        const dmg = (Math.floor(Math.random() * 6) + 1) + (Math.floor(Math.random() * 6) + 1) + mod;
+        target.hp -= dmg;
+        Bus.emit('LOG', `🗡️ SNEAK ATTACK! ${dmg} dmg!`);
         if (target.hp <= 0) { target.x = -1; target.y = -1; }
-        update();
-    }
+    } else { Bus.emit('LOG', `💨 Sneak missed!`); }
+    u.isHiding = false; u.hasAction = false; update();
 }
 
 function endTurn() {
-    isMoving = false; document.getElementById('move-btn').className = '';
-    units[turn].speed = units[turn].maxMove; units[turn].hasAction = true;
-    turn = (turn + 1) % units.length;
-    if (units[turn].hp <= 0) return endTurn();
+    isMoving = false;
+    let attempts = 0;
+    do { turn = (turn + 1) % units.length; attempts++; } while (units[turn].hp <= 0 && attempts < units.length);
+    const active = units[turn];
+    active.hasAction = true;
+    active.speed = 6;
+    Bus.emit('LOG', `Turn: ${active.name}`);
     update();
-    if (units[turn].type === 'monster') setTimeout(monsterAI, 800);
+    if (active.type === 'monster') setTimeout(monsterAI, 800);
 }
 
 function monsterAI() {
-    let u = units[turn];
+    const u = units[turn];
     if (!u || u.hp <= 0) return endTurn();
-    let target = units.find(t => t.type === 'pc' && t.hp > 0);
+    const target = units.find(t => t.type === 'pc' && t.hp > 0);
     if (target) {
-        const occ = getOccupiedSquares();
-        let nX = u.x + (u.x < target.x ? 1 : u.x > target.x ? -1 : 0);
-        let nY = u.y + (u.y < target.y ? 1 : u.y > target.y ? -1 : 0);
-        if (!(nX === target.x && nY === target.y) && !occ[nX][nY]) { u.x = nX; u.y = nY; update(); }
-        if (Math.max(Math.abs(u.x - target.x), Math.abs(u.y - target.y)) <= 1) setTimeout(handleAttack, 400);
+        if (Math.max(Math.abs(u.x - target.x), Math.abs(u.y - target.y)) > 1) {
+            u.x += (u.x < target.x ? 1 : u.x > target.x ? -1 : 0);
+            u.y += (u.y < target.y ? 1 : u.y > target.y ? -1 : 0);
+        } else { handleAttack(); }
     }
     setTimeout(endTurn, 1000);
 }
 
 function checkVictory() {
-    const monstersAlive = units.filter(u => u.type === 'monster' && u.hp > 0);
-    
-    if (monstersAlive.length === 0) {
-        Bus.emit('LOG', "VICTORY! Synchronizing with world...");
-
-        // This payload matches what your parent listener uses: results = event.data.result
-        const resultData = {
-            type: "BATTLE_COMPLETE",
-            result: units.filter(u => u.type === 'pc') 
-        };
-
-        // Notify the Parent
-        if (window.parent) {
-            window.parent.postMessage(resultData, "*"); 
-        }
+    if (units.filter(u => u.type === 'monster' && u.hp > 0).length === 0) {
+        Bus.emit('LOG', "VICTORY!");
+        if (window.parent) window.parent.postMessage({type: "BATTLE_COMPLETE", result: units.filter(u => u.type === 'pc')}, "*");
     }
 }
 
-function scaleApp() {
-    const screen = document.getElementById('screen');
-    const scale = Math.min(window.innerWidth / 540, window.innerHeight / 960);
-    screen.style.transform = `scale(${scale})`;
-    screen.style.transformOrigin = 'top center';
-}
+Bus.on('LOG', (msg) => {
+    const l = document.getElementById('log');
+    const entry = document.createElement('div');
+    entry.innerText = `> ${msg}`;
+    l.prepend(entry);
+});
 
 init();
-window.addEventListener('resize', scaleApp);
-window.addEventListener('load', scaleApp);
 </script>
 </body>
 </html>

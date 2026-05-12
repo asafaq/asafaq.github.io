@@ -719,6 +719,7 @@ if (page === "guild") {
 	  .join('');
 
 		initPatronClicks();
+		displayRightMenu();
   }
  
   if (page === "contracts") {
@@ -1397,9 +1398,10 @@ async function loadMissionPage() {
 	const hasSecretPatron = Object.values(player.patrons)
 		.some(p => p.location === 9);
 	if (hasSecretPatron) {
+		document.getElementById("missions_line9").style.display = "inline-block";
 		document.getElementById("missions_line9").textContent = "Secret";
 	} else {
-		document.getElementById("missions_line9").textContent = "";
+		document.getElementById("missions_line9").style.display = "none";
 	}
 
 
@@ -1541,11 +1543,13 @@ function updatePartyAGuideLine() {
     const line = document.getElementById("missions_line6");
 
     if (hasPartyAGuidePatron) {
+        line.style.display = "inline-block";
         line.textContent = "Guide";
     } else {
-        line.textContent = "";
+        line.style.display = "none";
     }
 }
+
 
 function updateContinueButton(partyKey) {
     const suffix = partyKey === "party_A" ? "A" :

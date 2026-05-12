@@ -21,14 +21,12 @@
       "RacialEnemy": "string",
       "proficiency_armor": "Light",
       "proficiency_weapon": "Light",
-      "inventory1": "Camp",
-      "inventory2": "Carriage",
-      "inventory3": "string",
-      "inventory4": "string",
-      "inventory1_lock": true,
-      "inventory2_lock": true,
-      "inventory3_lock": false,
-      "inventory4_lock": false,
+	  "inventory" : [
+		  { "item": "Camp", "qty": 1, "locked": true },
+		  { "item": "Carriage", "qty": 1, "locked": true },
+		  { "item": null, "qty": 0, "locked": false },
+		  { "item": null, "qty": 0, "locked": false }
+		],
       "trait": [
         "Diplomatic"
       ],
@@ -212,14 +210,12 @@
       "RacialEnemy": "",
       "proficiency_armor": "Medium",
       "proficiency_weapon": "Martial",
-      "inventory1": "",
-      "inventory2": "",
-      "inventory3": "",
-      "inventory4": "",
-      "inventory1_lock": false,
-      "inventory2_lock": false,
-      "inventory3_lock": false,
-      "inventory4_lock": false,
+	  "inventory" : [
+		  { "item": null, "qty": 0, "locked": false },
+		  { "item": null, "qty": 0, "locked": false },
+		  { "item": null, "qty": 0, "locked": false },
+		  { "item": null, "qty": 0, "locked": false }
+		],
       "trait": [
         "Backstab",
         "Shady"
@@ -248,14 +244,12 @@
       "RacialEnemy": "",
       "proficiency_armor": "Light",
       "proficiency_weapon": "Martial",
-      "inventory1": "",
-      "inventory2": "",
-      "inventory3": "",
-      "inventory4": "",
-      "inventory1_lock": false,
-      "inventory2_lock": false,
-      "inventory3_lock": false,
-      "inventory4_lock": false,
+	  	"inventory" : [
+		  { "item": null, "qty": 0, "locked": false },
+		  { "item": null, "qty": 0, "locked": false },
+		  { "item": null, "qty": 0, "locked": false },
+		  { "item": null, "qty": 0, "locked": false }
+		],
       "trait": [
         "Independant",
         "Pickpocket"
@@ -283,14 +277,12 @@
       "Lower Undead_comment": "Skeletons, Zombies, Ghouls, Ghasts.",
       "proficiency_armor": "Heavy",
       "proficiency_weapon": "Martial",
-      "inventory1": "",
-      "inventory2": "",
-      "inventory3": "",
-      "inventory4": "",
-      "inventory1_lock": false,
-      "inventory2_lock": false,
-      "inventory3_lock": false,
-      "inventory4_lock": false,
+	  	"inventory" : [
+		  { "item": null, "qty": 0, "locked": false },
+		  { "item": null, "qty": 0, "locked": false },
+		  { "item": null, "qty": 0, "locked": false },
+		  { "item": null, "qty": 0, "locked": false }
+		],
       "trait": [
         "Immune to Energy drain",
         "Immune to Fear",
@@ -320,14 +312,12 @@
       "RacialEnemy": "Demons",
       "proficiency_armor": "Heavy",
       "proficiency_weapon": "Martial",
-      "inventory1": "",
-      "inventory2": "",
-      "inventory3": "",
-      "inventory4": "",
-      "inventory1_lock": false,
-      "inventory2_lock": false,
-      "inventory3_lock": false,
-      "inventory4_lock": false,
+	  	"inventory" : [
+		  { "item": null, "qty": 0, "locked": false },
+		  { "item": null, "qty": 0, "locked": false },
+		  { "item": null, "qty": 0, "locked": false },
+		  { "item": null, "qty": 0, "locked": false }
+		],
       "trait": [
         "Divine",
         "Holy Aura",
@@ -360,14 +350,12 @@
       "RacialEnemy": "Knolls",
       "proficiency_armor": "unarmored",
       "proficiency_weapon": "Martial",
-      "inventory1": "Large Cauldron Spoon",
-      "inventory2": "Apothecary kit",
-      "inventory3": "string",
-      "inventory4": "string",
-      "inventory1_lock": false,
-      "inventory2_lock": false,
-      "inventory3_lock": false,
-      "inventory4_lock": false,
+	  	"inventory" : [
+		  { "item": "Large Cauldron Spoon", "qty": 1, "locked": true },
+		  { "item": "Apothecary kit", "qty": 1, "locked": true },
+		  { "item": null, "qty": 0, "locked": false },
+		  { "item": null, "qty": 0, "locked": false }
+		],
       "trait": [
         "Calm",
         "Apothecary"
@@ -396,14 +384,12 @@
       "RacialEnemy": "Pastries",
       "proficiency_armor": "unarmored",
       "proficiency_weapon": "Martial",
-      "inventory1": "Large Rolling Pin",
-      "inventory2": "string",
-      "inventory3": "string",
-      "inventory4": "string",
-      "inventory1_lock": false,
-      "inventory2_lock": false,
-      "inventory3_lock": false,
-      "inventory4_lock": false,
+	  	"inventory" : [
+		  { "item": "Large Rolling Pin", "qty": 1, "locked": true },
+		  { "item": null, "qty": 0, "locked": false },
+		  { "item": null, "qty": 0, "locked": false },
+		  { "item": null, "qty": 0, "locked": false }
+		],
       "trait": "Cheerful",
       "trait1_comment": "Party members have moral +1."
     },
@@ -427,14 +413,12 @@
       "RacialEnemy": "Potatoes",
       "proficiency_armor": "Medium",
       "proficiency_weapon": "Martial",
-      "inventory1": "Small Rapier",
-      "inventory2": "",
-      "inventory3": "",
-      "inventory4": "",
-      "inventory1_lock": false,
-      "inventory2_lock": false,
-      "inventory3_lock": false,
-      "inventory4_lock": false,
+	  	"inventory" : [
+		  { "item": "Small Rapier", "qty": 1, "locked": true },
+		  { "item": null, "qty": 0, "locked": false },
+		  { "item": null, "qty": 0, "locked": false },
+		  { "item": null, "qty": 0, "locked": false }
+		],
       "trait": [
         "Inconspicuous",
         "Adolescent",
@@ -462,14 +446,12 @@
       "RacialEnemy": "",
       "proficiency_armor": "unarmored",
       "proficiency_weapon": "Wild",
-      "inventory1": "",
-      "inventory2": "",
-      "inventory3": "",
-      "inventory4": "",
-      "inventory1_lock": true,
-      "inventory2_lock": true,
-      "inventory3_lock": true,
-      "inventory4_lock": true,
+	  	"inventory" : [
+		  { "item": null, "qty": 0, "locked": true },
+		  { "item": null, "qty": 0, "locked": true },
+		  { "item": null, "qty": 0, "locked": true },
+		  { "item": null, "qty": 0, "locked": true }
+		],
       "trait": [],
       "notes": ""
     },
@@ -492,14 +474,12 @@
       "RacialEnemy": "",
       "proficiency_armor": "Heavy",
       "proficiency_weapon": "Martial",
-      "inventory1": "",
-      "inventory2": "",
-      "inventory3": "",
-      "inventory4": "",
-      "inventory1_lock": false,
-      "inventory2_lock": false,
-      "inventory3_lock": false,
-      "inventory4_lock": false,
+	  	"inventory" : [
+		  { "item": null, "qty": 0, "locked": false },
+		  { "item": null, "qty": 0, "locked": false },
+		  { "item": null, "qty": 0, "locked": false },
+		  { "item": null, "qty": 0, "locked": false }
+		],
       "trait": [
         "Faulty Powerpack",
 		"Immortal Protocol",
@@ -524,7 +504,7 @@
       "intelligence_mod": 3,
       "charisma_mod": 0,
       "alignment": "Chaotic",
-      "level": 5,
+      "level": 8,
       "sex": 1,
       "size": "Medium",
       "caste": "Underclass",
@@ -618,6 +598,14 @@
 		"Vigor",
         "Fire-Phobic"
       ]
+    },
+    "Halfling": {
+      "desc": "Small demihuman with affinity to nature and order.",
+      "Traits": [
+        "Lucky",
+		"",
+        ""
+      ]
     }
   },
   "Roles": {
@@ -661,6 +649,12 @@
       "desc": "A warforged able to to channel divine power, but only partially, charging only healing abilities.",
       "Traits": [
         "Healer"
+      ]
+    },
+    "Deputy": {
+      "desc": "Halfling specific class. A fighter appointed to protect his community. Has some thieving skills.",
+      "Traits": [
+        "Sneak Attack"
       ]
     }
   },
