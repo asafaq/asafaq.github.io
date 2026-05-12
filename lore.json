@@ -495,7 +495,7 @@
       "left": "250px",
       "location": 2,
       "race": "Trollkin",
-      "role": "Arcane Trixter",
+      "role": "Arcane Trickster",
       "hp_die": 6,
       "hp_modifier": 2,
       "strengh_mod": -3,
@@ -518,8 +518,7 @@
 		  { "item": null, "qty": 0, "locked": false }
 		],
       "trait": [
-        "",
-        ""
+        "Selfish"
       ],
       "notes": "."
     }
@@ -653,6 +652,12 @@
     },
     "Deputy": {
       "desc": "Halfling specific class. A fighter appointed to protect his community. Has some thieving skills.",
+      "Traits": [
+        "Sneak Attack"
+      ]
+    },
+    "Arcane Trickster": {
+      "desc": "Rogue adept in illusion and enchantment spells.",
       "Traits": [
         "Sneak Attack"
       ]

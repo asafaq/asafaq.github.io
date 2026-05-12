@@ -497,12 +497,25 @@ async function handleMissionEnd(sceneId) {
 
         // --- DEEPWOOD CONTENT ---
         "dwood1_181end": async () => {
-            player = await storage.loadPlayer(player.id);
             player.missions.dwood_1 = 2;
             Journal.addEntry("You've been approched by the vile Trollkin, and Amyssa lost her spellbook.");
             recruitAdventurer("adv_Trollkin");
             player.patrons.adv_Trollkin.location = 0;
             player.patrons.adv_Trollkin.status = "rival";
+            loadPage("mission_dwood_1");
+        },
+		
+        "dwood1_219end": async () => {
+            player.missions.dwood_1 = 3;
+            Journal.addEntry("Claudio and Sebastian have decided to outsmart the Trollkin and manipulate the Spellbook out of him.");
+			// change Claudio portrait.
+            // change Amyssa portrait.
+            loadPage("mission_dwood_1");
+        },
+		
+        "dwood1_310end": async () => {
+            player.missions.dwood_1 = 4;
+            //Journal.addEntry(".");
             loadPage("mission_dwood_1");
         }
     };

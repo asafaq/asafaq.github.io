@@ -5,7 +5,6 @@ window.addEventListener("message", (event) => {
     // Security: Ensure the message is from your battle engine
     if (event.data.type === "BATTLE_COMPLETE") {
         const results = event.data.result; // This is the PC array from battle.html
-
         // A. Sync results back to your player object
         results.forEach(pc => {
             const key = `adv_${pc.name}`;
@@ -42,7 +41,7 @@ window.addEventListener("message", (event) => {
 // function launchBattle(encounterData) {
     // localStorage.setItem('currentBattle', JSON.stringify(encounterData));
    //Redirect or show the battle iframe
-    // window.location.href = "battle.html"; 
+    // window.location.href = "battle.html";
 // }
 // At the top of battlelauncher.js
 const Bus = window.parent.Bus;

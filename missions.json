@@ -2850,7 +2850,7 @@
     "dialog": ".",
     "interaction_type": "next",
     "target_id": "END"
-  }
+  },
   {
     "id": "dwood1_201",
     "speaker": "Hogmother",
@@ -2859,6 +2859,314 @@
     "dialog": "There's the shrine. Let's clean it up a bit. I wish I had more to offer as tribute to the godess.",
     "interaction_type": "next",
     "target_id": "dwood1_202"
+  },
+  {
+    "id": "dwood1_202",
+    "speaker": "Narrator",
+    "portrait": "",
+    "dialog": "The stone shrine is open on all ways. In the center, a risen stone platform marks a spot of sanctity. It is believed that ancient times a divine influnce has poured into the material place through here, and the connection has never severed.",
+    "side": "left",
+    "interaction_type": "selection",
+    "options": [
+      {
+        "text": "Amyssa says a prayer",
+        "target_id": "dwood1_203",
+        "color": "#FFFFFF",
+        "disabled": false
+      },
+      {
+        "text": "Make plans to submit Amyssa to the Trollkin",
+        "frustration_text": "You wouldn't be able to do that while Hogmother is in the party.",
+        "disabled": true,
+        "color": "#4800FF"
+      }
+    ]
+  },
+  {
+    "id": "dwood1_203",
+    "speaker": "Amyssa",
+    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "side": "left",
+    "dialog": "Oh godess Narlia, how did I get involved in a mess like this. I want to go home.",
+    "interaction_type": "next",
+    "target_id": "dwood1_204"
+  },
+  {
+    "id": "dwood1_204",
+    "speaker": "Amyssa",
+    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "dialog": "This spellbook cost me a fortune and it's a lot of time to make and write.",
+    "side": "left",
+    "interaction_type": "next",
+    "target_id": "dwood1_205"
+  },
+  {
+    "id": "dwood1_205",
+    "speaker": "Amyssa",
+    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "dialog": "I'll have to quit the adventure if I am to write a new one, and to cover the costs it's going to take a long time as well.",
+    "side": "left",
+    "interaction_type": "next",
+    "target_id": "dwood1_206"
+  },
+  {
+    "id": "dwood1_206",
+    "speaker": "Hogmother",
+    "portrait": "/assets/patrons/hogmother.png",
+    "side": "right",
+    "dialog": "We'll go and attempt to reason with the Trollkin first. We'll see if he can be persuaded.",
+    "interaction_type": "next",
+    "target_id": "dwood1_207"
+  },
+  {
+    "id": "dwood1_207",
+    "speaker": "Amyssa",
+    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "dialog": "I really doubt a type like his can be. Maybe I'll just offer myself to him and get it over with quickly.",
+    "side": "left",
+    "interaction_type": "next",
+    "target_id": "dwood1_208"
+  },
+  {
+    "id": "dwood1_208",
+    "speaker": "Amyssa",
+    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "dialog": "I really doubt a type like his can be. Maybe I'll just offer myself to him and get it over with quickly.",
+    "side": "left",
+    "interaction_type": "selection",
+    "options": [
+      {
+        "text": "In her [Desperation] Amyssa will go see the Trollkin",
+        "target_id": "dwood1_209",
+        "color": "#FFFFFF",
+        "disabled": false
+      },
+      {
+        "text": "Wait for answers from the altar",
+        "frustration_text": "The stone remains cold and still.",
+        "disabled": true,
+        "color": "#FFFFFF"
+      }
+    ]
+  },
+  {
+    "id": "dwood1_209",
+    "speaker": "Amyssa",
+    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "dialog": "I can't believe that beast is waiting there waiting for me to be offered to him.\n\nHow will I ever get out of this predicament.",
+    "side": "left",
+    "interaction_type": "next",
+    "target_id": "dwood1_210"
+  },
+  {
+    "id": "dwood1_210",
+    "speaker": "Claudio",
+    "portrait": "/assets/patrons/Claudio.png",
+    "side": "right",
+    "dialog": "We can exchange our outfits and I'll seduce the Trollkin.",
+    "interaction_type": "next",
+    "target_id": "dwood1_211",
+    "options": []
+  },
+  {
+    "id": "dwood1_211",
+    "speaker": "Claudio",
+    "portrait": "/assets/patrons/Claudio.png",
+    "side": "right",
+    "dialog": "I'll put on the performence of my life, while you figure out where the spellbook is kept.",
+    "interaction_type": "next",
+    "target_id": "dwood1_212",
+    "options": []
+  },
+  {
+    "id": "dwood1_212",
+    "speaker": "Claudio",
+    "portrait": "/assets/patrons/Claudio.png",
+    "side": "right",
+    "dialog": "Bragain you could steal the spellbook back.",
+    "interaction_type": "next",
+    "target_id": "dwood1_213",
+    "options": []
+  },
+  {
+    "id": "dwood1_213",
+    "speaker": "Bragain",
+    "portrait": "/assets/patrons/dwarven_miner.png",
+    "side": "left",
+    "dialog": "That's a plan to make, but alas I'm not that kind of rogue. There's hardly any stealth in me, and my thieving is underclassed.",
+    "interaction_type": "next",
+    "target_id": "dwood1_214"
+  },
+  {
+    "id": "dwood1_214",
+    "speaker": "Sebastian",
+    "portrait": "/assets/patrons/halfling_L.png",
+    "dialog": "I will do it.",
+    "side": "right",
+    "interaction_type": "next",
+    "target_id": "dwood1_215"
+  },
+  {
+    "id": "dwood1_215",
+    "speaker": "Amyssa",
+    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "dialog": "WHAT?! ........",
+    "side": "left",
+    "interaction_type": "next",
+    "target_id": "dwood1_216"
+  },
+  {
+    "id": "dwood1_216",
+    "speaker": "Sebastian",
+    "portrait": "/assets/patrons/halfling_L.png",
+    "dialog": "I'm hard to notice, and sneaky as it's possible to be.",
+    "side": "right",
+    "interaction_type": "next",
+    "target_id": "dwood1_217"
+  },
+  {
+    "id": "dwood1_217",
+    "speaker": "Sebastian",
+    "portrait": "/assets/patrons/halfling_L.png",
+    "dialog": "If you can buy me the time and keep the fiend busy, I'll slip in and look for the Spellbook in their possesion.",
+    "side": "right",
+    "interaction_type": "next",
+    "target_id": "dwood1_218"
+  },
+  {
+    "id": "dwood1_218",
+    "speaker": "Hogmother",
+    "portrait": "/assets/patrons/hogmother.png",
+    "side": "left",
+    "dialog": "May Narlia watch over us. This is going to be very dangerous. This Trollkin is a fierce enemy. Prepare well, my dear friends.",
+    "interaction_type": "next",
+    "target_id": "dwood1_219"
+  },
+  {
+    "id": "dwood1_219",
+    "speaker": "Narrator",
+    "portrait": "",
+    "dialog": "The party will settle for preparations and prayer.",
+    "side": "right",
+    "interaction_type": "next",
+    "target_id": "dwood1_219end"
+  },
+  {
+    "id": "dwood1_219end",
+    "speaker": "Narrator",
+    "portrait": "",
+    "dialog": "...",
+    "side": "right",
+    "interaction_type": "next",
+    "target_id": "END"
+  },
+  {
+    "id": "dwood1_301",
+    "speaker": "Claudio",
+    "portrait": "/assets/missions/claudio_disguise_l.png",
+    "dialog": "Well... Whadaya think?",
+    "side": "left",
+    "interaction_type": "next",
+    "target_id": "dwood1_302"
+  },
+  {
+    "id": "dwood1_302",
+    "speaker": "Amyssa",
+    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "dialog": "By the godess!!!\n\nYou look amazing Claudio!",
+    "side": "right",
+    "interaction_type": "next",
+    "target_id": "dwood1_303"
+  },
+  {
+    "id": "dwood1_303",
+    "speaker": "Amyssa",
+    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "dialog": "What a way to steal the show.",
+    "side": "right",
+    "interaction_type": "next",
+    "target_id": "dwood1_304"
+  },
+  {
+    "id": "dwood1_304",
+    "speaker": "Claudio",
+    "portrait": "/assets/missions/claudio_disguise_l.png",
+    "dialog": "Hehehe, I was born for the stage, and for my crowd. Let us pray this works.",
+    "side": "left",
+    "interaction_type": "next",
+    "target_id": "dwood1_304a"
+  },
+  {
+    "id": "dwood1_304a",
+    "speaker": "Amyssa",
+    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "dialog": "Are you sure you're ready to go through with this plan Sebastian? This is going to be very dangerous.",
+    "side": "right",
+    "interaction_type": "next",
+    "target_id": "dwood1_304b"
+  },
+  {
+    "id": "dwood1_304b",
+    "speaker": "Amyssa",
+    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "dialog": "I'm so sorry I'm putting you all through this risk, for a minor thing like a Spell. Ugh, I hate it!",
+    "side": "right",
+    "interaction_type": "next",
+    "target_id": "dwood1_305"
+  },
+  {
+    "id": "dwood1_305",
+    "speaker": "Sebastian",
+    "portrait": "/assets/patrons/halfling_L.png",
+    "dialog": "I would gladly stay in my garden if it was possible. I was appointed by our elders, they warned me there will be times like this.",
+    "side": "left",
+    "interaction_type": "next",
+    "target_id": "dwood1_306"
+  },
+  {
+    "id": "dwood1_306",
+    "speaker": "Sebastian",
+    "portrait": "/assets/patrons/halfling_L.png",
+    "dialog": "If we won't find a way to challenge them directly, it'll spread to every home and every family. It's not just you Amyssa.",
+    "side": "left",
+    "interaction_type": "next",
+    "target_id": "dwood1_307"
+  },
+  {
+    "id": "dwood1_307",
+    "speaker": "Sebastian",
+    "portrait": "/assets/patrons/halfling_L.png",
+    "dialog": "If we give this darkness any ground, it'll never stop taking.",
+    "side": "left",
+    "interaction_type": "next",
+    "target_id": "dwood1_308"
+  },
+  {
+    "id": "dwood1_308",
+    "speaker": "Hogmother",
+    "portrait": "/assets/patrons/hogmother.png",
+    "side": "left",
+    "dialog": "Let us swear an auth, upon this altar. If anything goes wrong, we'll never abandon Sebastian, or Claudio, or Amyssa.",
+    "interaction_type": "next",
+    "target_id": "dwood1_310"
+  },
+  {
+    "id": "dwood1_310",
+    "speaker": "Narrator",
+    "portrait": "",
+    "dialog": "The party finishes their planing and heads out towards that dreaded swamp.",
+    "side": "right",
+    "interaction_type": "next",
+    "target_id": "dwood1_310end"
+  },
+  {
+    "id": "dwood1_310end",
+    "speaker": "Narrator",
+    "portrait": "",
+    "dialog": "...",
+    "side": "right",
+    "interaction_type": "next",
+    "target_id": "END"
   }
 
 ]

@@ -426,6 +426,10 @@ function showAllPartyErrors() {
 }
 
 const missionNodes = {
+	
+	// path : 1
+	// shrine : 2,3
+	// swamp : 4
     dwood_fort: {
         title: "Darkwood Fort",
         desc: "A fortified outpost deep in the Dark Woods.",

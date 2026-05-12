@@ -108,7 +108,7 @@ function getVisiblePatrons() {
 
 	const patronKeys = Object.keys(player.patrons);
 
-	const allowed = ["idle", "applicant", "mission", "secret"];
+	const allowed = ["idle", "applicant", "mission", "secret", "rival"];
 
 	const filteredIds = patronKeys.filter(id => {
 		return allowed.includes(player.patrons[id].status);
