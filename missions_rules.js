@@ -439,7 +439,7 @@ const missionNodes = {
 
     dwood_swamp: {
         title: "Murkwater Swamp",
-        desc: "The swamp home to the Trollkin Trixter.",
+        desc: "The swamp home to the Trollkin Trickster.",
         missionId: "dwood_1",
         requires: null
     },
@@ -471,19 +471,88 @@ function missionController(nodeId) {
     }
 
     // 2. Green missions: clicking the path
-    if (nodeId === "green_1_path" ||
-        nodeId === "green_2_path" ||
-        nodeId === "green_3_path") {
+	const missionRules = {
+	  green_1_path: {
+		"*": { action: "run" }
+	  },
 
-        pushStatus("Continuing your journey...");
-        // Use your existing progression logic
-        runMission(missionId);
-        return;
-    }
+	  green_2_path: {
+		"*": { action: "run" }
+	  },
+
+	  green_3_path: {
+		"*": { action: "run" }
+	  },
+	  
+	  dwood_path: {
+		1: { action: "run", mission: "dwood_1" },
+		">1": { action: "status", text: "you've reached the Glade, there's no need to backtrack now, and you can't head towards the fortress yet either." }
+	  },
+
+	  dwood_shrine: {
+		1: { action: "status", text: "you can't reach the shrine yet." },
+		2: { action: "run", mission: "dwood_1" },
+		3: { action: "run", mission: "dwood_1" },
+		4: { action: "status", text: "The stone shrine stands in eternal peace." }
+	  },
+
+	  dwood_swamp: {
+		1: { action: "status", text: "you can't reach the swamp yet." },
+		2: { action: "status", mission: "you dread facing the Trollkin without a plan..." },
+		3: { action: "status", mission: "you dread facing the Trollkin without a plan..." },
+		4: { action: "run", text: "dwood_1" }
+	  },
+
+	  // add more nodes here...
+	};
+
+
+
 
     pushStatus("Nothing interesting happens here.");
     console.warn("Unknown mission node clicked:", nodeId);
 }
+
+function matchesCondition(condition, value) {
+  if (!isNaN(condition)) return Number(condition) === value;
+
+  const match = condition.match(/(>=|<=|>|<)(\d+)/);
+  if (!match) return false;
+
+  const [, operator, num] = match;
+  const n = Number(num);
+
+  switch (operator) {
+    case ">":  return value > n;
+    case "<":  return value < n;
+    case ">=": return value >= n;
+    case "<=": return value <= n;
+  }
+}
+
+function handleNodeEntry(nodeId, player, missionId) {
+  const rules = missionRules[nodeId];
+  if (!rules) return;
+
+  const missionState = player.missions.dwood_1; // or dynamic if needed
+
+  for (const condition in rules) {
+    if (matchesCondition(condition, missionState)) {
+      const rule = rules[condition];
+
+      if (rule.action === "run") {
+        runMission(rule.mission || missionId);
+      }
+
+      if (rule.action === "status") {
+        pushStatus(rule.text);
+      }
+
+      return; // stop after first match
+    }
+  }
+}
+
 
 function openMissionNode(nodeId) {
     const node = missionNodes[nodeId];

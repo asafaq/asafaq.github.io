@@ -3109,7 +3109,7 @@
     "id": "dwood1_304b",
     "speaker": "Amyssa",
     "portrait": "/assets/patrons/amyssa_smaller.png",
-    "dialog": "I'm so sorry I'm putting you all through this risk, for a minor thing like a Spell. Ugh, I hate it!",
+    "dialog": "I'm so sorry I'm putting you all through this risk, for a minor thing like a Spellbook. Ugh, I hate it!",
     "side": "right",
     "interaction_type": "next",
     "target_id": "dwood1_305"
@@ -3136,7 +3136,7 @@
     "id": "dwood1_307",
     "speaker": "Sebastian",
     "portrait": "/assets/patrons/halfling_L.png",
-    "dialog": "If we give this darkness any ground, it'll never stop taking.",
+    "dialog": "If we give this villain any ground, the darkness will only spread, it'll never stop taking.",
     "side": "left",
     "interaction_type": "next",
     "target_id": "dwood1_308"

@@ -11,10 +11,18 @@ function initializeGame() {
     console.log("Game engine ready.");
 }
 
-function startGame(assets) {
-    console.log("Game starting with assets:", assets);
-    // Your UI/game logic goes here
+function startGame(playerObj, preloadedAssets, loreData) {
+    console.log("Game starting with assets:", playerObj);
+
+    // Assign the global player
+    window.player = playerObj;
+
+    // Re-render the current page now that player exists
+    if (window.currentPage) {
+        loadPage(window.currentPage);
+    }
 }
+
 
 function showLoadingScreen() {
   const el = document.getElementById("loadingScreen");
@@ -177,11 +185,12 @@ const pages = {
 		  `,
 		// this patrons will open 2 default patrons, but in the future needs to be able to read from DB which partons are inhouse to display.
     contracts: `
+	  <div id="charsheet-container">
 		<div id="charsheet"></div>
-
 		<div id="portrait-bar">
 			<div id="portrait-scroll"></div>
 		</div>
+	  </div>
 		`,
     satchel_guild: `	
 		<div id="satchel" class="satchel-window">
@@ -388,52 +397,86 @@ const pages = {
 		</div>
 	</div>
 	`,
-		mission_dwood_1: `
-	<div id="mission-container" style="position: relative;">
-		<img id="fantasy map" src="assets/missions/dark_woods_map_s.png" />
-		<!-- Dark Forest Objective -->
-		
-		<!-- POI: Fort -->
-		<div id="dwood_fort"
-			 class="poi"
-			 data-node="dwood_fort"
-			 style="position:absolute; top:174px; left:373px; transform:scale(1.5);">
-			 <img src="assets/missions/mission_indicator_encounter.png">
-		</div>
+mission_dwood_1: () => `
+<div id="mission-container" style="position: relative;">
 
-		<!-- POI: Swamp -->
-		<div id="dwood_swamp"
-			 class="poi"
-			 data-node="dwood_swamp"
-			 style="position:absolute; top:149px; left:147px; transform:scale(1.5);">
-			 <img src="assets/missions/mission_indicator_encounter.png">
-		</div>
 
-		<!-- POI: Shrine -->
-		<div id="dwood_shrine"
-			 class="poi"
-			 data-node="dwood_shrine"
-			 style="position:absolute; top:421px; left:111px; transform:scale(1.5);">
-			 <img src="assets/missions/mission_indicator_encounter.png">
-		</div>
+    <img id="fantasy map" src="assets/missions/dark_woods_map_s.png" />
 
-		<!-- Path Layer -->
-		<svg width="100%" height="100%" style="position: absolute; top: 0; left: 0; pointer-events: none;">
-			<!-- 1. The "Hitbox" (Invisible but clickable) -->
-			<path d="M 460 410 C 370 330 240 330 320 240"
-              stroke="transparent" stroke-width="75" fill="none"
-              style="pointer-events: stroke; cursor: pointer;"
+    <!-- POI: Platform (always visible) -->
+    <div id="dwood_platform"
+         class="poi"
+         data-node="dwood_platform"
+         style="position:absolute; top:310px; left:390px; transform:scale(0.2); z-index:10;">
+         <img src="assets/missions/stone_platform.png">
+    </div>
+
+    ${player?.missions?.dwood_1 > 0 ? `
+    <!-- Path Layer -->
+    <svg width="100%" height="100%" 
+         style="position:absolute; top:0; left:0; z-index:1;">
+
+        <!-- Invisible hitbox -->
+        <path d="M 460 410 C 370 330 240 330 320 240"
+              stroke="transparent"
+              stroke-width="75"
+              fill="none"
               class="poi"
+              style="pointer-events: stroke; cursor: pointer;"
               data-node="dwood_path" />
-			
-			<!-- 2. The Visible Dashed Line -->
-			<path class="marching-path" d="M 460 410 C 370 330 240 330 320 240"
-				  stroke="rgba(0, 0, 0, 0.7)" stroke-width="4" 
-				  stroke-dasharray="10, 10" stroke-linecap="round" fill="none" />
-		</svg>
 
-	</div>
-	`,
+        <!-- Visible dashed line -->
+        <path d="M 460 410 C 370 330 240 330 320 240"
+              class="marching-path"
+              stroke="rgba(0, 0, 0, 0.7)"
+              stroke-width="4"
+              stroke-dasharray="10, 10"
+              stroke-linecap="round"
+              fill="none"
+              style="pointer-events: none;" />
+
+    </svg>
+    ` : ""}
+
+    ${player?.missions?.dwood_1 > 2 ? `
+    <!-- POI: Glade -->
+    <div id="dwood_glade"
+         class="poi"
+         data-node="dwood_glade"
+         style="position:absolute; top:240px; left:260px; transform:scale(1.5); z-index:10;">
+         <img src="assets/missions/mission_indicator_encounter.png">
+    </div>
+
+    <!-- POI: Swamp -->
+    <div id="dwood_swamp"
+         class="poi"
+         data-node="dwood_swamp"
+         style="position:absolute; top:149px; left:147px; transform:scale(1.5); z-index:10;">
+         <img src="assets/missions/mission_indicator_encounter.png">
+    </div>
+
+    <!-- POI: Shrine -->
+    <div id="dwood_shrine"
+         class="poi"
+         data-node="dwood_shrine"
+         style="position:absolute; top:421px; left:111px; transform:scale(1.5); z-index:10;">
+         <img src="assets/missions/mission_indicator_encounter.png">
+    </div>
+    ` : ""}
+
+    ${player?.missions?.dwood_1 > 4 ? `
+    <!-- POI: Fort -->
+    <div id="dwood_fort"
+         class="poi"
+         data-node="dwood_fort"
+         style="position:absolute; top:174px; left:373px; transform:scale(1.5); z-index:10;">
+         <img src="assets/missions/mission_indicator_encounter.png">
+    </div>
+    ` : ""}
+
+</div>
+`,
+
 	cogwheel: `
 		<div>
 	  <label>Guild Name:</label>
@@ -652,11 +695,17 @@ function showTemporaryImage(src) {
 }
 
 async function loadPage(page) {
+	
+  if (!player) {
+    return; // or show login UI
+  }
   const main = document.getElementById("mainWindow");
 
-  main.innerHTML = pages[page] || "<p>Unknown page</p>";
+main.innerHTML = typeof pages[page] === "function"
+    ? pages[page]() 
+    : pages[page] || "<p>Unknown page</p>";
 
-if (page === "guild") {
+  if (page === "guild") {
   patronList = getVisiblePatrons();
   console.log(patronList);
 

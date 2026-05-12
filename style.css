@@ -1032,10 +1032,11 @@ img:not([src]) {
 
 
 .poi {
-    /* transition: transform 0.2s ease, filter 0.2s ease; */
+    transition: transform 0.2s ease, filter 0.2s ease;
 }
 
-.poi-icon:hover {
-    animation: shinePulse 1s infinite alternate;
+.poi:hover {
+    /* transform: scale(0.6); /* slightly bigger */ */
+    filter: brightness(1.5) drop-shadow(0 0 10px gold);
     cursor: pointer;
 }
