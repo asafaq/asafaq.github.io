@@ -267,7 +267,7 @@
     .login-box {
         transform: scale(2);
         transform-origin: top center;
-    }
+    }    
 }
 
 .login-box {
@@ -438,6 +438,12 @@ img:not([src]) {
   left: 100px;
   color: white;
 }
+#missions-container #missions_line21 {
+  position: absolute;
+  top: 271px;
+  left: 250px;
+  color: white;
+}
 
 #missions-container #missions_line3 {
   position: absolute;
@@ -590,6 +596,13 @@ img:not([src]) {
   position: absolute;
   top: 200px;
   left: 180px;
+  z-index: 10;
+}
+
+#missions_line2 {
+  position: absolute;
+  top: 200px;
+  left: 380px;
   z-index: 10;
 }
 
@@ -1066,11 +1079,11 @@ img:not([src]) {
 .mapLight::before {
     content: "";
     position: absolute;
-    top: 15px;
-    left: 8px;
-    width: 0.2em;
-    height: 0.2em;
-    background: radial-gradient(circle, yellow 0%, transparent 70%);
+    top: 14px;
+    left: 7px;
+    width: 0.25em;
+    height: 0.25em;
+    background: radial-gradient(circle, blue 0%, transparent 70%);
     animation: twinkle 1.2s ease-in-out infinite;
     pointer-events: none;
     opacity: 0.9;

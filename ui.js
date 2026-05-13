@@ -211,6 +211,7 @@ const pages = {
         <img id="contract_parchment" src="assets/missions/guild_party_party_window.png" />
 			<p id="missions_line1"></p>
 			<p id="missions_line2"></p>
+			<p id="missions_line21"></p>
 			<p id="missions_line3"></p>
 			<p id="missions_line6"></p>
 			<p id="missions_line9"></p>
@@ -311,7 +312,7 @@ const pages = {
 				  stroke="transparent" stroke-width="75"
 				  style="pointer-events: all; cursor: pointer;"
 				  class="poi" fill="none"
-				  data-node="green_1_path" />
+				  data-node="green_1" />
 
 			
 			<!-- 2. The Visible Dashed Line -->
@@ -344,7 +345,7 @@ const pages = {
               stroke="transparent" stroke-width="75" fill="none"
               style="pointer-events: stroke; cursor: pointer;"
               class="poi"
-              data-node="green_2_path" />
+              data-node="green_2" />
 			
 			<!-- 2. The Visible Dashed Line -->
 			<path class="marching-path" d="M 140 450 C 221 324 413 466 480 340" 
@@ -376,7 +377,7 @@ const pages = {
               stroke="transparent" stroke-width="75" fill="none"
               style="pointer-events: stroke; cursor: pointer;"
               class="poi"
-              data-node="green_3_path" />
+              data-node="green_3" />
 			
 			<!-- 2. The Visible Dashed Line -->
 			<path class="marching-path" d="M 480 340 C 480 240 300 300 340 240" 
@@ -411,7 +412,7 @@ mission_dwood_1: () => `
          <img src="assets/missions/stone_platform.png">
     </div>
 
-    ${player?.missions?.dwood_1 > 0 ? `
+    ${player?.missions?.dwood_1 > -1 ? `
     <!-- Path Layer -->
     <svg width="100%" height="100%" 
          style="position:absolute; top:0; left:0; z-index:1;">
@@ -438,7 +439,7 @@ mission_dwood_1: () => `
     </svg>
     ` : ""}
 
-    ${player?.missions?.dwood_1 > 2 ? `
+    ${player?.missions?.dwood_1 > 1 ? `
     <!-- POI: Glade -->
     <div id="dwood_glade"
          class="poi mapLight"
@@ -484,12 +485,12 @@ mission_dwood_1: () => `
 	</div>
 	<div>
 	  <label>Party A:</label>
-	  <input id="partyAInput" type="text">
+	  <input id="partyAInput" type="text" maxlength="22">
 	</div>
 
 	<div>
 	  <label>Party B:</label>
-	  <input id="partyBInput" type="text">
+	  <input id="partyBInput" type="text" maxlength="22">
 	</div>
 	<div>
       <label>Text Speed:</label>
@@ -1427,6 +1428,7 @@ async function loadMissionPage() {
     // Insert missions page HTML
     const main = document.getElementById("mainWindow");
     main.innerHTML = pages.missions;
+	await new Promise(resolve => requestAnimationFrame(resolve));
 
     patronList = getVisiblePatrons();
     renderPatronInventory();
@@ -1436,7 +1438,17 @@ async function loadMissionPage() {
     // Fill static mission info
     document.getElementById("missions_line1").textContent = player.data.guild_name;
     document.getElementById("missions_line2").textContent = player.data.party_A;
+    document.getElementById("missions_line21").textContent = player.data.party_A; // synergy party trait
     document.getElementById("missions_line3").textContent = player.data.party_B;
+	
+	const synergy = player.missions.current_mission.synergyTraits;
+
+	if (typeof synergy === "string" && synergy.trim() !== "") {
+		document.getElementById("missions_line21").textContent = synergy;
+	} else {
+		document.getElementById("missions_line21").textContent = "";
+	}
+
 	const hasPartyAGuide = Object.values(player.patrons)
 		.some(p => p.location === 6);
 	if (hasPartyAGuide) {
@@ -1495,6 +1507,9 @@ async function loadMissionPage() {
     // Inject dropdowns
     listContainer.innerHTML = missionHTML + "<br><br>" + partyHTML;
 
+	// Wait for DOM to finish updating
+	await Promise.resolve();
+	if (!player.missions.current_mission.id?.trim()) {	player.missions.current_mission.id = "green_1"	};
     const missionSelect = document.getElementById("mission-select");
     const partySelect = document.getElementById("party-select");
 

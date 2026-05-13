@@ -373,6 +373,8 @@ async function handleMissionEnd(sceneId) {
             player.patrons.adv_Claudio.location = 0;
             player.patrons.adv_Amyssa.status = "applicant";
             
+			player.missions.current_mission.current_party = "party_A";
+			player.missions.current_mission.id = "green_1";
             Journal.addEntry("You've purchase yourself a Tavern.");
             Journal.addEntry("You've signed a contract with the government and recieved your Adventurers' Guild Licence.");
             Journal.addEntry("You've recruited Hogperson, Bragain and Claudio.");
@@ -538,6 +540,7 @@ async function handleMissionEnd(sceneId) {
         }
 
         if (typeof player !== 'undefined' && typeof storage !== 'undefined') {
+			buildPartyTraits();
             await storage.savePlayer(player);
         }
         return true;
@@ -576,6 +579,8 @@ async function handleMissionEnd_OLD(sceneId) {
 		player.patrons.adv_Hogperson.location = 3;
 		player.patrons.adv_Claudio.location = 0;
 		player.patrons.adv_Amyssa.status = "applicant";
+		player.missions.current_mission.current_party = "party_A";
+		player.missions.current_mission.id = "green_1";
 		
 		Journal.addEntry("You've purchase yourself a Tavern.")
 		Journal.addEntry("You've signed a contract with the government and recieved your Adventurers' Guild Licence.")

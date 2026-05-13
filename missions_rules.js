@@ -193,6 +193,7 @@ function buildPartyTraits(partyKey) {
 
     const visibleTraits = [];
     const hiddenTraits = [];
+    const synergyTraits = [];
 
     // Pre-calc lookup tables
     const roles = new Set();
@@ -252,7 +253,7 @@ function buildPartyTraits(partyKey) {
         }
 
         if (qualifies) {
-            visibleTraits.push(synergyName);
+            synergyTraits.push(synergyName);
         }
     }
 
@@ -262,6 +263,7 @@ function buildPartyTraits(partyKey) {
 
     player.missions.current_mission.party_traits_visible = uniqueVisible;
     player.missions.current_mission.party_traits_hidden = uniqueHidden;
+    player.missions.current_mission.synergyTraits = synergyTraits;
 }
 
 function partyHasTrait(traitName) {
@@ -472,6 +474,10 @@ function missionController(nodeId) {
 
     // 2. Green missions: clicking the path
 	const missionRules = {
+	  green_1: {
+		"*": { action: "run" }
+	  },
+	  
 	  green_1_path: {
 		"*": { action: "run" }
 	  },
@@ -512,9 +518,6 @@ function missionController(nodeId) {
 
 	  // add more nodes here...
 	};
-
-
-
 
     pushStatus("Nothing interesting happens here.");
     console.warn("Unknown mission node clicked:", nodeId);
