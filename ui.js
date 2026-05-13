@@ -405,9 +405,9 @@ mission_dwood_1: () => `
 
     <!-- POI: Platform (always visible) -->
     <div id="dwood_platform"
-         class="poi"
+         class="poi mapLight"
          data-node="dwood_platform"
-         style="position:absolute; top:310px; left:390px; transform:scale(0.2); z-index:10;">
+         style="position:absolute; top:294px; left:366px; transform:scale(0.25); z-index:10;">
          <img src="assets/missions/stone_platform.png">
     </div>
 
@@ -441,15 +441,15 @@ mission_dwood_1: () => `
     ${player?.missions?.dwood_1 > 2 ? `
     <!-- POI: Glade -->
     <div id="dwood_glade"
-         class="poi"
+         class="poi mapLight"
          data-node="dwood_glade"
-         style="position:absolute; top:240px; left:260px; transform:scale(1.5); z-index:10;">
+         style="position:absolute; top:273px; left:240px; transform:scale(1.5); z-index:10;">
          <img src="assets/missions/mission_indicator_encounter.png">
     </div>
 
     <!-- POI: Swamp -->
     <div id="dwood_swamp"
-         class="poi"
+         class="poi mapLight"
          data-node="dwood_swamp"
          style="position:absolute; top:149px; left:147px; transform:scale(1.5); z-index:10;">
          <img src="assets/missions/mission_indicator_encounter.png">
@@ -457,7 +457,7 @@ mission_dwood_1: () => `
 
     <!-- POI: Shrine -->
     <div id="dwood_shrine"
-         class="poi"
+         class="poi mapLight"
          data-node="dwood_shrine"
          style="position:absolute; top:421px; left:111px; transform:scale(1.5); z-index:10;">
          <img src="assets/missions/mission_indicator_encounter.png">
@@ -467,7 +467,7 @@ mission_dwood_1: () => `
     ${player?.missions?.dwood_1 > 4 ? `
     <!-- POI: Fort -->
     <div id="dwood_fort"
-         class="poi"
+         class="poi mapLight"
          data-node="dwood_fort"
          style="position:absolute; top:174px; left:373px; transform:scale(1.5); z-index:10;">
          <img src="assets/missions/mission_indicator_encounter.png">
@@ -824,7 +824,7 @@ main.innerHTML = typeof pages[page] === "function"
 		html += `<div class="date-group"><h3>${date}</h3>`;
 		
 		// Iterate through categories to maintain custom order
-		["Morning", "Noon", "Evening", "Nighttime"].forEach(cat => {
+		["Nighttime", "Evening", "Noon", "Morning",].forEach(cat => {
 		  if (groupedData[date][cat].length > 0) {
 			html += `
 			  <div class="time-category">
@@ -2074,15 +2074,20 @@ function renderCharSheet(adv) {
 
                     ${(() => {
                         const innate = getInnateTraits(adv);
-                        if (!innate.length) return "";
+						const roleTraits = loreData.Roles[adv.role]?.Traits || [];
 
-                        return `
-                            <h3>Innate</h3>
-                            <ul class="char-traits">
-                                ${innate.map(t => `<li>${t}</li>`).join("")}
-                            </ul>
-                        `;
-                    })()}
+						// Combine both arrays
+						const allTraits = [...innate, ...roleTraits];
+
+						if (!allTraits.length) return "";
+
+						return `
+							<h3>Innate</h3>
+							<ul class="char-traits">
+								${allTraits.map(t => `<li>${t}</li>`).join("")}
+							</ul>
+						`;
+					})()}
                 </div>
 
                 <div class="char-stats-block">
@@ -2113,7 +2118,7 @@ function getTimeCategory(hour) {
 }
 
 function scaleApp() {
-  const frame = document.querySelector('.app-frame');
+  const frame = document.querySelector('.app-wrapper');
   const targetWidth = 540;
   const targetHeight = 960;
 

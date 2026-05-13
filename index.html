@@ -10,6 +10,9 @@
 <!-- <button onclick="saveGame()">Save</button> -->
 <!-- <button onclick="loadGame()">Load</button> -->
 
+<body>
+
+<div class="app-wrapper">
 	<div class="login-box">
 	<p>Login / Register</p>
     <input id="username" type="text" placeholder="Username">
@@ -17,10 +20,8 @@
     <button onclick="login()">Login</button>
 
     <p id="status"></p>
-</div>
+	</div>
 
-
-<body>
 <div class="app-frame" id="app-frame">
 <div id="loadingScreen">
     Loading assets...
@@ -154,5 +155,7 @@ templates.satchel_mission = `
 <script src="missions_rules.js"></script>
 <script src="missions.js"></script>
 <script src="ui.js" defer></script>
+
+</div>
 </body>
 </html>

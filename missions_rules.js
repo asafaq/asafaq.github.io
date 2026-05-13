@@ -489,6 +489,13 @@ function missionController(nodeId) {
 		">1": { action: "status", text: "you've reached the Glade, there's no need to backtrack now, and you can't head towards the fortress yet either." }
 	  },
 
+		dwood_platform: {
+		1: { action: "status", text: "Awotruce may appear resting on his rock, but his kin senses are attuned listening to the woods." },
+		2: { action: "run", mission: "dwood_1" },
+		3: { action: "run", mission: "dwood_1" },
+		4: { action: "status", text: "Awotruce may appear resting on his rock, but his kin senses are attuned listening to the woods." }
+	  },
+
 	  dwood_shrine: {
 		1: { action: "status", text: "you can't reach the shrine yet." },
 		2: { action: "run", mission: "dwood_1" },

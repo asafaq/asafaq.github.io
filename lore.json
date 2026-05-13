@@ -661,6 +661,18 @@
       "Traits": [
         "Sneak Attack"
       ]
+    },
+    "Shaman": {
+      "desc": "A mediator between the Material realm and the Spiritual realm.",
+      "Traits": [
+        "Spiritual Guides"
+      ]
+    },
+    "Druid": {
+      "desc": "A reverent of nature. Emissary to the wild.",
+      "Traits": [
+        "Spiritual Guides"
+      ]
     }
   },
   "Traits": {

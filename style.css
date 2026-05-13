@@ -41,23 +41,37 @@
   }
 
 
-  body {
+  html, body {
     background: #222;
     font-family: Arial, sans-serif;
     display: flex;
     justify-content: center;
     padding: 0;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden; 
   }
 
   mainWindow {
     background: #A28A65;
 	min-height: 100vh
   }
+
+.app-wrapper {
+    width: 540px;
+    height: 960px;
+    margin: 0 auto;
+    position: fixed;
+    padding-top: env(safe-area-inset-top, 0);
+    transform-origin: top center;
+}
+
   .app-frame {
     display: none;
     width: 540px;
     height: 960px;
-	transform-origin: top center;
+	/* transform-origin: top center; */
     background: #A28A65;
     border-radius: 12px;
     overflow-y: auto;
@@ -76,7 +90,7 @@
   }
 
   .right-menu {
-    position: absolute;
+    position: fixed;
     top: 80px;
     right: 0;
     width: 60px;
@@ -247,6 +261,13 @@
 
 .tooltip img {
     width: 500px; /* large image size */
+}
+
+@media (max-width: 540px) {
+    .login-box {
+        transform: scale(2);
+        transform-origin: top center;
+    }
 }
 
 .login-box {
@@ -1030,13 +1051,32 @@ img:not([src]) {
     background: #222;
 }
 
-
 .poi {
-    transition: transform 0.2s ease, filter 0.2s ease;
+    font-size: 20px; /* base size */
 }
 
-.poi:hover {
-    /* transform: scale(0.6); /* slightly bigger */ */
-    filter: brightness(1.5) drop-shadow(0 0 10px gold);
-    cursor: pointer;
+.poi[style*="scale(1.5)"] {
+    font-size: 30px;
+}
+
+.poi[style*="scale(0.25)"] {
+    font-size: 200px;
+}
+
+.mapLight::before {
+    content: "";
+    position: absolute;
+    top: 15px;
+    left: 8px;
+    width: 0.2em;
+    height: 0.2em;
+    background: radial-gradient(circle, yellow 0%, transparent 70%);
+    animation: twinkle 1.2s ease-in-out infinite;
+    pointer-events: none;
+    opacity: 0.9;
+}
+
+@keyframes twinkle {
+    0%, 100% { transform: scale(0.4); opacity: 0.5; }
+    50%      { transform: scale(1.4); opacity: 1; }
 }
