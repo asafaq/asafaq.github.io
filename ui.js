@@ -507,88 +507,62 @@ mission_dwood_1: () => `
     // other pages...
   };
   
+// Define this once, outside the functions
+const excludedStatuses = ["applicant", "retired", "dead", "rival"];
+
 function renderPatronInventory() {
-	
-// 1. Define your patron data in an array. 
-// You can easily add up to 12 objects here.
-// 1. Single source of truth with the 'location' key
-//	0 is Hidden
-//	1	guild
-//	2	tavern
-//	3	party_A
-//	***	party_A_Companion (This is for the carriage handler)
-//	4	party_B
-//	5	party_C
-//	6	party_A_Guide
-//	4	party_B
-//	4	party_B
-//	9	Secret
-	
-  const guildContainer = document.getElementById("guild-patron-inventory");
-  const guild2Container = document.getElementById("guild2-patron-inventory");
-  const partyAContainer = document.getElementById("party-a-patron-inventory");
-  const partyAGuideContainer = document.getElementById("party-a-guide-inventory");
-  const partyBContainer = document.getElementById("party-b-patron-inventory");
-  const partyCContainer = document.getElementById("party-c-patron-inventory");
-  const secretContainer = document.getElementById("secret-patron-inventory");
+    const containers = {
+        1: document.getElementById("guild-patron-inventory"),
+        2: document.getElementById("guild2-patron-inventory"),
+        3: document.getElementById("party-a-patron-inventory"),
+        4: document.getElementById("party-b-patron-inventory"),
+        5: document.getElementById("party-c-patron-inventory"),
+        6: document.getElementById("party-a-guide-inventory"),
+        9: document.getElementById("secret-patron-inventory")
+    };
 
-  const excludedStatuses = ["applicant", "retired", "dead"];
-
-  // Ensure patronList only contains valid patrons
-  patronList = patronList.filter(p => player.patrons[p.id]);
-
-  function renderGroup(location) {
-    return patronList
-      .filter(p => p.location === location)
-      .filter(p => {
-        const status = player.patrons[p.id]?.status?.trim().toLowerCase();
-        return status && !excludedStatuses.includes(status);
-      })
-      .map(p => {
-        const status = player.patrons[p.id]?.status?.trim().toLowerCase();
-        const isIdle = status === "idle";
-
-        return `
-          <div class="patron-slot"
-               draggable="${isIdle}"
-               data-adv="${p.id}">
-            <img src="${p.icon}" class="item-icon" draggable="false">
-            <div class="hover-zone" data-label="${p.name}"></div>
-            <div class="tooltip"></div>
-          </div>
-        `;
-      })
-      .join("");
-  }
-
-  guildContainer.innerHTML = renderGroup(1);
-  guild2Container.innerHTML = renderGroup(2);
-  partyAContainer.innerHTML = renderGroup(3);
-  partyBContainer.innerHTML = renderGroup(4);
-  partyCContainer.innerHTML = renderGroup(5);
-  partyAGuideContainer.innerHTML = renderGroup(6);
-  secretContainer.innerHTML = renderGroup(9);
-
-}
-
-function enablePatronDragDrop() {
-    const slots = document.querySelectorAll(".patron-slot");
-    const zones = document.querySelectorAll(".dropzone");
-
-    // DRAG START
-    slots.forEach(slot => {
-        slot.addEventListener("dragstart", e => {
-            e.dataTransfer.setData("advId", slot.dataset.adv);
-            slot.classList.add("dragging");
-        });
-
-        slot.addEventListener("dragend", () => {
-            slot.classList.remove("dragging");
-        });
+    // Clear containers
+    Object.values(containers).forEach(container => {
+        if (container) container.innerHTML = "";
     });
 
-    // DROP ZONES
-    zones.forEach(zone => {
+    patronList
+        .filter(p => player.patrons[p.id]) // valid patron
+        .forEach(p => {
+            const status = player.patrons[p.id]?.status?.trim().toLowerCase();
+            if (!status || excludedStatuses.includes(status)) return;
+
+            const container = containers[p.location];
+            if (!container) return;
+
+            const isIdle = status === "idle";
+
+            const slot = document.createElement("div");
+            slot.className = "patron-slot";
+            slot.draggable = isIdle;
+            slot.dataset.adv = p.id;
+            slot.innerHTML = `
+                <img src="${p.icon}" class="item-icon" draggable="false">
+                <div class="hover-zone" data-label="${p.name}"></div>
+                <div class="tooltip"></div>
+            `;
+
+            container.appendChild(slot);
+        });
+}
+
+let dragDropInitialized = false;
+
+function enablePatronDragDrop() {
+    if (dragDropInitialized) return;
+    dragDropInitialized = true;
+
+    // === Event Delegation on document (safest fallback) ===
+    document.addEventListener("dragstart", handleGlobalDragStart);
+    document.addEventListener("dragend", handleGlobalDragEnd);
+
+    // === Drop Zones (still attach only once) ===
+    document.querySelectorAll(".dropzone").forEach(zone => {
         zone.addEventListener("dragover", e => {
             e.preventDefault();
             zone.classList.add("drag-over");
@@ -598,64 +572,81 @@ function enablePatronDragDrop() {
             zone.classList.remove("drag-over");
         });
 
-		zone.addEventListener("drop", async e => {
-			e.preventDefault();
-			zone.classList.remove("drag-over");
-
-			const advId = e.dataTransfer.getData("advId");
-			if (!advId) return;
-
-			const patron = player.patrons[advId];
-			const origin = patron.location;
-
-			// Determine new location
-			let newLocation = 1;
-			if (zone.id === "guild-patron-inventory") newLocation = 1;
-			if (zone.id === "guild2-patron-inventory") newLocation = 2;
-			if (zone.id === "party-a-patron-inventory") newLocation = 3;
-			if (zone.id === "party-b-patron-inventory") newLocation = 4;
-			if (zone.id === "party-c-patron-inventory") newLocation = 5;
-			if (zone.id === "party-a-guide-inventory") newLocation = 6;
-			if (zone.id === "secret-patron-inventory") newLocation = 9;
-
-			// --- PARTY LOCK CHECKS (origin + destination) ---
-			const isLocked = loc => ({
-				3: player.data.party_A_locked,
-				4: player.data.party_B_locked,
-				5: player.data.party_C_locked
-			}[loc] || false);
-
-			// Block leaving a locked party
-			if (isLocked(origin)) {
-				
-				pushStatus("Cannot move patron — origin party is locked.");
-				console.warn("Cannot move patron — origin party is locked.");
-				return;
-			}
-
-			// Block entering a locked party
-			if (isLocked(newLocation)) {
-				pushStatus("Cannot move patron — destination party is locked.");
-				console.warn("Cannot move patron — destination party is locked.");
-				return;
-			}
-			// -------------------------------------------------
-
-			// Update patron location
-			patron.location = newLocation;
-
-			await storage.savePlayer(player);
-
-			patronList = getVisiblePatrons();
-			renderPatronInventory();
-
-			setTimeout(enablePatronDragDrop, 0);
-		});
-
-
-
+        zone.addEventListener("drop", handlePatronDrop);
     });
 }
+
+// Separate handlers for clarity
+function handleGlobalDragStart(e) {
+    const slot = e.target.closest(".patron-slot");
+    if (!slot) return;
+    
+    e.dataTransfer.setData("advId", slot.dataset.adv);
+    slot.classList.add("dragging");
+}
+
+function handleGlobalDragEnd(e) {
+    const slot = e.target.closest(".patron-slot");
+    if (slot) slot.classList.remove("dragging");
+}
+
+async function handlePatronDrop(e) {
+    e.preventDefault();
+    const zone = e.currentTarget;
+    zone.classList.remove("drag-over");
+
+    const advId = e.dataTransfer.getData("advId");
+    if (!advId) return;
+
+    const patron = player.patrons[advId];
+    if (!patron) return;
+
+    const origin = patron.location;
+    const newLocation = getLocationFromZone(zone);   // helper below
+
+    // === YOUR ORIGINAL PARTY LOCK LOGIC (fully preserved) ===
+    const isLocked = loc => ({
+        3: player.data.party_A_locked,
+        4: player.data.party_B_locked,
+        5: player.data.party_C_locked
+    }[loc] || false);
+
+    if (isLocked(origin)) {
+        pushStatus("Cannot move patron — origin party is locked.");
+        console.warn("Cannot move patron — origin party is locked.");
+        return;
+    }
+    if (isLocked(newLocation)) {
+        pushStatus("Cannot move patron — destination party is locked.");
+        console.warn("Cannot move patron — destination party is locked.");
+        return;
+    }
+
+    // === Update data ===
+    patron.location = newLocation;
+    await storage.savePlayer(player);
+
+    // === Minimal DOM update (this is the key to stopping the slowdown) ===
+    const slot = document.querySelector(`.patron-slot[data-adv="${advId}"]`);
+    if (slot) {
+        zone.appendChild(slot);        // Move existing element instead of full re-render
+    }
+
+    patronList = getVisiblePatrons();  // keep your list in sync
+}
+
+function getLocationFromZone(zone) {
+    const id = zone.id;
+    if (id === "guild-patron-inventory") return 1;
+    if (id === "guild2-patron-inventory") return 2;
+    if (id === "party-a-patron-inventory") return 3;
+    if (id === "party-b-patron-inventory") return 4;
+    if (id === "party-c-patron-inventory") return 5;
+    if (id === "party-a-guide-inventory") return 6;
+    if (id === "secret-patron-inventory") return 9;
+    return 1; // fallback
+}
+
 
 function showTemporaryImage(src) {
 	// showTemporaryImage("assets/myImage.png");
