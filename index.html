@@ -12,20 +12,21 @@
 
 <body>
 
-<div class="app-wrapper">
-	<div class="login-box">
-	<p>Login / Register</p>
-    <input id="username" type="text" placeholder="Username">
-    <input id="password" type="password" placeholder="Password">
-    <button onclick="login()">Login</button>
+	<div class="app-wrapper">
+		<div class="login-wrapper">
+			<div class="login-box">
+			<p>Login / Register</p>
+			<input id="username" type="text" placeholder="Username">
+			<input id="password" type="password" placeholder="Password">
+			<button onclick="login()">Login</button>
 
-    <p id="status"></p>
-	</div>
-
+			<p id="status"></p>
+			</div>
+		</div>
 <div class="app-frame" id="app-frame">
-<div id="loadingScreen">
-    Loading assets...
-</div>
+			<div id="loadingScreen">
+				Loading assets...
+			</div>
 <div id="battle-container" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; z-index:999;">
     <iframe id="battle-frame" src="" style="width:100%; height:100%; border:none;"></iframe>
 </div>

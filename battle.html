@@ -2,181 +2,24 @@
 <html>
 <head>
     <title>D&D Mobile VTT: Action Economy</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-
+    <meta name="viewport" content="width=540, user-scalable=no" charset="UTF-8">
 <style>
-html, body {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 100%;
-    background: #000;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-/* Main game window */
-#screen {
-    width: 540px;
-    height: 960px;
-    background: #222;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    box-shadow: 0 0 50px #000;
-}
-
-/* Top: grid */
-#grid {
-    width: 540px;
-    height: 540px;
-    background: #333;
-    position: relative;
-    overflow: hidden;
-}
-
-/* Middle: log */
-#log {
-    width: 540px;
-    height: 180px;
-    background: #111;
-    padding: 10px;
-    overflow-y: auto;
-    color: #00ff00;
-    font-family: monospace;
-    box-sizing: border-box;
-}
-/* Bottom: controls */
-#controls {
-    width: 540px;
-    height: 240px;
-    background: #1a1a1a;
-    padding: 10px;
-    box-sizing: border-box;
-    display: flex;
-    gap: 10px;
-}
-
-/* Stats panel */
-#stats-panel {
-  width: 85px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  background: #2c3e50;
-  border-radius: 4px;
-  padding: 8px;
-  font-size: 0.7rem;
-  color: white;
-  flex-shrink: 0;
-  border-left: 4px solid #3498db;
-  box-sizing: border-box;
-}
-
-/* Button grid */
-.btn-group {
-  display: grid;
-  flex: 1;
-  grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: repeat(2, 1fr);
-  gap: 8px;
-  min-width: 0;
-}
-
-.btn-group button {
-  width: 100%;
-  height: 100%;
-  font-size: 0.85rem;
-  background: #444;
-  color: white;
-  border: 1px solid #555;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-/* End turn button */
-#end-turn-btn {
-  width: 45px;
-  background: #d35400;
-  color: white;
-  font-weight: bold;
-  writing-mode: vertical-lr;
-  text-orientation: upright;
-  border: none;
-  border-radius: 4px;
-  flex-shrink: 0;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  letter-spacing: 2px;
-  font-size: 0.8rem;
-}
-
-/* Tokens and grid overlay */
-.token {
-  width: 46px;
-  height: 46px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  position: absolute;
-  z-index: 3;
-  transition: 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
-  pointer-events: none;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-  font-size: 14px;
-  color: white;
-  border: 2px solid white;
-  background-size: cover;
-  background-position: center;
-}
-
-.active-ring {
-  position: absolute;
-  width: 50px;
-  height: 50px;
-  border: 3px solid #f1c40f;
-  border-radius: 50%;
-  transition: 0.3s;
-  pointer-events: none;
-  z-index: 2;
-  box-shadow: 0 0 15px #f1c40f;
-}
-
-.grid-overlay {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background-image: linear-gradient(rgba(255,255,255,0.25) 1px, transparent 1px),
-                    linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px);
-  background-size: 54px 54px;
-  pointer-events: none;
-  z-index: 10;
-}
-
-.cell {
-  width: 54px;
-  height: 54px;
-  float: left;
-  z-index: 1;
-  position: relative;
-  cursor: pointer;
-}
-
-.btn-move-active {
-  background-color: #27ae60 !important;
-  border: 2px solid white !important;
-}
-
-button:disabled {
-  opacity: 0.4;
-  filter: grayscale(1);
-  cursor: not-allowed;
-}
+    body { margin: 0; background: #121212; color: #eee; display: flex; justify-content: center; font-family: 'Segoe UI', sans-serif; min-height: 100vw ; overflow: auto; }
+    #screen { width: 540px; height: 960px; background: #222; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 0 50px #000; position: relative; }
+    #grid { width: 540px; height: 540px; position: relative; background-color: #333; border-bottom: 2px solid #444; flex-shrink: 0; overflow: hidden; background-size: cover; background-position: center; }
+    #log { height: 140px; background: #111; padding: 15px; overflow-y: auto; color: #00ff00; font-family: monospace; border-bottom: 2px solid #444; display: flex; flex-direction: column-reverse; box-sizing: border-box; flex-shrink: 0; }
+    #controls { display: flex; flex-direction: row; flex: 1; background: #1a1a1a; padding: 10px; gap: 10px; align-items: stretch; box-sizing: border-box; }
+    #stats-panel { width: 85px; display: flex; flex-direction: column; justify-content: center; background: #2c3e50; border-radius: 4px; padding: 8px; font-size: 0.7rem; color: white; flex-shrink: 0; border-left: 4px solid #3498db; box-sizing: border-box; }
+    #stats-panel strong { display: block; margin-bottom: 2px; color: #f1c40f; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .btn-group { display: grid; flex: 1; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(2, 1fr); gap: 8px; min-width: 0; }
+    .btn-group button { width: 100%; height: 100%; font-size: 0.85rem; background: #444; color: white; border: 1px solid #555; border-radius: 4px; cursor: pointer; }
+    #end-turn-btn { width: 45px; background: #d35400; color: white; font-weight: bold; writing-mode: vertical-lr; text-orientation: upright; border: none; border-radius: 4px; flex-shrink: 0; cursor: pointer; display: flex; align-items: center; justify-content: center; letter-spacing: 2px; font-size: 0.8rem; }
+    .token { width: 46px; height: 46px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; position: absolute; z-index: 3; transition: 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28); pointer-events: none; box-shadow: 0 4px 10px rgba(0,0,0,0.5); font-size: 14px; color: white; border: 2px solid white; background-size: cover; background-position: center; }
+    .active-ring { position: absolute; width: 50px; height: 50px; border: 3px solid #f1c40f; border-radius: 50%; transition: 0.3s; pointer-events: none; z-index: 2; box-shadow: 0 0 15px #f1c40f; }
+    .grid-overlay { position: absolute; width: 100%; height: 100%; background-image: linear-gradient(rgba(255,255,255,0.25) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px); background-size: 54px 54px; pointer-events: none; z-index: 10; }
+    .cell { width: 54px; height: 54px; float: left; z-index: 1; position: relative; cursor: pointer; }
+    .btn-move-active { background-color: #27ae60 !important; border: 2px solid white !important; }
+    button:disabled { opacity: 0.4; filter: grayscale(1); cursor: not-allowed; }
 </style>
 </head>
 <body>

@@ -31,11 +31,11 @@
 }
 .m-glass-panel {
     position: absolute;
-	bottom: 250px;           /* Increased a bit to give more room for choices */
-	max-height: 520px;           /* ← Important: Limit height */
+    bottom: 250px; 
     left: 20px;
     width: 500px;
     min-height: 120px;
+    max-height: 520px;
     background: var(--m-panel-bg);
     backdrop-filter: blur(4px);
     border: 1px solid var(--m-border-light);
@@ -63,7 +63,7 @@
 }
 
 .m-speaker-name {
-    font-size: 0.75rem;
+    font-size: 0.90rem;
     color: var(--m-neon-blue);
     margin-bottom: 4px;
     font-weight: bold;
@@ -72,7 +72,7 @@
 
 #m-typewriter-container {
     white-space: pre-wrap; /* This makes \n act like a real line break */
-    font-size: 0.95rem;
+    /* font-size: 0.95rem; */
     line-height: 1.3;
 }
 
@@ -101,7 +101,7 @@
     padding: 12px;
     border-radius: 4px;
     cursor: pointer;
-    font-size: 0.9rem;
+    /* font-size: 0.9rem; */
     text-align: left;
     transition: 0.2s;
 }

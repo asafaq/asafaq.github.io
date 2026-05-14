@@ -1,0 +1,35 @@
+dwood_1
+	0	leaving green_3,
+		get Awotruce
+		get Sebastian
+
+	2	reach the glade
+		meet trollkin
+
+	to add	Lurch dialog - Ugress Intro
+		This must set _fort = 1
+
+	to add	_swamp - unavailable right now because you're not ready
+		
+		shrine available
+
+	3	discussion at shrine
+
+	4	disguise at shrine
+
+	5	Spellbook back, party retreated to shrine.
+
+
+dwoodplat_1	if _fort = 1 discuss the Ugress ==> set fort = 2
+
+		if dwood_1 = 2 discuss the trollkin
+
+
+swamp_4		should have multiple sets of completion before unlocked
+		- dwood_1 = 4
+		
+
+dwood_fort	unlocks at dwood=5 && _fort = 2
+(add point at western wall of the fort)
+
+

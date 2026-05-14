@@ -64,8 +64,8 @@ window.Bus = {
 // Example Bestiary in your Parent code
 const EncounterTemplates = {
     "tutor_test": [
-        { name: 'Animated Bush', type: 'monster', hp: 4, maxHp: 4, x: 8, y: 4, color: '#e67e22', icon: 'assets/missions/monster_token.png', speed: 6, hasAction: false },
-        { name: 'Animated Bush', type: 'monster', hp: 4, maxHp: 4, x: 8, y: 6, color: '#e67e22', icon: 'assets/missions/monster_token.png', speed: 6, hasAction: false }
+        { name: 'Animated Bush', type: 'monster', hp: 4, maxHp: 4, x: 8, y: 4, color: '#e67e22', icon: 'assets/missions/bush_token.png', speed: 6, hasAction: false },
+        { name: 'Animated Bush', type: 'monster', hp: 4, maxHp: 4, x: 8, y: 6, color: '#e67e22', icon: 'assets/missions/bush_token.png', speed: 6, hasAction: false }
     ],
     "tutor_test2": [
         { name: 'Ogre', type: 'monster', hp: 20, maxHp: 20, x: 7, y: 5, color: '#c0392b', icon: 'assets/missions/monster_token.png', speed: 4, hasAction: false }

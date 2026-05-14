@@ -829,10 +829,8 @@ img:not([src]) {
     display: flex;
     align-items: center;        /* vertically center the text block */
     justify-content: flex-start;/* no horizontal centering */
-
     min-height: 24px;
     line-height: 24px;
-
     overflow: hidden;
 }
 
@@ -1101,7 +1099,7 @@ img:not([src]) {
     left: 7px;
     width: 0.25em;
     height: 0.25em;
-    background: radial-gradient(circle, blue 0%, transparent 70%);
+    background: radial-gradient(circle, MediumSlateBlue 0%, transparent 70%);
     animation: twinkle 1.2s ease-in-out infinite;
     pointer-events: none;
     opacity: 0.9;

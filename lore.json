@@ -439,11 +439,11 @@
       "intelligence_mod": -2,
       "charisma_mod": -1,
       "alignment": "Neutral",
-      "level": 4,
+      "level": 6,
       "sex": 1,
       "size": "Large",
       "caste": "Noble",
-      "RacialEnemy": "",
+      "RacialEnemy": "Ogres",
       "proficiency_armor": "unarmored",
       "proficiency_weapon": "Wild",
 	  	"inventory" : [
@@ -587,7 +587,9 @@
     "Direwolf": {
       "desc": "Quad-pedal predator, more interested in nature than in adventures.",
       "Traits": [
-        ""
+        "Ferocious",
+		"Thick-Fur",
+		"Postponed Death"
       ]
     },
     "Trollkin": {
@@ -595,7 +597,7 @@
       "Traits": [
         "Regeneration",
 		"Vigor",
-        "Fire-Phobic"
+        "Firephobic"
       ]
     },
     "Halfling": {
@@ -665,13 +667,13 @@
     "Shaman": {
       "desc": "A mediator between the Material realm and the Spiritual realm.",
       "Traits": [
-        "Spiritual Guides"
+        "Spiritual Guide"
       ]
     },
     "Druid": {
       "desc": "A reverent of nature. Emissary to the wild.",
       "Traits": [
-        "Spiritual Guides"
+        "Healer"
       ]
     }
   },

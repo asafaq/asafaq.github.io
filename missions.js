@@ -163,7 +163,12 @@ async function renderScene(sceneId) {
 // 1. FIND SCENE DATA
     const scene = storyData.find(s => s.id === sceneId);
 	console.log(sceneId)
-
+    // 2. VALIDATE SCENE EXISTS
+    if (!scene) {
+        console.error("Scene not found:", sceneId);
+        pushStatus(`Error: Scene ${sceneId} not found.`);
+        return;
+    }
     // 3. CHECK IF THIS SCENE IS AN ENDING
     // This catches scenes like tutor2_118 that point to "END"
     if (scene.target_id === "END") {
@@ -265,6 +270,11 @@ async function renderScene(sceneId) {
 				if (hasAlignment) isDisabled = true;
 			}
 
+			// "condition_mission": { "dwood_1": 4 }
+			// Condition: requires mission stage
+
+			
+
 			createBtn(opt.text, opt.target_id, opt.color, isDisabled, opt.frustration_text);
 		});
 
@@ -346,6 +356,13 @@ async function startMissionSystem(specificSceneId = null) {
 }
 
 async function handleMissionEnd(sceneId) {
+	
+	// any "END" scene will end even without any notices after playing.
+	const viewport = document.getElementById('m-viewport');
+	if (viewport) {
+		viewport.style.display = 'none';
+	}  
+	
     // 1. Identify "Full Return" points vs "Mid-Mission" points
     const campaignEndScenes = ["tutor1_110", "green1_056END", "tutor2_118END"];
     const isCampaignEnd = campaignEndScenes.includes(sceneId);
@@ -519,15 +536,34 @@ async function handleMissionEnd(sceneId) {
             player.missions.dwood_1 = 4;
             //Journal.addEntry(".");
             loadPage("mission_dwood_1");
-        }
+        },
+
+        "dwoodswamp1_127end": async () => {
+            player.missions.dwood_1 = 5;
+            Journal.addEntry("You've successfully seduced and robbed the Trollkin from Amyssa's Spellbook.");
+            loadPage("mission_dwood_1");
+        },
+
+        "dwoodplat1_104end": async () => {
+			
+            loadPage("mission_dwood_1");
+		},
+
+        "dwoodplat1_105end": async () => {
+			
+            player.missions.dwood_fort1 = 2;
+            loadPage("mission_dwood_1");
+		},
+
+        "dwoodglade_110end": async () => {
+			
+            player.missions.dwood_fort2 = 1;
+            loadPage("mission_dwood_1");
+		}
     };
 
     if (endings[sceneId]) {
-        await endings[sceneId]();
-        const viewport = document.getElementById('m-viewport');
-        if (viewport) {
-            viewport.style.display = 'none';
-        }      
+        await endings[sceneId]();  
         // Finalized Global Cleanup
         if (isCampaignEnd) {
             endMission(); // Triggers your location/party resets

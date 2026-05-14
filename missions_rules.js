@@ -432,33 +432,56 @@ const missionNodes = {
 	// path : 1
 	// shrine : 2,3
 	// swamp : 4
+	// fort :5 
+	green_1: {   missionId: "green_1",	},
+	green_2: {   missionId: "green_2",	},
+	green_3: {   missionId: "green_3",	},
+    dwood_fort2: {
+        title: "Darkwood Fort",
+        desc: "A fortified outpost deep in the Dark Woods.",
+        missionId: "dwood_fort_2",
+        requires:  {	dwood_1: 5,
+						dwood_fort_1: 2
+						}
+    },
+	
     dwood_fort: {
         title: "Darkwood Fort",
         desc: "A fortified outpost deep in the Dark Woods.",
-        missionId: "dwood_1",
-        requires: null
+        missionId: "dwood_fort_1",
+        requires:  {	dwood_1: 4	}
     },
 
     dwood_swamp: {
         title: "Murkwater Swamp",
         desc: "The swamp home to the Trollkin Trickster.",
-        missionId: "dwood_1",
-        requires: null
+        missionId: "dwood_swamp1",
+        requires: {}
     },
 
     dwood_shrine: {
         title: "Ancient Shrine",
         desc: "The Shrine to Narlia.",
         missionId: "dwood_1",
-        requires: null
+        requires: {}
     },
 
     dwood_path: {
         title: "The Dark Woods",
         desc: "You make your way through the dark woods.",
         missionId: "dwood_1",
-        requires: null
-    }
+        requires: {}
+    },
+	
+	dwood_platform: {
+		missionId: "dwoodplat_1",
+		requires: { dwood_1: 0 }
+				},
+	
+	dwood_glade: {
+		missionId: "dwood_glade_1",
+		requires: { dwood_1: 0 }
+				}
 };
 
 function missionController(nodeId) {
@@ -469,38 +492,33 @@ function missionController(nodeId) {
 
     // 1. Dark Woods / node-based missions
     if (missionNodes[nodeId]) {
+		
+		const node = missionNodes[nodeId];
+		if (node && node.requires) {
+			for (const reqMission in node.requires) {
+				const requiredStage = node.requires[reqMission];
+				const playerStage = player.missions[reqMission]?.stage || 0;
+
+				if (playerStage < requiredStage) {
+					return pushStatus(`You cannot access this yet ${playerStage} . You need ${reqMission} stage ${requiredStage}.`);
+				}
+			}
+		}
         return openMissionNode(nodeId);
     }
 
     // 2. Green missions: clicking the path
 	const missionRules = {
 	  green_1: {
-		"*": { action: "run" }
-	  },
-	  
-	  green_1_path: {
-		"*": { action: "run" }
+		"*": { action: "run", mission: "green_1" }
 	  },
 
-	  green_2_path: {
-		"*": { action: "run" }
-	  },
-
-	  green_3_path: {
-		"*": { action: "run" }
-	  },
-	  
 	  dwood_path: {
 		1: { action: "run", mission: "dwood_1" },
 		">1": { action: "status", text: "you've reached the Glade, there's no need to backtrack now, and you can't head towards the fortress yet either." }
 	  },
 
-		dwood_platform: {
-		1: { action: "status", text: "Awotruce may appear resting on his rock, but his kin senses are attuned listening to the woods." },
-		2: { action: "run", mission: "dwood_1" },
-		3: { action: "run", mission: "dwood_1" },
-		4: { action: "status", text: "Awotruce may appear resting on his rock, but his kin senses are attuned listening to the woods." }
-	  },
+
 
 	  dwood_shrine: {
 		1: { action: "status", text: "you can't reach the shrine yet." },
@@ -513,8 +531,12 @@ function missionController(nodeId) {
 		1: { action: "status", text: "you can't reach the swamp yet." },
 		2: { action: "status", mission: "you dread facing the Trollkin without a plan..." },
 		3: { action: "status", mission: "you dread facing the Trollkin without a plan..." },
-		4: { action: "run", text: "dwood_1" }
+		4: { action: "run", text: "dwood_swamp1" }
 	  },
+	  
+	  dwood_platform: {
+		"*": { action: "run", mission: "dwoodplat_1" }
+	  }
 
 	  // add more nodes here...
 	};
@@ -573,10 +595,10 @@ function openMissionNode(nodeId) {
     }
 
     // Check progression requirement
-    if (node.requires && !player.missions[node.requires]) {
-        pushStatus(`You cannot access ${node.title} yet.`);
-        return;
-    }
+    // if (node.requires && !player.missions[node.requires]) {
+        // pushStatus(`You cannot access ${node.title} yet.`);
+        // return;
+    // }
 
     // Show a short message instead of a popup
     pushStatus(`${node.title}: ${node.desc}`);

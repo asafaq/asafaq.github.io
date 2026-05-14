@@ -748,7 +748,7 @@
     "options": []
   },
   {
-    "id": "green1_601",
+    "id": "green1_701",
     "speaker": "Narrator",
     "portrait": "",
     "side": "right",
@@ -2802,7 +2802,7 @@
     "speaker": "Hogmother",
     "portrait": "/assets/patrons/hogmother.png",
     "side": "left",
-    "dialog": "There there my girl. This forest is home to the godess Narlia.",
+    "dialog": "There there my girl. This forest is home to the goddess Narlia.",
     "interaction_type": "next",
     "target_id": "dwood1_177"
   },
@@ -2856,7 +2856,7 @@
     "speaker": "Hogmother",
     "portrait": "/assets/patrons/hogmother.png",
     "side": "left",
-    "dialog": "There's the shrine. Let's clean it up a bit. I wish I had more to offer as tribute to the godess.",
+    "dialog": "There's the shrine. Let's clean it up a bit. I wish I had more to offer as tribute to the goddess.",
     "interaction_type": "next",
     "target_id": "dwood1_202"
   },
@@ -2887,7 +2887,7 @@
     "speaker": "Amyssa",
     "portrait": "/assets/patrons/amyssa_smaller.png",
     "side": "left",
-    "dialog": "Oh godess Narlia, how did I get involved in a mess like this. I want to go home.",
+    "dialog": "Oh goddess Narlia, how did I get involved in a mess like this. I want to go home.",
     "interaction_type": "next",
     "target_id": "dwood1_204"
   },
@@ -2965,8 +2965,7 @@
     "side": "right",
     "dialog": "We can exchange our outfits and I'll seduce the Trollkin.",
     "interaction_type": "next",
-    "target_id": "dwood1_211",
-    "options": []
+    "target_id": "dwood1_211"
   },
   {
     "id": "dwood1_211",
@@ -2975,8 +2974,7 @@
     "side": "right",
     "dialog": "I'll put on the performence of my life, while you figure out where the spellbook is kept.",
     "interaction_type": "next",
-    "target_id": "dwood1_212",
-    "options": []
+    "target_id": "dwood1_212"
   },
   {
     "id": "dwood1_212",
@@ -3073,7 +3071,7 @@
     "id": "dwood1_302",
     "speaker": "Amyssa",
     "portrait": "/assets/patrons/amyssa_smaller.png",
-    "dialog": "By the godess!!!\n\nYou look amazing Claudio!",
+    "dialog": "By the goddess!!!\n\nYou look amazing Claudio!",
     "side": "right",
     "interaction_type": "next",
     "target_id": "dwood1_303"
@@ -3165,6 +3163,496 @@
     "portrait": "",
     "dialog": "...",
     "side": "right",
+    "interaction_type": "next",
+    "target_id": "END"
+  },
+  {
+    "id": "dwoodplat1_101",
+    "speaker": "Hogmother",
+    "portrait": "/assets/patrons/hogmother.png",
+    "side": "left",
+    "dialog": "Excuse us Master Awotruce. We've returned seeking council.",
+    "interaction_type": "selection",
+    "options": [
+      {
+        "text": "The Spy, Lurch",
+        "target_id": "dwoodplat1_105",
+        "color": ""
+      },
+      {
+        "text": "The Trollkin",
+        "target_id": "dwoodplat1_102",
+        "color": ""
+      },
+      {
+        "text": "The Ugress",
+        "target_id": "dwoodplat1_106",
+        "color": ""
+      },
+      {
+        "text": "That is all Master Awotruce.",
+        "target_id": "dwoodplat1_104end",
+        "color": ""
+      }
+    ]
+  },
+  {
+    "id": "dwoodplat1_102",
+    "speaker": "Awotruce",
+    "portrait": "/assets/patrons/direwolf.png",
+    "dialog": "This trollkin is a vile aberration upon my woods. Do not mistaken him for a mere court Jester, He is a dangerous spellcaster and not to be taken lightly.",
+    "side": "right",
+    "interaction_type": "next",
+    "target_id": "dwoodplat1_103"
+  },
+  {
+    "id": "dwoodplat1_102",
+    "speaker": "Awotruce",
+    "portrait": "/assets/patrons/direwolf.png",
+    "dialog": "I would gladly maul his throat, but he rarely leaves his swamp, and it's very difficult to track him on ground.",
+    "side": "right",
+    "interaction_type": "next",
+    "target_id": "dwoodplat1_103"
+  },
+  {
+    "id": "dwoodplat1_103",
+    "speaker": "Awotruce",
+    "portrait": "/assets/patrons/direwolf.png",
+    "dialog": "I will not take on the swamp, it's too difficult for me to move on.",
+    "side": "right",
+    "interaction_type": "next",
+    "target_id": "dwoodplat1_104"
+  },
+  {
+    "id": "dwoodplat1_104",
+    "speaker": "Awotruce",
+    "portrait": "/assets/patrons/direwolf.png",
+    "dialog": "That foe is beyond either of us.",
+    "side": "right",
+    "interaction_type": "next",
+    "target_id": "dwoodplat1_104end",
+    "options": []
+  },
+  {
+    "id": "dwoodplat1_104end",
+    "speaker": "Awotruce",
+    "portrait": "/assets/patrons/direwolf.png",
+    "dialog": "",
+    "side": "right",
+    "interaction_type": "next",
+    "target_id": "END"
+  },
+  {
+    "id": "dwoodplat1_105end",
+    "speaker": "Awotruce",
+    "portrait": "/assets/patrons/direwolf.png",
+    "dialog": "",
+    "side": "right",
+    "interaction_type": "next",
+    "target_id": "END"
+  },
+  {
+    "id": "dwoodplat1_105",
+    "speaker": "Awotruce",
+    "portrait": "/assets/patrons/direwolf.png",
+    "dialog": "I smelt him. The forest says he's harmless.",
+    "side": "right",
+    "interaction_type": "next",
+    "target_id": "dwoodplat1_101"
+  },
+  {
+    "id": "dwoodplat1_106",
+    "speaker": "Awotruce",
+    "portrait": "/assets/patrons/direwolf.png",
+    "dialog": "Ah, so it is the Ugress... Cleverly, she never entered my woods, she doesn't leave the fortress and stay behind the walls.",
+    "side": "right",
+    "interaction_type": "next",
+    "target_id": "dwoodplat1_107"
+  },
+  {
+    "id": "dwoodplat1_107",
+    "speaker": "Awotruce",
+    "portrait": "/assets/patrons/direwolf.png",
+    "dialog": "It would bring me great honor to tear her to shreds and maul her beyond recognition.",
+    "side": "right",
+    "interaction_type": "next",
+    "target_id": "dwoodplat1_108"
+  },
+  {
+    "id": "dwoodplat1_108",
+    "speaker": "Awotruce",
+    "portrait": "/assets/patrons/direwolf.png",
+    "dialog": "If you can make way through the barricades and her armed troops, I will end her on the spot.",
+    "side": "right",
+    "interaction_type": "next",
+    "target_id": "dwoodplat1_105end"
+  },
+  {
+    "id": "dwoodswamp1_101",
+    "speaker": "Narrator",
+    "portrait": "",
+    "dialog": "The party anxiously makes its way to the swamp. Moving slowly and surely, looking for signs of an invisible stalker in their midst...",
+    "side": "right",
+    "interaction_type": "next",
+    "target_id": "dwoodswamp1_102"
+  },
+  {
+    "id": "dwoodswamp1_102",
+    "speaker": "Claudio",
+    "portrait": "/assets/missions/claudio_disguise_l.png",
+    "dialog": "Okey-Dokey, it's showtime! Oh goddess please watch over me!",
+    "side": "left",
+    "interaction_type": "next",
+    "target_id": "dwoodswamp1_103"
+  },
+  {
+    "id": "dwoodswamp1_103",
+    "speaker": "Claudio",
+    "portrait": "/assets/missions/claudio_disguise_l.png",
+    "dialog": "I am absolutely stage-terrified! I've never had such a hostile crowd! And such a dangerous stage!",
+    "side": "left",
+    "interaction_type": "next",
+    "target_id": "dwoodswamp1_104"
+  },
+  {
+    "id": "dwoodswamp1_104",
+    "speaker": "Claudio",
+    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "dialog": "I WILL GO FORTH",
+    "side": "left",
+    "interaction_type": "next",
+    "target_id": "dwoodswamp1_105"
+  },
+  {
+    "id": "dwoodswamp1_105",
+    "speaker": "Amyssa",
+    "portrait": "/assets/missions/amyssa_disguise_l.png ",
+    "dialog": "Alright, we'll ambush the creature back here, Sebastian will lurk and head for the back when the fiend is occupied.",
+    "side": "right",
+    "interaction_type": "next",
+    "target_id": "dwoodswamp1_105a"
+  },
+  {
+    "id": "dwoodswamp1_105a",
+    "speaker": "Hogmother",
+    "portrait": "/assets/patrons/hogmother.png",
+    "dialog": "If anything goes sour, we'll all jump and overwhelm the fiend. All for one and one for all.",
+    "side": "left",
+    "interaction_type": "next",
+    "target_id": "dwoodswamp1_106"
+  },
+  {
+    "id": "dwoodswamp1_106",
+    "speaker": "Amyssa",
+    "portrait": "/assets/missions/amyssa_disguise_l.png ",
+    "dialog": "Wow Claudio, that's some *REAL* good disguise!",
+    "side": "right",
+    "interaction_type": "next",
+    "target_id": "dwoodswamp1_107"
+  },
+  {
+    "id": "dwoodswamp1_107",
+    "speaker": "Claudio",
+    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "dialog": "YOOO HOOO !!\n\nTrollkin..........\nWhere arrrrrreeeeee youuuuu.......",
+    "side": "left",
+    "interaction_type": "next",
+    "target_id": "dwoodswamp1_108"
+  },
+  {
+    "id": "dwoodswamp1_108",
+    "speaker": "Narrator",
+    "portrait": "",
+    "dialog": "The long narrow figure from the swamp makes his way weaving like snake over the risen logs buried into the swamp.",
+    "side": "right",
+    "interaction_type": "next",
+    "target_id": "dwoodswamp1_109"
+  },
+  {
+    "id": "dwoodswamp1_109",
+    "speaker": "Narrator",
+    "portrait": "",
+    "dialog": "Right as he goes on shore, the halfling sneaks right behind him silent and unnoticed, and walks through the swamp in a careful motion.",
+    "side": "right",
+    "interaction_type": "next",
+    "target_id": "dwoodswamp1_110"
+  },
+  {
+    "id": "dwoodswamp1_110",
+    "speaker": "Trollkin",
+    "portrait": "/assets/patrons/trollkin_l.png",
+    "dialog": "HAAAAAAAAAAAA I knew you'd come see me, my pet!",
+    "side": "right",
+    "interaction_type": "next",
+    "target_id": "dwoodswamp1_111"
+  },
+  {
+    "id": "dwoodswamp1_111",
+    "speaker": "Trollkin",
+    "portrait": "/assets/patrons/trollkin_l.png",
+    "dialog": "None can resist the mojo of Trollkin!\n\nCome let me show you around your new kingdom.",
+    "side": "right",
+    "interaction_type": "next",
+    "target_id": "dwoodswamp1_112"
+  },
+  {
+    "id": "dwoodswamp1_112",
+    "speaker": "Claudio",
+    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "dialog": "Oh you devil you!! I'm not that kind of girl! You'll have put some more effort into me first!",
+    "side": "left",
+    "interaction_type": "next",
+    "target_id": "dwoodswamp1_113"
+  },
+  {
+    "id": "dwoodswamp1_113",
+    "speaker": "Claudio",
+    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "dialog": "*Does some tempting flirting and runs off*",
+    "side": "left",
+    "interaction_type": "next",
+    "target_id": "dwoodswamp1_114"
+  },
+  {
+    "id": "dwoodswamp1_114",
+    "speaker": "Trollkin",
+    "portrait": "/assets/patrons/trollkin_l.png",
+    "dialog": "HO HO HO HO HO HO HO\n\nHAAAAAAAAAA HAHAHAHA......",
+    "side": "right",
+    "interaction_type": "next",
+    "target_id": "dwoodswamp1_115"
+  },
+  {
+    "id": "dwoodswamp1_115",
+    "speaker": "Trollkin",
+    "portrait": "/assets/patrons/trollkin_l.png",
+    "dialog": "YEESSSS!!!!!\n\nI'm gonna get you like a lion prouncing over a gazelle.. Don't you run from me!",
+    "side": "right",
+    "interaction_type": "next",
+    "target_id": "dwoodswamp1_116"
+  },
+  {
+    "id": "dwoodswamp1_116",
+    "speaker": "Narrator",
+    "portrait": "",
+    "dialog": "The fiend plays the game of chase with Claudio who keeps his distance while giggling and pretending to play along...",
+    "side": "right",
+    "interaction_type": "next",
+    "target_id": "dwoodswamp1_117"
+  },
+  {
+    "id": "dwoodswamp1_117",
+    "speaker": "Narrator",
+    "portrait": "",
+    "dialog": "It is not too long before a signal sparks from the swamp.",
+    "side": "right",
+    "interaction_type": "next",
+    "target_id": "dwoodswamp1_118"
+  },
+  {
+    "id": "dwoodswamp1_118",
+    "speaker": "Narrator",
+    "portrait": "",
+    "dialog": "From here it seems like smoke, and a fire has started deeper into the swamp.",
+    "side": "right",
+    "interaction_type": "next",
+    "target_id": "dwoodswamp1_119"
+  },
+  {
+    "id": "dwoodswamp1_119",
+    "speaker": "Trollkin",
+    "portrait": "/assets/patrons/trollkin_l.png",
+    "dialog": "Ooooooooh..... what is that???\n\nDid I forget the kettle on?",
+    "side": "right",
+    "interaction_type": "next",
+    "target_id": "dwoodswamp1_120"
+  },
+  {
+    "id": "dwoodswamp1_120",
+    "speaker": "Narrator",
+    "portrait": "",
+    "dialog": "As the fiend is retreating back to his hut, the halfling appears and has returned.",
+    "side": "right",
+    "interaction_type": "next",
+    "target_id": "dwoodswamp1_121"
+  },
+  {
+    "id": "dwoodswamp1_121",
+    "speaker": "Sebastian",
+    "portrait": "/assets/patrons/halfling_L.png",
+    "dialog": "I have it.\n\nIt was right there laying in his hut. I sparked his nasty straw to mask our exit.",
+    "side": "left",
+    "interaction_type": "next",
+    "target_id": "dwoodswamp1_122"
+  },
+  {
+    "id": "dwoodswamp1_122",
+    "speaker": "Hogmother",
+    "portrait": "/assets/patrons/hogmother.png",
+    "dialog": "Brilliant work Sebastian. Let us retreat, quickly.",
+    "side": "right",
+    "interaction_type": "next",
+    "target_id": "dwoodswamp1_123"
+  },
+  {
+    "id": "dwoodswamp1_123",
+    "speaker": "Narrator",
+    "portrait": "",
+    "dialog": "The party rallies with Claudio and hurries away from the swamp...",
+    "side": "right",
+    "interaction_type": "next",
+    "target_id": "dwoodswamp1_124"
+  },
+  {
+    "id": "dwoodswamp1_124",
+    "speaker": "Claudio",
+    "portrait": "/assets/missions/claudio_disguise2_l.png",
+    "dialog": "Well... how did I do?",
+    "side": "left",
+    "interaction_type": "next",
+    "target_id": "dwoodswamp1_125"
+  },
+  {
+    "id": "dwoodswamp1_125",
+    "speaker": "Amyssa",
+    "portrait": "/assets/missions/amyssa_disguise_l.png ",
+    "dialog": "Oh you've been fantastic!!! And Sebastian went and got the Spellbook back, and distracted the Trollkin!",
+    "side": "right",
+    "interaction_type": "next",
+    "target_id": "dwoodswamp1_126"
+  },
+  {
+    "id": "dwoodswamp1_126",
+    "speaker": "Hogmother",
+    "portrait": "/assets/patrons/hogmother.png",
+    "dialog": "You've been wonderful Claudio, your preformance would please the goddess greatly. Now quick, let's head to the fortress before the Trollkin comes looking for us.",
+    "side": "right",
+    "interaction_type": "next",
+    "target_id": "dwoodswamp1_127end"
+  },
+  {
+    "id": "dwoodswamp1_127end",
+    "speaker": "Hogmother",
+    "portrait": "/assets/patrons/hogmother.png",
+    "dialog": ".",
+    "side": "right",
+    "interaction_type": "next",
+    "target_id": "END"
+  },
+  {
+    "id": "dwoodglade_101",
+    "speaker": "Hogmother",
+    "portrait": "/assets/patrons/hogmother.png",
+    "dialog": "Those woods are full with unrest. We're so close now, only those walls stand between me and Hogfather. I wish I didn't have to bring you all through this, but here we are.",
+    "side": "right",
+    "interaction_type": "next",
+    "target_id": "dwoodglade_102"
+  },
+  {
+    "id": "dwoodglade_102",
+    "speaker": "Hogmother",
+    "portrait": "/assets/patrons/hogmother.png",
+    "dialog": "This should be a good place to signal to our contact.",
+    "side": "right",
+    "interaction_type": "next",
+    "target_id": "dwoodglade_103"
+  },
+  {
+    "id": "dwoodglade_103",
+    "speaker": "Hogmother",
+    "portrait": "/assets/patrons/hogmother.png",
+    "dialog": "This should be a good place to signal to our contact.",
+    "side": "right",
+    "interaction_type": "next",
+    "target_id": "dwoodglade_103a"
+  },
+  {
+    "id": "dwoodglade_103a",
+    "speaker": "Narrator",
+    "portrait": "",
+    "dialog": "The Glade in the center of the woods would be the best place for a meetup... it is known to all the inhabitants.",
+    "side": "right",
+    "interaction_type": "next",
+    "target_id": "dwoodglade_104"
+  },
+  {
+    "id": "dwoodglade_104",
+    "speaker": "Narrator",
+    "portrait": "",
+    "dialog": "Like fate, coincidence or plan... the contact does appear in the glade.",
+    "side": "right",
+    "interaction_type": "next",
+    "target_id": "dwoodglade_105"
+  },
+  {
+    "id": "dwoodglade_105",
+    "speaker": "Lurch",
+    "portrait": "/assets/patrons/lurch.png",
+    "side": "left",
+    "dialog": "It is I Lurch, I bring you news from within the fortress as agreed upon.",
+    "interaction_type": "next",
+    "target_id": "dwoodglade_106"
+  },
+  {
+    "id": "dwoodglade_106",
+    "speaker": "Lurch",
+    "portrait": "/assets/patrons/lurch.png",
+    "side": "left",
+    "dialog": "The Ugress Warlock has taken hold of this area, she has gone completely power mad.\nHer motives are kept hidden, but the fiends surrounding her tell no lies.",
+    "interaction_type": "next",
+    "target_id": "dwoodglade_106a"
+  },
+  {
+    "id": "dwoodglade_106a",
+    "speaker": "Lurch",
+    "portrait": "/assets/patrons/lurch.png",
+    "side": "left",
+    "dialog": "They have began a full military scale industry to outfit their troops.\nThere are normal folks amongst them brought to provide sustenance.",
+    "interaction_type": "next",
+    "target_id": "dwoodglade_107"
+  },
+  {
+    "id": "dwoodglade_107",
+    "speaker": "Lurch",
+    "portrait": "/assets/patrons/lurch.png",
+    "side": "left",
+    "dialog": "It appear they came by their free will, or perhaps forced by the Ugress Geas.\nI will avoid the Ugress if I were you. There is a service tunnel leading downstream towards the Swamp.",
+    "interaction_type": "next",
+    "target_id": "dwoodglade_108"
+  },
+  {
+    "id": "dwoodglade_108",
+    "speaker": "Lurch",
+    "portrait": "/assets/patrons/lurch.png",
+    "side": "left",
+    "dialog": "It would be be wise to enter through there, slip in, get your friend and leave. but you would have to be avoiding the Trollkin which dwells nearby.",
+    "interaction_type": "next",
+    "target_id": "dwoodglade_109"
+  },
+  {
+    "id": "dwoodglade_109",
+    "speaker": "Lurch",
+    "portrait": "/assets/patrons/lurch.png",
+    "side": "left",
+    "dialog": "Oh, and before you ask, I've met him. I'll have nothing to do with him.",
+    "interaction_type": "next",
+    "target_id": "dwoodglade_110"
+  },
+  {
+    "id": "dwoodglade_110",
+    "speaker": "Lurch",
+    "portrait": "/assets/patrons/lurch.png",
+    "side": "left",
+    "dialog": "I'll be awaiting your signal and lead you inside, in secret.",
+    "interaction_type": "next",
+    "target_id": "dwoodglade_110end"
+  },
+  {
+    "id": "dwoodglade_110end",
+    "speaker": "Lurch",
+    "portrait": "/assets/patrons/lurch.png",
+    "side": "left",
+    "dialog": ".",
     "interaction_type": "next",
     "target_id": "END"
   }

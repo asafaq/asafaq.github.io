@@ -444,7 +444,7 @@ mission_dwood_1: () => `
     <div id="dwood_glade"
          class="poi mapLight"
          data-node="dwood_glade"
-         style="position:absolute; top:273px; left:240px; transform:scale(1.5); z-index:10;">
+         style="position:absolute; top:269px; left:240px; transform:scale(1.5); z-index:10;">
          <img src="assets/missions/mission_indicator_encounter.png">
     </div>
 
@@ -452,7 +452,7 @@ mission_dwood_1: () => `
     <div id="dwood_swamp"
          class="poi mapLight"
          data-node="dwood_swamp"
-         style="position:absolute; top:149px; left:147px; transform:scale(1.5); z-index:10;">
+         style="position:absolute; top:146px; left:147px; transform:scale(1.5); z-index:10;">
          <img src="assets/missions/mission_indicator_encounter.png">
     </div>
 
@@ -460,17 +460,27 @@ mission_dwood_1: () => `
     <div id="dwood_shrine"
          class="poi mapLight"
          data-node="dwood_shrine"
-         style="position:absolute; top:421px; left:111px; transform:scale(1.5); z-index:10;">
+         style="position:absolute; top:417px; left:111px; transform:scale(1.5); z-index:10;">
          <img src="assets/missions/mission_indicator_encounter.png">
     </div>
     ` : ""}
 
-    ${player?.missions?.dwood_1 > 4 ? `
+    ${player?.missions?.dwood_1 > 3 ? `
     <!-- POI: Fort -->
     <div id="dwood_fort"
          class="poi mapLight"
          data-node="dwood_fort"
-         style="position:absolute; top:174px; left:373px; transform:scale(1.5); z-index:10;">
+         style="position:absolute; top:170px; left:373px; transform:scale(1.5); z-index:10;">
+         <img src="assets/missions/mission_indicator_encounter.png">
+    </div>
+    ` : ""}
+
+    ${player?.missions?.dwood_fort2 > 0 ? `
+    <!-- POI: Fort -->
+    <div id="dwood_fort2"
+         class="poi mapLight"
+         data-node="dwood_fort2"
+         style="position:absolute; top:64px; left:366px; transform:scale(1.5); z-index:10;">
          <img src="assets/missions/mission_indicator_encounter.png">
     </div>
     ` : ""}
