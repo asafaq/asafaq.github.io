@@ -531,13 +531,13 @@ function renderPatronInventory() {
         9: document.getElementById("secret-patron-inventory")
     };
 
-    // Clear containers
+// Clear containers
     Object.values(containers).forEach(container => {
         if (container) container.innerHTML = "";
     });
 
     patronList
-        .filter(p => player.patrons[p.id]) // valid patron
+        .filter(p => player.patrons[p.id])
         .forEach(p => {
             const status = player.patrons[p.id]?.status?.trim().toLowerCase();
             if (!status || excludedStatuses.includes(status)) return;
@@ -546,35 +546,41 @@ function renderPatronInventory() {
             if (!container) return;
 
             const isIdle = status === "idle";
-
             const slot = document.createElement("div");
             slot.className = "patron-slot";
-            slot.draggable = isIdle;
+            slot.draggable = isIdle;           // important
             slot.dataset.adv = p.id;
             slot.innerHTML = `
                 <img src="${p.icon}" class="item-icon" draggable="false">
                 <div class="hover-zone" data-label="${p.name}"></div>
                 <div class="tooltip"></div>
             `;
-
             container.appendChild(slot);
         });
+
+    // ←←← Re-enable drag & drop every time we render
+    enablePatronDragDrop();
+	
+	console.log("Rendered patrons. Draggable slots:", 
+        document.querySelectorAll(".patron-slot[draggable='true']").length);
 }
 
-let dragDropInitialized = false;
+let globalDragListenersAdded = false;
 
 function enablePatronDragDrop() {
-    if (dragDropInitialized) return;
-    dragDropInitialized = true;
+    // === Global listeners (only once) ===
+    if (!globalDragListenersAdded) {
+        globalDragListenersAdded = true;
+        document.addEventListener("dragstart", handleGlobalDragStart);
+        document.addEventListener("dragend", handleGlobalDragEnd);
+    }
 
-    // === Event Delegation on document (safest fallback) ===
-    document.addEventListener("dragstart", handleGlobalDragStart);
-    document.addEventListener("dragend", handleGlobalDragEnd);
-
-    // === Drop Zones (still attach only once) ===
+    // === Drop zones - attach to ALL current .dropzone elements ===
     document.querySelectorAll(".dropzone").forEach(zone => {
-        zone.addEventListener("dragover", e => {
-            e.preventDefault();
+        if (zone.dataset.dragListenersAttached === "true") return;
+
+        zone.addEventListener("dragover", (e) => {
+            e.preventDefault();           // ← This is critical for drop to work
             zone.classList.add("drag-over");
         });
 
@@ -583,16 +589,20 @@ function enablePatronDragDrop() {
         });
 
         zone.addEventListener("drop", handlePatronDrop);
+
+        zone.dataset.dragListenersAttached = "true";
     });
 }
-
 // Separate handlers for clarity
 function handleGlobalDragStart(e) {
     const slot = e.target.closest(".patron-slot");
-    if (!slot) return;
-    
+    if (!slot || !slot.draggable) return;
+
     e.dataTransfer.setData("advId", slot.dataset.adv);
     slot.classList.add("dragging");
+
+    // Optional: set a ghost image or effect
+    // e.dataTransfer.effectAllowed = "move";
 }
 
 function handleGlobalDragEnd(e) {
@@ -612,39 +622,33 @@ async function handlePatronDrop(e) {
     if (!patron) return;
 
     const origin = patron.location;
-    const newLocation = getLocationFromZone(zone);   // helper below
+    const newLocation = getLocationFromZone(zone);
 
-    // === YOUR ORIGINAL PARTY LOCK LOGIC (fully preserved) ===
+    // Your lock logic...
     const isLocked = loc => ({
         3: player.data.party_A_locked,
         4: player.data.party_B_locked,
         5: player.data.party_C_locked
     }[loc] || false);
 
-    if (isLocked(origin)) {
-        pushStatus("Cannot move patron — origin party is locked.");
-        console.warn("Cannot move patron — origin party is locked.");
-        return;
-    }
-    if (isLocked(newLocation)) {
-        pushStatus("Cannot move patron — destination party is locked.");
-        console.warn("Cannot move patron — destination party is locked.");
+    if (isLocked(origin) || isLocked(newLocation)) {
+        pushStatus("Cannot move patron — party is locked.");
         return;
     }
 
-    // === Update data ===
+    // Update data
     patron.location = newLocation;
     await storage.savePlayer(player);
 
-    // === Minimal DOM update (this is the key to stopping the slowdown) ===
+    // Move DOM node (best performance)
     const slot = document.querySelector(`.patron-slot[data-adv="${advId}"]`);
     if (slot) {
-        zone.appendChild(slot);        // Move existing element instead of full re-render
+        zone.appendChild(slot);
     }
 
-    patronList = getVisiblePatrons();  // keep your list in sync
+    // Only update list, avoid full re-render if possible
+    patronList = getVisiblePatrons();
 }
-
 function getLocationFromZone(zone) {
     const id = zone.id;
     if (id === "guild-patron-inventory") return 1;
@@ -656,6 +660,10 @@ function getLocationFromZone(zone) {
     if (id === "secret-patron-inventory") return 9;
     return 1; // fallback
 }
+
+document.addEventListener("dragstart", e => {
+    console.log("dragstart fired on:", e.target.closest(".patron-slot"));
+}, true);
 
 // ====================
 // TOUCH + MOUSE SUPPORT
@@ -1541,6 +1549,8 @@ async function loadMissionPage() {
 
     patronList = getVisiblePatrons();
     renderPatronInventory();
+	console.log("Rendered patrons. Draggable slots:", 
+    document.querySelectorAll(".patron-slot[draggable='true']").length);
 	updateSecretMissionLine();
 	updatePartyAGuideLine();
 
@@ -1693,6 +1703,8 @@ async function loadMissionPage() {
     updateContinueButton("party_A");
     updateContinueButton("party_B");
     renderPatronInventory();
+	console.log("Rendered patrons. Draggable slots:", 
+    document.querySelectorAll(".patron-slot[draggable='true']").length);
     setTimeout(enablePatronDragDrop, 0);	// your mouse drag
 	enablePatronTouchSupport();    // new tap support
 }
@@ -2338,3 +2350,11 @@ document.addEventListener("click", function (e) {
     const nodeId = node.dataset.node;
     missionController(nodeId);
 });
+
+
+
+// Re-attach listeners if new dropzones appear
+const dragObserver = new MutationObserver(() => {
+    enablePatronDragDrop();
+});
+dragObserver.observe(document.body, { childList: true, subtree: true });
