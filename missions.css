@@ -31,7 +31,8 @@
 }
 .m-glass-panel {
     position: absolute;
-    bottom: 200px; 
+	bottom: 250px;           /* Increased a bit to give more room for choices */
+	max-height: 520px;           /* ← Important: Limit height */
     left: 20px;
     width: 500px;
     min-height: 120px;
