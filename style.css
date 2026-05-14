@@ -263,7 +263,12 @@
     width: 500px; /* large image size */
 }
 
-@media (max-width: 540px) {
+.login-wrapper {
+    display: flex;
+    justify-content: center;
+}
+
+@media (max-width: 1200px) {
     .login-box {
         transform: scale(2);
         transform-origin: top center;
@@ -693,6 +698,19 @@ img:not([src]) {
     user-drag: none;
     -webkit-user-drag: none;
 }
+
+.patron-slot.selected {
+    outline: 3px solid gold;
+    background: rgba(255, 215, 0, 0.25);
+    transform: scale(1.1);
+    box-shadow: 0 0 15px gold;
+    z-index: 20;
+}
+
+.patron-slot {
+    transition: all 0.2s ease;
+}
+
 
 #portrait-bar {
     position: fixed;

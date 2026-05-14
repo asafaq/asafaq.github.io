@@ -647,6 +647,114 @@ function getLocationFromZone(zone) {
     return 1; // fallback
 }
 
+// ====================
+// TOUCH + MOUSE SUPPORT
+// ====================
+
+let selectedPatronId = null;
+let isDragging = false;
+
+// Helper functions
+function selectPatron(advId) {
+    deselectPatron(); // clear previous first
+    
+    selectedPatronId = advId;
+    const slot = document.querySelector(`.patron-slot[data-adv="${advId}"]`);
+    if (slot) {
+        slot.classList.add('selected');
+    }
+}
+
+function deselectPatron() {
+    if (selectedPatronId) {
+        const slot = document.querySelector(`.patron-slot[data-adv="${selectedPatronId}"]`);
+        if (slot) slot.classList.remove('selected');
+    }
+    selectedPatronId = null;
+}
+
+// Main enable function
+function enablePatronTouchSupport() {
+    
+    // === Tap on Patron ===
+    document.addEventListener('click', function(e) {
+        if (isDragging) {
+            isDragging = false;
+            return;
+        }
+
+        const slot = e.target.closest('.patron-slot');
+        if (!slot) {
+            deselectPatron();
+            return;
+        }
+
+        const advId = slot.dataset.adv;
+        if (!advId) return;
+
+        if (selectedPatronId === advId) {
+            deselectPatron();
+        } else {
+            selectPatron(advId);
+        }
+    });
+
+    // === Tap on Drop Zone ===
+    document.querySelectorAll('.dropzone').forEach(zone => {
+        zone.addEventListener('click', async function(e) {
+            if (!selectedPatronId) return;
+
+            const patron = player.patrons[selectedPatronId];
+            if (!patron) {
+                deselectPatron();
+                return;
+            }
+
+            const origin = patron.location;
+            const newLocation = getLocationFromZone(zone);
+
+            if (origin === newLocation) {
+                deselectPatron();
+                return;
+            }
+
+            // Lock checks
+            const isLocked = loc => ({
+                3: player.data.party_A_locked,
+                4: player.data.party_B_locked,
+                5: player.data.party_C_locked
+            }[loc] || false);
+
+            if (isLocked(origin) || isLocked(newLocation)) {
+                pushStatus("Cannot move patron — party is locked.");
+                deselectPatron();
+                return;
+            }
+
+            // Move the element
+            const slot = document.querySelector(`.patron-slot[data-adv="${selectedPatronId}"]`);
+            if (slot) {
+                zone.appendChild(slot);
+            }
+
+            // Save
+            patron.location = newLocation;
+            await storage.savePlayer(player);
+            patronList = getVisiblePatrons();
+
+            deselectPatron();
+        });
+    });
+
+    // Track dragging to avoid conflict with click
+    document.addEventListener('dragstart', () => {
+        isDragging = true;
+        deselectPatron();
+    });
+}
+// Keep your existing mouse drag & drop functions unchanged
+// (handleGlobalDragStart, handleGlobalDragEnd, handlePatronDrop, etc.)
+
 
 function showTemporaryImage(src) {
 	// showTemporaryImage("assets/myImage.png");
@@ -1575,7 +1683,8 @@ async function loadMissionPage() {
     updateContinueButton("party_A");
     updateContinueButton("party_B");
     renderPatronInventory();
-    setTimeout(enablePatronDragDrop, 0);
+    setTimeout(enablePatronDragDrop, 0);	// your mouse drag
+	enablePatronTouchSupport();    // new tap support
 }
 
 function updateSecretMissionLine() {
