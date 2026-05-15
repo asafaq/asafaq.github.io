@@ -1,5 +1,5 @@
 // Toggle: true = show login screen, false = skip login entirely
-const ENABLE_LOGIN = true;
+const ENABLE_LOGIN = false;
 const ENABLE_PRELOAD = false;
 
 let preloadedAssets = null;

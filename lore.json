@@ -521,6 +521,41 @@
         "Selfish"
       ],
       "notes": "."
+    },
+	"adv_Trollkin": {
+      "name": "Crusher",
+      "icon": "/assets/patrons/trollkin_s.png",
+      "large": "/assets/patrons/trollkin_l.png",
+      "top": "350px",
+      "left": "250px",
+      "location": 2,
+      "race": "Goon",
+      "role": "Bouncer",
+      "hp_die": 10,
+      "hp_modifier": 2,
+      "strengh_mod": 4,
+      "Dexterity_mod": -1,
+      "wisdom_mod": -2,
+      "intelligence_mod": -3,
+      "charisma_mod": -2,
+      "alignment": "Evil",
+      "level": 4,
+      "sex": 1,
+      "size": "Medium",
+      "caste": "Commoner",
+      "RacialEnemy": "",
+      "proficiency_armor": "Light",
+      "proficiency_weapon": "Light",
+	  "inventory" : [
+		  { "item": "Crusher's Favorite Mug", "qty": 1, "locked": true },
+		  { "item": null, "qty": 0, "locked": false },
+		  { "item": null, "qty": 0, "locked": false },
+		  { "item": null, "qty": 0, "locked": false }
+		],
+      "trait": [
+        "Selfish"
+      ],
+      "notes": "."
     }
   },
   "Races": {
@@ -603,9 +638,14 @@
     "Halfling": {
       "desc": "Small demihuman with affinity to nature and order.",
       "Traits": [
-        "Lucky",
-		"",
-        ""
+        "Lucky"
+      ]
+    },
+    "Goon": {
+	  "desc": "A more civilized and smaller Ogre. Can be trained to live with humans.",
+      "Traits": [
+        "Volatile Temper",
+		"Gluttonous"
       ]
     }
   },
@@ -674,6 +714,13 @@
       "desc": "A reverent of nature. Emissary to the wild.",
       "Traits": [
         "Healer"
+      ]
+    },
+    "Bouncer": {
+      "desc": "An unarmed brawler guarding a station, versed in striking and grappling.",
+      "Traits": [
+        "Tough",
+		"Unflappable"
       ]
     }
   },

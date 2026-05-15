@@ -16,7 +16,7 @@
     #end-turn-btn { width: 45px; background: #d35400; color: white; font-weight: bold; writing-mode: vertical-lr; text-orientation: upright; border: none; border-radius: 4px; flex-shrink: 0; cursor: pointer; display: flex; align-items: center; justify-content: center; letter-spacing: 2px; font-size: 0.8rem; }
     .token { width: 46px; height: 46px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; position: absolute; z-index: 3; transition: 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28); pointer-events: none; box-shadow: 0 4px 10px rgba(0,0,0,0.5); font-size: 14px; color: white; border: 2px solid white; background-size: cover; background-position: center; }
     .active-ring { position: absolute; width: 50px; height: 50px; border: 3px solid #f1c40f; border-radius: 50%; transition: 0.3s; pointer-events: none; z-index: 2; box-shadow: 0 0 15px #f1c40f; }
-    .grid-overlay { position: absolute; width: 100%; height: 100%; background-image: linear-gradient(rgba(255,255,255,0.25) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px); background-size: 54px 54px; pointer-events: none; z-index: 10; }
+    .grid-overlay { position: absolute; width: 100%; height: 100%; background-image: linear-gradient(rgba(255,255,255,0.35) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px); background-size: 54px 54px; pointer-events: none; z-index: 10; }
     .cell { width: 54px; height: 54px; float: left; z-index: 1; position: relative; cursor: pointer; }
     .btn-move-active { background-color: #27ae60 !important; border: 2px solid white !important; }
     button:disabled { opacity: 0.4; filter: grayscale(1); cursor: not-allowed; }
@@ -54,7 +54,11 @@ function init() {
 
     const savedData = localStorage.getItem('currentBattle');
     if (!savedData) return Bus.emit('LOG', "ERR: No battle data found!");
+
     const data = JSON.parse(savedData);
+
+    // FIXED: use data.monsterDB, not savedData.monsterDB
+    window.MONSTER_DB = data.monsterDB;
 
     const grid = document.getElementById('grid');
     staticObstacles = data.obstacles || [];
@@ -63,15 +67,32 @@ function init() {
         "green_1": "assets/missions/combat_green_1.png",
         "default": "assets/missions/combat_green_1.png"
     };
+
     const bgUrl = mapUrls[data.missionId] || mapUrls["default"];
     grid.style.backgroundImage = `url('${bgUrl}')`;
 
     units = [
-        ...data.party.map(p => ({...p, type: 'pc', speed: 6, maxSpeed: 6, hasAction: true, isHiding: false, maxHp: p.hp})), 
-        ...data.monsters.map(m => ({...m, type: 'monster', speed: 6, maxSpeed: 6, hasAction: true, maxHp: m.hp}))
+        ...data.party.map(p => ({
+            ...p,
+            type: 'pc',
+            speed: 6,
+            maxSpeed: 6,
+            hasAction: true,
+            isHiding: false,
+            maxHp: p.hp
+        })), 
+        ...data.monsters.map(m => ({
+            ...m,
+            type: 'monster',
+            speed: 6,
+            maxSpeed: 6,
+            hasAction: true,
+            maxHp: m.hp
+        }))
     ];
 
     grid.innerHTML = '<div class="grid-overlay"></div><div id="active-ring" class="active-ring"></div>';
+
     for (let i = 0; i < 100; i++) {
         let cell = document.createElement('div');
         cell.className = 'cell';
@@ -85,8 +106,10 @@ function init() {
         t.id = `t-${i}`;
         t.className = `token`;
         t.style.backgroundColor = u.type === 'pc' ? "#3498db" : "#c0392b";
+
         if (u.icon) t.style.backgroundImage = `url('${u.icon}')`;
         else t.innerText = u.name.substring(0,2).toUpperCase();
+
         grid.appendChild(t);
     });
 
@@ -164,35 +187,92 @@ function getOccupiedSquares() {
     return map;
 }
 
-// FULL RESTORATION OF ATTACK LOGIC (With Mods and Racial Checks)
 function handleAttack() {
     const u = units[turn];
     if (!u.hasAction) return;
-    const target = units.find(t => t.type !== u.type && t.hp > 0 && Math.max(Math.abs(t.x - u.x), Math.abs(t.y - u.y)) <= 1);
-    if (!target) return Bus.emit('LOG', "No enemy in reach.");
 
-    let attackMod = u.stats?.str || 0;
-    if (u.role === "Miner" && (u.stats?.dex > u.stats?.str)) attackMod = u.stats.dex;
+    // Find adjacent enemy
+    const target = units.find(t =>
+        t.type !== u.type &&
+        t.hp > 0 &&
+        Math.max(Math.abs(t.x - u.x), Math.abs(t.y - u.y)) <= 1
+    );
 
-    let racialBonus = 0;
-    if (u.RacialEnemy && target.name.includes(u.RacialEnemy)) {
-        racialBonus = 2; Bus.emit('LOG', `🎯 Racial Advantage!`);
+    if (!target) {
+        Bus.emit('LOG', "No enemy in reach.");
+        return;
     }
 
+    // --- ATTACK MODIFIER ---
+    let attackMod = 0;
+
+    if (u.type === "pc") {
+        // PCs use STR or DEX (Miner rule)
+        attackMod = u.stats?.str || 0;
+        if (u.role === "Miner" && (u.stats?.dex > u.stats?.str)) {
+            attackMod = u.stats.dex;
+        }
+    } else {
+        // Monsters pull from JSON DB
+        const m = getMonsterStats(u);
+        attackMod = m?.attackMod ?? 0;
+    }
+
+    // --- RACIAL BONUS ---
+    let racialBonus = 0;
+    if (u.RacialEnemy && target.name.includes(u.RacialEnemy)) {
+        racialBonus = 2;
+        Bus.emit('LOG', `🎯 Racial Advantage!`);
+    }
+
+    // --- ROLL TO HIT ---
     const roll = Math.floor(Math.random() * 20) + 1;
     const totalToHit = roll + attackMod + racialBonus;
     const targetAC = target.ac || 10;
 
-    if (roll === 20 || (roll !== 1 && totalToHit >= targetAC)) {
-        let dmg = (u.type === 'pc' ? Math.floor(Math.random() * 6) + 1 : Math.floor(Math.random() * 3) + 1) + attackMod;
+    const isCrit = roll === 20;
+    const isHit = isCrit || (roll !== 1 && totalToHit >= targetAC);
+
+    if (isHit) {
+        // --- DAMAGE ---
+        let dmg = 0;
+
+        if (u.type === "pc") {
+            // PCs: 1d6 + STR
+            dmg = (Math.floor(Math.random() * 6) + 1) + attackMod;
+        } else {
+            // Monsters: use JSON stats
+            const m = getMonsterStats(u);
+            const die = m?.damageDie ?? 3;
+            const bonus = m?.damageBonus ?? 0;
+
+            dmg = (Math.floor(Math.random() * die) + 1) + bonus;
+        }
+
         target.hp -= dmg;
+
         Bus.emit('LOG', `⚔️ ${u.name} hits ${target.name} for ${dmg}!`);
-        if (target.hp <= 0) { target.x = -1; target.y = -1; Bus.emit('LOG', `💀 ${target.name} defeated.`); }
+
+        if (target.hp <= 0) {
+            target.x = -1;
+            target.y = -1;
+            Bus.emit('LOG', `💀 ${target.name} defeated.`);
+        }
     } else {
         Bus.emit('LOG', `🛡️ ${u.name} misses (${totalToHit} vs AC ${targetAC}).`);
     }
-    u.hasAction = false; update();
+
+    u.hasAction = false;
+    update();
 }
+
+function getMonsterStats(unit) {
+    if (unit.type !== "monster") return null;
+    if (!window.MONSTER_DB) return null;
+
+    return window.MONSTER_DB[unit.id] || null;
+}
+
 
 function handleSpell() {
     const u = units[turn];
@@ -256,12 +336,97 @@ function monsterAI() {
 }
 
 function checkVictory() {
-    if (units.filter(u => u.type === 'monster' && u.hp > 0).length === 0) {
-        Bus.emit('LOG', "VICTORY!");
-		localStorage.removeItem('currentBattle');
-        if (window.parent) window.parent.postMessage({type: "BATTLE_COMPLETE", result: units.filter(u => u.type === 'pc')}, "*");
+    const aliveMonsters = units.filter(u => u.type === 'monster' && u.hp > 0);
+
+    if (aliveMonsters.length === 0) {
+
+        const savedData = JSON.parse(localStorage.getItem('currentBattle')) || {};
+
+        const xp = savedData.xp || 0;
+        const loot = savedData.loot || [];
+
+        const defeated = units
+            .filter(u => u.type === 'monster')
+            .map(u => u.name)
+            .join("<br>");
+
+        const lootHTML = loot.length
+            ? loot.map(l => `${l.qty} × ${l.item}`).join("<br>")
+            : "(none)";
+
+        const summaryHTML = `
+            <strong>Defeated Enemies:</strong><br>
+            ${defeated}<br><br>
+
+            <strong>XP Gained:</strong><br>
+            ${xp}<br><br>
+
+            <strong>Spoils:</strong><br>
+            ${lootHTML}
+        `;
+
+        showVictoryWindow(summaryHTML, () => {
+
+            Bus.emit('LOG', "VICTORY!");
+
+            localStorage.removeItem('currentBattle');
+
+            if (window.parent) {
+                window.parent.postMessage({
+                    type: "BATTLE_COMPLETE",
+                    result: units.filter(u => u.type === 'pc'),
+                    xp: xp,
+                    loot: loot
+                }, "*");
+            }
+        });
     }
 }
+
+function showVictoryWindow(summary, onClose) {
+    const overlay = document.createElement('div');
+    overlay.id = "victory-window";
+    overlay.style = `
+        position: fixed;
+        top: 0; left: 0;
+        width: 100vw; height: 100vh;
+        background: rgba(0,0,0,0.8);
+        color: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 99999;
+        font-family: sans-serif;
+        text-align: center;
+    `;
+
+    overlay.innerHTML = `
+        <div style="background:#222; padding:20px; border-radius:10px; width:300px;">
+            <h2 style="margin-top:0;">Victory!</h2>
+            <div id="victory-summary" style="margin-bottom:20px; font-size:14px;">
+                ${summary}
+            </div>
+            <button id="victory-close" style="
+                padding:10px 20px;
+                background:#27ae60;
+                border:none;
+                color:white;
+                border-radius:5px;
+                cursor:pointer;
+                font-size:16px;
+            ">Continue</button>
+        </div>
+    `;
+
+    document.body.appendChild(overlay);
+
+    document.getElementById("victory-close").onclick = () => {
+        overlay.remove();
+        if (onClose) onClose();
+    };
+}
+
 
 Bus.on('LOG', (msg) => {
     const l = document.getElementById('log');

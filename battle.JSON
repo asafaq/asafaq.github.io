@@ -1,0 +1,83 @@
+{
+  "encounters": {
+    "tutor_test": {
+      "name": "Training Bushes",
+      "map": "green_1",
+      "monsters": [
+        {
+          "id": "animated_bush",
+          "count": 2,
+          "spawns": [
+            { "x": 8, "y": 4 },
+            { "x": 8, "y": 6 }
+          ]
+        }
+      ]
+    },
+
+    "tutor_test2": {
+      "name": "Ogre Demo",
+      "map": "green_2",
+      "monsters": [
+        {
+          "id": "ogre",
+          "count": 1,
+          "spawns": [
+            { "x": 7, "y": 5 }
+          ]
+        }
+      ]
+    }
+  },
+
+  "monsters": {
+    "animated_bush": {
+      "name": "Animated Bush",
+      "type": "monster",
+      "hp": 4,
+      "maxHp": 4,
+      "speed": 6,
+	  "xp": 8,
+      "icon": "assets/missions/bush_token.png",
+      "color": "#e67e22",
+		"ac": 8,
+		"attackMod": 0,
+		"damageDie": 4,
+		"damageBonus": 0
+    },
+
+    "ogre": {
+      "name": "Oogler",
+      "type": "monster",
+      "hp": 20,
+      "maxHp": 20,
+      "speed": 4,
+	  "xp": 28,
+      "icon": "assets/missions/monster_token.png",
+      "color": "#c0392b",
+		"ac": 12,
+		"attackMod": 2,
+		"damageDie": 6,
+		"damageBonus": 1
+    }
+  },
+
+  "maps": {
+    "green_1": {
+      "url": "assets/mission/combat_green_1.png",
+      "obstacles": [
+        { "x": 2, "y": 2 },
+        { "x": 2, "y": 3 }
+      ]
+    },
+
+    "green_2": {
+      "url": "assets/mission/combat_green_1.png",
+      "obstacles": [
+        { "x": 4, "y": 4 },
+        { "x": 4, "y": 5 },
+        { "x": 5, "y": 4 }
+      ]
+    }
+  }
+}
