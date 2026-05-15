@@ -16,7 +16,7 @@
     },
 
     "tutor_test2": {
-      "name": "Ogre Demo",
+      "name": "Oogler",
       "map": "green_2",
       "monsters": [
         {
@@ -46,7 +46,37 @@
 		"damageBonus": 0
     },
 
-    "ogre": {
+    "large_toad": {
+      "name": "Large Toad",
+      "type": "monster",
+      "hp": 4,
+      "maxHp": 4,
+      "speed": 6,
+	  "xp": 8,
+      "icon": "assets/missions/bush_token.png",
+      "color": "#e67e22",
+		"ac": 12,
+		"attackMod": 0,
+		"damageDie": 4,
+		"damageBonus": 0
+    },
+
+    "large centipede": {
+      "name": "Large Centipede",
+      "type": "monster",
+      "hp": 12,
+      "maxHp": 12,
+      "speed": 6,
+	  "xp": 16,
+      "icon": "assets/missions/bush_token.png",
+      "color": "#e67e22",
+		"ac": 10,
+		"attackMod": 0,
+		"damageDie": 4,
+		"damageBonus": 0
+    },
+
+    "Oogler": {
       "name": "Oogler",
       "type": "monster",
       "hp": 20,
@@ -57,7 +87,7 @@
       "color": "#c0392b",
 		"ac": 12,
 		"attackMod": 2,
-		"damageDie": 6,
+		"damageDie": 4,
 		"damageBonus": 1
     }
   },
@@ -66,8 +96,12 @@
     "green_1": {
       "url": "assets/mission/combat_green_1.png",
       "obstacles": [
-        { "x": 2, "y": 2 },
-        { "x": 2, "y": 3 }
+        { "x": 3, "y": 7 },
+        { "x": 0, "y": 0 },
+        { "x": 0, "y": 7 },
+        { "x": 5, "y": 7 },
+        { "x": 4, "y": 7 },
+        { "x": 7, "y": 7 }
       ]
     },
 

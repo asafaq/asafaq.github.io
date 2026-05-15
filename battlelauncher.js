@@ -93,6 +93,7 @@ async function launchBattle(encounterKey) {
         group.spawns.forEach((spawn, index) => {
             monsters.push({
                 ...template,
+				id: group.id, 
                 x: spawn.x,
                 y: spawn.y,
                 hasAction: false
@@ -153,17 +154,37 @@ async function launchBattle(encounterKey) {
 		xp: encounter.xp || 0,
 		loot: encounter.loot || []
 	};
+	console.log("PAYLOAD BEFORE SAVE:", payload);
+	localStorage.setItem('currentBattle', JSON.stringify(payload));
 
-    localStorage.setItem('currentBattle', JSON.stringify(payload));
-	
-    // --- OVERLAY LOGIC ---
+
+	// ⭐ Delay iframe load so localStorage is fully written
+	setTimeout(() => {
+		battleOverlay();
+	}, 0);
+
+}
+
+function battleOverlay() {
     let overlay = document.getElementById('battle-overlay');
+
     if (!overlay) {
         overlay = document.createElement('div');
         overlay.id = 'battle-overlay';
-        // Styles to make it cover the whole screen
-        overlay.style = "position:fixed; top:0; left:0; width:100vw; height:100vh; z-index:10000; background:#000; display:block;";
-        overlay.innerHTML = `<iframe id="battle-frame" src="battle.html" style="width:100%; height:100%; border:none;"></iframe>`;
+        overlay.style = `
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background: #000;
+            z-index: 10000;
+            display: block;
+        `;
+        overlay.innerHTML = `
+            <iframe id="battle-frame"
+                src="battle.html"
+                style="width:100%; height:100%; border:none;">
+            </iframe>
+        `;
         document.body.appendChild(overlay);
     } else {
         overlay.style.display = "block";

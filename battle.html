@@ -18,8 +18,26 @@
     .active-ring { position: absolute; width: 50px; height: 50px; border: 3px solid #f1c40f; border-radius: 50%; transition: 0.3s; pointer-events: none; z-index: 2; box-shadow: 0 0 15px #f1c40f; }
     .grid-overlay { position: absolute; width: 100%; height: 100%; background-image: linear-gradient(rgba(255,255,255,0.35) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px); background-size: 54px 54px; pointer-events: none; z-index: 10; }
     .cell { width: 54px; height: 54px; float: left; z-index: 1; position: relative; cursor: pointer; }
+	.cell.obstacle {     background-color: rgba(0,0,0,0.6); }
     .btn-move-active { background-color: #27ae60 !important; border: 2px solid white !important; }
     button:disabled { opacity: 0.4; filter: grayscale(1); cursor: not-allowed; }
+	.reaction-panel {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: 300px;
+    background: rgba(0,0,0,0.8);
+    padding: 10px;
+    border: 2px solid #fff;
+    display: none;
+    color: white;
+	z-index: 11;
+}
+
+.reaction-entry {
+    margin-bottom: 10px;
+}
+
 </style>
 </head>
 <body>
@@ -30,6 +48,7 @@
         <div id="active-ring" class="active-ring"></div>
     </div>
     <div id="log">> Battle Initialized.</div>
+	<div id="reaction-panel" class="reaction-panel"></div>
     <div id="controls">
         <div id="stats-panel">
             <strong id="unit-name">Name</strong>
@@ -48,7 +67,9 @@ const Bus = {
     emit(event, data) { if(this.events[event]) this.events[event].forEach(cb => cb(data)); }
 };
 
-let staticObstacles = [], units = [], turn = 0, isMoving = false;
+let staticObstacles = [], units = [], turn = 0, isMoving = false; battleXP = 0; isReactionPhase = false; roundStarted = false;
+const firstPCIndex = units.findIndex(u => u.type === "pc");
+
 
 function init() {
 
@@ -71,16 +92,19 @@ function init() {
     const bgUrl = mapUrls[data.missionId] || mapUrls["default"];
     grid.style.backgroundImage = `url('${bgUrl}')`;
 
-    units = [
-        ...data.party.map(p => ({
-            ...p,
-            type: 'pc',
-            speed: 6,
-            maxSpeed: 6,
-            hasAction: true,
-            isHiding: false,
-            maxHp: p.hp
-        })), 
+	units = [
+		...data.party.map(p => ({
+			...p,
+			type: 'pc',
+			speed: 6,
+			maxSpeed: 6,
+			hasAction: true,
+			isHiding: false,
+			usedRage: false,   // Barbarian
+			canSing: true,     // Bard
+			canHide: true,     // Miner
+			maxHp: p.hp
+		})),
         ...data.monsters.map(m => ({
             ...m,
             type: 'monster',
@@ -97,6 +121,10 @@ function init() {
         let cell = document.createElement('div');
         cell.className = 'cell';
         let cx = i % 10, cy = Math.floor(i / 10);
+		    // ⭐ Mark obstacles
+		if (staticObstacles.some(o => o.x === cx && o.y === cy)) {
+			cell.classList.add("obstacle");
+		}
         cell.onclick = () => processMove(cx, cy);
         grid.appendChild(cell);
     }
@@ -114,9 +142,12 @@ function init() {
     });
 
     update();
+	roundStarted = false;
+	startReactionPhase();
 }
 
 function update() {
+    if (isReactionPhase) return; // ⭐ Prevent UI rebuild during reactions
     const active = units[turn];
     if (!active) return;
 
@@ -253,11 +284,22 @@ function handleAttack() {
 
         Bus.emit('LOG', `⚔️ ${u.name} hits ${target.name} for ${dmg}!`);
 
-        if (target.hp <= 0) {
-            target.x = -1;
-            target.y = -1;
-            Bus.emit('LOG', `💀 ${target.name} defeated.`);
-        }
+		if (target.hp <= 0) {
+			target.x = -1;
+			target.y = -1;
+
+			Bus.emit('LOG', `💀 ${target.name} defeated.`);
+
+			// ⭐ Award XP from monster DB
+			if (target.type === "monster" && window.MONSTER_DB) {
+				const template = window.MONSTER_DB[target.id];
+				const xpValue = template?.xp || 0;
+
+				battleXP += xpValue;
+
+				Bus.emit('LOG', `✨ Gained ${xpValue} XP`);
+			}
+		}
     } else {
         Bus.emit('LOG', `🛡️ ${u.name} misses (${totalToHit} vs AC ${targetAC}).`);
     }
@@ -310,17 +352,119 @@ function handleSneakAttack() {
     u.isHiding = false; u.hasAction = false; update();
 }
 
+function startReactionPhase() {
+    isReactionPhase = true;
+	console.log("REACTION PHASE PCs:", units.filter(u => u.type === "pc"));
+
+    const panel = document.getElementById('reaction-panel');
+    panel.innerHTML = "";
+    panel.style.display = "block";
+
+    units.filter(u => u.type === 'pc' && u.hp > 0).forEach((pc, index) => {
+        const div = document.createElement('div');
+        div.className = "reaction-entry";
+        div.innerText = pc.name;
+
+        // Add reaction button based on role
+        if (pc.race === "Barbarian" && !pc.usedRage) {
+            createReactionBtn(div, "Rage", () => {
+                pc.usedRage = true;
+                Bus.emit('LOG', `${pc.name} enters a RAGE!`);
+                
+            });
+        }
+
+        if (pc.role === "Miner" && pc.canHide) {
+            createReactionBtn(div, "Hide", () => {
+                pc.isHiding = true;
+                pc.canHide = false;
+                Bus.emit('LOG', `${pc.name} hides in the shadows.`);
+                
+            });
+        }
+
+        if (pc.role === "Bard" && pc.canSing) {
+            createReactionBtn(div, "Sing", () => {
+                pc.canSing = false;
+                Bus.emit('LOG', `${pc.name} sings an inspiring tune!`);
+                
+            });
+        }
+
+        panel.appendChild(div);
+    });
+
+    // Add "Continue" button
+    const cont = document.createElement('button');
+    cont.innerText = "Continue";
+    cont.onclick = () => {
+        isReactionPhase = false;
+        panel.style.display = "none";
+		roundStarted = true;   // ⭐ FIX HERE
+        update();
+    };
+    panel.appendChild(cont);
+}
+
+function createReactionBtn(parent, text, func) {
+    const btn = document.createElement('button');
+    btn.innerText = text;
+    btn.onclick = func;
+    parent.appendChild(btn);
+}
+
+
 function endTurn() {
     isMoving = false;
+
+    let previousTurn = turn;
+
+    // Advance to next living unit
     let attempts = 0;
-    do { turn = (turn + 1) % units.length; attempts++; } while (units[turn].hp <= 0 && attempts < units.length);
+    do {
+        turn = (turn + 1) % units.length;
+        attempts++;
+    } while (units[turn].hp <= 0 && attempts < units.length);
+
     const active = units[turn];
+
+    // Detect ROUND START:
+    // If we looped back to the first PC in the list
+    const firstPCIndex = units.findIndex(u => u.type === 'pc');
+
+    if (turn === firstPCIndex) {
+        roundStarted = false;
+		// ⭐ Reset per-round reactions
+		units.forEach(pc => {
+			if (pc.type !== 'pc') return;
+
+			if (pc.role === "Miner") pc.canHide = true;
+			if (pc.role === "Bard") pc.canSing = true;
+
+			// Barbarian Rage does NOT reset per round
+			// Rage resets only per fight, which you already do in init()
+		});
+    }
+
+    // If round hasn't started yet → trigger reactions
+    if (!roundStarted) {
+        roundStarted = true;
+        startReactionPhase();
+        return; // Stop here until reactions are done
+    }
+
+    // Normal turn setup
     active.hasAction = true;
     active.speed = 6;
+
     Bus.emit('LOG', `Turn: ${active.name}`);
     update();
-    if (active.type === 'monster') setTimeout(monsterAI, 800);
+
+    if (active.type === 'monster') {
+        setTimeout(monsterAI, 800);
+    }
 }
+
 
 function monsterAI() {
     const u = units[turn];
@@ -342,7 +486,7 @@ function checkVictory() {
 
         const savedData = JSON.parse(localStorage.getItem('currentBattle')) || {};
 
-        const xp = savedData.xp || 0;
+        const xp = battleXP;
         const loot = savedData.loot || [];
 
         const defeated = units
@@ -375,7 +519,7 @@ function checkVictory() {
                 window.parent.postMessage({
                     type: "BATTLE_COMPLETE",
                     result: units.filter(u => u.type === 'pc'),
-                    xp: xp,
+                    xp: battleXP,
                     loot: loot
                 }, "*");
             }
@@ -426,6 +570,8 @@ function showVictoryWindow(summary, onClose) {
         if (onClose) onClose();
     };
 }
+
+console.log("MONSTER_DB:", window.MONSTER_DB);
 
 
 Bus.on('LOG', (msg) => {

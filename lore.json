@@ -431,7 +431,7 @@
       "race": "Direwolf",
       "icon": "assets/patrons/direwolf_s.png",
       "role": "Druid",
-      "hp_die": 12,
+      "hp_die": 8,
       "hp_modifier": 4,
       "strengh_mod": 3,
       "Dexterity_mod": 1,
@@ -522,7 +522,7 @@
       ],
       "notes": "."
     },
-	"adv_Trollkin": {
+	"adv_Crusher": {
       "name": "Crusher",
       "icon": "/assets/patrons/trollkin_s.png",
       "large": "/assets/patrons/trollkin_l.png",
@@ -555,7 +555,79 @@
       "trait": [
         "Selfish"
       ],
-      "notes": "."
+      "notes": "The Bar guard and Bouncer none want to mess with."
+    },
+	"adv_Wormtail": {
+      "name": "Wormtail",
+      "icon": "/assets/patrons/trollkin_s.png",
+      "large": "/assets/patrons/trollkin_l.png",
+      "top": "350px",
+      "left": "250px",
+      "location": 2,
+      "race": "Wererat",
+      "role": "Sorcerer",
+      "hp_die": 6,
+      "hp_modifier": 1,
+      "strengh_mod": 0,
+      "Dexterity_mod": 2,
+      "wisdom_mod": -2,
+      "intelligence_mod": -1,
+      "charisma_mod": 3,
+      "alignment": "Chaotic",
+      "level": 6,
+      "sex": 1,
+      "size": "Medium",
+      "caste": "Underclass",
+      "RacialEnemy": "",
+      "proficiency_armor": "Light",
+      "proficiency_weapon": "Light",
+	  "inventory" : [
+		  { "item": "Poisoned Dagger", "qty": 1, "locked": true },
+		  { "item": null, "qty": 0, "locked": false },
+		  { "item": null, "qty": 0, "locked": false },
+		  { "item": null, "qty": 0, "locked": false }
+		],
+      "trait": [
+        "Selfish"
+      ],
+      "notes": "A loathsome creature who dwells underground. Lives of unfair fights and easy pickings."
+    },
+	"adv_Ugress": {
+      "name": "Ugress",
+      "icon": "/assets/patrons/trollkin_s.png",
+      "large": "/assets/patrons/trollkin_l.png",
+      "top": "350px",
+      "left": "250px",
+      "location": 2,
+      "race": "Ugress",
+      "role": "Witch",
+      "hp_die": 6,
+      "hp_modifier": 3,
+      "strengh_mod": 1,
+      "Dexterity_mod": -2,
+      "wisdom_mod": 4,
+      "intelligence_mod": 3,
+      "charisma_mod": -4,
+      "alignment": "Chaotic",
+      "level": 12,
+      "sex": 0,
+      "size": "Large",
+      "caste": "Underclass",
+      "RacialEnemy": "",
+      "proficiency_armor": "Light",
+      "proficiency_weapon": "Light",
+	  "inventory" : [
+		  { "item": "Pendant of Imprisonment", "qty": 1, "locked": true },
+		  { "item": null, "qty": 0, "locked": false },
+		  { "item": null, "qty": 0, "locked": false },
+		  { "item": null, "qty": 0, "locked": false }
+		],
+      "trait": [
+        "Vicious",
+		"Ruthless",
+		"Ambitious"
+      ],
+      "notes": "A vile monstrosity who will stop at nothing. Her Geas forces many to do her bidding, or in a day or a month they'll likely die."
     }
   },
   "Races": {
@@ -643,6 +715,13 @@
     },
     "Goon": {
 	  "desc": "A more civilized and smaller Ogre. Can be trained to live with humans.",
+      "Traits": [
+        "Volatile Temper",
+		"Gluttonous"
+      ]
+    },
+    "Ugress": {
+	  "desc": "A vile female Ogre.",
       "Traits": [
         "Volatile Temper",
 		"Gluttonous"
