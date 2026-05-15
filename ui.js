@@ -403,16 +403,19 @@ mission_dwood_1: () => `
 
 
     <img id="fantasy map" src="assets/missions/dark_woods_map_s.png" />
-
-    <!-- POI: Platform (always visible) -->
+	    <!-- POI: Platform (always visible) -->
     <div id="dwood_platform"
-         class="poi mapLight"
+		 class="poi ${
+			 (player?.missions?.dwood_fort1 === 1 ||
+			 player?.missions?.dwood_1 === 2) ? 'mapLight' : ''}"
          data-node="dwood_platform"
          style="position:absolute; top:294px; left:366px; transform:scale(0.25); z-index:10;">
          <img src="assets/missions/stone_platform.png">
     </div>
+	
+	
+	${player?.missions?.dwood_1 > -1 && player?.missions?.dwood_1 < 2 ? `
 
-    ${player?.missions?.dwood_1 > -1 ? `
     <!-- Path Layer -->
     <svg width="100%" height="100%" 
          style="position:absolute; top:0; left:0; z-index:1;">
@@ -437,28 +440,127 @@ mission_dwood_1: () => `
               style="pointer-events: none;" />
 
     </svg>
-    ` : ""}
 
+	` : ""}
+
+    ${player?.missions?.dwood_1 === 2 ? `
+	
+	    <!-- Path Layer -->
+    <svg width="100%" height="100%" 
+         style="position:absolute; top:0; left:0; z-index:1;">
+
+        <!-- Invisible hitbox -->
+        <path d="M 320 240 C 220 400 300 400 130 420"
+              stroke="transparent"
+              stroke-width="75"
+              fill="none"
+              class="poi"
+              style="pointer-events: stroke; cursor: pointer;"
+              data-node="dwood_path" />
+
+        <!-- Visible dashed line -->
+        <path d="M 320 240 C 220 400 300 400 130 420"
+              class="marching-path"
+              stroke="rgba(0, 0, 0, 0.7)"
+              stroke-width="4"
+              stroke-dasharray="10, 10"
+              stroke-linecap="round"
+              fill="none"
+              style="pointer-events: none;" />
+
+    </svg>
+
+	
+	` : ""}
+	
+    ${player?.missions?.dwood_1 === 4 ? `
+	
+	    <!-- Path Layer -->
+    <svg width="100%" height="100%" 
+         style="position:absolute; top:0; left:0; z-index:1;">
+
+        <!-- Invisible hitbox -->
+        <path d="M 130 420 C 200 400 300 250 165 170"
+              stroke="transparent"
+              stroke-width="75"
+              fill="none"
+              class="poi"
+              style="pointer-events: stroke; cursor: pointer;"
+              data-node="dwood_path" />
+
+        <!-- Visible dashed line -->
+        <path d="M 130 420 C 200 400 300 250 165 170"
+              class="marching-path"
+              stroke="rgba(0, 0, 0, 0.7)"
+              stroke-width="4"
+              stroke-dasharray="10, 10"
+              stroke-linecap="round"
+              fill="none"
+              style="pointer-events: none;" />
+
+    </svg>
+
+	
+	` : ""}
+	
+    ${player?.missions?.dwood_1 === 5 ? `
+	
+	    <!-- Path Layer -->
+    <svg width="100%" height="100%" 
+         style="position:absolute; top:0; left:0; z-index:1;">
+
+        <!-- Invisible hitbox -->
+        <path d="M 165 170 C 240 120 300 170 370 85"
+              stroke="transparent"
+              stroke-width="75"
+              fill="none"
+              class="poi"
+              style="pointer-events: stroke; cursor: pointer;"
+              data-node="dwood_path" />
+
+        <!-- Visible dashed line -->
+        <path d="M 165 170 C 240 120 300 170 370 85"
+              class="marching-path"
+              stroke="rgba(0, 0, 0, 0.7)"
+              stroke-width="4"
+              stroke-dasharray="10, 10"
+              stroke-linecap="round"
+              fill="none"
+              style="pointer-events: none;" />
+
+    </svg>
+
+	
+	` : ""}
+	
     ${player?.missions?.dwood_1 > 1 ? `
     <!-- POI: Glade -->
     <div id="dwood_glade"
-         class="poi mapLight"
+		 class="poi ${
+			 (player?.missions?.dwood_fort1 === 0 ||
+			 player?.missions?.dwood_1 === 2) ? 'mapLight' : ''}"
          data-node="dwood_glade"
          style="position:absolute; top:269px; left:240px; transform:scale(1.5); z-index:10;">
          <img src="assets/missions/mission_indicator_encounter.png">
     </div>
 
+	` : ""}
+	
+    ${player?.missions?.dwood_1 === 4 ? `
     <!-- POI: Swamp -->
     <div id="dwood_swamp"
-         class="poi mapLight"
+		 class="poi ${player?.missions?.dwood_1 === 4 ? 'mapLight' : ''}"
          data-node="dwood_swamp"
          style="position:absolute; top:146px; left:147px; transform:scale(1.5); z-index:10;">
          <img src="assets/missions/mission_indicator_encounter.png">
     </div>
 
+	` : ""}
+	
+    ${player?.missions?.dwood_1 > 1 ? `
     <!-- POI: Shrine -->
     <div id="dwood_shrine"
-         class="poi mapLight"
+		 class="${poiClass(player?.missions?.dwood_1 === 3 || player?.missions?.dwood_1 === 2)}"
          data-node="dwood_shrine"
          style="position:absolute; top:417px; left:111px; transform:scale(1.5); z-index:10;">
          <img src="assets/missions/mission_indicator_encounter.png">
@@ -518,7 +620,12 @@ mission_dwood_1: () => `
   };
   
 // Define this once, outside the functions
-const excludedStatuses = ["applicant", "retired", "dead", "rival"];
+
+function poiClass(condition) {
+    return condition ? "poi mapLight" : "nopoi";
+}
+
+const excludedStatuses = ["applicant", "retired", "dead", "rival", "away"];
 
 function renderPatronInventory() {
     const containers = {

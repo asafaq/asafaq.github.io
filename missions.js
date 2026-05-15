@@ -550,13 +550,13 @@ async function handleMissionEnd(sceneId) {
 		},
 
         "dwoodplat1_105end": async () => {
-			
+            Journal.addEntry("Awotruce have agreed to participate in the slaying of the Ugress.");
             player.missions.dwood_fort1 = 2;
             loadPage("mission_dwood_1");
 		},
 
         "dwoodglade_110end": async () => {
-			
+            Journal.addEntry("You've met with your contact Lurch who have filled you in on the inside details from the fort: The Ugress has taken control of the place, the garrison is preparing for war, and there are folk with them.");
             player.missions.dwood_fort2 = 1;
             loadPage("mission_dwood_1");
 		}
@@ -960,6 +960,7 @@ async function handleMissionEnd_FUNKY(sceneId) {
         "dwood1_181end": async () => {
             player = await storage.loadPlayer(player.id);
             player.missions.dwood_1 = 1;
+            player.missions.dwood_fort1 = 0;
             Journal.addEntry("The Trollkin approached, and Amyssa lost her spellbook.");
             recruitAdventurer("adv_Trollkin");
             player.patrons.adv_Trollkin.status = "rival";
