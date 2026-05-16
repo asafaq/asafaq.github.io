@@ -27,7 +27,7 @@
 		  { "item": null, "qty": 0, "locked": false },
 		  { "item": null, "qty": 0, "locked": false }
 		],
-      "trait": [
+      "traits": [
         "Diplomatic"
       ],
       "notes": "The old adventurer and the party's horse and buggy, builds the camp, cooks dinner, parles with encouters, guards the loot, doesn't fight monsters."
@@ -64,7 +64,7 @@
 		  { "item": null, "qty": 0, "locked": false },
 		  { "item": null, "qty": 0, "locked": false }
 		],
-      "trait": [
+      "traits": [
         "Masocist",
         "Cheerful"
       ],
@@ -103,7 +103,7 @@
 		  { "item": null, "qty": 0, "locked": false }
 		],
       "Knapsack_comment": "Allows the bearer to hold 4 items without value other than in trade, without spending an inventory slot.",
-      "trait": [
+      "traits": [
         "Appraisal",
         "Tunnel Surveyer"
       ],
@@ -144,7 +144,7 @@
 		  { "item": null, "qty": 0, "locked": false },
 		  { "item": null, "qty": 0, "locked": false }
 		],
-      "trait": [
+      "traits": [
         "Persuasive",
         "Comedian"
       ],
@@ -181,7 +181,7 @@
 		  { "item": null, "qty": 0, "locked": false },
 		  { "item": null, "qty": 0, "locked": false }
 		],
-      "trait": [
+      "traits": [
         "Spellcaster",
         "Scribe",
         "Snob"
@@ -216,7 +216,7 @@
 		  { "item": null, "qty": 0, "locked": false },
 		  { "item": null, "qty": 0, "locked": false }
 		],
-      "trait": [
+      "traits": [
         "Backstab",
         "Shady"
       ],
@@ -250,7 +250,7 @@
 		  { "item": null, "qty": 0, "locked": false },
 		  { "item": null, "qty": 0, "locked": false }
 		],
-      "trait": [
+      "traits": [
         "Independant",
         "Pickpocket"
       ],
@@ -273,7 +273,7 @@
       "sex": 1,
       "size": "Medium",
       "caste": "Outcast_Noble",
-      "RacialEnemy": "Lower Undead",
+      "RacialEnemy": "Ghasts",
       "Lower Undead_comment": "Skeletons, Zombies, Ghouls, Ghasts.",
       "proficiency_armor": "Heavy",
       "proficiency_weapon": "Martial",
@@ -283,7 +283,7 @@
 		  { "item": null, "qty": 0, "locked": false },
 		  { "item": null, "qty": 0, "locked": false }
 		],
-      "trait": [
+      "traits": [
         "Immune to Energy drain",
         "Immune to Fear",
         "Turn Undead",
@@ -318,7 +318,7 @@
 		  { "item": null, "qty": 0, "locked": false },
 		  { "item": null, "qty": 0, "locked": false }
 		],
-      "trait": [
+      "traits": [
         "Divine",
         "Holy Aura",
         "Eternal"
@@ -342,7 +342,7 @@
       "wisdom_mod": 2,
       "intelligence_mod": 0,
       "charisma_mod": 1,
-      "alignment": "Neutral",
+      "alignment": "Good",
       "level": 3,
       "sex": 0,
       "size": "Medium",
@@ -356,7 +356,7 @@
 		  { "item": null, "qty": 0, "locked": false },
 		  { "item": null, "qty": 0, "locked": false }
 		],
-      "trait": [
+      "traits": [
         "Calm",
         "Apothecary"
       ],
@@ -390,7 +390,7 @@
 		  { "item": null, "qty": 0, "locked": false },
 		  { "item": null, "qty": 0, "locked": false }
 		],
-      "trait": "Cheerful",
+      "traits": "Cheerful",
       "trait1_comment": "Party members have moral +1."
     },
     "adv_Sebastian": {
@@ -419,7 +419,7 @@
 		  { "item": null, "qty": 0, "locked": false },
 		  { "item": null, "qty": 0, "locked": false }
 		],
-      "trait": [
+      "traits": [
         "Inconspicuous",
         "Adolescent",
         "Gardener"
@@ -452,7 +452,7 @@
 		  { "item": null, "qty": 0, "locked": true },
 		  { "item": null, "qty": 0, "locked": true }
 		],
-      "trait": [],
+      "traits": [],
       "notes": ""
     },
     "adv_Tinman BB-TR": {
@@ -480,7 +480,7 @@
 		  { "item": null, "qty": 0, "locked": false },
 		  { "item": null, "qty": 0, "locked": false }
 		],
-      "trait": [
+      "traits": [
         "Faulty Powerpack",
 		"Immortal Protocol",
         "Spinning Batter"
@@ -517,7 +517,7 @@
 		  { "item": null, "qty": 0, "locked": false },
 		  { "item": null, "qty": 0, "locked": false }
 		],
-      "trait": [
+      "traits": [
         "Selfish"
       ],
       "notes": "."
@@ -552,7 +552,7 @@
 		  { "item": null, "qty": 0, "locked": false },
 		  { "item": null, "qty": 0, "locked": false }
 		],
-      "trait": [
+      "traits": [
         "Selfish"
       ],
       "notes": "The Bar guard and Bouncer none want to mess with."
@@ -587,7 +587,7 @@
 		  { "item": null, "qty": 0, "locked": false },
 		  { "item": null, "qty": 0, "locked": false }
 		],
-      "trait": [
+      "traits": [
         "Selfish"
       ],
       "notes": "A loathsome creature who dwells underground. Lives of unfair fights and easy pickings."
@@ -600,8 +600,8 @@
       "left": "250px",
       "location": 2,
       "race": "Ugress",
-      "role": "Witch",
-      "hp_die": 6,
+      "role": "Warlock",
+      "hp_die": 8,
       "hp_modifier": 3,
       "strengh_mod": 1,
       "Dexterity_mod": -2,
@@ -622,10 +622,11 @@
 		  { "item": null, "qty": 0, "locked": false },
 		  { "item": null, "qty": 0, "locked": false }
 		],
-      "trait": [
+      "traits": [
         "Vicious",
 		"Ruthless",
-		"Ambitious"
+		"Ambitious",
+		"Magic-Immunity"
       ],
       "notes": "A vile monstrosity who will stop at nothing. Her Geas forces many to do her bidding, or in a day or a month they'll likely die."
     }
@@ -800,6 +801,13 @@
       "Traits": [
         "Tough",
 		"Unflappable"
+      ]
+    },
+    "Warlock": {
+      "desc": "Through a pact made with a supernatural power, the Warlock gains mysterious powers.",
+      "Traits": [
+        "",
+		""
       ]
     }
   },

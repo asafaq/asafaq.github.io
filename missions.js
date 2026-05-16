@@ -389,9 +389,12 @@ async function handleMissionEnd(sceneId) {
             player.patrons.adv_Hogperson.location = 3;
             player.patrons.adv_Claudio.location = 0;
             player.patrons.adv_Amyssa.status = "applicant";
-            
 			player.missions.current_mission.current_party = "party_A";
 			player.missions.current_mission.id = "green_1";
+            
+			const partyKey = player.missions.current_mission.party;
+            buildPartyTraits(partyKey);
+			buildPartySummary(partyKey);
             Journal.addEntry("You've purchase yourself a Tavern.");
             Journal.addEntry("You've signed a contract with the government and recieved your Adventurers' Guild Licence.");
             Journal.addEntry("You've recruited Hogperson, Bragain and Claudio.");
@@ -429,6 +432,9 @@ async function handleMissionEnd(sceneId) {
             player = await storage.loadPlayer(player.id);
             player.missions.green_1 = 5;
             player.patrons.adv_Claudio.location = 3;
+			const partyKey = player.missions.current_mission.party;
+            buildPartyTraits(partyKey);
+			buildPartySummary(partyKey);
             Journal.addEntry("You've successfully demoralized a band of Koboldogs.");
             Journal.addEntry("You've saved Claudio from a cage.");
             loadPage("mission_green_1");
@@ -466,6 +472,12 @@ async function handleMissionEnd(sceneId) {
         "green2_117end": async () => {
             player.missions.green_2 = 2;
             player.patrons.adv_Amyssa.location = 3;
+            player.patrons.adv_Amyssa.status = "mission";
+			
+            
+			const partyKey = player.missions.current_mission.party;
+            buildPartyTraits(partyKey);
+			buildPartySummary(partyKey);
             Journal.addEntry(`Amyssa has joined the ${player.data.party_A} on their way to ${player.missions.current_mission.id}.`);
             loadPage("mission_green_2");
         },
@@ -474,6 +486,11 @@ async function handleMissionEnd(sceneId) {
             recruitAdventurer("adv_Hogmother");
             player.patrons.adv_Hogmother.location = 3;
             player.patrons.adv_Hogmother.status = "mission";
+			
+            
+			const partyKey = player.missions.current_mission.party;
+            buildPartyTraits(partyKey);
+			buildPartySummary(partyKey);
             Journal.addEntry(`You've met up with Hogmother and she has joined the ${player.data.party_A} on their way to ${player.missions.current_mission.id}.`);
             loadPage("mission_green_2");
         },
@@ -485,14 +502,25 @@ async function handleMissionEnd(sceneId) {
             player.missions.current_mission.id = "green_3";
             player.missions.current_mission.locked_mission = "green_3";
             player.missions.current_mission.page = "mission_green_3";
-            recruitAdventurer("adv_Hogmother");
-            player.patrons.adv_Hogmother.location = 3;
-            player.patrons.adv_Hogmother.status = "mission";
             recruitAdventurer("adv_Lurch");
             player.patrons.adv_Lurch.location = 9;
             player.patrons.adv_Lurch.status = "secret";
-            Journal.addEntry(`You've met up with Hogmother and she has joined the ${player.data.party_A}...`);
-            Journal.addEntry(`You've dealth with Lurch who has agreed on to spy...`);
+			
+            recruitAdventurer("adv_Hogmother");
+            player.patrons.adv_Hogmother.location = 3;
+            player.patrons.adv_Hogmother.status = "mission";
+            
+			const partyKey = player.missions.current_mission.party;
+            buildPartyTraits(partyKey);
+			buildPartySummary(partyKey);
+			
+			Journal.addEntry(
+				`You've met up with Hogmother and she has joined the ${player.data.party_A} on their way to ${player.missions.current_mission.id}.`
+			);
+			Journal.addEntry(
+				`You've dealth with Lurch who has agreed on to spy for the ${player.data.party_A} and meet them later as they make their own way to ${player.missions.current_mission.id}.`
+			);
+			
             loadPage("mission_green_3");
         },
 
@@ -509,8 +537,12 @@ async function handleMissionEnd(sceneId) {
             recruitAdventurer("adv_Sebastian");
             player.patrons.adv_Sebastian.location = 3;
             player.patrons.adv_Sebastian.status = "mission";
-            Journal.addEntry(`You've met with Awetruce who have agreed to overwatch...`);
-            Journal.addEntry(`You've met with Sebastian the Young who joined...`);
+            
+			const partyKey = player.missions.current_mission.party;
+            buildPartyTraits(partyKey);
+			buildPartySummary(partyKey);
+            Journal.addEntry(`You've met with Awetruce who have agreed to overwatch you in the dark woods.`);
+            Journal.addEntry(`You've met with Sebastian the Young who joined the ${player.data.party_A}`);
             loadPage("mission_dwood_1");
         },
 
@@ -540,7 +572,7 @@ async function handleMissionEnd(sceneId) {
 
         "dwoodswamp1_127end": async () => {
             player.missions.dwood_1 = 5;
-            Journal.addEntry("You've successfully seduced and robbed the Trollkin from Amyssa's Spellbook.");
+            Journal.addEntry("You've successfully seduced and robbed the Trollkin out of Amyssa's Spellbook.");
             loadPage("mission_dwood_1");
         },
 
@@ -576,7 +608,10 @@ async function handleMissionEnd(sceneId) {
         }
 
         if (typeof player !== 'undefined' && typeof storage !== 'undefined') {
-			buildPartyTraits();
+			
+			const partyKey = player.missions.current_mission.party;
+            buildPartyTraits(partyKey);
+			buildPartySummary(partyKey);
             await storage.savePlayer(player);
         }
         return true;
@@ -920,6 +955,13 @@ async function handleMissionEnd_FUNKY(sceneId) {
             player.missions.current_mission.page = "mission_green_3";
             recruitAdventurer("adv_Hogmother");
             recruitAdventurer("adv_Lurch");
+			
+            player.patrons.adv_Hogmother.location = 3;
+            player.patrons.adv_Lurch.location = 9;
+			
+			const partyKey = player.missions.current_mission.party;
+            buildPartyTraits(partyKey);
+			buildPartySummary(partyKey);
             Journal.addEntry("You've met Hogmother and dealt with Lurch the spy.");
             loadPage("mission_green_3");
         },
@@ -943,12 +985,16 @@ async function handleMissionEnd_FUNKY(sceneId) {
             player.patrons.adv_Sebastian.location = 3;
             player.patrons.adv_Sebastian.status = "mission";
 
+			
+			const partyKey = player.missions.current_mission.party;
+            buildPartyTraits(partyKey);
+			buildPartySummary(partyKey);
             // 4. Record the lore
             Journal.addEntry(
-                `You've met with Awetruce who has agreed to overwatch the ${player.data.party_A}...`
+                `You've met with Awetruce who has agreed to overwatch the ${player.data.party_A}`
             );
             Journal.addEntry(
-                `You've met with Sebastian the Young who joined the ${player.data.party_A}...`
+                `You've met with Sebastian the Young who joined the ${player.data.party_A}`
             );
 
             // 5. Switch the map without returning to the Tavern
@@ -1042,7 +1088,7 @@ function endMission() {
     player.missions.current_mission.party = "";
     player.missions.current_mission.page = null;
     player.missions.current_mission.locked_mission = "";
-    player.missions.current_mission.party_traits = [];
+    player.missions.current_mission.synergyTraits = [];
 
 }
 

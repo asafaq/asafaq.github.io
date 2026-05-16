@@ -67,7 +67,7 @@ function ruleCasteCompatibility(members, mission) {
     const castes = members.map(m => ({
         id: m.id,
         caste: getEffectiveCaste(m),
-        snob: m.trait?.includes("Snob")
+        snob: m.traits?.includes("Snob")
     }));
 
     for (let i = 0; i < castes.length; i++) {
@@ -110,25 +110,25 @@ function ruleCasteCompatibility(members, mission) {
     return true;
 }
 
-// future multiple set of missions to bypass caste rule.
-// const casteBypassMissions = new Set([
-    // "emergency_001",
-    // "emergency_002",
-    // "tutor1_110",
-    // "siege_escape",
-    // "flood_rescue"
-// ]);
-// function ruleCasteCompatibility(party, mission) {
+/*
+future multiple set of missions to bypass caste rule.
+const casteBypassMissions = new Set([
+    "emergency_001",
+    "emergency_002",
+    "tutor1_110",
+    "siege_escape",
+    "flood_rescue"
+]);
+function ruleCasteCompatibility(party, mission) {
 
-//    Emergency override — skip caste/snob restrictions
-    // if (mission && casteBypassMissions.has(mission.id)) {
-        // return { ok: true };
-    // }
+   Emergency override — skip caste/snob restrictions
+    if (mission && casteBypassMissions.has(mission.id)) {
+        return { ok: true };
+    }
 
-//    Normal caste/snob logic continues here...
-// }
-
-
+   Normal caste/snob logic continues here...
+}
+*/
 
 function ruleAlignmentCompatibility(members) {
     // Extract alignments
@@ -171,8 +171,8 @@ function getInnateTraits(patron) {
 const PartySynergies = {
     "Trouble Makers": {
         requirements: {
-            roles: ["barbarian", "bard"],	//roles → all must be present
-            anyOfRoles: ["rogue", "miner"]	//anyOfRoles → at least one must be present
+			race: [ "barbarian"],
+            roles: [ "miner" , "bard"]	//roles → all must be present
         }
     },
 
@@ -187,6 +187,18 @@ const PartySynergies = {
     }
 };
 
+function getPartyMembers(partyKey) {
+    const locationMap = {
+        party_A: 3,
+        party_B: 4,
+        party_C: 5
+    };
+
+    const loc = locationMap[partyKey];
+
+    return Object.values(player.patrons)
+        .filter(p => p.location === loc);
+}
 
 function buildPartyTraits(partyKey) {
     const members = getPartyMembers(partyKey);
@@ -200,6 +212,7 @@ function buildPartyTraits(partyKey) {
     const adventurerIds = new Set();
 
     for (const m of members) {
+
         const role = m.role?.toLowerCase();
         if (role) roles.add(role);
 
@@ -218,6 +231,17 @@ function buildPartyTraits(partyKey) {
         // Innate racial traits
         const innate = getInnateTraits(m);
         visibleTraits.push(...innate);
+		// Role traits from loreData.Roles
+		// Build a lowercase role lookup table
+		rolesLower = [];
+		// Role traits (normalized)
+		const normalizedRole = m.role?.toLowerCase();
+		const roleData = rolesLower[normalizedRole];
+
+		if (roleData && Array.isArray(roleData.Traits)) {
+			visibleTraits.push(...roleData.Traits);
+		}
+
     }
 
     // --- Evaluate Synergies ---
@@ -225,6 +249,18 @@ function buildPartyTraits(partyKey) {
         const req = synergy.requirements;
 
         let qualifies = true;
+
+		// Required races
+		if (qualifies && req.race) {
+			const memberRaces = new Set(members.map(m => m.race?.toLowerCase()));
+			for (const r of req.race) {
+				if (!memberRaces.has(r.toLowerCase())) {
+					qualifies = false;
+					break;
+				}
+			}
+		}
+
 
         // Required roles
         if (req.roles) {
@@ -272,7 +308,7 @@ function partyHasTrait(traitName) {
 
     const all = [...visible, ...hidden];
 
-    return all.some(t => t.toLowerCase() === traitName.toLowerCase());
+    return all.some(t => t.toLowerCase() === traitsName.toLowerCase());
 }
 
 
@@ -283,26 +319,26 @@ function partyHasTrait(traitName) {
     // });
 // }
 
-function partyHasAnyTrait(traitList) {
+function partyHasAnyTrait(traitsList) {
     const visible = player.missions.current_mission.party_traits_visible || [];
     const hidden = player.missions.current_mission.party_traits_hidden || [];
 
     const all = [...visible, ...hidden];
 
-    return traitList.some(t => all.includes(t));
+    return traitsList.some(t => all.includes(t));
 }
 
-// if (partyHasAnyTrait(["Rage", "Berserker", "Bloodlust"])) {
+// if (partyHasAnytraits(["Rage", "Berserker", "Bloodlust"])) {
     // unlockBerserkPath();
 // }
 
-function partyHasAllTraits(traitList) {
+function partyHasAllTraits(traitsList) {
     const visible = player.missions.current_mission.party_traits_visible || [];
     const hidden = player.missions.current_mission.party_traits_hidden || [];
 
     const all = [...visible, ...hidden];
 
-    return traitList.every(t => all.includes(t));
+    return traitsList.every(t => all.includes(t));
 }
 
 
@@ -310,19 +346,6 @@ function partyHasAllTraits(traitList) {
     // unlockMeditationOption();
 // }
 
-
-function getPartyMembers(partyKey) {
-    const locationMap = {
-        party_A: 3,
-        party_B: 4,
-        party_C: 5
-    };
-
-    const loc = locationMap[partyKey];
-
-    return Object.values(player.patrons)
-        .filter(p => p.location === loc);
-}
 
 function ruleMinMembers(members, rules) {
     const count = members.length;

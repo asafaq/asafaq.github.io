@@ -3555,7 +3555,7 @@
     "dialog": "This should be a good place to signal to our contact.",
     "side": "right",
     "interaction_type": "next",
-    "target_id": "dwoodglade_103"
+    "target_id": "dwoodglade_103a"
   },
   {
     "id": "dwoodglade_103",

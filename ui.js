@@ -666,10 +666,8 @@ function renderPatronInventory() {
         });
 
     // ←←← Re-enable drag & drop every time we render
-    enablePatronDragDrop();
-	
-	console.log("Rendered patrons. Draggable slots:", 
-        document.querySelectorAll(".patron-slot[draggable='true']").length);
+    // enablePatronDragDrop();
+
 }
 
 let globalDragListenersAdded = false;
@@ -1112,7 +1110,7 @@ function getIdleDescription(adv, player) {
 
   // 1. If idle → override with trait referral
   if (hydrated.status === "idle") {
-    return traitReferrals[hydrated.trait] || traitReferrals.default;
+    return traitReferrals[hydrated.traits] || traitReferrals.default;
   }
 
   // 2. Otherwise → use normal idle descriptions
@@ -1129,7 +1127,7 @@ function getTraitReferral(adv) {
   }
 
   // hydrated.trait is an array → loop through it
-  for (const t of hydrated.trait) {
+  for (const t of hydrated.traits) {
     if (traits[t]) {
       return traits[t];
     }
@@ -1377,7 +1375,9 @@ function buildPartySummary(partyKey) {
     const summary = {
         races: members.map(m => m.race),
         roles: members.map(m => m.role),
-        traits: members.flatMap(m => m.traits)
+        personalTraits: members.flatMap(m => m.traits),	// NOTICE: THIS IS ONLY PERSONAL ADV TRAITS
+        secretTraits: members.flatMap(m => Array.isArray(m.secretTraits) ? m.secretTraits : [])
+
     };
 
     player.missions.current_mission.summary = summary;
@@ -1639,6 +1639,66 @@ function getStartSceneId(c_mission) {
 // | ``"blue_1"`` | 1 | ``blue1_101`` |
 }
 
+const missionConfig = {
+    green_1: {
+        label: "Tutorial in the Green Pastures",
+        category: "Adventure",
+        selectable: true,
+        unlock: (player) => player.missions.green_1 <= 6
+    },
+
+    green_2: {
+        label: "Travelling to Townshop Tavern",
+        category: "Adventure",
+        selectable: true,
+        unlock: (player) => player.missions.green_2 <= 2
+    },
+
+    green_3: {
+        label: "Entering the Dark Forest",
+        category: "Adventure",
+        selectable: false,
+    },
+
+    dwood_1: {
+        label: "The Dark Forest",
+        category: "Adventure",
+        selectable: false,
+    },
+
+
+    dwood_fort1: {
+        label: "The Dark Forest",
+        category: "Adventure",
+        selectable: false,
+    },
+
+
+    dwood_fort2: {
+        label: "The Dark Forest",
+        category: "Adventure",
+        selectable: false,
+    },
+
+    tutorial: {
+        selectable: false
+    },
+
+    current_mission: {
+        selectable: false
+    }
+};
+
+function getAvailableMissions(player) {
+    return Object.entries(missionConfig)
+        .filter(([id, cfg]) => cfg.selectable)
+        .filter(([id, cfg]) => !cfg.unlock || cfg.unlock(player))
+        .map(([id, cfg]) => ({
+            id,
+            label: cfg.label,
+            category: cfg.category || "Other"
+        }));
+}
 
 async function loadMissionPage() {
     console.log("Loading Mission Page");
@@ -1655,9 +1715,8 @@ async function loadMissionPage() {
 	await new Promise(resolve => requestAnimationFrame(resolve));
 
     patronList = getVisiblePatrons();
-    renderPatronInventory();
-	console.log("Rendered patrons. Draggable slots:", 
-    document.querySelectorAll(".patron-slot[draggable='true']").length);
+    // renderPatronInventory();
+    document.querySelectorAll(".patron-slot[draggable='true']").length;
 	updateSecretMissionLine();
 	updatePartyAGuideLine();
 
@@ -1669,11 +1728,12 @@ async function loadMissionPage() {
 	
 	const synergy = player.missions.current_mission.synergyTraits;
 
-	if (typeof synergy === "string" && synergy.trim() !== "") {
-		document.getElementById("missions_line21").textContent = synergy;
+	if (Array.isArray(synergy) && synergy.length > 0) {
+		document.getElementById("missions_line21").textContent = synergy.join(", ");
 	} else {
 		document.getElementById("missions_line21").textContent = "";
 	}
+
 
 	const hasPartyAGuide = Object.values(player.patrons)
 		.some(p => p.location === 6);
@@ -1703,6 +1763,9 @@ async function loadMissionPage() {
     Object.keys(player.missions).forEach(key => {
         if (key === "current_mission") return;
         if (key === "tutorial") return;
+        if (key === "dwood_1") return;
+        if (key === "dwood_fort1") return;
+        if (key === "dwood_fort2") return;
 		//here we are setting where do those missions end and exist visability.
         if (key === "green_1" && player.missions.green_1 > 6) return;
         if (key === "green_2" && player.missions.green_2 > 2) return;
@@ -1810,8 +1873,6 @@ async function loadMissionPage() {
     updateContinueButton("party_A");
     updateContinueButton("party_B");
     renderPatronInventory();
-	console.log("Rendered patrons. Draggable slots:", 
-    document.querySelectorAll(".patron-slot[draggable='true']").length);
     setTimeout(enablePatronDragDrop, 0);	// your mouse drag
 	enablePatronTouchSupport();    // new tap support
 }
@@ -2313,7 +2374,7 @@ function renderCharSheet(adv) {
                     <h3>Traits</h3>
 
                     <ul class="char-traits">
-                        ${(adv.trait ?? []).map(t => `<li>${t}</li>`).join("")}
+                        ${(adv.traits ?? []).map(t => `<li>${t}</li>`).join("")}
                     </ul>
 
                     ${(() => {

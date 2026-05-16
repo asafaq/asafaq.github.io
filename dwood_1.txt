@@ -33,3 +33,13 @@ dwood_fort	unlocks at dwood=5 && _fort = 2
 (add point at western wall of the fort)
 
 
+TWINKLE CONSTRAINTS NOTES
+
+class="${poiClass([3,4].includes(player?.missions?.dwood_1))}"
+
+class="${poiClass(player?.missions?.dwood_1 === 3 || player?.missions?.dwood_1 === 4)}"
+
+class="${poiClass(player?.missions?.dwood_1 >= 3 && player?.missions?.dwood_1 <= 4)}"
+
+
+
