@@ -143,13 +143,13 @@ let patronList = []; // This will hold your dynamic data
 const pages = {
     guild: `
       <div id="guild-container">
-        <img id="guild-image" src="assets/guild/guild.png" />
+        <img id="guild-image" src="/assets/guild/guild.png" />
         <div class="guild_License" style="top: 160px; left: 240px;">
-          <img src="assets/guild/license_icon.png" class="item-icon">
+          <img src="/assets/guild/license_icon.png" class="item-icon">
 
           <div class="hover-zone"
                data-label="Guild License"
-               data-large="assets/guild/adventurers_license_50.png">
+               data-large="/assets/guild/adventurers_license_50.png">
           </div>
 
           <div class="tooltip"></div>
@@ -157,7 +157,7 @@ const pages = {
 		
 		<div id="guild-stash">
 			<div class="guild_stash">
-				<img src="assets/guild/chest60.png" id="stash-chest-icon" class="item-icon chest-icon">
+				<img src="/assets/guild/chest60.png" id="stash-chest-icon" class="item-icon chest-icon">
 			</div>
 
 			<div class="stash-grid hidden"></div>
@@ -171,7 +171,7 @@ const pages = {
 		`,
 	tavern: `
       <div id="tavern-container">
-        <img id="contract_parchment" src="assets/guild/tavern.png" />
+        <img id="contract_parchment" src="/assets/guild/tavern.png" />
 		<p style="margin: 40px; color: black;"></p>
 		<div id="patron-container"></div>
 		</div>
@@ -188,20 +188,20 @@ const pages = {
     satchel_guild: `	
 		<div id="satchel" class="satchel-window">
 		<div class="close-btn" id="close-satchel">X</div>
-			<img src="assets/inventory/knabsack.png" id="satchel-icon" class="item-icon chest-icon">
+			<img src="/assets/inventory/knabsack.png" id="satchel-icon" class="item-icon chest-icon">
 			<div class="satchel-grid hidden"></div>
 		</div>
 		`,
     satchel_mission: `	
 		<div id="satchel" class="satchel-window">
 		<div class="close-btn" id="close-satchel">X</div>
-			<img src="assets/inventory/knabsack.png" id="satchel-icon" class="item-icon chest-icon">
+			<img src="/assets/inventory/knabsack.png" id="satchel-icon" class="item-icon chest-icon">
 			<div class="satchel-grid hidden"></div>
 		</div>
 		`,
     missions: `
       <div id="missions-container">
-        <img id="contract_parchment" src="assets/missions/guild_party_party_window.png" />
+        <img id="contract_parchment" src="/assets/missions/guild_party_party_window.png" />
 			<p id="missions_line1"></p>
 			<p id="missions_line2"></p>
 			<p id="missions_line21"></p>
@@ -296,7 +296,7 @@ const pages = {
 	mission_green_1: `
 	<div id="mission-container"
 			style="position: relative;">
-			<img id="fantasy_map" src="assets/missions/fantasy_map_s.png" />
+			<img id="fantasy_map" src="/assets/missions/fantasy_map_s.png" />
 
 		<!-- Path Layer -->
 		<svg width="100%" height="100%" style="position:absolute; top:0; left:0; pointer-events:none;">
@@ -316,20 +316,20 @@ const pages = {
 		<!-- Homebase -->
 		<div class="guild_homebase shine-container" 
 			 style="position: absolute; top: 420px; left: 110px; transform: scale(0.66); transform-origin: top left;">
-			<img src="assets/menu/menu_home.png" class="item-icon">
+			<img src="/assets/menu/menu_home.png" class="item-icon">
 		</div>
 
 
 		<!-- Objective: Fixed Coordinates -->
 		<div class="mission_green_objective shine-container" 
 			 style="position: absolute; top: 300px; left: 195px; transform: scale(0.66); transform-origin: top left;">
-			<img src="assets/missions/mission_event_coins_s.png" class="item-icon">
+			<img src="/assets/missions/mission_event_coins_s.png" class="item-icon">
 		</div>
 
 	`,
 	mission_green_2: `
 	<div id="mission-container" style="position: relative;">
-		<img id="fantasy_map" src="assets/missions/fantasy_map_s.png" />
+		<img id="fantasy_map" src="/assets/missions/fantasy_map_s.png" />
 
 		<!-- Path Layer -->
 		<svg width="100%" height="100%" style="position: absolute; top: 0; left: 0; pointer-events: none;">
@@ -349,19 +349,19 @@ const pages = {
 		<!-- Homebase -->
 		<div class="guild_homebase shine-container" 
 			 style="position: absolute; top: 420px; left: 110px; transform: scale(0.66); transform-origin: top left;">
-			<img src="assets/menu/menu_home.png" class="item-icon">
+			<img src="/assets/menu/menu_home.png" class="item-icon">
 		</div>
 
 		<!-- Objective: Fixed Coordinates -->
 		<div class="mission_green2_objective shine-container" 
 			 style="position: absolute; top: 300px; left: 455px; transform: scale(0.66); transform-origin: top left;">
-			<img src="assets/menu/menu_home.png" class="item-icon">
+			<img src="/assets/menu/menu_home.png" class="item-icon">
 		</div>
 	</div>
 	`,
 	mission_green_3: `
 	<div id="mission-container" style="position: relative;">
-		<img id="fantasy_map" src="assets/missions/fantasy_map_s.png" />
+		<img id="fantasy_map" src="/assets/missions/fantasy_map_s.png" />
 
 		<!-- Path Layer -->
 		<svg width="100%" height="100%" style="position: absolute; top: 0; left: 0; pointer-events: none;">
@@ -381,13 +381,13 @@ const pages = {
 		<!-- Dark Forest Objective -->
 		<div class="guild_homebase shine-container" 
 			 style="position: absolute; top: 220px; left: 310px; transform: scale(0.66); transform-origin: top left;">
-			<img src="assets/menu/menu_home.png" class="item-icon">
+			<img src="/assets/menu/menu_home.png" class="item-icon">
 		</div>
 
 		<!-- Township DepartureObjective: Fixed Coordinates -->
 		<div class="mission_green2_objective shine-container" 
 			 style="position: absolute; top: 300px; left: 455px; transform: scale(0.66); transform-origin: top left;">
-			<img src="assets/menu/menu_home.png" class="item-icon">
+			<img src="/assets/menu/menu_home.png" class="item-icon">
 		</div>
 	</div>
 	`,
@@ -395,7 +395,7 @@ mission_dwood_1: () => `
 <div id="mission-container" style="position: relative;">
 
 
-    <img id="fantasy_map" src="assets/missions/dark_woods_map_s.png" />
+    <img id="fantasy_map" src="/assets/missions/dark_woods_map_s.png" />
 	    <!-- POI: Platform (always visible) -->
     <div id="dwood_platform"
 		 class="poi ${
@@ -403,7 +403,7 @@ mission_dwood_1: () => `
 			 player?.missions?.dwood_1 === 2) ? 'mapLight' : ''}"
          data-node="dwood_platform"
          style="position:absolute; top:318px; left:400px; transform:scale(0.35); z-index:10;">
-         <img src="assets/missions/stone_pedestal.png">
+         <img src="/assets/missions/stone_pedestal.png">
     </div>
 	
 	
@@ -534,7 +534,7 @@ mission_dwood_1: () => `
 			 player?.missions?.dwood_1 === 2) ? 'mapLight' : ''}"
          data-node="dwood_glade"
          style="position:absolute; top:269px; left:240px; transform:scale(1.5); z-index:10;">
-         <img src="assets/missions/mission_indicator_encounter.png">
+         <img src="/assets/missions/mission_indicator_encounter.png">
     </div>
 
 	` : ""}
@@ -545,7 +545,7 @@ mission_dwood_1: () => `
 		 class="poi ${player?.missions?.dwood_1 === 4 ? 'mapLight' : ''}"
          data-node="dwood_swamp"
          style="position:absolute; top:146px; left:147px; transform:scale(1.5); z-index:10;">
-         <img src="assets/missions/mission_indicator_encounter.png">
+         <img src="/assets/missions/mission_indicator_encounter.png">
     </div>
 
 	` : ""}
@@ -556,7 +556,7 @@ mission_dwood_1: () => `
 		 class="${poiClass(player?.missions?.dwood_1 === 3 || player?.missions?.dwood_1 === 2)}"
          data-node="dwood_shrine"
          style="position:absolute; top:417px; left:111px; transform:scale(1.5); z-index:10;">
-         <img src="assets/missions/mission_indicator_encounter.png">
+         <img src="/assets/missions/mission_indicator_encounter.png">
     </div>
     ` : ""}
 
@@ -566,7 +566,7 @@ mission_dwood_1: () => `
          class="poi mapLight"
          data-node="dwood_fort"
          style="position:absolute; top:170px; left:373px; transform:scale(1.5); z-index:10;">
-         <img src="assets/missions/mission_indicator_encounter.png">
+         <img src="/assets/missions/mission_indicator_encounter.png">
     </div>
     ` : ""}
 
@@ -576,7 +576,7 @@ mission_dwood_1: () => `
          class="poi mapLight"
          data-node="dwood_fort2"
          style="position:absolute; top:64px; left:366px; transform:scale(1.5); z-index:10;">
-         <img src="assets/missions/mission_indicator_encounter.png">
+         <img src="/assets/missions/mission_indicator_encounter.png">
     </div>
     ` : ""}
 
@@ -888,7 +888,7 @@ function enablePatronTouchSupport() {
 
 
 function showTemporaryImage(src) {
-	// showTemporaryImage("assets/myImage.png");
+	// showTemporaryImage("/assets/myImage.png");
 
     // Create overlay container
     const overlay = document.createElement("div");
@@ -945,7 +945,7 @@ main.innerHTML = typeof pages[page] === "function"
   container.innerHTML = patronList
     .filter(patron => patron.location === 1)
     .map(patron => {
-      const large = patron.large || patron.icon || "assets/patrons/default.png";
+      const large = patron.large || patron.icon || "/assets/patrons/default.png";
 
       return `
         <div class="patron-wrapper" 
@@ -982,7 +982,7 @@ main.innerHTML = typeof pages[page] === "function"
 	container.innerHTML = patronList
 	  .filter(patron => patron.location === 2)
 	  .map(patron => {
-		const large = patron.large || "assets/patrons/default.png";
+		const large = patron.large || "/assets/patrons/default.png";
 
 		return `
 		  <div class="patron-wrapper" 
@@ -1153,7 +1153,7 @@ function initPatronClicks() {
     zone.addEventListener('mousedown', () => {
 	  const id = zone.dataset.id;
 	  const adv = getHydratedAdventurer(id); // refresh data
-      const large = zone.dataset.large || adv.icon || "assets/patrons/default.png";
+      const large = zone.dataset.large || adv.icon || "/assets/patrons/default.png";
 
       openPatronWindow(adv, large);
     });
@@ -2428,7 +2428,7 @@ function initGuildTooltips() {
     if (!zone || !tooltip) return;
 
     const showTooltip = () => {
-      const largeSrc = zone.dataset.large || "assets/patrons/default.png";
+      const largeSrc = zone.dataset.large || "/assets/patrons/default.png";
       tooltip.innerHTML = `<img src="${largeSrc}">`;
       tooltip.style.display = "block";
     };
@@ -2461,7 +2461,7 @@ function initGuildTooltips() {
 }
 
 // data-label="Guild licence"
-// data-large="assets/guild/adventurers_licence_50.png"
+// data-large="/assets/guild/adventurers_licence_50.png"
 
 
 function openWindow(label, imageSrc) {
