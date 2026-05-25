@@ -1,6 +1,6 @@
 // Toggle: true = show login screen, false = skip login entirely
 const ENABLE_LOGIN = true;
-const ENABLE_PRELOAD = false;
+const ENABLE_PRELOAD = true;
 
 let preloadedAssets = null;
 let preloadPromise = null;
@@ -10,7 +10,6 @@ const assetUrls = [
 
   "/assets/guild/adventurers_license_50.png",
   "/assets/guild/chest60.png",
-  "/assets/guild/contract_parchment.png",
   "/assets/guild/default.png",
   "/assets/guild/guild.png",
   "/assets/guild/guild_master.png",
@@ -120,6 +119,10 @@ if (!ENABLE_LOGIN) {
         document.querySelector(".login-box").style.display = "none";
         document.getElementById("app-frame").style.display = "block";
 
+		// 🔥 Show loading screen immediately
+		showLoadingScreen();
+		updateLoadingText(0, assetUrls.length);
+		
         // Wait for preload + lore
         if (ENABLE_PRELOAD && preloadPromise) await preloadPromise;
         if (lorePromise) await lorePromise;

@@ -4,6 +4,9 @@
       "name": "Marilnus",
       "icon": "assets/patrons/default.png",
       "large": "assets/patrons/default.png",
+      "top": "220px",
+      "left": "260px",
+      "location": 2,
       "race": "Human",
       "role": "Carriagefarer",
       "hp_die": 6,
@@ -28,7 +31,7 @@
 		  { "item": null, "qty": 0, "locked": false }
 		],
       "traits": [
-        "Diplomatic"
+        "Persuasion"
       ],
       "notes": "The old adventurer and the party's horse and buggy, builds the camp, cooks dinner, parles with encouters, guards the loot, doesn't fight monsters."
     },
@@ -190,6 +193,41 @@
       "Snob_comment": "Won't party with lower castes.",
       "notes": "Amyssa is the first hireling the player may pay for after the tutorial adventure, then they discover the Caste system, and how Amyssa won't join with the commoner but stay in the guild and scribe scrolls instead, until he hires some nobles."
     },
+    "adv_Hogmother": {
+      "name": "Hogmother",
+      "icon": "assets/patrons/hogmother.png",
+      "large": "assets/patrons/hogmother.png",
+      "race": "Barbarian",
+      "race_comment": "Wildmen more of a humanoid than a human. Thick Hide for bonus unarmed AC \tRage +10 tempHP.",
+      "role": "Shaman",
+      "role_comment": "A cleric channeling spirits.",
+      "hp_die": 8,
+      "hp_modifier": 3,
+      "strengh_mod": 1,
+      "Dexterity_mod": 0,
+      "wisdom_mod": 2,
+      "intelligence_mod": 0,
+      "charisma_mod": 1,
+      "alignment": "Good",
+      "level": 3,
+      "sex": 0,
+      "size": "Medium",
+      "caste": "Commoner",
+      "RacialEnemy": "Knolls",
+      "proficiency_armor": "unarmored",
+      "proficiency_weapon": "Martial",
+	  	"inventory" : [
+		  { "item": "Large Cauldron Spoon", "qty": 1, "locked": true },
+		  { "item": "Apothecary kit", "qty": 1, "locked": true },
+		  { "item": null, "qty": 0, "locked": false },
+		  { "item": null, "qty": 0, "locked": false }
+		],
+      "traits": [
+        "Calm",
+        "Apothecary"
+      ],
+      "trait1_comment": "Resistant to drama. Can sooth others, party has +1 resist fear rolls."
+    },
     "adv_Tonica": {
       "name": "Tonica",
       "large": "assets/patrons/default.png",
@@ -259,10 +297,15 @@
     },
     "adv_Desmond": {
       "name": "Desmond",
+      "icon": "assets/patrons/desmond.png",
+      "large": "assets/patrons/desmond.png",
+      "top": "270px",
+      "left": "280px",
+      "location": 2,
       "race": "Human",
       "role": "Fallen Paladin",
       "hp_die": 10,
-      "hp_modifier": 3,
+      "hp_modifier": 2,
       "strengh_mod": 2,
       "Dexterity_mod": -2,
       "wisdom_mod": 2,
@@ -278,8 +321,8 @@
       "proficiency_armor": "Heavy",
       "proficiency_weapon": "Martial",
 	  	"inventory" : [
-		  { "item": null, "qty": 0, "locked": false },
-		  { "item": null, "qty": 0, "locked": false },
+		  { "item": "Adorned_Basalt_Club", "qty": 1, "locked": true },
+		  { "item": "Holy_water_flask", "qty": 2, "locked": false },
 		  { "item": null, "qty": 0, "locked": false },
 		  { "item": null, "qty": 0, "locked": false }
 		],
@@ -293,6 +336,11 @@
     },
     "adv_Aasibelle": {
       "name": "Aasibelle",
+	  "icon": "assets/patrons/Aasibelle_s2.png",
+      "large": "assets/patrons/Aasibelle_s2.png",
+      "top": "260px",
+      "left": "180px",
+      "location": 1,
       "race": "Angel",
       "role": "Paladin",
       "hp_die": 10,
@@ -326,41 +374,6 @@
       "Divine_comment": "Has (10*Lvl) Radiant points to spend as Smite or Heal.",
       "Holy Aura_comment": "party has +1 hit and Save rolls.",
       "notes": "The premium Pay2Win character. Aasibelle may seem as going out of game balance, but she is a token of gratitude from the development team to the player, and she doesn't have to be played at all as she will cost you no upkeep or space in the tavern."
-    },
-    "adv_Hogmother": {
-      "name": "Hogmother",
-      "icon": "assets/patrons/hogmother.png",
-      "large": "assets/patrons/hogmother.png",
-      "race": "Barbarian",
-      "race_comment": "Wildmen more of a humanoid than a human. Thick Hide for bonus unarmed AC \tRage +10 tempHP.",
-      "role": "Shaman",
-      "role_comment": "A cleric channeling spirits.",
-      "hp_die": 8,
-      "hp_modifier": 3,
-      "strengh_mod": 1,
-      "Dexterity_mod": 0,
-      "wisdom_mod": 2,
-      "intelligence_mod": 0,
-      "charisma_mod": 1,
-      "alignment": "Good",
-      "level": 3,
-      "sex": 0,
-      "size": "Medium",
-      "caste": "Commoner",
-      "RacialEnemy": "Knolls",
-      "proficiency_armor": "unarmored",
-      "proficiency_weapon": "Martial",
-	  	"inventory" : [
-		  { "item": "Large Cauldron Spoon", "qty": 1, "locked": true },
-		  { "item": "Apothecary kit", "qty": 1, "locked": true },
-		  { "item": null, "qty": 0, "locked": false },
-		  { "item": null, "qty": 0, "locked": false }
-		],
-      "traits": [
-        "Calm",
-        "Apothecary"
-      ],
-      "trait1_comment": "Resistant to drama. Can sooth others, party has +1 resist fear rolls."
     },
     "adv_Hogfather": {
       "name": "Hogfather",
@@ -455,8 +468,13 @@
       "traits": [],
       "notes": ""
     },
-    "adv_Tinman BB-TR": {
+    "adv_Tinman": {
       "name": "Tinman B-B-TR",
+	  "icon": "assets/patrons/Tinman.png",
+      "large": "assets/patrons/Tinman.png",
+	  "top": "180px",
+      "left": "400px",
+      "location": 2,
       "race": "Warforged",
       "role": "Clericbot",
       "hp_die": 8,
@@ -524,15 +542,15 @@
     },
 	"adv_Crusher": {
       "name": "Crusher",
-      "icon": "/assets/patrons/trollkin_s.png",
-      "large": "/assets/patrons/trollkin_l.png",
-      "top": "350px",
-      "left": "250px",
+      "icon": "/assets/patrons/crusher_s.png",
+      "large": "/assets/patrons/crusher_l.png",
+      "top": "400px",
+      "left": "230px",
       "location": 2,
       "race": "Goon",
       "role": "Bouncer",
-      "hp_die": 10,
-      "hp_modifier": 2,
+      "hp_die": 12,
+      "hp_modifier": 3,
       "strengh_mod": 4,
       "Dexterity_mod": -1,
       "wisdom_mod": -2,
@@ -559,10 +577,10 @@
     },
 	"adv_Wormtail": {
       "name": "Wormtail",
-      "icon": "/assets/patrons/trollkin_s.png",
-      "large": "/assets/patrons/trollkin_l.png",
-      "top": "350px",
-      "left": "250px",
+      "icon": "/assets/patrons/wormtail_s.png",
+      "large": "/assets/patrons/wormtail_l.png",
+      "top": "270px",
+      "left": "150px",
       "location": 2,
       "race": "Wererat",
       "role": "Sorcerer",
@@ -587,9 +605,7 @@
 		  { "item": null, "qty": 0, "locked": false },
 		  { "item": null, "qty": 0, "locked": false }
 		],
-      "traits": [
-        "Selfish"
-      ],
+      "traits": [],
       "notes": "A loathsome creature who dwells underground. Lives of unfair fights and easy pickings."
     },
 	"adv_Ugress": {
@@ -598,9 +614,9 @@
       "large": "/assets/patrons/trollkin_l.png",
       "top": "350px",
       "left": "250px",
-      "location": 2,
+      "location": 0,
       "race": "Ugress",
-      "role": "Warlock",
+      "role": "Hag",
       "hp_die": 8,
       "hp_modifier": 3,
       "strengh_mod": 1,
@@ -624,8 +640,7 @@
 		],
       "traits": [
         "Vicious",
-		"Ruthless",
-		"Ambitious",
+		"Dark Ambition",
 		"Magic-Immunity"
       ],
       "notes": "A vile monstrosity who will stop at nothing. Her Geas forces many to do her bidding, or in a day or a month they'll likely die."
@@ -726,6 +741,15 @@
       "Traits": [
         "Volatile Temper",
 		"Gluttonous"
+      ]
+    },
+    "Wererat": {
+	  "desc": "Lycanthope infected person.",
+      "Traits": [
+        "Undergrounder",
+		"Keen Smell",
+		"Ambusher",
+		"Cursed Bite"
       ]
     }
   },

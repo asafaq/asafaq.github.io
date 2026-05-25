@@ -2,13 +2,9 @@
 let loreData = null;
 let lorePromise = null;
 
-function updateLoadingText(loaded, total) {
+function updateLoadingText(loaded, total) {	//It updates the text on a loading screen to show how many assets have loaded out of the total
     const el = document.getElementById("loadingScreen");
     if (el) el.textContent = `Loading assets... ${loaded}/${total}`;
-}
-
-function initializeGame() {
-    console.log("Game engine ready.");
 }
 
 function startGame(playerObj, preloadedAssets, loreData) {
@@ -23,13 +19,10 @@ function startGame(playerObj, preloadedAssets, loreData) {
     }
 }
 
-
 function showLoadingScreen() {
   const el = document.getElementById("loadingScreen");
   if (el) el.style.display = "flex";
 }
-
-initializeGame();
 
 // Unified initialization
 
@@ -281,7 +274,6 @@ const pages = {
 		`,
 	journal: `
       <div id="journal-container">
-        <img id="contract_parchment" src="assets/guild/contract_parchment.png" />
 		<div id="journal-text"></div>
 		</div>
 		`,
@@ -304,7 +296,7 @@ const pages = {
 	mission_green_1: `
 	<div id="mission-container"
 			style="position: relative;">
-			<img id="fantasy map" src="assets/missions/fantasy_map_s.png" />
+			<img id="fantasy_map" src="assets/missions/fantasy_map_s.png" />
 
 		<!-- Path Layer -->
 		<svg width="100%" height="100%" style="position:absolute; top:0; left:0; pointer-events:none;">
@@ -327,16 +319,17 @@ const pages = {
 			<img src="assets/menu/menu_home.png" class="item-icon">
 		</div>
 
+
 		<!-- Objective: Fixed Coordinates -->
 		<div class="mission_green_objective shine-container" 
 			 style="position: absolute; top: 300px; left: 195px; transform: scale(0.66); transform-origin: top left;">
 			<img src="assets/missions/mission_event_coins_s.png" class="item-icon">
 		</div>
-	</div>
+
 	`,
 	mission_green_2: `
 	<div id="mission-container" style="position: relative;">
-		<img id="fantasy map" src="assets/missions/fantasy_map_s.png" />
+		<img id="fantasy_map" src="assets/missions/fantasy_map_s.png" />
 
 		<!-- Path Layer -->
 		<svg width="100%" height="100%" style="position: absolute; top: 0; left: 0; pointer-events: none;">
@@ -368,7 +361,7 @@ const pages = {
 	`,
 	mission_green_3: `
 	<div id="mission-container" style="position: relative;">
-		<img id="fantasy map" src="assets/missions/fantasy_map_s.png" />
+		<img id="fantasy_map" src="assets/missions/fantasy_map_s.png" />
 
 		<!-- Path Layer -->
 		<svg width="100%" height="100%" style="position: absolute; top: 0; left: 0; pointer-events: none;">
@@ -402,15 +395,15 @@ mission_dwood_1: () => `
 <div id="mission-container" style="position: relative;">
 
 
-    <img id="fantasy map" src="assets/missions/dark_woods_map_s.png" />
+    <img id="fantasy_map" src="assets/missions/dark_woods_map_s.png" />
 	    <!-- POI: Platform (always visible) -->
     <div id="dwood_platform"
 		 class="poi ${
 			 (player?.missions?.dwood_fort1 === 1 ||
 			 player?.missions?.dwood_1 === 2) ? 'mapLight' : ''}"
          data-node="dwood_platform"
-         style="position:absolute; top:294px; left:366px; transform:scale(0.25); z-index:10;">
-         <img src="assets/missions/stone_platform.png">
+         style="position:absolute; top:318px; left:400px; transform:scale(0.35); z-index:10;">
+         <img src="assets/missions/stone_pedestal.png">
     </div>
 	
 	
@@ -703,7 +696,16 @@ function handleGlobalDragStart(e) {
     const slot = e.target.closest(".patron-slot");
     if (!slot || !slot.draggable) return;
 
-    e.dataTransfer.setData("advId", slot.dataset.adv);
+    const advId = slot.dataset.adv;
+    const patron = player.patrons[advId];
+
+    // ❌ Deny pickup from locations 6 and 9
+    if (patron.location === 6 || patron.location === 9) {
+        e.preventDefault();
+        return;
+    }
+
+    e.dataTransfer.setData("advId", advId);
     slot.classList.add("dragging");
 
     // Optional: set a ghost image or effect
@@ -779,6 +781,12 @@ let isDragging = false;
 
 // Helper functions
 function selectPatron(advId) {
+    const patron = player.patrons[advId];
+
+    // ❌ Deny selecting patrons in locations 6 or 9
+    if (patron.location === 6 || patron.location === 9) {
+        return;
+    }
     deselectPatron(); // clear previous first
     
     selectedPatronId = advId;
@@ -1438,6 +1446,7 @@ async function startMission(partyKey) {
     // 🔴 TEMPORARY BLOCK: prevent party_B from starting missions
 
     const missionId = player.missions.current_mission.id;
+
     const party = player.missions.current_mission.party;
 	
 
@@ -1541,13 +1550,26 @@ async function startMission(partyKey) {
 }
 
 // Utility: Set status for all patrons in a given party
-function setPartyStatus(party, status) {
+function setPartyStatus(partyKey, status) {
+    // Map party key → location code
+    const locationByParty = {
+        party_A: 3,
+        party_B: 4
+    };
+
+    const targetLocation = locationByParty[partyKey];
+    if (targetLocation == null) {
+        console.warn("Unknown partyKey in setPartyStatus:", partyKey);
+        return;
+    }
+
     Object.values(player.patrons).forEach(p => {
-        if (p.party === party) {
+        if (p.location === targetLocation) {
             p.status = status;
         }
     });
 }
+
 
 function continueMission(partyKey) {
 	
@@ -1759,7 +1781,7 @@ async function loadMissionPage() {
         <label>Adv:</label>
         <select id="mission-select">
     `;
-
+	
     Object.keys(player.missions).forEach(key => {
         if (key === "current_mission") return;
         if (key === "tutorial") return;
@@ -1767,9 +1789,9 @@ async function loadMissionPage() {
         if (key === "dwood_fort1") return;
         if (key === "dwood_fort2") return;
 		//here we are setting where do those missions end and exist visability.
-        if (key === "green_1" && player.missions.green_1 > 6) return;
-        if (key === "green_2" && player.missions.green_2 > 2) return;
-        if (key === "green_3" && player.missions.green_3 > 2) return;
+        if (key === "green_1" && player.missions.green_1 > 1) return;
+        if (key === "green_2" && player.missions.green_2 > 1) return;
+        if (key === "green_3" && player.missions.green_3 > 1) return;
 
         const label = missionLabels[key] || key;
         const selected = (player.missions.current_mission.id === key) ? "selected" : "";
@@ -1777,6 +1799,9 @@ async function loadMissionPage() {
         missionHTML += `<option value="${key}" ${selected}>${label}</option>`;
     });
 
+	if (missionHTML === `<label>Adv:</label><select id="mission-select">`) {
+    missionHTML += `<option disabled>(No missions available)</option>`;
+	}
     missionHTML += `</select>`;
 
     // Build party dropdown
@@ -1797,9 +1822,15 @@ async function loadMissionPage() {
     listContainer.innerHTML = missionHTML + "<br><br>" + partyHTML;
 
 	// Wait for DOM to finish updating
-	await Promise.resolve();
-	if (!player.missions.current_mission.id?.trim()) {	player.missions.current_mission.id = "green_1"	};
-    const missionSelect = document.getElementById("mission-select");
+	await Promise.resolve();Select = document.getElementById("mission-select");
+	const missionSelect = document.getElementById("mission-select");
+
+	if (!missionSelect) {
+		console.warn("mission-select not found — no missions available");
+		return; // or handle gracefully
+	}
+
+
     const partySelect = document.getElementById("party-select");
 
     // --- FIX #1: Sync mission dropdown with saved state ---
@@ -1822,7 +1853,7 @@ async function loadMissionPage() {
     // Set dropdown to match saved value
     partySelect.value = player.missions.current_mission.party;
 
-    updateMissionDisplay();
+    //updateMissionDisplay();
 
     // Mission dropdown listener
     missionSelect.addEventListener("change", async (e) => {
@@ -1927,7 +1958,9 @@ function updateContinueButton(partyKey) {
     }
 }
 
-function updateMissionDisplay() {
+async function updateMissionDisplay() {
+	
+	//player = await storage.loadPlayer(player.id);
     const missionDisplay = document.getElementById("current-mission-display");
     if (!missionDisplay) return;
 
@@ -1979,56 +2012,6 @@ function hideRightMenu() {
 function displayRightMenu() {
   document.querySelector('.right-menu').style.display = 'flex';
   document.querySelector('.right-menu-mini').style.display = 'none';
-}
-
-function startTutorial() {
-	// TODO: Replace with mission-based tutorial system
-	if (player.missions.tutorial === 0) {
-		const win = document.querySelector(".tutorial-window");
-		if (win) {
-			const btn = document.getElementById("tutorial-button");
-			if (btn) {
-				btn.style.display = "none";}
-			console.log("tutorial-window:", win);
-
-			win.style.visibility = "visible";
-			win.style.display = "block";
-			win.classList.add("active");
-
-			
-    setTutorialChoices([
-        {
-            label: "start the Tutorial",
-            action: () => {
-                setTutorialText("Are you ready to start the Tutorial? This is going to take about 5-6 minutes of dialog.");
-                setTutorialChoices([
-					{
-						label: "OK",
-						action: () =>	{
-							closeTutorial();
-							startMissionSystem("tutor1_101");}
-							}]);
-            }
-        },
-        {
-            label: "Go back",
-            action: () => {
-                setTutorialText("No, let me back.");
-                setTutorialChoices([{ label: "Got it", action: () => closeTutorial() }]);
-            }
-        }
-    ]);
-			
-            }
-
-		}
-	}
-
-function startTutorial2() {
-	// TODO: Replace with mission-based tutorial system
-	if (player.missions.green_1 === 6) {
-	startMissionSystem("tutor2_101")
-	}
 }
 
 function closeTutorial() {
@@ -2221,7 +2204,6 @@ function rollAdvantage(die) {
 async function recruitAdventurer(advId) {
     // 1. Get the latest player state from your storage
     // (Assuming you have a function to get player data)
-    //let player = await storage.getPlayer(); 
 
     // 2. Safety check: Prevent overwriting if already recruited
     if (player.patrons[advId]) {
@@ -2268,7 +2250,6 @@ const Journal = {
             title: "Journal",
             content: `
                 <div id="journal-container">
-                    <img id="contract_parchment" src="assets/guild/contract_parchment.png" />
                     <div id="journal-text">
                         ${player.journal.entries.join("<br><br>")}
                     </div>

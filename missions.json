@@ -733,12 +733,32 @@
     "portrait": "",
     "side": "right",
     "dialog": "The bushes rustle at your path, they are aggressivly drawing out branches in a menacing, it's time for your introduction to the battle system.\n\nIn the standard Virtual Tabletop Battle Grid, use Move / Attack / Magic against the Animated Bushes to clain your victory.",
-    "interaction_type": "next",
-    "target_id": "green1_502end",
-    "options": []
+    "interaction_type": "selection",
+    "options": [
+      {
+        "text": "Fight tutorial battle",
+        "target_id": "green1_502end",
+        "disabled": false,
+        "color": "#FFD700"
+      },
+	  {
+        "text": "Skip tutorial battle.",
+        "target_id": "green1_502endskip"
+      }
+    ]
   },
   {
     "id": "green1_502end",
+    "speaker": "Narrator",
+    "portrait": "",
+    "side": "right",
+    "dialog": "The bushes rustle at your path, they are aggressivly drawing out branches in a menacing, it's time for your introduction to the battle system.\n\nIn the standard Virtual Tabletop Battle Grid, use Move / Attack / Magic against the Animated Bushes to clain your victory.",
+    "interaction_type": "next",
+    "target_id": "END",
+    "options": []
+  },
+  {
+    "id": "green1_502endskip",
     "speaker": "Narrator",
     "portrait": "",
     "side": "right",
@@ -1967,7 +1987,7 @@
         "disabled": true
       },
       {
-        "text": "[Calm] Have Hogmother Speak softly to the figure and explain your motivation.",
+        "text": "[Calm] Have Hogmother Speak softly to the figure and explain your intention.",
         "target_id": "green3_208a",
         "disabled": false,
         "color": "#FFD700"
@@ -2249,7 +2269,7 @@
     "id": "green3_232b",
     "speaker": "Awotruce",
     "portrait": "/assets/patrons/direwolf.png",
-    "dialog": "Well there's no harm done yet little guy. There I was thinking you were with THEM, but as it turns out, you're just another intruder through my woods.",
+    "dialog": "Well there's no harm done yet. I was thinking you were with THEM, but as it turns out, you're just another intruder passing through my woods.",
     "side": "right",
     "interaction_type": "next",
     "target_id": "green3_233"
@@ -3598,7 +3618,7 @@
     "speaker": "Lurch",
     "portrait": "/assets/patrons/lurch.png",
     "side": "left",
-    "dialog": "The Ugress Warlock has taken hold of this area, she has gone completely power mad.\nHer motives are kept hidden, but the fiends surrounding her tell no lies.",
+    "dialog": "The Ugress Hag has taken hold of this area, she has gone completely power mad.\nHer motives are kept hidden, but the fiends surrounding her tell no lies.",
     "interaction_type": "next",
     "target_id": "dwoodglade_106a"
   },

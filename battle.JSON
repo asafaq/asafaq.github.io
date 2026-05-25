@@ -15,6 +15,23 @@
       ]
     },
 
+    "tutor_test1": {
+      "name": "Training Bushes",
+      "map": "green_1",
+      "monsters": [
+        {
+          "id": "animated_bush",
+          "count": 4,
+          "spawns": [
+            { "x": 8, "y": 4 },
+            { "x": 6, "y": 4 },
+            { "x": 8, "y": 4 },
+            { "x": 6, "y": 6 }
+          ]
+        }
+      ]
+    },
+
     "tutor_test2": {
       "name": "Oogler",
       "map": "green_2",
@@ -61,7 +78,7 @@
 		"damageBonus": 0
     },
 
-    "large centipede": {
+    "large_centipede": {
       "name": "Large Centipede",
       "type": "monster",
       "hp": 12,

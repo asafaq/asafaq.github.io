@@ -169,16 +169,26 @@ function getInnateTraits(patron) {
 }
 
 const PartySynergies = {
-    "Trouble Makers": {
-        requirements: {
-			race: [ "barbarian"],
-            roles: [ "miner" , "bard"]	//roles → all must be present
-        }
-    },
+	"Trouble Makers": {
+		requirements: {
+			race: ["barbarian"],
+			roles: [
+				"bard"
+			],
+			anyOf: [
+				["rogue"],
+				["miner"],
+				["thief"],
+				["arcane trickster"],
+				["deputy"]
+			]
+		}
+	},
+
 
     "Hogfamily first": {
         requirements: {
-            adventurers: [					//adventurers → specific IDs must be present
+            adventurers: [
                 "Adv_Hogperson",
                 "Adv_Hogmother",
                 "Adv_Hogfather"
@@ -213,9 +223,15 @@ function buildPartyTraits(partyKey) {
 
     for (const m of members) {
 
-        const role = m.role?.toLowerCase();
-        if (role) roles.add(role);
-
+		console.log("Processing member:", m);
+		
+        const role = m.role;		//?.toLowerCase()
+		console.log("  role:", role);
+		
+		if (role) roles.add(role.toLowerCase());   // ⭐ FIXED
+		
+		console.log("  -> adding role:", role);
+		
         if (m.id) adventurerIds.add(m.id);
 
         // Visible personal traits
@@ -231,15 +247,23 @@ function buildPartyTraits(partyKey) {
         // Innate racial traits
         const innate = getInnateTraits(m);
         visibleTraits.push(...innate);
-		// Role traits from loreData.Roles
-		// Build a lowercase role lookup table
-		rolesLower = [];
-		// Role traits (normalized)
-		const normalizedRole = m.role?.toLowerCase();
-		const roleData = rolesLower[normalizedRole];
+		
+		
+		console.log("role:", m.role);
+
+		const normalizedRole = m.role; // or m.role.toLowerCase()
+		console.log("lookup key:", normalizedRole);
+
+		// ⭐ FIX: actually pull the role data from loreData
+		const roleData = loreData.Roles[normalizedRole];
+
+		console.log("roleData:", roleData);
 
 		if (roleData && Array.isArray(roleData.Traits)) {
+			console.log("  -> adding role traits:", roleData.Traits);
 			visibleTraits.push(...roleData.Traits);
+		} else {
+			console.log("  -> NO TRAITS FOUND for role:", normalizedRole);
 		}
 
     }
