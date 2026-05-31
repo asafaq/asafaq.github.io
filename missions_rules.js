@@ -223,7 +223,7 @@ function buildPartyTraits(partyKey) {
 
     for (const m of members) {
 
-		console.log("Processing member:", m);
+		// console.log("Processing member:", m);
 		
         const role = m.role;		//?.toLowerCase()
 		console.log("  role:", role);

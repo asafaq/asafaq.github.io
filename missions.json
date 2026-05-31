@@ -2251,14 +2251,14 @@
     "id": "green3_232",
     "speaker": "Halfling",
     "portrait": "/assets/patrons/halfling_L.png",
-    "dialog": "Allow me to introduce myself, I'm Sebastian the Young. I'm a humble scout from the farmers settlement nearby.",
+    "dialog": "Allow me to introduce myself, I'm Finnick the Young. I'm a humble scout from the farmers settlement nearby.",
     "side": "left",
     "interaction_type": "next",
     "target_id": "green3_232a"
   },
   {
     "id": "green3_232a",
-    "speaker": "Sebastian",
+    "speaker": "Finnick",
     "portrait": "/assets/patrons/halfling_L.png",
     "dialog": "I hope you don't think me an intruder, but it's been hard not to notice your business in the Tavern and follow you here.",
     "side": "left",
@@ -2285,7 +2285,7 @@
   },
   {
     "id": "green3_234",
-    "speaker": "Sebastian",
+    "speaker": "Finnick",
     "portrait": "/assets/patrons/halfling_L.png",
     "dialog": "*Gulp* Hopefully it won't come to this. I've been sent to this forest by my people. Our fields bloomed and flourished under the rule of goddess Narlia.",
     "side": "left",
@@ -2294,7 +2294,7 @@
   },
   {
     "id": "green3_235",
-    "speaker": "Sebastian",
+    "speaker": "Finnick",
     "portrait": "/assets/patrons/halfling_L.png",
     "dialog": "But alas, the crops grow stale now, and decay hurts the earth and the earthworms and butterflies and the bees.",
     "side": "left",
@@ -2303,7 +2303,7 @@
   },
   {
     "id": "green3_236",
-    "speaker": "Sebastian",
+    "speaker": "Finnick",
     "portrait": "/assets/patrons/halfling_L.png",
     "dialog": "Even the water don't seem so fresh anymore.",
     "side": "left",
@@ -2312,7 +2312,7 @@
   },
   {
     "id": "green3_237",
-    "speaker": "Sebastian",
+    "speaker": "Finnick",
     "portrait": "/assets/patrons/halfling_L.png",
     "dialog": "I've been appointed by the council elders to investigate this matter and report back. Their prime suspicion is the temple of the goddess at the edge of the forest have been overrun by vile forces.",
     "side": "left",
@@ -2321,7 +2321,7 @@
   },
   {
     "id": "green3_238",
-    "speaker": "Sebastian",
+    "speaker": "Finnick",
     "portrait": "/assets/patrons/halfling_L.png",
     "dialog": "We'll have to leave these lands unless it changes...",
     "side": "left",
@@ -2339,7 +2339,7 @@
   },
   {
     "id": "green3_240",
-    "speaker": "Sebastian",
+    "speaker": "Finnick",
     "portrait": "/assets/patrons/halfling_L.png",
     "dialog": "I'm afraid not my lady, but it would be safe to assume the cases are linked.",
     "side": "left",
@@ -2351,7 +2351,7 @@
     "speaker": "Hogmother",
     "portrait": "/assets/patrons/hogmother.png",
     "side": "right",
-    "dialog": "Yes it would. Master Awotruce, we would like to accept Master Sebastian under our wing, and away from your jaws if that's acceptable with you.",
+    "dialog": "Yes it would. Master Awotruce, we would like to accept Master Finnick under our wing, and away from your jaws if that's acceptable with you.",
     "interaction_type": "next",
     "target_id": "green3_242"
   },
@@ -2898,7 +2898,8 @@
         "text": "Make plans to submit Amyssa to the Trollkin",
         "frustration_text": "You wouldn't be able to do that while Hogmother is in the party.",
         "disabled": true,
-        "color": "#4800FF"
+        "color": "#4800FF",
+		"shadow": "0 0 5px rgba(255,255,0,1)"
       }
     ]
   },
@@ -3017,7 +3018,7 @@
   },
   {
     "id": "dwood1_214",
-    "speaker": "Sebastian",
+    "speaker": "Finnick",
     "portrait": "/assets/patrons/halfling_L.png",
     "dialog": "I will do it.",
     "side": "right",
@@ -3035,7 +3036,7 @@
   },
   {
     "id": "dwood1_216",
-    "speaker": "Sebastian",
+    "speaker": "Finnick",
     "portrait": "/assets/patrons/halfling_L.png",
     "dialog": "I'm hard to notice, and sneaky as it's possible to be.",
     "side": "right",
@@ -3044,7 +3045,7 @@
   },
   {
     "id": "dwood1_217",
-    "speaker": "Sebastian",
+    "speaker": "Finnick",
     "portrait": "/assets/patrons/halfling_L.png",
     "dialog": "If you can buy me the time and keep the fiend busy, I'll slip in and look for the Spellbook in their possesion.",
     "side": "right",
@@ -3118,7 +3119,7 @@
     "id": "dwood1_304a",
     "speaker": "Amyssa",
     "portrait": "/assets/patrons/amyssa_smaller.png",
-    "dialog": "Are you sure you're ready to go through with this plan Sebastian? This is going to be very dangerous.",
+    "dialog": "Are you sure you're ready to go through with this plan Finnick? This is going to be very dangerous.",
     "side": "right",
     "interaction_type": "next",
     "target_id": "dwood1_304b"
@@ -3134,7 +3135,7 @@
   },
   {
     "id": "dwood1_305",
-    "speaker": "Sebastian",
+    "speaker": "Finnick",
     "portrait": "/assets/patrons/halfling_L.png",
     "dialog": "I would gladly stay in my garden if it was possible. I was appointed by our elders, they warned me there will be times like this.",
     "side": "left",
@@ -3143,7 +3144,7 @@
   },
   {
     "id": "dwood1_306",
-    "speaker": "Sebastian",
+    "speaker": "Finnick",
     "portrait": "/assets/patrons/halfling_L.png",
     "dialog": "If we won't find a way to challenge them directly, it'll spread to every home and every family. It's not just you Amyssa.",
     "side": "left",
@@ -3152,7 +3153,7 @@
   },
   {
     "id": "dwood1_307",
-    "speaker": "Sebastian",
+    "speaker": "Finnick",
     "portrait": "/assets/patrons/halfling_L.png",
     "dialog": "If we give this villain any ground, the darkness will only spread, it'll never stop taking.",
     "side": "left",
@@ -3164,7 +3165,7 @@
     "speaker": "Hogmother",
     "portrait": "/assets/patrons/hogmother.png",
     "side": "left",
-    "dialog": "Let us swear an auth, upon this altar. If anything goes wrong, we'll never abandon Sebastian, or Claudio, or Amyssa.",
+    "dialog": "Let us swear an auth, upon this altar. If anything goes wrong, we'll never abandon Finnick, or Claudio, or Amyssa.",
     "interaction_type": "next",
     "target_id": "dwood1_310"
   },
@@ -3332,7 +3333,7 @@
     "dialog": "I am absolutely stage-terrified! I've never had such a hostile crowd! And such a dangerous stage!",
     "side": "left",
     "interaction_type": "next",
-    "target_id": "dwoodswamp1_104"
+    "target_id": "dwoodswamp1_105"
   },
   {
     "id": "dwoodswamp1_104",
@@ -3341,13 +3342,13 @@
     "dialog": "I WILL GO FORTH",
     "side": "left",
     "interaction_type": "next",
-    "target_id": "dwoodswamp1_105"
+    "target_id": "dwoodswamp1_106"
   },
   {
     "id": "dwoodswamp1_105",
     "speaker": "Amyssa",
     "portrait": "/assets/missions/amyssa_disguise_l.png ",
-    "dialog": "Alright, we'll ambush the creature back here, Sebastian will lurk and head for the back when the fiend is occupied.",
+    "dialog": "Alright, we'll ambush the creature back here, Finnick will lurk and head for the back when the fiend is occupied.",
     "side": "right",
     "interaction_type": "next",
     "target_id": "dwoodswamp1_105a"
@@ -3359,7 +3360,7 @@
     "dialog": "If anything goes sour, we'll all jump and overwhelm the fiend. All for one and one for all.",
     "side": "left",
     "interaction_type": "next",
-    "target_id": "dwoodswamp1_106"
+    "target_id": "dwoodswamp1_104"
   },
   {
     "id": "dwoodswamp1_106",
@@ -3498,7 +3499,7 @@
   },
   {
     "id": "dwoodswamp1_121",
-    "speaker": "Sebastian",
+    "speaker": "Finnick",
     "portrait": "/assets/patrons/halfling_L.png",
     "dialog": "I have it.\n\nIt was right there laying in his hut. I sparked his nasty straw to mask our exit.",
     "side": "left",
@@ -3509,7 +3510,7 @@
     "id": "dwoodswamp1_122",
     "speaker": "Hogmother",
     "portrait": "/assets/patrons/hogmother.png",
-    "dialog": "Brilliant work Sebastian. Let us retreat, quickly.",
+    "dialog": "Brilliant work Finnick. Let us retreat, quickly.",
     "side": "right",
     "interaction_type": "next",
     "target_id": "dwoodswamp1_123"
@@ -3536,7 +3537,7 @@
     "id": "dwoodswamp1_125",
     "speaker": "Amyssa",
     "portrait": "/assets/missions/amyssa_disguise_l.png ",
-    "dialog": "Oh you've been fantastic!!! And Sebastian went and got the Spellbook back, and distracted the Trollkin!",
+    "dialog": "Oh you've been fantastic!!! And Finnick went and got the Spellbook back, and distracted the Trollkin!",
     "side": "right",
     "interaction_type": "next",
     "target_id": "dwoodswamp1_126"
@@ -3618,7 +3619,7 @@
     "speaker": "Lurch",
     "portrait": "/assets/patrons/lurch.png",
     "side": "left",
-    "dialog": "The Ugress Hag has taken hold of this area, she has gone completely power mad.\nHer motives are kept hidden, but the fiends surrounding her tell no lies.",
+    "dialog": "The Ugress Warlock has taken hold of this area, she has gone completely power mad.\nHer motives are kept hidden, but the fiends surrounding her tell no lies.",
     "interaction_type": "next",
     "target_id": "dwoodglade_106a"
   },
@@ -3663,7 +3664,16 @@
     "speaker": "Lurch",
     "portrait": "/assets/patrons/lurch.png",
     "side": "left",
-    "dialog": "I'll be awaiting your signal and lead you inside, in secret.",
+    "dialog": "I'll be awaiting your signal and lead you inside, in secret. You will have to make a diversion at the opposite side of the sewers.",
+    "interaction_type": "next",
+    "target_id": "dwoodglade_111"
+  },
+  {
+    "id": "dwoodglade_111",
+    "speaker": "Lurch",
+    "portrait": "/assets/patrons/lurch.png",
+    "side": "left",
+    "dialog": "I'll do my best to prepare Hogfather for departure.",
     "interaction_type": "next",
     "target_id": "dwoodglade_110end"
   },

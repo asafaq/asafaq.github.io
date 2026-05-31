@@ -2,10 +2,10 @@
   "Adventurer": {
     "adv_Marilnus": {
       "name": "Marilnus",
-      "icon": "assets/patrons/default.png",
-      "large": "assets/patrons/default.png",
+      "icon": "assets/patrons/marlnus_s.png",
+      "large": "assets/patrons/marlnus_l.png",
       "top": "220px",
-      "left": "260px",
+      "left": "285px",
       "location": 2,
       "race": "Human",
       "role": "Carriagefarer",
@@ -406,8 +406,8 @@
       "traits": "Cheerful",
       "trait1_comment": "Party members have moral +1."
     },
-    "adv_Sebastian": {
-      "name": "Sebastian",
+    "adv_Finnick": {
+      "name": "Finnick",
       "race": "Halfling",
       "icon": "assets/patrons/halfling_L.png",
       "role": "Deputy",
@@ -616,7 +616,7 @@
       "left": "250px",
       "location": 0,
       "race": "Ugress",
-      "role": "Hag",
+      "role": "Warlock",
       "hp_die": 8,
       "hp_modifier": 3,
       "strengh_mod": 1,
@@ -644,6 +644,79 @@
 		"Magic-Immunity"
       ],
       "notes": "A vile monstrosity who will stop at nothing. Her Geas forces many to do her bidding, or in a day or a month they'll likely die."
+    },
+	"adv_SandraFreja": {
+      "name": "Sandra Freja",
+      "icon": "/assets/patrons/SandraFreja_s.png",
+      "large": "/assets/patrons/SandraFreja_l.png",
+      "top": "350px",
+      "left": "250px",
+      "location": 0,
+      "race": "Amazon",
+      "role": "Huntress",
+      "hp_die": 8,
+      "hp_modifier": -1,
+      "strengh_mod": 0,
+      "Dexterity_mod": 2,
+      "wisdom_mod": 1,
+      "intelligence_mod": -2,
+      "charisma_mod": -1,
+      "alignment": "Neutral",
+      "level": 3,
+      "sex": 0,
+      "size": "normal",
+      "caste": "Noble",
+      "RacialEnemy": "",
+      "proficiency_armor": "Heavy",
+      "proficiency_weapon": "Martial",
+	  "inventory" : [
+		  { "item": "Helmet of True Seeing", "qty": 1, "locked": true },
+		  { "item": null, "qty": 0, "locked": false },
+		  { "item": null, "qty": 0, "locked": false },
+		  { "item": null, "qty": 0, "locked": false }
+		],
+      "traits": [
+        "Arrogant",
+		"Ambitious"
+      ],
+      "notes": "Female Warrior. Can serve as a ranger across a difficult passage."
+    },
+	"adv_Bjorn": {
+      "name": "Bjorn",
+      "icon": "/assets/patrons/SandraFreja_s.png",
+      "large": "/assets/patrons/SandraFreja_l.png",
+      "top": "350px",
+      "left": "250px",
+      "location": 0,
+      "race": "Human",
+      "role": "Squire",
+      "hp_die": 10,
+      "hp_modifier": 3,
+      "strengh_mod": 4,
+      "Dexterity_mod": -1,
+      "wisdom_mod": 0,
+      "intelligence_mod": -1,
+      "charisma_mod": 0,
+      "alignment": "Good",
+      "level": 2,
+      "sex": 0,
+      "size": "normal",
+      "caste": "Commoner",
+      "RacialEnemy": "",
+      "proficiency_armor": "Heavy",
+      "proficiency_weapon": "Martial",
+	  "inventory" : [
+		  { "item": "Short Sword", "qty": 1, "locked": false },
+		  { "item": null, "qty": 0, "locked": false },
+		  { "item": null, "qty": 0, "locked": false },
+		  { "item": null, "qty": 0, "locked": false }
+		],
+      "traits": [
+        "Adolescent",
+		"Ambitious",
+		"Stoic"
+      ],
+      "notes": "A villager youth, capable of extraordinary feats of strength. Throws cabers since her was 14."
     }
   },
   "Races": {
@@ -698,7 +771,7 @@
       "desc": "Love child of a human and an angel."
     },
     "Warforged": {
-      "desc": "Mechanical conscience beings, built with a purpose."
+      "desc": "Mechanical conscience beings, built by engineers, chemists, and magic with a purpose."
     },
     "Koboldog": {
       "desc": "A mean humanoid akin to a large dog.",
@@ -740,7 +813,8 @@
 	  "desc": "A vile female Ogre.",
       "Traits": [
         "Volatile Temper",
-		"Gluttonous"
+		"Gluttonous",
+		"Large"
       ]
     },
     "Wererat": {
@@ -750,6 +824,13 @@
 		"Keen Smell",
 		"Ambusher",
 		"Cursed Bite"
+      ]
+    },
+    "Amazon": {
+	  "desc": "A tribe of females shaped by their idol, the icon of a Valkyrie.",
+      "Traits": [
+        "Outdoorsman",
+		"Keen Senses"
       ]
     }
   },
@@ -761,6 +842,12 @@
       "desc": "less proficient fighter, higher critical rate for recklessness.",
       "Traits": [
         "Reckless"
+      ]
+    },
+    "Squire": {
+      "desc": "less proficient fighter on internship to become a Knight.",
+      "Traits": [
+        ""
       ]
     },
     "Baker": {
@@ -832,6 +919,14 @@
       "Traits": [
         "",
 		""
+      ]
+    },
+    "Huntress": {
+      "desc": "A female warrior adept at large wild game.",
+      "Traits": [
+        "Game Hunter",
+		"Tracker",
+		"Patient"
       ]
     }
   },
@@ -919,6 +1014,12 @@
     },
     "Postposed Death": {
       "desc": "If this character takes fatal damage, even a catastophic dismemberment death, it may still act and attack for 2 rounds, with +4 to all rolls."
+    },
+    "Game Hunter": {
+      "desc": "Have the Anatomical Expertise to subdue large beasts."
+    },
+    "Tracker": {
+      "desc": "Tracks the footsteps of their target."
     }
   },
   "Party Traits": {

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>D&D Mobile VTT: Action Economy</title>
+    <title>D&D Virtual Table Top</title>
     <meta name="viewport" content="width=540, user-scalable=no" charset="UTF-8">
 <style>
     body { margin: 0; background: #121212; color: #eee; display: flex; justify-content: center; font-family: 'Segoe UI', sans-serif; min-height: 100vw ; overflow: auto; }
@@ -67,7 +67,8 @@ const Bus = {
     emit(event, data) { if(this.events[event]) this.events[event].forEach(cb => cb(data)); }
 };
 
-let staticObstacles = [], units = [], turn = 0, isMoving = false; battleXP = 0; isReactionPhase = false; roundStarted = false;
+let staticObstacles = [], units = [], turn = 0, isMoving = false; battleXP = 0; isReactionPhase = false; roundStarted = false; isHealing = false; healerUnit = null;
+
 const firstPCIndex = units.findIndex(u => u.type === "pc");
 
 
@@ -125,7 +126,37 @@ function init() {
 		if (staticObstacles.some(o => o.x === cx && o.y === cy)) {
 			cell.classList.add("obstacle");
 		}
-        cell.onclick = () => processMove(cx, cy);
+		cell.onclick = () => {
+			// ⭐ HEALING TARGET SELECTION
+			if (isHealing) {
+				const target = units.find(t =>
+					t.x === cx &&
+					t.y === cy &&
+					t.hp > 0 &&
+					t.type === "pc"
+				);
+
+				if (!target) {
+					Bus.emit('LOG', "Invalid healing target.");
+					isHealing = false;
+					healerUnit = null;
+					return;
+				}
+
+				applyHeal(healerUnit, target);
+
+				isHealing = false;
+				healerUnit = null;
+				return;
+			}
+
+			// ⭐ NORMAL CLICK BEHAVIOR
+			processMove(cx, cy);
+		};
+
+		
+		
+		
         grid.appendChild(cell);
     }
 
@@ -145,6 +176,28 @@ function init() {
 	roundStarted = false;
 	startReactionPhase();
 }
+
+// High‑level class groups
+const ROLE_TYPES = {
+    Rogue: ["Deputy", "Arcane Trickster", "Thief", "Miner"],
+    Caster: ["Bard", "Swordmage", "Shaman", "Arcane Trickster"],
+	Healer: ["Shaman", "Cleric", "Paladin", "Clericbot", "Druid", "Warlock"]
+
+};
+
+function isRogue(role) {
+    return ROLE_TYPES.Rogue.includes(role);
+}
+
+function canCast(role) {
+    return ROLE_TYPES.Caster.includes(role);
+}
+
+function canHeal(role) {
+    return ROLE_TYPES.Healer.includes(role);
+}
+
+
 
 function update() {
     if (isReactionPhase) return; // ⭐ Prevent UI rebuild during reactions
@@ -173,16 +226,27 @@ function update() {
     bar.innerHTML = '';
     createBtn(bar, "📍 Move", toggleMove, isMoving ? 'btn-move-active' : '', "move-btn");
     
-    if (active.role === "Miner") {
-        if (active.isHiding) createBtn(bar, "🗡️ Sneak", handleSneakAttack);
-        else { 
-            createBtn(bar, "⛏️ Attack", handleAttack); 
-            createBtn(bar, "🌫️ Hide", handleHide); 
-        }
-    } else {
-        createBtn(bar, "⚔️ Strike", handleAttack);
-        createBtn(bar, "🔥 Spell", handleSpell);
-    }
+	// Rogue‑type actions
+	if (isRogue(active.role)) {
+		if (active.isHiding) {
+			createBtn(bar, "🗡️ Sneak", handleSneakAttack);
+		} else {
+			createBtn(bar, "⚔️ Strike", handleAttack);
+			createBtn(bar, "🌫️ Hide", handleHide);
+		}
+	} else {
+		// Default non‑rogue attack
+		createBtn(bar, "⚔️ Strike", handleAttack);
+	}
+
+	// Spellcasting (only for caster roles)
+	if (canCast(active.role)) {
+		createBtn(bar, "✨ Spell", handleSpell);
+	}
+	if (canHeal(active.role)) {
+		createBtn(bar, "💚 Heal", startHealTargeting);
+	}
+
 
     const endBtn = document.getElementById('end-turn-btn');
     if (endBtn) endBtn.disabled = (active.type === 'monster');
@@ -351,6 +415,61 @@ function handleSneakAttack() {
     } else { Bus.emit('LOG', `💨 Sneak missed!`); }
     u.isHiding = false; u.hasAction = false; update();
 }
+
+function handleHeal() {
+    const u = units[turn];
+
+    // Only healers can use this
+    if (!HEALER_ROLES.includes(u.role)) {
+        Bus.emit('LOG', `${u.name} cannot cast healing magic.`);
+        return;
+    }
+
+    if (!u.hasAction) return;
+
+    // Choose a target: any living PC (including self)
+    const allies = units.filter(t => t.type === 'pc' && t.hp > 0);
+
+    // If you want a UI selection later, replace this with a target picker
+    const target = allies.length > 1 ? allies[0] : u;
+
+    // Heal amount: 2–7 HP
+    const heal = Math.floor(Math.random() * 6) + 3;
+
+    const oldHP = target.hp;
+    target.hp = Math.min(target.maxHp, target.hp + heal);
+
+    u.hasAction = false;
+
+    Bus.emit('LOG', `💚 ${u.name} heals ${target.name} for ${target.hp - oldHP} HP.`);
+
+    update();
+}
+
+function startHealTargeting() {
+    const u = units[turn];
+
+    if (!canHeal(u.role) || !u.hasAction) return;
+
+    isHealing = true;
+    healerUnit = u;
+
+    Bus.emit('LOG', `${u.name} is selecting a healing target...`);
+}
+
+function applyHeal(healer, target) {
+    const heal = Math.floor(Math.random() * 6) + 2; // 2–7 HP
+    const before = target.hp;
+
+    target.hp = Math.min(target.maxHp, target.hp + heal);
+    healer.hasAction = false;
+
+    Bus.emit('LOG', `💚 ${healer.name} heals ${target.name} for ${target.hp - before} HP.`);
+
+    update();
+}
+
+
 
 function startReactionPhase() {
     isReactionPhase = true;

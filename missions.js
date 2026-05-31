@@ -211,7 +211,8 @@ async function renderScene(sceneId) {
     if (typeTarget) {
         isTyping = true;
         typeTarget.innerHTML = "";
-		
+
+
         player = await storage.loadPlayer(player.id);
 		// Now read the updated value
 		const SKIP_TYPEWRITER = player?.data?.skip_typewriter ?? false;
@@ -275,7 +276,7 @@ async function renderScene(sceneId) {
 
 			
 
-			createBtn(opt.text, opt.target_id, opt.color, isDisabled, opt.frustration_text);
+			createBtn(opt.text, opt.target_id, opt.color, isDisabled, opt.frustration_text, opt.shadow);
 		});
 
 		
@@ -287,7 +288,7 @@ async function renderScene(sceneId) {
 }
 let frustrationTimeout; // Keep track of the timer globally
 
-function createBtn(text, targetId, color = null, isDisabled = false, frustrationText = "") {
+function createBtn(text, targetId, color = null, isDisabled = false, frustrationText = "", shadow = null) {
     const btn = document.createElement('button');
     btn.className = 'm-btn';
     btn.innerText = text;
@@ -298,17 +299,15 @@ function createBtn(text, targetId, color = null, isDisabled = false, frustration
         btn.style.boxShadow = `inset 0 0 5px ${color}44`; 
     }
 
+    if (shadow) {
+        btn.style.textShadow = shadow;
+    }
+
     btn.onclick = () => {
         if (isDisabled && frustrationText) {
             const display = document.getElementById('m-frustration-display');
-            
-            // 1. Clear any existing timeout so it doesn't vanish too early
             clearTimeout(frustrationTimeout);
-            
-            // 2. Set the text (this automatically overwrites any previous frustration text)
             display.innerText = frustrationText;
-            
-            // 3. Set a new timeout to clear the text after 3 seconds
             frustrationTimeout = setTimeout(() => {
                 display.innerText = "";
             }, 3000);
@@ -319,6 +318,7 @@ function createBtn(text, targetId, color = null, isDisabled = false, frustration
     
     document.getElementById('m-choices-container').appendChild(btn);
 }
+
 // Add this helper function to show the text briefly
 function showTemporaryMessage(text) {
     const dialogBox = document.getElementById('m-dialog-box');
@@ -549,15 +549,15 @@ async function handleMissionEnd(sceneId) {
             recruitAdventurer("adv_Awetruce");
             player.patrons.adv_Awetruce.location = 6;
             player.patrons.adv_Awetruce.status = "mission";
-            recruitAdventurer("adv_Sebastian");
-            player.patrons.adv_Sebastian.location = 3;
-            player.patrons.adv_Sebastian.status = "mission";
+            recruitAdventurer("adv_Finnick");
+            player.patrons.adv_Finnick.location = 3;
+            player.patrons.adv_Finnick.status = "mission";
             
 			const partyKey = player.missions.current_mission.party;
             buildPartyTraits(partyKey);
 			buildPartySummary(partyKey);
             Journal.addEntry(`You've met with Awetruce who have agreed to overwatch you in the dark woods.`);
-            Journal.addEntry(`You've met with Sebastian the Young who joined the ${player.data.party_A}`);
+            Journal.addEntry(`You've met with Finnick the Young who joined the ${player.data.party_A}`);
             loadPage("mission_dwood_1");
         },
 
@@ -573,7 +573,7 @@ async function handleMissionEnd(sceneId) {
 		
         "dwood1_219end": async () => {
             player.missions.dwood_1 = 3;
-            Journal.addEntry("Claudio and Sebastian have decided to outsmart the Trollkin and manipulate the Spellbook out of him.");
+            Journal.addEntry("Claudio and Finnick have decided to outsmart the Trollkin and manipulate the Spellbook out of him.");
 			// change Claudio portrait.
             // change Amyssa portrait.
             loadPage("mission_dwood_1");

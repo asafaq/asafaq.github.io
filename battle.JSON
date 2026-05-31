@@ -32,6 +32,22 @@
       ]
     },
 
+
+    "tutor_test2": {
+      "name": "Training Bushes",
+      "map": "green_1",
+      "monsters": [
+        {
+          "id": "Oogler",
+          "count": 2,
+          "spawns": [
+            { "x": 8, "y": 4 },
+            { "x": 6, "y": 6 }
+          ]
+        }
+      ]
+    },
+
     "tutor_test2": {
       "name": "Oogler",
       "map": "green_2",
@@ -44,7 +60,45 @@
           ]
         }
       ]
-    }
+    },
+	
+	"forest_mix_test": {
+	  "name": "Forest Ambush",
+	  "map": "green_1",
+	  "monsters": [
+		{
+		  "id": "animated_bush",
+		  "count": 2,
+		  "spawns": [
+			{ "x": 8, "y": 4 },
+			{ "x": 8, "y": 6 }
+		  ]
+		},
+		{
+		  "id": "large_toad",
+		  "count": 2,
+		  "spawns": [
+			{ "x": 6, "y": 3 },
+			{ "x": 7, "y": 2 }
+		  ]
+		},
+		{
+		  "id": "large_centipede",
+		  "count": 1,
+		  "spawns": [
+			{ "x": 5, "y": 5 }
+		  ]
+		},
+		{
+		  "id": "Oogler",
+		  "count": 1,
+		  "spawns": [
+			{ "x": 9, "y": 5 }
+		  ]
+		}
+	  ]
+	}
+
   },
 
   "monsters": {
@@ -100,7 +154,7 @@
       "maxHp": 20,
       "speed": 4,
 	  "xp": 28,
-      "icon": "assets/missions/monster_token.png",
+      "icon": "assets/missions/monster_token_default.png",
       "color": "#c0392b",
 		"ac": 12,
 		"attackMod": 2,

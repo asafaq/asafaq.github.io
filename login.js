@@ -1,10 +1,11 @@
 // Toggle: true = show login screen, false = skip login entirely
 const ENABLE_LOGIN = true;
-const ENABLE_PRELOAD = true;
+const ENABLE_PRELOAD = false;
 
 let preloadedAssets = null;
 let preloadPromise = null;
 
+// loading assets into user's working memory depends on having the leading / "/asset will be loaded but not "asset without leading /
 const assetUrls = [
   "/assets/Contracts/parchment.jpg",
 
