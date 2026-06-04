@@ -67,7 +67,8 @@ const Bus = {
     emit(event, data) { if(this.events[event]) this.events[event].forEach(cb => cb(data)); }
 };
 
-let staticObstacles = [], units = [], turn = 0, isMoving = false; battleXP = 0; isReactionPhase = false; roundStarted = false; isHealing = false; healerUnit = null; isCastingSpell = false; spellCaster = null; selectedSpell = null; pendingSpells = []; 
+let staticObstacles = [], units = [], turn = 0, isMoving = false; battleXP = 0; isReactionPhase = false; roundStarted = false; isHealing = false; healerUnit = null; isCastingSpell = false; spellCaster = null; selectedSpell = null; pendingSpells = []; victoryShown = false; isRangedTargeting = false; rangedShooter = null; isMeleeTargeting = false; meleeAttacker = null;
+
 
 const firstPCIndex = units.findIndex(u => u.type === "pc");
 
@@ -157,7 +158,6 @@ function init() {
 				healerUnit = null;
 				return;
 			}
-
 			// ⭐ SPELL TARGETING
 			if (isCastingSpell) {
 				const target = units.find(t =>
@@ -193,6 +193,62 @@ function init() {
 				return;
 			}
 
+			// ⭐ RANGED TARGETING
+			if (isRangedTargeting) {
+				const target = units.find(t =>
+					t.x === cx &&
+					t.y === cy &&
+					t.hp > 0 &&
+					t.type !== rangedShooter.type
+				);
+
+				if (!target) {
+					Bus.emit('LOG', "Invalid ranged target.");
+					isRangedTargeting = false;
+					rangedShooter = null;
+					return;
+				}
+
+				handleRangedAttack(rangedShooter, target);
+
+				isRangedTargeting = false;
+				rangedShooter = null;
+				return;
+			}
+
+			// ⭐ MELEE TARGETING
+			if (isMeleeTargeting) {
+				const target = units.find(t =>
+					t.x === cx &&
+					t.y === cy &&
+					t.hp > 0 &&
+					t.type !== meleeAttacker.type
+				);
+
+				if (!target) {
+					Bus.emit('LOG', "Invalid melee target.");
+					isMeleeTargeting = false;
+					meleeAttacker = null;
+					return;
+				}
+
+				// Check melee range (adjacent)
+				const dx = Math.abs(target.x - meleeAttacker.x);
+				const dy = Math.abs(target.y - meleeAttacker.y);
+
+				if (dx + dy !== 1) {
+					Bus.emit('LOG', "Target is not in melee range.");
+					isMeleeTargeting = false;
+					meleeAttacker = null;
+					return;
+				}
+
+				handleMeleeAttack(meleeAttacker, target);
+
+				isMeleeTargeting = false;
+				meleeAttacker = null;
+				return;
+			}
 
 			// ⭐ NORMAL CLICK BEHAVIOR
 			processMove(cx, cy);
@@ -222,18 +278,44 @@ function init() {
 }
 
 function applyDamage(target, amount) {
-    target.hp -= amount;
+    let dmg = amount;
 
-    if (target.hp <= 0) {
-        target.x = -1;
-        target.y = -1;
+    // ⭐ 1. Temp HP absorbs damage first
+    if (target.tempHp && target.tempHp > 0) {
+        const absorbed = Math.min(target.tempHp, dmg);
+        target.tempHp -= absorbed;
+        dmg -= absorbed;
+
+        Bus.emit('LOG', `🛡️ ${target.name}'s temp HP absorbs ${absorbed} damage.`);
+
+        // If all damage was absorbed, stop here
+        if (dmg <= 0) {
+            update();
+            return;
+        }
     }
 
+    // ⭐ 2. Remaining damage hits real HP
+    target.hp -= dmg;
+    Bus.emit('LOG', `💥 ${target.name} takes ${dmg} damage.`);
+
+    // ⭐ 3. If HP drops to 0 or below, remove from board
+    if (target.hp <= 0) {
+        target.hp = 0;
+        target.x = -1;
+        target.y = -1;
+        Bus.emit('LOG', `☠️ ${target.name} falls!`);
+    }
+
+    // ⭐ 4. Concentration breaks on ANY real HP damage
     if (target.isConcentrating) {
         target.isConcentrating = false;
         Bus.emit('LOG', `💥 ${target.name} loses concentration!`);
     }
+
+    update();
 }
+
 
 
 
@@ -263,8 +345,39 @@ function update() {
     if (!active) return;
 
     document.getElementById('unit-name').innerText = active.name;
-    document.getElementById('unit-hp').innerText = `HP: ${active.hp}`;
+    // ⭐ HP + Temp HP combined
+    let hpText = `HP: ${active.hp}`;
+    if (active.tempHp && active.tempHp > 0) {
+        hpText += `  🛡️ ${active.tempHp}`;
+    }
+    document.getElementById('unit-hp').innerText = hpText;
     document.getElementById('unit-speed').innerText = `SPD: ${active.speed}`;
+
+    // ⭐ HIT and DAMAGE bonuses
+    const hitBonus = active.hitBonus || 0;
+    const dmgBonus = active.damageBonus || 0;
+
+    // Create or update bonus elements
+    let hitEl = document.getElementById('unit-hitBonus');
+    let dmgEl = document.getElementById('unit-damageBonus');
+
+    if (!hitEl) {
+        hitEl = document.createElement('span');
+        hitEl.id = 'unit-hitBonus';
+        document.getElementById('stats-panel').appendChild(hitEl);
+    }
+
+    if (!dmgEl) {
+        dmgEl = document.createElement('span');
+        dmgEl.id = 'unit-damageBonus';
+        document.getElementById('stats-panel').appendChild(dmgEl);
+    }
+    // Display only if non‑zero
+    hitEl.style.display = hitBonus !== 0 ? "block" : "none";
+    dmgEl.style.display = dmgBonus !== 0 ? "block" : "none";
+
+    if (hitBonus !== 0) hitEl.innerText = `HIT: ${hitBonus > 0 ? "+" : ""}${hitBonus}`;
+    if (dmgBonus !== 0) dmgEl.innerText = `DMG: ${dmgBonus > 0 ? "+" : ""}${dmgBonus}`;
 
     const ring = document.getElementById('active-ring');
     ring.style.left = (active.x * 54 + 2) + 'px';
@@ -284,12 +397,24 @@ function update() {
     bar.innerHTML = '';
     createBtn(bar, "📍 Move", toggleMove, isMoving ? 'btn-move-active' : '', "move-btn");
     
+	if (active.race === "Barbarian") {
+		// End Rage button (only after 2 full turns)
+		if (active.isRaging && active.rageTurnsActive >= 3) {
+			createBtn(bar, "End Rage", handleEndRage);
+		}
+	}
+		// Bard ranged attack (crossbow)
+	if (active.role === "Bard") {
+		createBtn(bar, "🏹 Crossbow", startRangedTargeting);
+	}
+
+	
 	// Rogue‑type actions
 	if (isRogue(active.role)) {
 		if (active.isHiding) {
 			createBtn(bar, "🗡️ Sneak", handleSneakAttack);
 		} else {
-			createBtn(bar, "⚔️ Strike", handleAttack);
+			createBtn(bar, "⚔️ Strike", startMeleeTargeting);
 			createBtn(bar, "🌫️ Hide", handleHide);
 		}
 	} else {
@@ -298,11 +423,12 @@ function update() {
 	}
 
 	// Spellcasting (only for caster roles) (disabled for singing).
-	if (canCast(active.role) && !active.isSinging) {
+	if (canCast(active.role) && !active.isSinging && !active.isRaging) {
 		createBtn(bar, "✨ Spell", handleSpell);
 	}
 
-	if (canHeal(active.role)) {
+	// Healing (blocked while raging)
+	if (canHeal(active.role) && !active.isRaging) {
 		createBtn(bar, "💚 Heal", startHealTargeting);
 	}
 
@@ -311,6 +437,18 @@ function update() {
     if (endBtn) endBtn.disabled = (active.type === 'monster');
     checkVictory();
 }
+
+function startRangedTargeting() {
+    const u = units[turn];
+    if (!u.hasAction) return;
+
+    isRangedTargeting = true;
+    rangedShooter = u;
+
+    Bus.emit('LOG', `${u.name} aims their crossbow... select a target`);
+}
+
+
 
 function createBtn(parent, text, func, className = '', id = '') {
     const btn = document.createElement('button');
@@ -349,63 +487,53 @@ function getOccupiedSquares() {
     return map;
 }
 
-function handleAttack() {
-    const u = units[turn];
-    if (!u.hasAction) return;
-
-    // Find adjacent enemy
-    const target = units.find(t =>
-        t.type !== u.type &&
-        t.hp > 0 &&
-        Math.max(Math.abs(t.x - u.x), Math.abs(t.y - u.y)) <= 1
-    );
-
-    if (!target) {
-        Bus.emit('LOG', "No enemy in reach.");
-        return;
-    }
+function handleAttack(attacker, target) {
+    if (!attacker.hasAction) return;
+    if (!target || target.hp <= 0) return;
 
     // --- ATTACK MODIFIER ---
-    let attackMod = 0;
+    let hitMod = 0;
 
-    if (u.type === "pc") {
+    if (attacker.type === "pc") {
         // PCs use STR or DEX (Miner rule)
-        attackMod = u.stats?.str || 0;
-        if (u.role === "Miner" && (u.stats?.dex > u.stats?.str)) {
-            attackMod = u.stats.dex;
+        hitMod = attacker.stats?.str || 0;
+        if (attacker.role === "Miner" && (attacker.stats?.dex > attacker.stats?.str)) {
+            hitMod = attacker.stats.dex;
         }
     } else {
         // Monsters pull from JSON DB
-        const m = getMonsterStats(u);
-        attackMod = m?.attackMod ?? 0;
+        const m = getMonsterStats(attacker);
+        hitMod = m?.hitMod ?? 0;
     }
 
     // --- RACIAL BONUS ---
     let racialBonus = 0;
-    if (u.RacialEnemy && target.name.includes(u.RacialEnemy)) {
+    if (attacker.RacialEnemy && target.name.includes(attacker.RacialEnemy)) {
         racialBonus = 2;
         Bus.emit('LOG', `🎯 Racial Advantage!`);
     }
 
     // --- ROLL TO HIT ---
     const roll = Math.floor(Math.random() * 20) + 1;
-    const totalToHit = roll + attackMod + racialBonus + (u.hitBonus || 0);
+    const totalToHit = roll + hitMod + racialBonus + (attacker.hitBonus || 0);
 
     const targetAC = target.ac || 10;
 
     const isCrit = roll === 20;
     const isHit = isCrit || (roll !== 1 && totalToHit >= targetAC);
 
+    Bus.emit('LOG', `${attacker.name} attacks ${target.name}! (Roll: ${roll} + ${hitMod} + ${attacker.hitBonus || 0})`);
+
     if (isHit) {
         // --- DAMAGE ---
         let dmg = 0;
 
-        if (u.type === "pc") {
-            // PCs: 1d6 + STR
-            dmg = (Math.floor(Math.random() * 6) + 1) + attackMod + (u.damageBonus || 0);
+        if (attacker.type === "pc") {
+            // PCs: 1d6 + STR + damageBonus
+            dmg = (Math.floor(Math.random() * 6) + 1) + hitMod + (attacker.damageBonus || 0);
         } else {
             // Monsters: use JSON stats
-            const m = getMonsterStats(u);
+            const m = getMonsterStats(attacker);
             const die = m?.damageDie ?? 3;
             const bonus = m?.damageBonus ?? 0;
 
@@ -414,31 +542,30 @@ function handleAttack() {
 
         applyDamage(target, dmg);
 
-        Bus.emit('LOG', `⚔️ ${u.name} hits ${target.name} for ${dmg}!`);
+        Bus.emit('LOG', `⚔️ ${attacker.name} hits ${target.name} for ${dmg}!`);
 
-		if (target.hp <= 0) {
-			target.x = -1;
-			target.y = -1;
+        if (target.hp <= 0) {
+            target.x = -1;
+            target.y = -1;
 
-			Bus.emit('LOG', `💀 ${target.name} defeated.`);
+            Bus.emit('LOG', `💀 ${target.name} defeated.`);
 
-			// ⭐ Award XP from monster DB
-			if (target.type === "monster" && window.MONSTER_DB) {
-				const template = window.MONSTER_DB[target.id];
-				const xpValue = template?.xp || 0;
+            // ⭐ Award XP from monster DB
+            if (target.type === "monster" && window.MONSTER_DB) {
+                const template = window.MONSTER_DB[target.id];
+                const xpValue = template?.xp || 0;
 
-				battleXP += xpValue;
+                battleXP += xpValue;
 
-				Bus.emit('LOG', `✨ Gained ${xpValue} XP`);
-			}
-		}
+                Bus.emit('LOG', `✨ Gained ${xpValue} XP`);
+            }
+        }
     } else {
-        Bus.emit('LOG', `🛡️ ${u.name} misses (${totalToHit} vs AC ${targetAC}).`);
+        Bus.emit('LOG', `🛡️ ${attacker.name} misses (${totalToHit} vs AC ${targetAC}).`);
     }
 
-    u.hasAction = false;
+    attacker.hasAction = false;
     update();
-}
 
 function getMonsterStats(unit) {
     if (unit.type !== "monster") return null;
@@ -459,6 +586,53 @@ function handleSpell() {
     Bus.emit('LOG', `${u.name} begins chanting the incantations to cast ${selectedSpell}... please select a target`);
 }
 
+function handleRage(u) {
+
+    // Only Barbarians can Rage
+    if (u.race !== "Barbarian") {
+        Bus.emit('LOG', `${u.name} cannot Rage.`);
+        return;
+    }
+
+    // Already raging?
+    if (u.isRaging) {
+        Bus.emit('LOG', `${u.name} is already raging.`);
+        return;
+    }
+
+    // Only once per battle
+    if (u.usedRage) {
+        Bus.emit('LOG', `${u.name} has already used Rage this battle.`);
+        return;
+    }
+
+    // ⭐ Rage is a free action
+    u.usedRage = true;
+    u.isRaging = true;
+	u.damageBonus += 2;
+	u.rageTurnsActive = 1;   // ⭐ Start counting turns
+	
+    // ⭐ Temp HP = 5x + 5 (x = level)
+    const lvl = u.level || 1;
+    u.tempHp = (5 * lvl) + 5;
+
+    Bus.emit('LOG', `💢 Primal spirit of might imbues in ${u.name}`);
+
+    update();
+}
+
+function handleEndRage() {
+    const u = units[turn];
+    if (!u.isRaging) return;
+
+    u.isRaging = false;
+    u.tempHp = 0;
+	u.damageBonus -= 2;
+
+    Bus.emit('LOG', `😤 ${u.name} ends their Rage.`);
+    update();
+}
+
 
 function handleHide() {
     const u = units[turn];
@@ -474,10 +648,12 @@ function handleSneakAttack() {
     const target = units.find(t => t.type !== u.type && t.hp > 0 && Math.max(Math.abs(t.x - u.x), Math.abs(t.y - u.y)) <= 1);
     if (!target) return Bus.emit('LOG', "Must be in melee.");
 
-    const mod = Math.max(u.stats?.str || 0, u.stats?.dex || 0);
+    let mod = Math.max(u.stats?.str || 0, u.stats?.dex || 0);
+	mod += u.hitBonus
     const roll = Math.floor(Math.random() * 20) + 1;
     if (roll + mod + 2 >= (target.ac || 10)) {
-        const dmg = (Math.floor(Math.random() * 6) + 1) + (Math.floor(Math.random() * 6) + 1) + mod;
+        let dmg = (Math.floor(Math.random() * 6) + 1) + (Math.floor(Math.random() * 6) + 1) + mod;
+		dmg += u.damageBonus 
         applyDamage(target, dmg);
         Bus.emit('LOG', `🗡️ SNEAK ATTACK! ${dmg} dmg!`);
         if (target.hp <= 0) { target.x = -1; target.y = -1; }
@@ -567,6 +743,38 @@ function handleSing() {
     endReactionPhase();
 }
 
+function startMeleeTargeting() {
+    const u = units[turn];
+    if (!u.hasAction) return;
+
+    isMeleeTargeting = true;
+    meleeAttacker = u;
+
+    Bus.emit('LOG', `${u.name} prepares to strike... select an adjacent enemy`);
+}
+
+
+function handleRangedAttack(attacker, target) {
+    const roll = Math.floor(Math.random() * 20) + 1;
+    const totalHit = roll + (attacker.hitBonus || 0);
+
+    Bus.emit('LOG', `${attacker.name} fires a crossbow bolt! (Roll: ${roll} + ${attacker.hitBonus || 0})`);
+
+    if (totalHit >= target.ac) {
+        const dmgRoll = Math.floor(Math.random() * 8) + 1; // 1d8
+        const totalDmg = dmgRoll + (attacker.damageBonus || 0);
+
+        Bus.emit('LOG', `🏹 Hit! The bolt deals ${totalDmg} damage.`);
+        applyDamage(target, totalDmg);
+    } else {
+        Bus.emit('LOG', `❌ Miss! The bolt flies wide.`);
+    }
+
+    attacker.hasAction = false;
+    update();
+    endTurn();
+}
+
 
 function startReactionPhase() {
     isReactionPhase = true;
@@ -584,8 +792,7 @@ function startReactionPhase() {
         // Add reaction button based on role
         if (pc.race === "Barbarian" && !pc.usedRage) {
             createReactionBtn(div, "Rage", () => {
-                pc.usedRage = true;
-                Bus.emit('LOG', `${pc.name} enters a RAGE!`);
+				handleRage(pc);
                 
             });
         }
@@ -647,6 +854,11 @@ function endTurn() {
     isMoving = false;
 
     const current = units[turn];
+
+	// ⭐ If the active unit is raging, increment their Rage duration
+	if (current.isRaging) {
+		current.rageTurnsActive++;
+	}
 
     // ⭐ Detect if this was the last living unit of the round
     const lastAliveIndex = units.findLastIndex(u => u.hp > 0);
@@ -795,6 +1007,8 @@ function monsterAI() {
 
 
 function checkVictory() {
+
+    if (victoryShown) return; // ⭐ Prevent repeated triggers
     const aliveMonsters = units.filter(u => u.type === 'monster' && u.hp > 0);
 
     if (aliveMonsters.length === 0) {
@@ -880,10 +1094,19 @@ function showVictoryWindow(summary, onClose) {
 
     document.body.appendChild(overlay);
 
-    document.getElementById("victory-close").onclick = () => {
-        overlay.remove();
-        if (onClose) onClose();
-    };
+	document.getElementById("victory-close").onclick = () => {
+		console.log("DEBUG: Victory close clicked");
+		overlay.remove();
+		console.log("DEBUG: Overlay removed");
+
+		if (onClose) {
+			console.log("DEBUG: Calling onClose()");
+			onClose();
+		} else {
+			console.log("DEBUG: No onClose callback");
+		}
+	};
+
 }
 
 console.log("MONSTER_DB:", window.MONSTER_DB);
