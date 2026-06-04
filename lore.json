@@ -699,7 +699,7 @@
       "charisma_mod": 0,
       "alignment": "Good",
       "level": 2,
-      "sex": 0,
+      "sex": 1,
       "size": "normal",
       "caste": "Commoner",
       "RacialEnemy": "",
@@ -717,6 +717,112 @@
 		"Stoic"
       ],
       "notes": "A villager youth, capable of extraordinary feats of strength. Throws cabers since her was 14."
+    },
+	"adv_Lili": {
+      "name": "Lili Two-Bows",
+      "icon": "/assets/patrons/SandraFreja_s.png",
+      "large": "/assets/patrons/SandraFreja_l.png",
+      "top": "350px",
+      "left": "250px",
+      "location": 0,
+      "race": "Elfling",
+      "role": "Master Archer",
+      "hp_die": 6,
+      "hp_modifier": 1,
+      "strengh_mod": 1,
+      "Dexterity_mod": 5,
+      "wisdom_mod": 0,
+      "intelligence_mod": -2,
+      "charisma_mod": 0,
+      "alignment": "Good",
+      "level": 14,
+      "sex": 0,
+      "size": "normal",
+      "caste": "Aristocrat",
+      "RacialEnemy": "",
+      "proficiency_armor": "Light",
+      "proficiency_weapon": "Martial",
+	  "inventory" : [
+		  { "item": "Short Bow", "qty": 1, "locked": false },
+		  { "item": "Long Bow", "qty": 1, "locked": false },
+		  { "item": null, "qty": 0, "locked": false },
+		  { "item": null, "qty": 0, "locked": false }
+		],
+      "traits": [
+		"Stern",
+		"Loner"
+      ],
+      "notes": "A companion of the exiled dragonangel. Mastered a unique technique to release arrows of longbows behind her back, because her arms are too short otherwise."
+    },
+	"adv_Thoran": {
+      "name": "Thoran",
+      "icon": "/assets/patrons/SandraFreja_s.png",
+      "large": "/assets/patrons/SandraFreja_l.png",
+      "top": "350px",
+      "left": "250px",
+      "location": 0,
+      "race": "Barbarian",
+      "role": "Fighter",
+      "hp_die": 12,
+      "hp_modifier": 5,
+      "strengh_mod": 4,
+      "Dexterity_mod": 2,
+      "wisdom_mod": 2,
+      "intelligence_mod": -2,
+      "charisma_mod": 2,
+      "alignment": "Good",
+      "level": 14,
+      "sex": 1,
+      "size": "normal",
+      "caste": "Aristocrat",
+      "RacialEnemy": "",
+      "proficiency_armor": "Unarmored",
+      "proficiency_weapon": "Martial",
+	  "inventory" : [
+		  { "item": "Battle Axe", "qty": 1, "locked": true },
+		  { "item": "Circlet of Intellect", "qty": 1, "locked": true },
+		  { "item": null, "qty": 0, "locked": false },
+		  { "item": null, "qty": 0, "locked": false }
+		],
+      "traits": [
+		"Regal"
+      ],
+      "notes": "A companion of the exiled dragonangel. Natural leader, decended from royal family."
+    },
+	"adv_Saint": {
+      "name": "Saint",
+      "icon": "/assets/patrons/SandraFreja_s.png",
+      "large": "/assets/patrons/SandraFreja_l.png",
+      "top": "350px",
+      "left": "250px",
+      "location": 0,
+      "race": "Unknown",
+      "role": "Sword Saint",
+      "hp_die": 10,
+      "hp_modifier": 5,
+      "strengh_mod": 5,
+      "Dexterity_mod": 5,
+      "wisdom_mod": 0,
+      "intelligence_mod": 0,
+      "charisma_mod": 0,
+      "alignment": "Neutral",
+      "level": 20,
+      "sex": 1,
+      "size": "normal",
+      "caste": "Omni",
+      "RacialEnemy": "",
+      "proficiency_armor": "Unarmored",
+      "proficiency_weapon": "Martial",
+	  "inventory" : [
+		  { "item": "Katana", "qty": 2, "locked": true },
+		  { "item": null, "qty": 0, "locked": false },
+		  { "item": null, "qty": 0, "locked": false },
+		  { "item": null, "qty": 0, "locked": false }
+		],
+      "traits": [
+		""
+      ],
+      "notes": "The cheater anamoly, roaming the world laying waste and ruining the game."
     }
   },
   "Races": {
@@ -751,6 +857,13 @@
     },
     "Half-Elf": {
       "desc": "Descended of a human and an elf."
+    },
+    "Elfling": {
+      "desc": "Descended of a halfling and an elf.",
+      "Traits": [
+        "Nimble",
+		"Lucky"
+		]
     },
     "Goblin": {
       "desc": "Smaller humanoids, subterrain and evil.",

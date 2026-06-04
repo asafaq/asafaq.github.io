@@ -139,7 +139,11 @@ async function launchBattle(encounterKey) {
 				y: 2 + missionParty.length,
 				speed: hydrated.speed || 6,
 				maxMove: hydrated.speed || 6,
-				hasAction: true
+				hasAction: true,
+				
+				hitBonus: 0,
+				damageBonus: 0,
+				isSinging: false,
 			});
         }
     }

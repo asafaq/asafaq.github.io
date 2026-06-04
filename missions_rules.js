@@ -485,17 +485,17 @@ const missionNodes = {
 	green_3: {   missionId: "green_3",	},
     dwood_fort2: {
         title: "Darkwood Fort",
-        desc: "A fortified outpost deep in the Dark Woods.",
-        missionId: "dwood_fort_2",
+        desc: "The back sewers entrance to the fortified outpost deep in the Dark Woods.",
+        missionId: "dwood_fort2",
         requires:  {	dwood_1: 5,
-						dwood_fort_1: 2
+						dwood_fort1: 2
 						}
     },
 	
     dwood_fort: {
         title: "Darkwood Fort",
         desc: "A fortified outpost deep in the Dark Woods.",
-        missionId: "dwood_fort_1",
+        missionId: "dwood_fort1",
         requires:  {	dwood_1: 4	}
     },
 
@@ -521,13 +521,14 @@ const missionNodes = {
     },
 	
 	dwood_platform: {
+        title: "Awetruce lookout spot.",
 		missionId: "dwoodplat_1",
 		requires: { dwood_1: 0 }
 				},
 	
 	dwood_glade: {
 		missionId: "dwood_glade_1",
-		requires: { dwood_1: 0 }
+		requires: { dwood_1: 2 }
 				}
 };
 
@@ -544,7 +545,8 @@ function missionController(nodeId) {
 		if (node && node.requires) {
 			for (const reqMission in node.requires) {
 				const requiredStage = node.requires[reqMission];
-				const playerStage = player.missions[reqMission]?.stage || 0;
+				const playerStage = player.missions[reqMission] || 0;
+
 
 				if (playerStage < requiredStage) {
 					return pushStatus(`You cannot access this yet ${playerStage} . You need ${reqMission} stage ${requiredStage}.`);

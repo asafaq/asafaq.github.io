@@ -67,7 +67,7 @@ const Bus = {
     emit(event, data) { if(this.events[event]) this.events[event].forEach(cb => cb(data)); }
 };
 
-let staticObstacles = [], units = [], turn = 0, isMoving = false; battleXP = 0; isReactionPhase = false; roundStarted = false; isHealing = false; healerUnit = null;
+let staticObstacles = [], units = [], turn = 0, isMoving = false; battleXP = 0; isReactionPhase = false; roundStarted = false; isHealing = false; healerUnit = null; isCastingSpell = false; spellCaster = null; selectedSpell = null; pendingSpells = []; 
 
 const firstPCIndex = units.findIndex(u => u.type === "pc");
 
@@ -97,14 +97,21 @@ function init() {
 		...data.party.map(p => ({
 			...p,
 			type: 'pc',
+			tempHp: p.tempHp || 0,
 			speed: 6,
 			maxSpeed: 6,
 			hasAction: true,
-			isHiding: false,
-			usedRage: false,   // Barbarian
-			canSing: true,     // Bard
-			canHide: true,     // Miner
-			maxHp: p.hp
+			isConcentrating: false,
+			isHiding: p.isHiding || false,
+			isRaging: p.isHiding || false,
+			usedRage: p.usedRage || false,
+			canSing: p.canSing ?? true,
+			canHide: p.canHide ?? true,
+			maxHp: p.maxHp || p.hp,
+			// ⭐ Preserve bard song state
+			hitBonus: p.hitBonus || 0,
+			damageBonus: p.damageBonus || 0,
+			isSinging: p.isSinging || false,
 		})),
         ...data.monsters.map(m => ({
             ...m,
@@ -115,7 +122,8 @@ function init() {
             maxHp: m.hp
         }))
     ];
-
+	// ⭐ Bard song fade: runs at the start of the Bard's next turn
+	const active = units[turn];
     grid.innerHTML = '<div class="grid-overlay"></div><div id="active-ring" class="active-ring"></div>';
 
     for (let i = 0; i < 100; i++) {
@@ -150,6 +158,42 @@ function init() {
 				return;
 			}
 
+			// ⭐ SPELL TARGETING
+			if (isCastingSpell) {
+				const target = units.find(t =>
+					t.x === cx &&
+					t.y === cy &&
+					t.hp > 0 &&
+					t.type !== spellCaster.type
+				);
+
+				if (!target) {
+					Bus.emit('LOG', "Invalid spell target.");
+					isCastingSpell = false;
+					spellCaster = null;
+					selectedSpell = null;
+					return;
+				}
+
+				// Queue the spell for end-of-round resolution
+				pendingSpells.push({ caster: spellCaster, target, spell: selectedSpell });
+				// ⭐ Start concentration
+				spellCaster.isConcentrating = true
+
+				Bus.emit('LOG', `${spellCaster.name} is cast ${selectedSpell} at ${target.name}!`);
+
+				spellCaster.hasAction = false;
+
+				// Exit spell mode
+				isCastingSpell = false;
+				spellCaster = null;
+				selectedSpell = null;
+
+				update();
+				return;
+			}
+
+
 			// ⭐ NORMAL CLICK BEHAVIOR
 			processMove(cx, cy);
 		};
@@ -177,6 +221,22 @@ function init() {
 	startReactionPhase();
 }
 
+function applyDamage(target, amount) {
+    target.hp -= amount;
+
+    if (target.hp <= 0) {
+        target.x = -1;
+        target.y = -1;
+    }
+
+    if (target.isConcentrating) {
+        target.isConcentrating = false;
+        Bus.emit('LOG', `💥 ${target.name} loses concentration!`);
+    }
+}
+
+
+
 // High‑level class groups
 const ROLE_TYPES = {
     Rogue: ["Deputy", "Arcane Trickster", "Thief", "Miner"],
@@ -196,8 +256,6 @@ function canCast(role) {
 function canHeal(role) {
     return ROLE_TYPES.Healer.includes(role);
 }
-
-
 
 function update() {
     if (isReactionPhase) return; // ⭐ Prevent UI rebuild during reactions
@@ -239,10 +297,11 @@ function update() {
 		createBtn(bar, "⚔️ Strike", handleAttack);
 	}
 
-	// Spellcasting (only for caster roles)
-	if (canCast(active.role)) {
+	// Spellcasting (only for caster roles) (disabled for singing).
+	if (canCast(active.role) && !active.isSinging) {
 		createBtn(bar, "✨ Spell", handleSpell);
 	}
+
 	if (canHeal(active.role)) {
 		createBtn(bar, "💚 Heal", startHealTargeting);
 	}
@@ -265,14 +324,22 @@ function createBtn(parent, text, func, className = '', id = '') {
 
 function toggleMove() { isMoving = !isMoving; update(); }
 
-function processMove(tx, ty) {
-    if (!isMoving) return;
+function processMove(tx, ty, force = false) {
+    if (!isMoving && !force) return;
+
     const u = units[turn];
     const occupied = getOccupiedSquares();
     if (occupied[tx][ty]) return Bus.emit('LOG', "Space occupied!");
+
     let dist = Math.max(Math.abs(u.x - tx), Math.abs(u.y - ty));
-    if (dist <= u.speed) { u.x = tx; u.y = ty; u.speed -= dist; update(); } 
-    else Bus.emit('LOG', "Out of speed!");
+    if (dist <= u.speed) {
+        u.x = tx;
+        u.y = ty;
+        u.speed -= dist;
+        update();
+    } else {
+        Bus.emit('LOG', "Out of speed!");
+    }
 }
 
 function getOccupiedSquares() {
@@ -322,7 +389,8 @@ function handleAttack() {
 
     // --- ROLL TO HIT ---
     const roll = Math.floor(Math.random() * 20) + 1;
-    const totalToHit = roll + attackMod + racialBonus;
+    const totalToHit = roll + attackMod + racialBonus + (u.hitBonus || 0);
+
     const targetAC = target.ac || 10;
 
     const isCrit = roll === 20;
@@ -334,7 +402,7 @@ function handleAttack() {
 
         if (u.type === "pc") {
             // PCs: 1d6 + STR
-            dmg = (Math.floor(Math.random() * 6) + 1) + attackMod;
+            dmg = (Math.floor(Math.random() * 6) + 1) + attackMod + (u.damageBonus || 0);
         } else {
             // Monsters: use JSON stats
             const m = getMonsterStats(u);
@@ -344,7 +412,7 @@ function handleAttack() {
             dmg = (Math.floor(Math.random() * die) + 1) + bonus;
         }
 
-        target.hp -= dmg;
+        applyDamage(target, dmg);
 
         Bus.emit('LOG', `⚔️ ${u.name} hits ${target.name} for ${dmg}!`);
 
@@ -379,17 +447,18 @@ function getMonsterStats(unit) {
     return window.MONSTER_DB[unit.id] || null;
 }
 
-
 function handleSpell() {
     const u = units[turn];
-    const target = units.find(t => t.type !== u.type && t.hp > 0);
-    if (!target || !u.hasAction) return;
-    const d = Math.floor(Math.random() * 8) + 2;
-    target.hp -= d; u.hasAction = false;
-    Bus.emit('LOG', `🔥 Spell hits ${target.name} for ${d}.`);
-    if (target.hp <= 0) { target.x = -1; target.y = -1; }
-    update();
+
+    if (!canCast(u.role) || !u.hasAction) return;
+
+    isCastingSpell = true;
+    spellCaster = u;
+    selectedSpell = "Magic Missile"; // your only spell for now
+
+    Bus.emit('LOG', `${u.name} begins chanting the incantations to cast ${selectedSpell}... please select a target`);
 }
+
 
 function handleHide() {
     const u = units[turn];
@@ -409,7 +478,7 @@ function handleSneakAttack() {
     const roll = Math.floor(Math.random() * 20) + 1;
     if (roll + mod + 2 >= (target.ac || 10)) {
         const dmg = (Math.floor(Math.random() * 6) + 1) + (Math.floor(Math.random() * 6) + 1) + mod;
-        target.hp -= dmg;
+        applyDamage(target, dmg);
         Bus.emit('LOG', `🗡️ SNEAK ATTACK! ${dmg} dmg!`);
         if (target.hp <= 0) { target.x = -1; target.y = -1; }
     } else { Bus.emit('LOG', `💨 Sneak missed!`); }
@@ -469,6 +538,34 @@ function applyHeal(healer, target) {
     update();
 }
 
+function isAnyBardSinging() {
+    return units.some(u => u.type === 'pc' && u.role === 'Bard' && u.isSinging);
+}
+
+
+function handleSing() {
+    const bard = units[turn];
+    if (bard.role !== "Bard" || !bard.canSing) return;
+
+    bard.canSing = false;
+    bard.isSinging = true;
+
+    // Buff allies
+    units.forEach(u => {
+        if (u.type === "pc" && u !== bard) {
+            u.hitBonus += 1;
+            u.damageBonus += 1;
+        }
+    });
+
+    // Penalize Bard
+    bard.hitBonus -= 1;
+    bard.damageBonus -= 1;
+
+    Bus.emit('LOG', `🎶 ${bard.name} sings! Allies gain +1 hit/dmg, Bard suffers -1 hit/dmg and cannot cast spells.`);
+
+    endReactionPhase();
+}
 
 
 function startReactionPhase() {
@@ -502,13 +599,27 @@ function startReactionPhase() {
             });
         }
 
-        if (pc.role === "Bard" && pc.canSing) {
-            createReactionBtn(div, "Sing", () => {
-                pc.canSing = false;
-                Bus.emit('LOG', `${pc.name} sings an inspiring tune!`);
-                
-            });
-        }
+		if (pc.role === "Bard" && pc.canSing && !isAnyBardSinging()) {
+			createReactionBtn(div, "Sing", () => {
+				pc.canSing = false;
+				pc.isSinging = true;
+
+				// Buff allies
+				units.forEach(u => {
+					if (u.type === "pc" && u !== pc) {
+						u.hitBonus = (u.hitBonus || 0) + 1;
+						u.damageBonus = (u.damageBonus || 0) + 1;
+					}
+				});
+
+				// Penalize Bard
+				pc.hitBonus = (pc.hitBonus || 0) - 1;
+				pc.damageBonus = (pc.damageBonus || 0) - 1;
+
+				Bus.emit('LOG', `${pc.name} sings an inspiring tune! Allies gain +1 hit/dmg, Bard suffers -1 hit/dmg and cannot cast spells.`);
+			});
+		}
+
 
         panel.appendChild(div);
     });
@@ -532,9 +643,42 @@ function createReactionBtn(parent, text, func) {
     parent.appendChild(btn);
 }
 
-
 function endTurn() {
     isMoving = false;
+
+    const current = units[turn];
+
+    // ⭐ Detect if this was the last living unit of the round
+    const lastAliveIndex = units.findLastIndex(u => u.hp > 0);
+
+    if (turn === lastAliveIndex) {
+        // ⭐ Resolve all queued spells now
+        if (pendingSpells.length > 0) {
+            pendingSpells.forEach(({ caster, target, spell }) => {
+			
+			    // ⭐ Spell fizzles if concentration was broken
+				if (!caster.isConcentrating) {
+					Bus.emit('LOG', `💨 ${caster.name}'s ${spell} fizzles due to lost concentration.`);
+					return;
+				}
+			
+                if (target.hp > 0) {
+                    const d = Math.floor(Math.random() * 8) + 2;
+                    target.hp -= d;
+
+                    Bus.emit('LOG', `🔥 ${caster.name}'s ${spell} hits ${target.name} for ${d}.`);
+
+                    if (target.hp <= 0) {
+                        target.x = -1;
+                        target.y = -1;
+                    }
+                }
+            });
+
+            pendingSpells = [];
+        }
+    }
+
 
     let previousTurn = turn;
 
@@ -551,19 +695,44 @@ function endTurn() {
     // If we looped back to the first PC in the list
     const firstPCIndex = units.findIndex(u => u.type === 'pc');
 
-    if (turn === firstPCIndex) {
-        roundStarted = false;
-		// ⭐ Reset per-round reactions
+	if (turn === firstPCIndex) {
+		roundStarted = false;
+
+		// ⭐ If any bard was singing last round, fade the song now
+		if (isAnyBardSinging()) {
+			const singingBard = units.find(u => u.type === "pc" && u.role === "Bard" && u.isSinging);
+
+			if (singingBard) {
+				singingBard.isSinging = false;
+
+				// Remove buffs from allies
+				units.forEach(u => {
+					if (u.type === "pc" && u !== singingBard) {
+						u.hitBonus -= 1;
+						u.damageBonus -= 1;
+					}
+				});
+
+				// Remove bard penalty
+				singingBard.hitBonus += 1;
+				singingBard.damageBonus += 1;
+
+				Bus.emit('LOG', `🎵 ${singingBard.name}'s song fades.`);
+			}
+		}
+
+		// Reset per-round reactions
 		units.forEach(pc => {
 			if (pc.type !== 'pc') return;
-
 			if (pc.role === "Miner") pc.canHide = true;
 			if (pc.role === "Bard") pc.canSing = true;
-
-			// Barbarian Rage does NOT reset per round
-			// Rage resets only per fight, which you already do in init()
 		});
-    }
+	}
+
+
+    // Normal turn setup
+    active.hasAction = true;
+    active.speed = 6;
 
     // If round hasn't started yet → trigger reactions
     if (!roundStarted) {
@@ -571,10 +740,6 @@ function endTurn() {
         startReactionPhase();
         return; // Stop here until reactions are done
     }
-
-    // Normal turn setup
-    active.hasAction = true;
-    active.speed = 6;
 
     Bus.emit('LOG', `Turn: ${active.name}`);
     update();
@@ -588,15 +753,46 @@ function endTurn() {
 function monsterAI() {
     const u = units[turn];
     if (!u || u.hp <= 0) return endTurn();
+
     const target = units.find(t => t.type === 'pc' && t.hp > 0);
-    if (target) {
-        if (Math.max(Math.abs(u.x - target.x), Math.abs(u.y - target.y)) > 1) {
-            u.x += (u.x < target.x ? 1 : u.x > target.x ? -1 : 0);
-            u.y += (u.y < target.y ? 1 : u.y > target.y ? -1 : 0);
-        } else { handleAttack(); }
+    if (!target) return endTurn();
+
+    // Attack if adjacent
+    const dist = Math.max(Math.abs(u.x - target.x), Math.abs(u.y - target.y));
+    if (dist <= 1) {
+        handleAttack();
+        return setTimeout(endTurn, 500);
     }
-    setTimeout(endTurn, 1000);
+
+    // Move up to speed tiles
+    for (let i = 0; i < u.speed; i++) {
+        const dx = (u.x < target.x ? 1 : u.x > target.x ? -1 : 0);
+        const dy = (u.y < target.y ? 1 : u.y > target.y ? -1 : 0);
+
+        const occupied = getOccupiedSquares();
+
+        if (!occupied[u.x + dx]?.[u.y + dy]) {
+            processMove(u.x + dx, u.y + dy, true);
+        }
+        else if (!occupied[u.x + dx]?.[u.y]) {
+            processMove(u.x + dx, u.y, true);
+        }
+        else if (!occupied[u.x]?.[u.y + dy]) {
+            processMove(u.x, u.y + dy, true);
+        }
+        else {
+            Bus.emit('LOG', `${u.name} is blocked.`);
+            break;
+        }
+
+        // Stop early if we reached melee range
+        const newDist = Math.max(Math.abs(u.x - target.x), Math.abs(u.y - target.y));
+        if (newDist <= 1) break;
+    }
+
+    setTimeout(endTurn, 500);
 }
+
 
 function checkVictory() {
     const aliveMonsters = units.filter(u => u.type === 'monster' && u.hp > 0);

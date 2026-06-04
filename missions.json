@@ -2812,7 +2812,7 @@
     "id": "dwood1_175",
     "speaker": "Amyssa",
     "portrait": "/assets/patrons/amyssa_smaller.png",
-    "dialog": "Oh do shut up. How did I ever get involved with this villain.\n\nNow my spellbook is gone and I'm so far from home...",
+    "dialog": "Shut up. How did I ever get involved with this villain.\n\nNow my spellbook is gone and I'm so far from home...",
     "side": "right",
     "interaction_type": "next",
     "target_id": "dwood1_176"
@@ -3683,6 +3683,231 @@
     "portrait": "/assets/patrons/lurch.png",
     "side": "left",
     "dialog": ".",
+    "interaction_type": "next",
+    "target_id": "END"
+  },
+  {
+    "id": "dwoodfort1_201",
+    "speaker": "Narrator",
+    "portrait": "",
+    "side": "left",
+    "dialog": "The fort entrence is blocked, and you don't carry the what's required to scale it, or breach it.",
+    "interaction_type": "next",
+    "target_id": "dwoodfort1_201end"
+  },
+  {
+    "id": "dwoodfort1_201end",
+    "speaker": "Narrator",
+    "portrait": "",
+    "side": "left",
+    "dialog": "The fort entrence is blocked, and you don't carry the what's required to scale it, or breach it.",
+    "interaction_type": "next",
+    "target_id": "END"
+  },
+  {
+    "id": "dwoodfort2_101",
+    "speaker": "Narrator",
+    "portrait": "",
+    "side": "left",
+    "dialog": "That's it, the sewers outfall the Spy has told you about. It's large and wide, but sloped, dark, and would be a maze you'd rather not get lost in.",
+    "interaction_type": "next",
+    "target_id": "dwoodfort2_102"
+  },
+  {
+    "id": "dwoodfort2_102",
+    "speaker": "Narrator",
+    "portrait": "",
+    "side": "left",
+    "dialog": "It's best to signal your Spy by creating a diversion elsewhere, like you've planned.",
+    "interaction_type": "next",
+    "target_id": "dwoodfort2_102end"
+  },
+  {
+    "id": "dwoodfort2_102end",
+    "speaker": "Narrator",
+    "portrait": "",
+    "side": "left",
+    "dialog": "It's best to signal your Spy by creating a diversion elsewhere, like you've planned.",
+    "interaction_type": "next",
+    "target_id": "END"
+  },
+  {
+    "id": "dwoodfort1_301",
+    "speaker": "Narrator",
+    "portrait": "You gather a a large brushpile from the many dead plants around, near a clearing, and set it on fire. This will be a beacon for all to see.",
+    "side": "left",
+    "dialog": " it.",
+    "interaction_type": "next",
+    "target_id": "dwoodfort1_301end"
+  },
+  {
+    "id": "dwoodfort1_301end",
+    "speaker": "Narrator",
+    "portrait": "You gather a a large brushpile from the many dead plants around, near a clearing, and set it on fire. This will be a beacon for all to see.",
+    "side": "left",
+    "dialog": " it.",
+    "interaction_type": "next",
+    "target_id": "END"
+  },
+  {
+    "id": "dwoodfort2_201",
+    "speaker": "Narrator",
+    "portrait": "",
+    "side": "left",
+    "dialog": "While remaining in the growth to the side of the fortress, you sit and wait for the next move.",
+    "interaction_type": "next",
+    "target_id": "dwoodfort2_202"
+  },
+  {
+    "id": "dwoodfort2_202",
+    "speaker": "Narrator",
+    "portrait": "",
+    "side": "left",
+    "dialog": "Keeping a close eye at the watch tower above, the guard's gaze is fixed on the fire.\n\nOut of the sewer's entrence, as planned, the Spy emergences.",
+    "interaction_type": "next",
+    "target_id": "dwoodfort2_203"
+  },
+  {
+    "id": "dwoodfort2_203",
+    "speaker": "Lurch",
+    "portrait": "/assets/patrons/lurch.png",
+    "side": "left",
+    "dialog": "Ah, you made it.",
+    "interaction_type": "next",
+    "target_id": "dwoodfort2_204"
+  },
+  {
+    "id": "dwoodfort2_204",
+    "speaker": "Lurch",
+    "portrait": "/assets/patrons/lurch.png",
+    "side": "left",
+    "dialog": "Let's move in, the guards aren't around.",
+    "interaction_type": "next",
+    "target_id": "dwoodfort2_205"
+  },
+  {
+    "id": "dwoodfort2_205",
+    "speaker": "Lurch",
+    "portrait": "/assets/patrons/lurch.png",
+    "side": "left",
+    "dialog": "I got you here, but I can't get you through, there's a new ruler in those sewers. You'll have to deal with him by yourself. He doesn't grant passage to just anyone.",
+    "interaction_type": "next",
+    "target_id": "dwoodfort2_206"
+  },
+  {
+    "id": "dwoodfort2_207",
+    "speaker": "Hogmother",
+    "portrait": "/assets/patrons/hogmother.png",
+    "side": "right",
+    "dialog": "Wouldn't that be the Ugress?",
+    "interaction_type": "next",
+    "target_id": "dwoodfort2_208"
+  },
+  {
+    "id": "dwoodfort2_206",
+    "speaker": "Lurch",
+    "portrait": "/assets/patrons/lurch.png",
+    "side": "left",
+    "dialog": "No, he seems to have migrated here before her arrival.",
+    "interaction_type": "next",
+    "target_id": "dwoodfort2_207"
+  },
+  {
+    "id": "dwoodfort2_207",
+    "speaker": "Hogmother",
+    "portrait": "/assets/patrons/hogmother.png",
+    "side": "right",
+    "dialog": "I will see him.",
+    "interaction_type": "next",
+    "target_id": "dwoodfort2_208"
+  },
+  {
+    "id": "dwoodfort2_207",
+    "speaker": "Narrator",
+    "portrait": "",
+    "side": "right",
+    "dialog": "The sewers seem ancient, but well constructed. They have preceded the makeshift fort by a lot.",
+    "interaction_type": "next",
+    "target_id": "dwoodfort2_208"
+  },
+  {
+    "id": "dwoodfort2_208",
+    "speaker": "Narrator",
+    "portrait": "",
+    "side": "right",
+    "dialog": "Awaiting near the wall, you see two figures...",
+    "interaction_type": "next",
+    "target_id": "dwoodfort2_209"
+  },
+  {
+    "id": "dwoodfort2_209",
+    "speaker": "Lurch",
+    "portrait": "/assets/patrons/lurch.png",
+    "side": "left",
+    "dialog": "The sorcerer is that way, and your people await beyond his domain.",
+    "interaction_type": "next",
+    "target_id": "dwoodfort2_210"
+  },
+  {
+    "id": "dwoodfort2_208",
+    "speaker": "Narrator",
+    "portrait": "",
+    "side": "right",
+    "dialog": "Eyes glint red in the dark. It looks like a huge rat looking down through a large sewer pipe.",
+    "interaction_type": "next",
+    "target_id": "dwoodfort2_209"
+  },
+  {
+    "id": "dwoodfort2_209",
+    "speaker": "Mysterious Rat",
+    "portrait": "/assets/patrons/wormtail_l.png",
+    "side": "left",
+    "dialog": "More intruders to the woods.\nYou have come by the lair of Wormtail.\nWhat's your business here?",
+    "interaction_type": "next",
+    "target_id": "dwoodfort2_210"
+  },
+  {
+    "id": "dwoodfort2_210",
+    "speaker": "Hogmother",
+    "portrait": "/assets/patrons/hogmother.png",
+    "side": "right",
+    "dialog": "Greetings master Wormtail, we're merely passing by into the fort, and back or again.",
+    "interaction_type": "next",
+    "target_id": "dwoodfort2_211"
+  },
+  {
+    "id": "dwoodfort2_211",
+    "speaker": "Wormtail",
+    "portrait": "/assets/patrons/wormtail_l.png",
+    "side": "left",
+    "dialog": "None merely are passing by through here, do they?\n\nHmm, and not through the main entrance…\n\nWhy would that be?",
+    "interaction_type": "next",
+    "target_id": "dwoodfort2_212"
+  },
+  {
+    "id": "dwoodfort2_212",
+    "speaker": "Hogmother",
+    "portrait": "/assets/patrons/hogmother.png",
+    "side": "right",
+    "dialog": "We aren't aligned with the Ugress. We're here to rescue my husband from this place.",
+    "interaction_type": "next",
+    "target_id": "dwoodfort2_299"
+  },
+  {
+    "id": "dwoodfort2_299",
+    "speaker": "Developer",
+    "portrait": "",
+    "side": "right",
+    "dialog": "End of current development.",
+    "interaction_type": "next",
+    "target_id": "dwoodfort2_299end"
+  },
+  {
+    "id": "dwoodfort2_299end",
+    "speaker": "Hogmother",
+    "portrait": "/assets/patrons/hogmother.png",
+    "side": "right",
+    "dialog": "End of current development.",
     "interaction_type": "next",
     "target_id": "END"
   }

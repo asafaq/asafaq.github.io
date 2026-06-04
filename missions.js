@@ -606,6 +606,18 @@ async function handleMissionEnd(sceneId) {
             Journal.addEntry("You've met with your contact Lurch who have filled you in on the inside details from the fort: The Ugress has taken control of the place, the garrison is preparing for war, and there are folk with them.");
             player.missions.dwood_fort2 = 1;
             loadPage("mission_dwood_1");
+		},
+
+        "dwoodfort2_102end": async () => {
+            Journal.addEntry("You've inspected the sewers downfall, at the fortress.");
+            player.missions.dwood_fort1 = 3;
+            loadPage("mission_dwood_1");
+		},
+
+        "dwoodfort1_301end": async () => {
+            Journal.addEntry("You've started a bushfire, in front of the fortress.");
+            player.missions.dwood_fort2 = 2;
+            loadPage("mission_dwood_1");
 		}
     };
 

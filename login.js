@@ -1,5 +1,5 @@
 // Toggle: true = show login screen, false = skip login entirely
-const ENABLE_LOGIN = true;
+const ENABLE_LOGIN = false;
 const ENABLE_PRELOAD = false;
 
 let preloadedAssets = null;
@@ -121,9 +121,10 @@ if (!ENABLE_LOGIN) {
         document.getElementById("app-frame").style.display = "block";
 
 		// 🔥 Show loading screen immediately
-		showLoadingScreen();
-		updateLoadingText(0, assetUrls.length);
-		
+		if (ENABLE_PRELOAD) {
+			showLoadingScreen();
+			updateLoadingText(0, assetUrls.length);
+		}
         // Wait for preload + lore
         if (ENABLE_PRELOAD && preloadPromise) await preloadPromise;
         if (lorePromise) await lorePromise;
