@@ -243,7 +243,7 @@ function init() {
 					return;
 				}
 
-				handleMeleeAttack(meleeAttacker, target);
+				handleAttack(meleeAttacker, target);
 
 				isMeleeTargeting = false;
 				meleeAttacker = null;
@@ -343,6 +343,7 @@ function update() {
     if (isReactionPhase) return; // ⭐ Prevent UI rebuild during reactions
     const active = units[turn];
     if (!active) return;
+	if (active.type === "monster") return; // monsters do NOT click
 
     document.getElementById('unit-name').innerText = active.name;
     // ⭐ HP + Temp HP combined
@@ -419,7 +420,7 @@ function update() {
 		}
 	} else {
 		// Default non‑rogue attack
-		createBtn(bar, "⚔️ Strike", handleAttack);
+		createBtn(bar, "⚔️ Strike", startMeleeTargeting);
 	}
 
 	// Spellcasting (only for caster roles) (disabled for singing).
@@ -566,6 +567,7 @@ function handleAttack(attacker, target) {
 
     attacker.hasAction = false;
     update();
+}
 
 function getMonsterStats(unit) {
     if (unit.type !== "monster") return null;
@@ -746,11 +748,22 @@ function handleSing() {
 function startMeleeTargeting() {
     const u = units[turn];
     if (!u.hasAction) return;
+	console.log("DEBUG: melee targeting started");
+	console.log("DEBUG: isMeleeTargeting =", isMeleeTargeting);
+	console.log("DEBUG: meleeAttacker =", meleeAttacker?.name);
 
     isMeleeTargeting = true;
     meleeAttacker = u;
 
     Bus.emit('LOG', `${u.name} prepares to strike... select an adjacent enemy`);
+}
+
+function getAdjacentEnemy(attacker) {
+    return units.find(t =>
+        t.type !== attacker.type &&
+        t.hp > 0 &&
+        Math.abs(t.x - attacker.x) + Math.abs(t.y - attacker.y) === 1
+    );
 }
 
 
@@ -902,7 +915,7 @@ function endTurn() {
     } while (units[turn].hp <= 0 && attempts < units.length);
 
     const active = units[turn];
-
+	if (active.type === "monster") return; // monsters do NOT click
     // Detect ROUND START:
     // If we looped back to the first PC in the list
     const firstPCIndex = units.findIndex(u => u.type === 'pc');
@@ -972,7 +985,20 @@ function monsterAI() {
     // Attack if adjacent
     const dist = Math.max(Math.abs(u.x - target.x), Math.abs(u.y - target.y));
     if (dist <= 1) {
-        handleAttack();
+	
+		const monster = units[turn];
+		const target = getAdjacentEnemy(monster);
+
+		if (target) {
+			handleAttack(monster, target);
+		} else {
+			// No adjacent PC — monster should move or skip
+			Bus.emit('LOG', `${monster.name} growls but finds no target.`);
+			monster.hasAction = false;
+			update();
+			endTurn();
+		}
+
         return setTimeout(endTurn, 500);
     }
 
@@ -1121,5 +1147,7 @@ Bus.on('LOG', (msg) => {
 
 init();
 </script>
+
+
 </body>
 </html>
