@@ -1033,14 +1033,17 @@ function monsterAI() {
 
 
 function checkVictory() {
+    if (victoryShown) return; 
+    
+    // ⭐ FIX: Prevent premature activation before round officially starts
+    if (units.length === 0 || !roundStarted) return;
 
-    if (victoryShown) return; // ⭐ Prevent repeated triggers
     const aliveMonsters = units.filter(u => u.type === 'monster' && u.hp > 0);
 
     if (aliveMonsters.length === 0) {
+        victoryShown = true; // Set early to prevent parallel executions
 
         const savedData = JSON.parse(localStorage.getItem('currentBattle')) || {};
-
         const xp = battleXP;
         const loot = savedData.loot || [];
 
@@ -1056,18 +1059,14 @@ function checkVictory() {
         const summaryHTML = `
             <strong>Defeated Enemies:</strong><br>
             ${defeated}<br><br>
-
             <strong>XP Gained:</strong><br>
             ${xp}<br><br>
-
             <strong>Spoils:</strong><br>
             ${lootHTML}
         `;
 
         showVictoryWindow(summaryHTML, () => {
-
             Bus.emit('LOG', "VICTORY!");
-
             localStorage.removeItem('currentBattle');
 
             if (window.parent) {
@@ -1081,7 +1080,6 @@ function checkVictory() {
         });
     }
 }
-
 function showVictoryWindow(summary, onClose) {
     const overlay = document.createElement('div');
     overlay.id = "victory-window";
@@ -1146,6 +1144,10 @@ Bus.on('LOG', (msg) => {
 });
 
 init();
+window.addEventListener("beforeunload", () => {
+    console.warn("IFRAME IS BEING RELOADED!");
+});
+
 </script>
 
 
