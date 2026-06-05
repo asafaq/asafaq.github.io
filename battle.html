@@ -8,7 +8,7 @@
     #screen { width: 540px; height: 960px; background: #222; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 0 50px #000; position: relative; }
     #grid { width: 540px; height: 540px; position: relative; background-color: #333; border-bottom: 2px solid #444; flex-shrink: 0; overflow: hidden; background-size: cover; background-position: center; }
     #log { height: 140px; background: #111; padding: 15px; overflow-y: auto; color: #00ff00; font-family: monospace; border-bottom: 2px solid #444; display: flex; flex-direction: column-reverse; box-sizing: border-box; flex-shrink: 0; }
-    #controls { display: flex; flex-direction: row; flex: 1; background: #1a1a1a; padding: 10px; gap: 10px; align-items: stretch; box-sizing: border-box; }
+    #controls { position:relative ; display: flex; flex-direction: row; flex: 1; background: #1a1a1a; padding: 10px; gap: 10px; align-items: stretch; box-sizing: border-box; }
     #stats-panel { width: 85px; display: flex; flex-direction: column; justify-content: center; background: #2c3e50; border-radius: 4px; padding: 8px; font-size: 0.7rem; color: white; flex-shrink: 0; border-left: 4px solid #3498db; box-sizing: border-box; }
     #stats-panel strong { display: block; margin-bottom: 2px; color: #f1c40f; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .btn-group { display: grid; flex: 1; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(2, 1fr); gap: 8px; min-width: 0; }
@@ -21,21 +21,57 @@
 	.cell.obstacle {     background-color: rgba(0,0,0,0.6); }
     .btn-move-active { background-color: #27ae60 !important; border: 2px solid white !important; }
     button:disabled { opacity: 0.4; filter: grayscale(1); cursor: not-allowed; }
-	.reaction-panel {
+.reaction-panel {
     position: absolute;
-    top: 20px;
-    left: 20px;
-    width: 300px;
-    background: rgba(0,0,0,0.8);
-    padding: 10px;
-    border: 2px solid #fff;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #121214; /* Solid color matches theme and obscures the active skill keys */
+    padding: 12px;
     display: none;
     color: white;
-	z-index: 11;
+    z-index: 999; /* Higher priority layer to step completely over the action button map */
+    box-sizing: border-box;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
 }
 
 .reaction-entry {
     margin-bottom: 10px;
+}
+
+/* The Restyled Reaction Blocker Panel */
+.reaction-overlay-panel {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #121214; /* Match your app's dark dashboard or UI theme */
+    z-index: 999; /* Sits completely on top of action buttons */
+    
+    /* Center the reaction contents beautifully */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 16px;
+    box-sizing: border-box;
+    border-top: 2px solid #3a3a42;
+}
+
+/* Optional styling to make the notification stand out */
+.reaction-title {
+    color: #ffd166;
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
 </style>
@@ -67,7 +103,7 @@ const Bus = {
     emit(event, data) { if(this.events[event]) this.events[event].forEach(cb => cb(data)); }
 };
 
-let staticObstacles = [], units = [], turn = 0, isMoving = false; battleXP = 0; isReactionPhase = false; roundStarted = false; isHealing = false; healerUnit = null; isCastingSpell = false; spellCaster = null; selectedSpell = null; pendingSpells = []; victoryShown = false; isRangedTargeting = false; rangedShooter = null; isMeleeTargeting = false; meleeAttacker = null;
+let staticObstacles = [], units = [], turn = 0, isMoving = false; battleXP = 0; isReactionPhase = false; roundStarted = false; isHealing = false; healerUnit = null; isCastingSpell = false; spellCaster = null; selectedSpell = null; pendingSpells = []; victoryShown = false; isRangedTargeting = false; rangedShooter = null; isMeleeTargeting = false; meleeAttacker = null; isSneakTargeting = false; sneakAttacker = null;
 
 
 const firstPCIndex = units.findIndex(u => u.type === "pc");
@@ -217,36 +253,57 @@ function init() {
 			}
 
 			// ⭐ MELEE TARGETING
+			// Inside your init() function cell click handler:
 			if (isMeleeTargeting) {
-				const target = units.find(t =>
-					t.x === cx &&
-					t.y === cy &&
-					t.hp > 0 &&
-					t.type !== meleeAttacker.type
-				);
-
+				const target = units.find(t => t.x === cx && t.y === cy && t.hp > 0 && t.type !== meleeAttacker.type);
 				if (!target) {
 					Bus.emit('LOG', "Invalid melee target.");
 					isMeleeTargeting = false;
 					meleeAttacker = null;
 					return;
 				}
-
-				// Check melee range (adjacent)
+				
+				// ⭐ CHANGE: Calculate distance using Math.max to allow diagonal range checks
 				const dx = Math.abs(target.x - meleeAttacker.x);
 				const dy = Math.abs(target.y - meleeAttacker.y);
+				const distance = Math.max(dx, dy); 
 
-				if (dx + dy !== 1) {
+				if (distance !== 1) {
 					Bus.emit('LOG', "Target is not in melee range.");
 					isMeleeTargeting = false;
 					meleeAttacker = null;
 					return;
 				}
-
+				
 				handleAttack(meleeAttacker, target);
-
 				isMeleeTargeting = false;
 				meleeAttacker = null;
+				return;
+			}
+
+			// Add this inside cell.onclick alongside your other targeting modes:
+			if (isSneakTargeting) {
+				const target = units.find(t => t.x === cx && t.y === cy && t.hp > 0 && t.type !== sneakAttacker.type);
+				if (!target) {
+					Bus.emit('LOG', "Invalid sneak attack target.");
+					isSneakTargeting = false;
+					sneakAttacker = null;
+					return;
+				}
+
+				// Range check (using Math.max to respect your diagonal rule)
+				const dx = Math.abs(target.x - sneakAttacker.x);
+				const dy = Math.abs(target.y - sneakAttacker.y);
+				if (Math.max(dx, dy) !== 1) {
+					Bus.emit('LOG', "Target is out of sneak attack range.");
+					isSneakTargeting = false;
+					sneakAttacker = null;
+					return;
+				}
+
+				handleSneakAttack(target);
+				isSneakTargeting = false;
+				sneakAttacker = null;
 				return;
 			}
 
@@ -304,6 +361,7 @@ function applyDamage(target, amount) {
         target.hp = 0;
         target.x = -1;
         target.y = -1;
+		awardFoeDefeat(target);
         Bus.emit('LOG', `☠️ ${target.name} falls!`);
     }
 
@@ -340,46 +398,11 @@ function canHeal(role) {
 }
 
 function update() {
-    if (isReactionPhase) return; // ⭐ Prevent UI rebuild during reactions
+    if (isReactionPhase) return; 
     const active = units[turn];
     if (!active) return;
-	if (active.type === "monster") return; // monsters do NOT click
 
-    document.getElementById('unit-name').innerText = active.name;
-    // ⭐ HP + Temp HP combined
-    let hpText = `HP: ${active.hp}`;
-    if (active.tempHp && active.tempHp > 0) {
-        hpText += `  🛡️ ${active.tempHp}`;
-    }
-    document.getElementById('unit-hp').innerText = hpText;
-    document.getElementById('unit-speed').innerText = `SPD: ${active.speed}`;
-
-    // ⭐ HIT and DAMAGE bonuses
-    const hitBonus = active.hitBonus || 0;
-    const dmgBonus = active.damageBonus || 0;
-
-    // Create or update bonus elements
-    let hitEl = document.getElementById('unit-hitBonus');
-    let dmgEl = document.getElementById('unit-damageBonus');
-
-    if (!hitEl) {
-        hitEl = document.createElement('span');
-        hitEl.id = 'unit-hitBonus';
-        document.getElementById('stats-panel').appendChild(hitEl);
-    }
-
-    if (!dmgEl) {
-        dmgEl = document.createElement('span');
-        dmgEl.id = 'unit-damageBonus';
-        document.getElementById('stats-panel').appendChild(dmgEl);
-    }
-    // Display only if non‑zero
-    hitEl.style.display = hitBonus !== 0 ? "block" : "none";
-    dmgEl.style.display = dmgBonus !== 0 ? "block" : "none";
-
-    if (hitBonus !== 0) hitEl.innerText = `HIT: ${hitBonus > 0 ? "+" : ""}${hitBonus}`;
-    if (dmgBonus !== 0) dmgEl.innerText = `DMG: ${dmgBonus > 0 ? "+" : ""}${dmgBonus}`;
-
+    // 1. ALWAYS update position rings and token visibility for both PCs and Monsters
     const ring = document.getElementById('active-ring');
     ring.style.left = (active.x * 54 + 2) + 'px';
     ring.style.top = (active.y * 54 + 2) + 'px';
@@ -394,50 +417,69 @@ function update() {
         }
     });
 
+    // 🛑 STOP UI REBUILD HERE IF IT IS A MONSTER'S TURN
+    // This replaces the old "if (active.type === 'monster') return;" that was placed too high up
     const bar = document.getElementById('action-bar');
+    const endBtn = document.getElementById('end-turn-btn');
+    
+    if (active.type === "monster") {
+        bar.innerHTML = '';
+        if (endBtn) endBtn.disabled = true;
+        checkVictory();
+        return; 
+    }
+
+    // 2. Human Player character UI rebuild follows normally...
+    if (endBtn) endBtn.disabled = false;
+    document.getElementById('unit-name').innerText = active.name;
+    let hpText = `HP: ${active.hp}`;
+    if (active.tempHp && active.tempHp > 0) {
+        hpText += `  🛡️ ${active.tempHp}`;
+    }
+    document.getElementById('unit-hp').innerText = hpText;
+    document.getElementById('unit-speed').innerText = `SPD: ${active.speed}`;
+
+    const hitBonus = active.hitBonus || 0;
+    const dmgBonus = active.damageBonus || 0;
+    let hitEl = document.getElementById('unit-hitBonus') || document.createElement('span');
+    let dmgEl = document.getElementById('unit-damageBonus') || document.createElement('span');
+    hitEl.id = 'unit-hitBonus'; dmgEl.id = 'unit-damageBonus';
+    document.getElementById('stats-panel').appendChild(hitEl);
+    document.getElementById('stats-panel').appendChild(dmgEl);
+    hitEl.style.display = hitBonus !== 0 ? "block" : "none";
+    dmgEl.style.display = dmgBonus !== 0 ? "block" : "none";
+    if (hitBonus !== 0) hitEl.innerText = `HIT: ${hitBonus > 0 ? "+" : ""}${hitBonus}`;
+    if (dmgBonus !== 0) dmgEl.innerText = `DMG: ${dmgBonus > 0 ? "+" : ""}${dmgBonus}`;
+
     bar.innerHTML = '';
     createBtn(bar, "📍 Move", toggleMove, isMoving ? 'btn-move-active' : '', "move-btn");
     
-	if (active.race === "Barbarian") {
-		// End Rage button (only after 2 full turns)
-		if (active.isRaging && active.rageTurnsActive >= 3) {
-			createBtn(bar, "End Rage", handleEndRage);
-		}
-	}
-		// Bard ranged attack (crossbow)
-	if (active.role === "Bard") {
-		createBtn(bar, "🏹 Crossbow", startRangedTargeting);
-	}
+    if (active.race === "Barbarian" && active.isRaging && active.rageTurnsActive >= 3) {
+        createBtn(bar, "End Rage", handleEndRage);
+    }
+    if (active.role === "Bard") {
+        createBtn(bar, "🏹 Crossbow", startRangedTargeting);
+    }
+    if (isRogue(active.role)) {
+        if (active.isHiding) {
+            createBtn(bar, "🗡️ Sneak", startSneakTargeting);
+        } else {
+            createBtn(bar, "⚔️ Strike", startMeleeTargeting);
+            createBtn(bar, "🌫️ Hide", handleHide);
+        }
+    } else {
+        createBtn(bar, "⚔️ Strike", startMeleeTargeting);
+    }
+    if (canCast(active.role) && !active.isSinging && !active.isRaging) {
+        createBtn(bar, "✨ Spell", handleSpell);
+    }
+    if (canHeal(active.role) && !active.isRaging) {
+        createBtn(bar, "💚 Heal", startHealTargeting);
+    }
 
-	
-	// Rogue‑type actions
-	if (isRogue(active.role)) {
-		if (active.isHiding) {
-			createBtn(bar, "🗡️ Sneak", handleSneakAttack);
-		} else {
-			createBtn(bar, "⚔️ Strike", startMeleeTargeting);
-			createBtn(bar, "🌫️ Hide", handleHide);
-		}
-	} else {
-		// Default non‑rogue attack
-		createBtn(bar, "⚔️ Strike", startMeleeTargeting);
-	}
-
-	// Spellcasting (only for caster roles) (disabled for singing).
-	if (canCast(active.role) && !active.isSinging && !active.isRaging) {
-		createBtn(bar, "✨ Spell", handleSpell);
-	}
-
-	// Healing (blocked while raging)
-	if (canHeal(active.role) && !active.isRaging) {
-		createBtn(bar, "💚 Heal", startHealTargeting);
-	}
-
-
-    const endBtn = document.getElementById('end-turn-btn');
-    if (endBtn) endBtn.disabled = (active.type === 'monster');
     checkVictory();
 }
+
 
 function startRangedTargeting() {
     const u = units[turn];
@@ -448,8 +490,6 @@ function startRangedTargeting() {
 
     Bus.emit('LOG', `${u.name} aims their crossbow... select a target`);
 }
-
-
 
 function createBtn(parent, text, func, className = '', id = '') {
     const btn = document.createElement('button');
@@ -496,13 +536,11 @@ function handleAttack(attacker, target) {
     let hitMod = 0;
 
     if (attacker.type === "pc") {
-        // PCs use STR or DEX (Miner rule)
         hitMod = attacker.stats?.str || 0;
         if (attacker.role === "Miner" && (attacker.stats?.dex > attacker.stats?.str)) {
             hitMod = attacker.stats.dex;
         }
     } else {
-        // Monsters pull from JSON DB
         const m = getMonsterStats(attacker);
         hitMod = m?.hitMod ?? 0;
     }
@@ -530,10 +568,8 @@ function handleAttack(attacker, target) {
         let dmg = 0;
 
         if (attacker.type === "pc") {
-            // PCs: 1d6 + STR + damageBonus
             dmg = (Math.floor(Math.random() * 6) + 1) + hitMod + (attacker.damageBonus || 0);
         } else {
-            // Monsters: use JSON stats
             const m = getMonsterStats(attacker);
             const die = m?.damageDie ?? 3;
             const bonus = m?.damageBonus ?? 0;
@@ -551,22 +587,18 @@ function handleAttack(attacker, target) {
 
             Bus.emit('LOG', `💀 ${target.name} defeated.`);
 
-            // ⭐ Award XP from monster DB
-            if (target.type === "monster" && window.MONSTER_DB) {
-                const template = window.MONSTER_DB[target.id];
-                const xpValue = template?.xp || 0;
-
-                battleXP += xpValue;
-
-                Bus.emit('LOG', `✨ Gained ${xpValue} XP`);
-            }
         }
     } else {
         Bus.emit('LOG', `🛡️ ${attacker.name} misses (${totalToHit} vs AC ${targetAC}).`);
     }
 
     attacker.hasAction = false;
-    update();
+
+    // ⭐ FIX: Only trigger UI updates if a human player is acting.
+    // Monsters will be updated as a batch when their AI sequence finishes.
+    if (attacker.type === "pc") {
+        update();
+    }
 }
 
 function getMonsterStats(unit) {
@@ -644,23 +676,44 @@ function handleHide() {
     update();
 }
 
-function handleSneakAttack() {
+function startSneakTargeting() {
     const u = units[turn];
     if (!u.hasAction || !u.isHiding) return;
-    const target = units.find(t => t.type !== u.type && t.hp > 0 && Math.max(Math.abs(t.x - u.x), Math.abs(t.y - u.y)) <= 1);
-    if (!target) return Bus.emit('LOG', "Must be in melee.");
+    
+    isSneakTargeting = true;
+    sneakAttacker = u;
+    Bus.emit('LOG', `${u.name} aims from the shadows... select an adjacent enemy`);
+}
+
+function handleSneakAttack(target) {
+    const u = units[turn];
+    if (!u.hasAction || !u.isHiding) return;
+    if (!target || target.hp <= 0) return;
 
     let mod = Math.max(u.stats?.str || 0, u.stats?.dex || 0);
-	mod += u.hitBonus
+    mod += u.hitBonus;
+    
     const roll = Math.floor(Math.random() * 20) + 1;
+    
+    // Attack roll with +2 Sneak Advantage
     if (roll + mod + 2 >= (target.ac || 10)) {
         let dmg = (Math.floor(Math.random() * 6) + 1) + (Math.floor(Math.random() * 6) + 1) + mod;
-		dmg += u.damageBonus 
+        dmg += u.damageBonus;
+        
         applyDamage(target, dmg);
-        Bus.emit('LOG', `🗡️ SNEAK ATTACK! ${dmg} dmg!`);
-        if (target.hp <= 0) { target.x = -1; target.y = -1; }
-    } else { Bus.emit('LOG', `💨 Sneak missed!`); }
-    u.isHiding = false; u.hasAction = false; update();
+        Bus.emit('LOG', `🗡️ SNEAK ATTACK! ${u.name} hits ${target.name} for ${dmg} dmg!`);
+        
+        if (target.hp <= 0) { 
+            target.x = -1; 
+            target.y = -1; 
+        }
+    } else { 
+        Bus.emit('LOG', `💨 Sneak attack missed!`); 
+    }
+    
+    u.isHiding = false; 
+    u.hasAction = false; 
+    update();
 }
 
 function handleHeal() {
@@ -762,7 +815,8 @@ function getAdjacentEnemy(attacker) {
     return units.find(t =>
         t.type !== attacker.type &&
         t.hp > 0 &&
-        Math.abs(t.x - attacker.x) + Math.abs(t.y - attacker.y) === 1
+        // ⭐ CHANGE: Use Math.max so monsters recognize diagonal targets as adjacent
+        Math.max(Math.abs(t.x - attacker.x), Math.abs(t.y - attacker.y)) === 1
     );
 }
 
@@ -788,25 +842,44 @@ function handleRangedAttack(attacker, target) {
     endTurn();
 }
 
-
 function startReactionPhase() {
     isReactionPhase = true;
-	console.log("REACTION PHASE PCs:", units.filter(u => u.type === "pc"));
+    console.log("REACTION PHASE PCs:", units.filter(u => u.type === "pc"));
 
-    const panel = document.getElementById('reaction-panel');
-    panel.innerHTML = "";
-    panel.style.display = "block";
+    // ⭐ Grab the controls container to append the reaction view inside it
+    const controlsWindow = document.getElementById('controls');
+    let panel = document.getElementById('reaction-panel');
+    
+    if (panel) {
+        panel.innerHTML = "";
+        // Move it into controls if it was anywhere else
+        if (controlsWindow && panel.parentNode !== controlsWindow) {
+            controlsWindow.appendChild(panel);
+        }
+    } else {
+        panel = document.createElement('div');
+        panel.id = 'reaction-panel';
+        panel.className = 'reaction-panel';
+        if (controlsWindow) {
+            controlsWindow.appendChild(panel);
+        } else {
+            document.body.appendChild(panel);
+        }
+    }
 
+    // Set layout display to flex so centering styles work nicely
+    panel.style.display = "flex";
+
+    // --- (Keep your entire existing loop unchanged) ---
     units.filter(u => u.type === 'pc' && u.hp > 0).forEach((pc, index) => {
         const div = document.createElement('div');
         div.className = "reaction-entry";
-        div.innerText = pc.name;
+        div.innerText = pc.name + ": "; // Cleaner separator label
 
         // Add reaction button based on role
         if (pc.race === "Barbarian" && !pc.usedRage) {
             createReactionBtn(div, "Rage", () => {
-				handleRage(pc);
-                
+                handleRage(pc);
             });
         }
 
@@ -815,31 +888,27 @@ function startReactionPhase() {
                 pc.isHiding = true;
                 pc.canHide = false;
                 Bus.emit('LOG', `${pc.name} hides in the shadows.`);
-                
             });
         }
 
-		if (pc.role === "Bard" && pc.canSing && !isAnyBardSinging()) {
-			createReactionBtn(div, "Sing", () => {
-				pc.canSing = false;
-				pc.isSinging = true;
+        if (pc.role === "Bard" && pc.canSing && !isAnyBardSinging()) {
+            createReactionBtn(div, "Sing", () => {
+                pc.canSing = false;
+                pc.isSinging = true;
 
-				// Buff allies
-				units.forEach(u => {
-					if (u.type === "pc" && u !== pc) {
-						u.hitBonus = (u.hitBonus || 0) + 1;
-						u.damageBonus = (u.damageBonus || 0) + 1;
-					}
-				});
+                units.forEach(u => {
+                    if (u.type === "pc" && u !== pc) {
+                        u.hitBonus = (u.hitBonus || 0) + 1;
+                        u.damageBonus = (u.damageBonus || 0) + 1;
+                    }
+                });
 
-				// Penalize Bard
-				pc.hitBonus = (pc.hitBonus || 0) - 1;
-				pc.damageBonus = (pc.damageBonus || 0) - 1;
+                pc.hitBonus = (pc.hitBonus || 0) - 1;
+                pc.damageBonus = (pc.damageBonus || 0) - 1;
 
-				Bus.emit('LOG', `${pc.name} sings an inspiring tune! Allies gain +1 hit/dmg, Bard suffers -1 hit/dmg and cannot cast spells.`);
-			});
-		}
-
+                Bus.emit('LOG', `${pc.name} sings an inspiring tune! Allies gain +1 hit/dmg, Bard suffers -1 hit/dmg and cannot cast spells.`);
+            });
+        }
 
         panel.appendChild(div);
     });
@@ -850,7 +919,7 @@ function startReactionPhase() {
     cont.onclick = () => {
         isReactionPhase = false;
         panel.style.display = "none";
-		roundStarted = true;   // ⭐ FIX HERE
+        roundStarted = true;   
         update();
     };
     panel.appendChild(cont);
@@ -865,49 +934,32 @@ function createReactionBtn(parent, text, func) {
 
 function endTurn() {
     isMoving = false;
-
     const current = units[turn];
 
-	// ⭐ If the active unit is raging, increment their Rage duration
-	if (current.isRaging) {
-		current.rageTurnsActive++;
-	}
-
-    // ⭐ Detect if this was the last living unit of the round
-    const lastAliveIndex = units.findLastIndex(u => u.hp > 0);
-
-    if (turn === lastAliveIndex) {
-        // ⭐ Resolve all queued spells now
-        if (pendingSpells.length > 0) {
-            pendingSpells.forEach(({ caster, target, spell }) => {
-			
-			    // ⭐ Spell fizzles if concentration was broken
-				if (!caster.isConcentrating) {
-					Bus.emit('LOG', `💨 ${caster.name}'s ${spell} fizzles due to lost concentration.`);
-					return;
-				}
-			
-                if (target.hp > 0) {
-                    const d = Math.floor(Math.random() * 8) + 2;
-                    target.hp -= d;
-
-                    Bus.emit('LOG', `🔥 ${caster.name}'s ${spell} hits ${target.name} for ${d}.`);
-
-                    if (target.hp <= 0) {
-                        target.x = -1;
-                        target.y = -1;
-                    }
-                }
-            });
-
-            pendingSpells = [];
-        }
+    if (current && current.isRaging) {
+        current.rageTurnsActive++;
     }
 
+    // Resolve queued end-of-round spells
+    const lastAliveIndex = units.findLastIndex(u => u.hp > 0);
+    if (turn === lastAliveIndex && pendingSpells.length > 0) {
+        pendingSpells.forEach(({ caster, target, spell }) => {
+            if (!caster.isConcentrating) {
+                Bus.emit('LOG', `💨 ${caster.name}'s ${spell} fizzles.`);
+                return;
+            }
+			if (target.hp > 0) {
+				const d = Math.floor(Math.random() * 8) + 2;
+				Bus.emit('LOG', `🔥 ${caster.name}'s ${spell} targets ${target.name}:`);
 
-    let previousTurn = turn;
+				// Pass the damage directly to the engine to handle mitigation, health tracking, and rewards
+				applyDamage(target, d);
+			}
+        });
+        pendingSpells = [];
+    }
 
-    // Advance to next living unit
+    // Cycle to next living combatant
     let attempts = 0;
     do {
         turn = (turn + 1) % units.length;
@@ -915,122 +967,153 @@ function endTurn() {
     } while (units[turn].hp <= 0 && attempts < units.length);
 
     const active = units[turn];
-	if (active.type === "monster") return; // monsters do NOT click
-    // Detect ROUND START:
-    // If we looped back to the first PC in the list
+
+    // Round Reset / Reaction Phase Trigger Loop
     const firstPCIndex = units.findIndex(u => u.type === 'pc');
+    if (turn === firstPCIndex) {
+        roundStarted = false;
 
-	if (turn === firstPCIndex) {
-		roundStarted = false;
+        if (isAnyBardSinging()) {
+            const singingBard = units.find(u => u.type === "pc" && u.role === "Bard" && u.isSinging);
+            if (singingBard) {
+                singingBard.isSinging = false;
+                units.forEach(u => {
+                    if (u.type === "pc" && u !== singingBard) {
+                        u.hitBonus -= 1; u.damageBonus -= 1;
+                    }
+                });
+                singingBard.hitBonus += 1; singingBard.damageBonus += 1;
+                Bus.emit('LOG', `🎵 ${singingBard.name}'s song fades.`);
+            }
+        }
 
-		// ⭐ If any bard was singing last round, fade the song now
-		if (isAnyBardSinging()) {
-			const singingBard = units.find(u => u.type === "pc" && u.role === "Bard" && u.isSinging);
+        units.forEach(pc => {
+            if (pc.type !== 'pc') return;
+            if (pc.role === "Miner") pc.canHide = true;
+            if (pc.role === "Bard") pc.canSing = true;
+        });
+    }
 
-			if (singingBard) {
-				singingBard.isSinging = false;
-
-				// Remove buffs from allies
-				units.forEach(u => {
-					if (u.type === "pc" && u !== singingBard) {
-						u.hitBonus -= 1;
-						u.damageBonus -= 1;
-					}
-				});
-
-				// Remove bard penalty
-				singingBard.hitBonus += 1;
-				singingBard.damageBonus += 1;
-
-				Bus.emit('LOG', `🎵 ${singingBard.name}'s song fades.`);
-			}
-		}
-
-		// Reset per-round reactions
-		units.forEach(pc => {
-			if (pc.type !== 'pc') return;
-			if (pc.role === "Miner") pc.canHide = true;
-			if (pc.role === "Bard") pc.canSing = true;
-		});
-	}
-
-
-    // Normal turn setup
     active.hasAction = true;
     active.speed = 6;
 
-    // If round hasn't started yet → trigger reactions
     if (!roundStarted) {
         roundStarted = true;
         startReactionPhase();
-        return; // Stop here until reactions are done
+        return; 
     }
 
     Bus.emit('LOG', `Turn: ${active.name}`);
-    update();
+    update(); // Now completely safe to call for both types!
 
     if (active.type === 'monster') {
         setTimeout(monsterAI, 800);
     }
 }
 
-
 function monsterAI() {
     const u = units[turn];
     if (!u || u.hp <= 0) return endTurn();
 
-    const target = units.find(t => t.type === 'pc' && t.hp > 0);
+    let target = units.find(t => t.type === 'pc' && t.hp > 0);
     if (!target) return endTurn();
 
-    // Attack if adjacent
-    const dist = Math.max(Math.abs(u.x - target.x), Math.abs(u.y - target.y));
+    let dist = Math.max(Math.abs(u.x - target.x), Math.abs(u.y - target.y));
+    
+    // 1. If not adjacent, try to move closer first
+    if (dist > 1) {
+        for (let i = 0; i < u.speed; i++) {
+            const dx = (u.x < target.x ? 1 : u.x > target.x ? -1 : 0);
+            const dy = (u.y < target.y ? 1 : u.y > target.y ? -1 : 0);
+
+            const occupied = getOccupiedSquares();
+
+            if (!occupied[u.x + dx]?.[u.y + dy]) {
+                processMove(u.x + dx, u.y + dy, true);
+            }
+            else if (!occupied[u.x + dx]?.[u.y]) {
+                processMove(u.x + dx, u.y, true);
+            }
+            else if (!occupied[u.x]?.[u.y + dy]) {
+                processMove(u.x, u.y + dy, true);
+            }
+            else {
+                Bus.emit('LOG', `${u.name} is blocked.`);
+                break;
+            }
+
+            // Check distance again after every step taken
+            const newDist = Math.max(Math.abs(u.x - target.x), Math.abs(u.y - target.y));
+            if (newDist <= 1) break;
+        }
+    }
+
+    // 2. Refresh distance state after movement options run out
+    dist = Math.max(Math.abs(u.x - target.x), Math.abs(u.y - target.y));
+
+    // 3. If adjacent now, unleash the attack!
     if (dist <= 1) {
-	
-		const monster = units[turn];
-		const target = getAdjacentEnemy(monster);
-
-		if (target) {
-			handleAttack(monster, target);
-		} else {
-			// No adjacent PC — monster should move or skip
-			Bus.emit('LOG', `${monster.name} growls but finds no target.`);
-			monster.hasAction = false;
-			update();
-			endTurn();
-		}
-
-        return setTimeout(endTurn, 500);
+        const adjacentEnemy = getAdjacentEnemy(u);
+        if (adjacentEnemy) {
+            handleAttack(u, adjacentEnemy);
+        } else {
+            Bus.emit('LOG', `${u.name} growls but finds no target.`);
+            u.hasAction = false;
+        }
+    } else {
+        Bus.emit('LOG', `${u.name} cannot reach anyone.`);
     }
 
-    // Move up to speed tiles
-    for (let i = 0; i < u.speed; i++) {
-        const dx = (u.x < target.x ? 1 : u.x > target.x ? -1 : 0);
-        const dy = (u.y < target.y ? 1 : u.y > target.y ? -1 : 0);
-
-        const occupied = getOccupiedSquares();
-
-        if (!occupied[u.x + dx]?.[u.y + dy]) {
-            processMove(u.x + dx, u.y + dy, true);
-        }
-        else if (!occupied[u.x + dx]?.[u.y]) {
-            processMove(u.x + dx, u.y, true);
-        }
-        else if (!occupied[u.x]?.[u.y + dy]) {
-            processMove(u.x, u.y + dy, true);
-        }
-        else {
-            Bus.emit('LOG', `${u.name} is blocked.`);
-            break;
-        }
-
-        // Stop early if we reached melee range
-        const newDist = Math.max(Math.abs(u.x - target.x), Math.abs(u.y - target.y));
-        if (newDist <= 1) break;
-    }
-
-    setTimeout(endTurn, 500);
+    // 4. Cleanly pass control to the next character in sequence
+    setTimeout(endTurn, 600);
 }
 
+function awardFoeDefeat(target) {
+    // Safety check: only process monsters that haven't been resolved yet
+    if (!target || target.type !== "monster" || target.hp === -999) return;
+
+    Bus.emit('LOG', `💀 ${target.name} has been overcome!`);
+
+    // Mark unit internally as permanently resolved and clear coordinates
+    target.hp = 0; 
+    target.x = -1;
+    target.y = -1;
+    
+    // Use a special internal flag so they aren't accidentally rewarded twice
+    target.isDefeated = true; 
+
+    // UNIVERSAL RESOURCE POOLING
+    const template = window.MONSTER_DB ? window.MONSTER_DB[target.id] : null;
+    
+    // 1. Pool XP
+    const xpValue = template?.xp || 0;
+    battleXP += xpValue;
+    if (xpValue > 0) {
+        Bus.emit('LOG', `✨ Gained ${xpValue} XP from ${target.name}`);
+    }
+
+    // 2. Pool Loot Items
+    if (template?.loot && Array.isArray(template.loot)) {
+        const savedData = JSON.parse(localStorage.getItem('currentBattle')) || {};
+        if (!savedData.loot) savedData.loot = [];
+
+        template.loot.forEach(itemDrop => {
+            const existing = savedData.loot.find(l => l.item === itemDrop.item);
+            if (existing) {
+                existing.qty += itemDrop.qty;
+            } else {
+                savedData.loot.push({ item: itemDrop.item, qty: itemDrop.qty });
+            }
+        });
+        
+        localStorage.setItem('currentBattle', JSON.stringify(savedData));
+    }
+
+    // 3. Future tracks (Gold, Faction Reputation, Story Keys) hook directly here:
+    // if (template?.gold) { battleGold += template.gold; }
+
+    update();
+}
 
 function checkVictory() {
     if (victoryShown) return; 
@@ -1080,6 +1163,7 @@ function checkVictory() {
         });
     }
 }
+
 function showVictoryWindow(summary, onClose) {
     const overlay = document.createElement('div');
     overlay.id = "victory-window";
