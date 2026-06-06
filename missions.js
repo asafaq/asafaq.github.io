@@ -391,7 +391,8 @@ async function handleMissionEnd(sceneId) {
             recruitAdventurer("adv_Bragain");
             recruitAdventurer("adv_Claudio");
             recruitAdventurer("adv_Amyssa");
-
+			awardManualXP(["Bragain", "Claudio", "Hogperson"], 600);
+			awardManualXP("Amyssa", 1700);
             player.patrons ??= {};
             player.patrons.adv_Bragain.location = 3;
             player.patrons.adv_Hogperson.location = 3;
@@ -423,19 +424,23 @@ async function handleMissionEnd(sceneId) {
             player = await storage.loadPlayer(player.id);
             player.missions.green_1 = 3;
             Journal.addEntry("In the nearby green pastures, you've smashed a rock to bits.");
+			awardManualXP("Bragain", 50);
             loadPage("mission_green_1");
         },
         "green1_025END": async () => {
             player = await storage.loadPlayer(player.id);
             player.missions.green_1 = 4;
             Journal.addEntry("You've cheered up a wandering traveler.");
+			awardManualXP("Hogperson", 50);
             loadPage("mission_green_1");
         },
-        "green1_502end": async () => {
-            launchBattle("tutor_test");
-            player.missions.green_1 = 6;
-            loadPage("mission_green_1");
-        },
+		"green1_502end": async () => {
+			player.missions.green_1 = 6;
+			launchBattle("tutor_test", () => {
+				loadPage("mission_green_1");
+			});
+		},
+
         "green1_502endskip": async () => {
             player.missions.green_1 = 6;
             loadPage("mission_green_1");
@@ -450,6 +455,8 @@ async function handleMissionEnd(sceneId) {
 			setPartyStatus(partyKey, "mission")
             Journal.addEntry("You've successfully demoralized a band of Koboldogs.");
             Journal.addEntry("You've saved Claudio from a cage.");
+			awardManualXP(["Bragain", "Claudio", "Hogperson"], 150);
+			
             loadPage("mission_green_1");
         },
         "green1_056END": async () => {
@@ -488,8 +495,6 @@ async function handleMissionEnd(sceneId) {
             player.missions.green_2 = 2;
             player.patrons.adv_Amyssa.location = 3;
             player.patrons.adv_Amyssa.status = "mission";
-			
-            
 			const partyKey = player.missions.current_mission.party;
             buildPartyTraits(partyKey);
 			buildPartySummary(partyKey);
@@ -499,6 +504,7 @@ async function handleMissionEnd(sceneId) {
         "green2_240a_end": async () => {
             player.missions.green_2 = 3;
             recruitAdventurer("adv_Hogmother");
+			awardManualXP("Hogmother", 2000);
             player.patrons.adv_Hogmother.location = 3;
             player.patrons.adv_Hogmother.status = "mission";
 			
@@ -518,10 +524,12 @@ async function handleMissionEnd(sceneId) {
             player.missions.current_mission.locked_mission = "green_3";
             player.missions.current_mission.page = "mission_green_3";
             recruitAdventurer("adv_Lurch");
+			awardManualXP("Lurch", 2000);
             player.patrons.adv_Lurch.location = 9;
             player.patrons.adv_Lurch.status = "secret";
 			
             recruitAdventurer("adv_Hogmother");
+			awardManualXP("Hogmother", 2000);
             player.patrons.adv_Hogmother.location = 3;
             player.patrons.adv_Hogmother.status = "mission";
             
@@ -533,7 +541,7 @@ async function handleMissionEnd(sceneId) {
 				`You've met up with Hogmother and she has joined the ${player.data.party_A} on their way to ${player.missions.current_mission.id}.`
 			);
 			Journal.addEntry(
-				`You've dealth with Lurch who has agreed on to spy for the ${player.data.party_A} and meet them later as they make their own way to ${player.missions.current_mission.id}.`
+				`You've dealt with Lurch who has agreed on to spy for the ${player.data.party_A} and meet them later as they make their own way to ${player.missions.current_mission.id}.`
 			);
 			
             loadPage("mission_green_3");
@@ -550,6 +558,8 @@ async function handleMissionEnd(sceneId) {
             player.patrons.adv_Awetruce.location = 6;
             player.patrons.adv_Awetruce.status = "mission";
             recruitAdventurer("adv_Finnick");
+			
+			awardManualXP("Finnick", 1000);
             player.patrons.adv_Finnick.location = 3;
             player.patrons.adv_Finnick.status = "mission";
             

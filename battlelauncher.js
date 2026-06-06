@@ -1,42 +1,104 @@
 // --- Launcher for index.html ---
 
 // --- 2. THE LISTENER (Battle -> Main Page) ---
-window.addEventListener("message", (event) => {
-    // Security: Ensure the message is from your battle engine
+// --- 2. THE LISTENER (Battle -> Main Page) ---
+window.addEventListener("message", async (event) => {
     if (event.data.type === "BATTLE_COMPLETE") {
-        const results = event.data.result; // This is the PC array from battle.html
-        // A. Sync results back to your player object
-        results.forEach(pc => {
-            const key = `adv_${pc.name}`;
-            if (player.patrons[key]) {
-                player.patrons[key].currentHP = pc.hp;
-                // If HP is 0, you might want to change status to 'dead' or 'injured'
-                if (pc.hp <= 0) player.patrons[key].status = 'injured';
-            }
-        });
+        const results = event.data.result;
+        const earnedXP = event.data.xp || 0;
+        const earnedLoot = event.data.loot || [];
 
-        // B. CLEANUP (Crucial steps)
-        localStorage.removeItem('currentBattle'); // Clear the "Battle Info" file
-        
-		const overlay = document.getElementById('battle-overlay');
-		if (overlay) {
-			overlay.remove();   // removes BOTH overlay + iframe
-		}
+        if (results && Array.isArray(results)) {
+            const xpPerPC = results.length > 0 ? Math.floor(earnedXP / results.length) : 0;
 
+            results.forEach(pc => {
+                const key = `adv_${pc.name}`;
+                
+                if (player && player.patrons && player.patrons[key]) {
+                    const patron = player.patrons[key];
+                    patron.currentHP = pc.hp;
+                    
+                    if (pc.hp <= 0) patron.status = 'injured';
 
-        // C. SAVE PROGRESS
-        console.log("Battle synchronized. Saving player data...");
-        // Call your existing Save/IDB function here
-        // saveToIDB(player); 
-		// unimplements yet.
-        // Check if the parent and the Bus exist before calling
-		if (window.parent && window.parent.Bus) {
-			window.parent.Bus.emit('LOG', "The party has returned from combat.");
-		} else {
-			console.error("Could not find the Event Bus on the parent window.");
-		}
-		}
+                    if (typeof patron.Exp === 'undefined') patron.Exp = 0;
+                    if (!patron.Level) patron.Level = 1;
+
+                    // Fallback to determine class configurations on older characters safely
+                    if (!patron.classKey) {
+                        const lore = loreData.Adventurer[pc.name] || {};
+                        const r = lore.role?.toLowerCase() || "";
+                        const c = lore.race?.toLowerCase() || "";
+                        patron.classKey = CLASS_REGISTRY[r] ? r : (CLASS_REGISTRY[c] ? c : "default");
+                    }
+
+                    patron.Exp += xpPerPC;
+
+                    let nextLevel = patron.Level + 1;
+                    let xpNeeded = XP_TABLES.getRequiredXP(patron.classKey, nextLevel);
+
+                    while (patron.Exp >= xpNeeded && nextLevel <= 20) {
+                        patron.Level = nextLevel;
+                        let hpGained = 0;
+
+                        // Check if character is inside the rolling tier or flat reward tier
+                        if (patron.Level <= 9) {
+                            const lore = loreData.Adventurer[pc.name];
+                            const hpDie = lore?.hp_die ?? 6;
+                            let hpMod = lore?.hp_modifier ?? 0;
+                            
+                            // Apply your custom rule: max +2 hpMod contribution
+                            if (hpMod > 2) hpMod = 2;
+
+                            const roll1 = Math.ceil(Math.random() * hpDie);
+                            const roll2 = Math.ceil(Math.random() * hpDie);
+                            hpGained = Math.max(roll1, roll2) + hpMod;
+                        } else {
+                            // Flat high-level reward scaling rules
+                            const config = CLASS_REGISTRY[patron.classKey] || { hpStyle: "thief" };
+                            if (config.hpStyle === "warrior") hpGained = 3;
+                            else if (config.hpStyle === "priest") hpGained = 2;
+                            else hpGained = 1;
+                            
+                            // Note: hpMod is completely ignored here per your criteria!
+                        }
+
+                        patron.MaxHP += hpGained;
+                        patron.currentHP = patron.MaxHP; // Leveling up fully heals characters
+
+                        if (window.Bus && typeof window.Bus.emit === 'function') {
+                            window.Bus.emit('LOG', `🎉 LEVEL UP! ${pc.name} reached Level ${patron.Level}! (+${hpGained} Max HP)`);
+                        }
+                        
+                        nextLevel = patron.Level + 1;
+                        xpNeeded = XP_TABLES.getRequiredXP(patron.classKey, nextLevel);
+                    }
+                }
+            });
+        }
+
+        // --- (Your standard loot packing and overlay cleanup logic continues below here) ---
+        if (!player.inventory) player.inventory = [];
+        if (earnedLoot && earnedLoot.length > 0) {
+            earnedLoot.forEach(droppedItem => {
+                const existingItem = player.inventory.find(i => i.item === droppedItem.item);
+                if (existingItem) existingItem.qty += droppedItem.qty;
+                else player.inventory.push({ item: droppedItem.item, qty: droppedItem.qty });
+            });
+        }
+
+        localStorage.removeItem('currentBattle');
+        const overlay = document.getElementById('battle-overlay');
+        if (overlay) overlay.remove();
+
+        try {
+            await storage.savePlayer(player);
+            console.log("💾 Player data saved permanently with updated levels.");
+        } catch (error) {
+            console.error("❌ Error writing save state:", error);
+        }
+    }
 });
+
 
 // Example function to start a fight
 // function launchBattle(encounterData) {
@@ -46,6 +108,261 @@ window.addEventListener("message", (event) => {
 // }
 // At the top of battlelauncher.js
 const Bus = window.parent.Bus;
+
+// Global Registry mapping every class/role to its behavior rules
+const CLASS_REGISTRY = {
+    // --- ⚔️ WARRIORS (+3 HP after level 9) ---
+    warrior:    { table: "warrior",   hpStyle: "warrior" },
+    paladin:    { table: "warrior",   hpStyle: "warrior" },
+    "Fallen Paladin":    { table: "warrior",   hpStyle: "warrior" },
+    barbarian:  { table: "warrior",   hpStyle: "warrior" },
+    fighter:    { table: "warrior",   hpStyle: "warrior" },
+    brute:    	{ table: "warrior",   hpStyle: "warrior" },
+    baker:    	{ table: "warrior",   hpStyle: "warrior" },
+    bouncer:    { table: "warrior",   hpStyle: "warrior" },
+    squire:     { table: "warrior",   hpStyle: "warrior" },
+    deputy:     { table: "warrior",   hpStyle: "warrior" },
+
+    // --- 🔮 PRIESTS / UTILITY (+2 HP after level 9) ---
+    priest:     { table: "priest",    hpStyle: "priest" },
+    shaman:     { table: "priest",    hpStyle: "priest" },
+    druid:      { table: "priest",    hpStyle: "priest" },
+    warlock:    { table: "priest",    hpStyle: "priest" },
+    cleric:     { table: "priest",    hpStyle: "priest" },
+    Clericbot:  { table: "priest",    hpStyle: "priest" },
+    bard:   	{ table: "priest",    hpStyle: "priest" },
+    spy:    	{ table: "priest",    hpStyle: "priest" },
+
+    // --- 🧙 MAGES (+1 HP after level 9 ) ---
+    mage:       { table: "mage",      hpStyle: "mage" },
+    wizard:     { table: "mage",      hpStyle: "mage" },
+    sorcerer:   { table: "mage",      hpStyle: "mage" },
+    huntress:   { table: "mage",      hpStyle: "mage" },
+
+    // --- 🗡️ THIEVES (+1 HP after level 9) ---
+    thief:      { table: "thief",     hpStyle: "thief" },
+    miner:      { table: "thief",     hpStyle: "thief" },
+    "arcane trickster":      { table: "swordmage",     hpStyle: "thief" },
+
+    // --- 🗺️ NON-STANDARD ARCHEPLAY / ANCESTRY CLASSES ---
+    swordmage:  { table: "swordmage", hpStyle: "warrior" }, 
+    dwarf:      { table: "dwarf",     hpStyle: "warrior" }
+};
+
+const XP_TABLES = {
+    // 3 Main Core Classes (Halved requirements)
+    warrior:   [0, 1000, 2000, 4000, 9000, 17500, 35000, 62500, 125000, 250000, 375000],
+    priest:    [0, 750, 1500, 3000, 6500, 11250, 22500, 45000, 90000, 137500, 225000],
+    thief:     [0, 625, 1250, 2500, 5000, 10000, 21250, 42500, 85000, 140000, 220000],
+    
+    // Core Magic Track
+    mage:      [0, 1250, 2500, 5000, 10000, 20000, 45000, 90000, 187500, 287500, 375000],
+
+    // Non-Standard Classes
+    swordmage: [0, 1500, 3000, 6000, 12000, 24000, 48000, 95000, 175000, 275000, 375000],
+    dwarf:     [0, 1000, 2000, 4000, 9000, 17500, 35000, 62500, 125000, 250000, 375000],
+    default:   [0, 1000, 2000, 4000, 8000, 16000, 32000, 64000, 125000, 250000, 375000],
+
+    getRequiredXP: function(classKey, targetLevel) {
+        const config = CLASS_REGISTRY[classKey] || { table: "default" };
+        const table = this[config.table] || this.default;
+        
+        if (targetLevel <= table.length) {
+            return table[targetLevel - 1];
+        }
+        
+        const baseXP = table[table.length - 1];
+        const flatIncrement = table[table.length - 1] - table[table.length - 2];
+        return baseXP + ((targetLevel - table.length) * flatIncrement);
+    }
+};
+
+function createDefaultPatronState(advId) {
+    const lore = loreData.Adventurer[advId];
+    if (!lore) {
+        console.warn("Missing lore for", advId);
+        return { status: "idle" };
+    }
+
+    const armorBonus = { unarmed: 0, light: 2, medium: 4, heavy: 6 };
+    const Dexterity = lore.Dexterity_mod ?? 0;
+    const wisdom = lore.wisdom_mod ?? 0;
+    const hpDie = lore.hp_die ?? 6;
+    let hpMod = lore.hp_modifier ?? 0;
+    const level = lore.level ?? 1;
+
+    // Cap the recruitment modifier to a maximum value of +2
+    if (hpMod > 2) hpMod = 2;
+
+    let prof = (lore.proficiency_armor || "unarmed").toLowerCase();
+    if (!armorBonus.hasOwnProperty(prof)) prof = "unarmed";
+
+    const race = lore.race?.toLowerCase() || "";
+    const role = lore.role?.toLowerCase() || "";
+    
+    // ⭐ Determine specific class tracking identity key
+    const currentClassKey = CLASS_REGISTRY[role] ? role : (CLASS_REGISTRY[race] ? race : "default");
+
+    let AC = 10 + Dexterity + (armorBonus[prof] || 0);
+    if ((race === "barbarian" || race === "direwolf") && prof === "unarmed") {
+        AC += hpMod;
+    }
+    if (role === "monk" && prof === "unarmed") {
+        AC = 10 + wisdom;
+    }
+
+    // --- Compute MaxHP using the split level 1-9 vs 10+ rules ---
+    function rollAdvantage(die) {
+        return Math.max(Math.ceil(Math.random() * die), Math.ceil(Math.random() * die));
+    }
+
+    let MaxHP = hpDie + hpMod; // Level 1 guarantee
+
+    for (let lvl = 2; lvl <= level; lvl++) {
+        if (lvl <= 9) {
+            MaxHP += rollAdvantage(hpDie) + hpMod;
+        } else {
+            // Flat high-level reward scaling rules (Levels 10+)
+            // FIXED: Changed 'patron.classKey' to 'currentClassKey'
+            const config = CLASS_REGISTRY[currentClassKey] || { hpStyle: "thief" };
+            let hpGained = 1; // Default fallback
+            
+            if (config.hpStyle === "warrior") {
+                hpGained = 3;
+            } else if (config.hpStyle === "priest") {
+                hpGained = 2;
+            } else if (config.hpStyle === "mage") {
+                hpGained = 1; 
+            }
+            
+            MaxHP += hpGained; // FIXED: Missing addition to MaxHP
+        }
+    }
+
+    // ⭐ NEW FEATURE: Dynamically calculate starting experience based on level and class type
+    let startingExp = 0;
+    if (level > 1) {
+        startingExp = XP_TABLES.getRequiredXP(currentClassKey, level);
+    }
+
+    return {
+        status: "idle",
+        AC,
+        MaxHP,
+        currentHP: MaxHP,
+        Level: level,
+        Exp: startingExp, // Dynamic XP applied here
+        classKey: currentClassKey
+    };
+}
+
+
+/**
+ * Universal XP Distributor
+ * @param {string|string[]} targets - A single name (e.g. "Bragain") or an array of names (e.g. ["Bragain", "Claudio"])
+ * @param {number} totalXP - The amount of XP to grant (automatically split if targeting a list)
+ */
+
+// awardManualXP("Bragain", 500);
+// awardManualXP(["Amyssa", "Bragain", "Claudio", "Hogperson"], 2000);
+ 
+ // Filter active adventurers assigned to location 3 right out of your state object
+//const missionParty = Object.keys(player.patrons)
+//    .filter(key => player.patrons[key].location === 3)
+//    .map(key => key.replace("adv_", "")); // Strip prefix back to name literals
+
+// Give the combined squad a flat 1000 XP drop pool
+//awardManualXP(missionParty, 1000);
+ 
+
+async function awardManualXP(targets, totalXP) {
+    // 1. Normalize targets into an array format
+    const targetNames = Array.isArray(targets) ? targets : [targets];
+    if (targetNames.length === 0 || totalXP <= 0) return;
+
+    // 2. Calculate the split share
+    const xpPerPC = Math.floor(totalXP / targetNames.length);
+    if (xpPerPC <= 0) {
+        console.warn("❌ Grant cancelled: XP amount too small to divide among targets.");
+        return;
+    }
+
+    console.log(`Giving ${xpPerPC} Exp to: ${targetNames.join(", ")}`);
+
+	// 3. Process each character profile
+	targetNames.forEach(name => {
+		// ⭐ UNIVERSAL NORMALIZATION STEP
+		// Trim accidental whitespace, lower-case it to safely check for 'adv_', 
+		// then remove the prefix if it exists.
+		let cleanName = name.trim();
+		if (cleanName.toLowerCase().startsWith("adv_")) {
+			cleanName = cleanName.substring(4); // Strips away the 'adv_' prefix
+		}
+
+		// Always re-apply the unified lowercase prefix followed by the exact key text
+		const key = `adv_${cleanName}`;
+		
+		if (player && player.patrons && player.patrons[key]) {
+			const patron = player.patrons[key];
+			
+			// Use cleanName for logs and lookup so that it strips the 'adv_' from the screen output
+			console.log(`🎯 Processing matched key: ${key}`);
+
+			// ... [The rest of your XP allocation and Level Up loop logic goes here, unchanged!] ...
+
+            // 4. Handle Level Up evaluation loops
+            let nextLevel = patron.Level + 1;
+            let xpNeeded = XP_TABLES.getRequiredXP(patron.classKey, nextLevel);
+
+            while (patron.Exp >= xpNeeded && nextLevel <= 20) {
+                patron.Level = nextLevel;
+                let hpGained = 0;
+
+                if (patron.Level <= 9) {
+                    const lore = loreData.Adventurer[name];
+                    const hpDie = lore?.hp_die ?? 6;
+                    let hpMod = lore?.hp_modifier ?? 0;
+                    
+                    if (hpMod > 2) hpMod = 2; // Cap your mod contribution to max +2
+
+                    const roll1 = Math.ceil(Math.random() * hpDie);
+                    const roll2 = Math.ceil(Math.random() * hpDie);
+                    hpGained = Math.max(roll1, roll2) + hpMod;
+                } else {
+                    // Flat level 10+ rewards matching your exact targets
+                    const config = CLASS_REGISTRY[patron.classKey] || { hpStyle: "thief" };
+                    if (config.hpStyle === "warrior") hpGained = 3;
+                    else if (config.hpStyle === "priest") hpGained = 2;
+                    else hpGained = 1; // Mages and Thieves get flat +1 HP
+                }
+
+                patron.MaxHP += hpGained;
+                patron.currentHP = patron.MaxHP; // Fully heal on level up
+
+                if (window.Bus && typeof window.Bus.emit === 'function') {
+                    window.Bus.emit('LOG', `🎉 MANUAL LEVEL UP! ${name} reached Level ${patron.Level}! (+${hpGained} Max HP)`);
+                }
+                
+                nextLevel = patron.Level + 1;
+                xpNeeded = XP_TABLES.getRequiredXP(patron.classKey, nextLevel);
+            }
+        } else {
+            console.warn(`⚠️ Character key "${key}" was not found inside player.patrons.`);
+        }
+    });
+
+    // 5. Commit mutations permanently to your IndexedDB layout
+    try {
+        await storage.savePlayer(player);
+        console.log("💾 Storage synced successfully following manual XP injection.");
+        
+        // UI Hook refresh trigger if you use one
+        if (typeof renderCharacterSheets === "function") renderCharacterSheets();
+    } catch (error) {
+        console.error("❌ Failed to commit manual XP adjustments to storage:", error);
+    }
+}
+
 
 // Now your old code works again!
 if (Bus) {

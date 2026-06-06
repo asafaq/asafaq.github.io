@@ -200,6 +200,7 @@
       "race": "Barbarian",
       "race_comment": "Wildmen more of a humanoid than a human. Thick Hide for bonus unarmed AC \tRage +10 tempHP.",
       "role": "Shaman",
+      "subclass": "Ancestral Protector",
       "role_comment": "A cleric channeling spirits.",
       "hp_die": 8,
       "hp_modifier": 3,
@@ -297,8 +298,8 @@
     },
     "adv_Desmond": {
       "name": "Desmond",
-      "icon": "assets/patrons/desmond.png",
-      "large": "assets/patrons/desmond.png",
+      "icon": "assets/patrons/desmond_s.png",
+      "large": "assets/patrons/desmond_l.png",
       "top": "270px",
       "left": "280px",
       "location": 2,
@@ -916,7 +917,7 @@
       ]
     },
     "Goon": {
-	  "desc": "A more civilized and smaller Ogre. Can be trained to live with humans.",
+	  "desc": "A more civilized and smaller Ogre. Good at boring tasks like guarding a spot.",
       "Traits": [
         "Volatile Temper",
 		"Gluttonous"

@@ -356,7 +356,7 @@
     "speaker": "Bragain",
     "portrait": "/assets/patrons/dwarven_miner.png",
     "side": "right",
-    "dialog": "Hahahaha. Success!\n\nLet's head on out.",
+    "dialog": "Hahahaha. Success!\n\nLet's head on out.\n\nBragain gains 50 Exp.",
     "interaction_type": "next",
     "target_id": "green1_019END",
     "options": []
@@ -434,7 +434,7 @@
     "speaker": "Narrator",
     "portrait": "",
     "side": "right",
-    "dialog": "Hogperson may not be the smartest guy, nor *A* smart guy, \nnor being able to appear smart if his life was depending on it, \nbut he's got a big heart! And that counts.",
+    "dialog": "Hogperson may not be the smartest guy, nor *A* smart guy, \nnor being able to appear smart if his life was depending on it, \nbut he's got a big heart! And that counts.\n\nHogperson gains 50 Exp.",
     "interaction_type": "next",
     "target_id": "green1_025END",
     "options": []
@@ -592,7 +592,7 @@
     "speaker": "Narrator",
     "portrait": "",
     "side": "right",
-    "dialog": "You let Claudio out of the cage, catch up on what's been going on lately.",
+    "dialog": "You let Claudio out of the cage, catch up on what's been going on lately.\n\nThe Party gains 150 EXP.",
     "interaction_type": "next",
     "target_id": "green1_039",
     "options": []

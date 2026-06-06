@@ -2126,73 +2126,73 @@ function getHydratedAdventurer(advId) {
 
 function createDefaultPatronState(advId) {
     const lore = loreData.Adventurer[advId];
-
     if (!lore) {
         console.warn("Missing lore for", advId);
         return { status: "idle" };
     }
 
-    // Armor proficiency → numeric bonus (all lowercase keys)
-    const armorBonus = {
-        unarmed: 0,
-        light: 2,
-        medium: 4,
-        heavy: 6
-    };
-
+    const armorBonus = { unarmed: 0, light: 2, medium: 4, heavy: 6 };
     const Dexterity = lore.Dexterity_mod ?? 0;
     const wisdom = lore.wisdom_mod ?? 0;
-    const hpDie = lore.hp_die ?? 0;
-    const hpMod = lore.hp_modifier ?? 0;
+    const hpDie = lore.hp_die ?? 6;
+    let hpMod = lore.hp_modifier ?? 0;
     const level = lore.level ?? 1;
 
-    // Normalize armor proficiency
-    let prof = (lore.proficiency_armor || "unarmed").toLowerCase();
-    if (!armorBonus.hasOwnProperty(prof)) {
-        prof = "unarmed";
-    }
+    // Cap the recruitment modifier to a maximum value of +2
+    if (hpMod > 2) hpMod = 2;
 
-    // Normalize race + role
+    let prof = (lore.proficiency_armor || "unarmed").toLowerCase();
+    if (!armorBonus.hasOwnProperty(prof)) prof = "unarmed";
+
     const race = lore.race?.toLowerCase() || "";
     const role = lore.role?.toLowerCase() || "";
+    
+    // ⭐ Determine specific class tracking identity key
+    const currentClassKey = CLASS_REGISTRY[role] ? role : (CLASS_REGISTRY[race] ? race : "default");
 
-    // --- Compute AC ---
     let AC = 10 + Dexterity + (armorBonus[prof] || 0);
-
-    // Barbarian bonus only when unarmed
-    if (race === "barbarian" && prof === "unarmed") {
+    if ((race === "barbarian" || race === "direwolf") && prof === "unarmed") {
         AC += hpMod;
     }
-
-    // Barbarian bonus only when unarmed
-    if (race === "direwolf" && prof === "unarmed") {
-        AC += hpMod;
-    }
-
-    // Monk AC formula (only when unarmed)
     if (role === "monk" && prof === "unarmed") {
         AC = 10 + wisdom;
     }
 
-    // --- Compute MaxHP ---
+    // --- Compute MaxHP using the split level 1-9 vs 10+ rules ---
     function rollAdvantage(die) {
-        const a = Math.ceil(Math.random() * die);
-        const b = Math.ceil(Math.random() * die);
-        return Math.max(a, b);
+        return Math.max(Math.ceil(Math.random() * die), Math.ceil(Math.random() * die));
     }
 
-    let MaxHP = hpDie + hpMod; // Level 1 guaranteed max
+    let MaxHP = hpDie + hpMod; // Level 1 guarantee
 
     for (let lvl = 2; lvl <= level; lvl++) {
-        MaxHP += rollAdvantage(hpDie) + hpMod;
-    }
+        if (lvl <= 9) {
+            MaxHP += rollAdvantage(hpDie) + hpMod;
+		} else {
+			// Flat high-level reward scaling rules (Levels 10+)
+			const config = CLASS_REGISTRY[patron.classKey] || { hpStyle: "thief" };
+			
+			if (config.hpStyle === "warrior") {
+				hpGained = 3;
+			} else if (config.hpStyle === "priest") {
+				hpGained = 2;
+			} else if (config.hpStyle === "mage") {
+				hpGained = 1; // Change this to 1 if you want mages to gain the same flat HP as thieves after level 9
+			} else {
+				hpGained = 1; // Thief standard
+			}
+		}
 
     return {
         status: "idle",
         AC,
         MaxHP,
-        currentHP: MaxHP
+        currentHP: MaxHP,
+        Level: level,
+        Exp: 0,
+        classKey: currentClassKey
     };
+}
 }
 
 function rollAdvantage(die) {
