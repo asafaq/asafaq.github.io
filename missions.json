@@ -3734,9 +3734,9 @@
   {
     "id": "dwoodfort1_301",
     "speaker": "Narrator",
-    "portrait": "You gather a a large brushpile from the many dead plants around, near a clearing, and set it on fire. This will be a beacon for all to see.",
+    "portrait": "",
     "side": "left",
-    "dialog": " it.",
+    "dialog": "You gather a a large brushpile from the many dead plants around, near a clearing, and set it on fire. This will be a beacon for all to see.",
     "interaction_type": "next",
     "target_id": "dwoodfort1_301end"
   },
@@ -3795,43 +3795,43 @@
     "target_id": "dwoodfort2_206"
   },
   {
-    "id": "dwoodfort2_207",
+    "id": "dwoodfort2_206",
     "speaker": "Hogmother",
     "portrait": "/assets/patrons/hogmother.png",
     "side": "right",
     "dialog": "Wouldn't that be the Ugress?",
     "interaction_type": "next",
-    "target_id": "dwoodfort2_208"
+    "target_id": "dwoodfort2_207"
   },
   {
-    "id": "dwoodfort2_206",
+    "id": "dwoodfort2_207",
     "speaker": "Lurch",
     "portrait": "/assets/patrons/lurch.png",
     "side": "left",
     "dialog": "No, he seems to have migrated here before her arrival.",
     "interaction_type": "next",
-    "target_id": "dwoodfort2_207"
+    "target_id": "dwoodfort2_208"
   },
   {
-    "id": "dwoodfort2_207",
+    "id": "dwoodfort2_208",
     "speaker": "Hogmother",
     "portrait": "/assets/patrons/hogmother.png",
     "side": "right",
     "dialog": "I will see him.",
     "interaction_type": "next",
-    "target_id": "dwoodfort2_208"
+    "target_id": "dwoodfort2_208a"
   },
   {
-    "id": "dwoodfort2_207",
+    "id": "dwoodfort2_208a",
     "speaker": "Narrator",
     "portrait": "",
     "side": "right",
     "dialog": "The sewers seem ancient, but well constructed. They have preceded the makeshift fort by a lot.",
     "interaction_type": "next",
-    "target_id": "dwoodfort2_208"
+    "target_id": "dwoodfort2_208b"
   },
   {
-    "id": "dwoodfort2_208",
+    "id": "dwoodfort2_208b",
     "speaker": "Narrator",
     "portrait": "",
     "side": "right",
@@ -3849,25 +3849,25 @@
     "target_id": "dwoodfort2_210"
   },
   {
-    "id": "dwoodfort2_208",
+    "id": "dwoodfort2_210",
     "speaker": "Narrator",
     "portrait": "",
     "side": "right",
     "dialog": "Eyes glint red in the dark. It looks like a huge rat looking down through a large sewer pipe.",
     "interaction_type": "next",
-    "target_id": "dwoodfort2_209"
+    "target_id": "dwoodfort2_210a"
   },
   {
-    "id": "dwoodfort2_209",
+    "id": "dwoodfort2_210a",
     "speaker": "Mysterious Rat",
     "portrait": "/assets/patrons/wormtail_l.png",
     "side": "left",
     "dialog": "More intruders to the woods.\nYou have come by the lair of Wormtail.\nWhat's your business here?",
     "interaction_type": "next",
-    "target_id": "dwoodfort2_210"
+    "target_id": "dwoodfort2_210b"
   },
   {
-    "id": "dwoodfort2_210",
+    "id": "dwoodfort2_210b",
     "speaker": "Hogmother",
     "portrait": "/assets/patrons/hogmother.png",
     "side": "right",
@@ -3891,19 +3891,334 @@
     "side": "right",
     "dialog": "We aren't aligned with the Ugress. We're here to rescue my husband from this place.",
     "interaction_type": "next",
-    "target_id": "dwoodfort2_299"
+    "target_id": "dwoodfort2_213"
   },
   {
-    "id": "dwoodfort2_299",
+    "id": "dwoodfort2_213",
+    "speaker": "Wormtail",
+    "portrait": "/assets/patrons/wormtail_l.png",
+    "side": "left",
+    "dialog": "Not yet... The Ugress can be, very persuasive.\n\nAnd I don't think you can stand up to her.\n\nYou're all going to fall for her spell, or die. If I let you go through my sewers, there's no coming back for you.",
+    "interaction_type": "next",
+    "target_id": "dwoodfort2_214"
+  },
+  {
+    "id": "dwoodfort2_214",
+    "speaker": "Hogmother",
+    "portrait": "/assets/patrons/hogmother.png",
+    "side": "right",
+    "dialog": "The Forest rejects the influence of the Ugress in its midst. Master Awetruce aligned with us, he will face the Ugress.",
+    "interaction_type": "next",
+    "target_id": "dwoodfort2_215"
+  },
+  {
+    "id": "dwoodfort2_215",
+    "speaker": "Wormtail",
+    "portrait": "/assets/patrons/wormtail_l.png",
+    "side": "left",
+    "dialog": "She has armed troops everywhere, who is going to take on them?",
+    "interaction_type": "next",
+    "target_id": "dwoodfort2_216"
+  },
+  {
+    "id": "dwoodfort2_216",
+    "speaker": "Hogmother",
+    "portrait": "/assets/patrons/hogmother.png",
+    "side": "right",
+    "dialog": "We'll go right now while the gate is open and the guards are outside, we'll allow Awetruce in and straight to her\n\nIf he succeeds, the spell will break.",
+    "interaction_type": "next",
+    "target_id": "dwoodfort2_217"
+  },
+  {
+    "id": "dwoodfort2_217",
+    "speaker": "Wormtail",
+    "portrait": "/assets/patrons/wormtail_l.png",
+    "side": "left",
+    "dialog": "This plan just might work. I harbor much hatred for this Ugress for taking up on my territory, I will take you to her. Hurry.",
+    "interaction_type": "next",
+    "target_id": "dwoodfort2_218"
+  },
+  {
+    "id": "dwoodfort2_218",
+    "speaker": "Narrator",
+    "portrait": "",
+    "side": "right",
+    "dialog": "In a feat of skill the wererat in his huge rat form zips through the sewers with tremendous agiliy. To your relief he is leading you forward.\n\nThe Maze of the sewers may appear daunting, but it's not much more than straight pipes going in a steady upwards slop, and connected logically.\n\nQuickly, the giant rat reaches the final sewer cover, wide enough for all of you to fit in one by one. He looks up to the surface and inspects the inner grounds of the fort.",
+    "interaction_type": "next",
+    "target_id": "dwoodfort2_219"
+  },
+  {
+    "id": "dwoodfort2_219",
+    "speaker": "Wormtail",
+    "portrait": "/assets/patrons/wormtail_l.png",
+    "side": "left",
+    "dialog": "The Ugress will be in her main Den, her henchmen will be mostly in their huts, I will sneak by and seal their doors by my magic. You make your own way to the gate, and confront her directly.",
+    "interaction_type": "next",
+    "target_id": "dwoodfort2_220"
+  },
+  {
+    "id": "dwoodfort2_220",
+    "speaker": "Narrator",
+    "portrait": "",
+    "side": "right",
+    "dialog": "The party exits the sewers, while the Wererat skittishly hopping between makeship huts, casting his magics. To your great fortune you see the central yard is mostly empty, and the main gate remains open.",
+    "interaction_type": "next",
+    "target_id": "dwoodfort2_221"
+  },
+  {
+    "id": "dwoodfort2_221",
+    "speaker": "Hogmother",
+    "portrait": "/assets/patrons/hogmother.png",
+    "side": "right",
+    "dialog": "Awetruce must be outside, all this commotion can't go unnoticed by the forest. I will see to him.",
+    "interaction_type": "next",
+    "target_id": "dwoodfort2_222"
+  },
+  {
+    "id": "dwoodfort2_222",
+    "speaker": "Narrator",
+    "portrait": "",
+    "side": "right",
+    "dialog": "Out the gate, in the bushes, sure enough the menacing face of the Direwolf and his piercing red glowing eyes are staring back at you.\n\nIt is the time to spring the trap. Face the Ugress directly in her Den.",
+    "interaction_type": "next",
+    "target_id": "dwoodfort2_223"
+  },
+  {
+    "id": "dwoodfort2_223",
+    "speaker": "Narrator",
+    "portrait": "",
+    "side": "right",
+    "dialog": "The guards stationed at the Den are demanding of disposal.",
+    "interaction_type": "next",
+    "target_id": "dwoodfort2_223end"
+  },
+  {
+    "id": "dwoodfort2_223end",
+    "speaker": "Narrator",
+    "portrait": "",
+    "side": "right",
+    "dialog": "The guards stationed at the Den are demanding of disposal.",
+    "interaction_type": "next",
+    "target_id": "END"
+  },
+  {
+    "id": "dwoodfort2_301",
+    "speaker": "Narrator",
+    "portrait": "",
+    "side": "right",
+    "dialog": "Upon defeating the guards stationed at the Den, you are now ready to face your final adversary. The large wooden door of the main Den opens, It's the hidious Ugress herself, in a most flared mood, more than her usual unpleasant self.",
+    "interaction_type": "next",
+    "target_id": "dwoodfort2_302"
+  },
+  {
+    "id": "dwoodfort2_302",
+    "speaker": "Ugress",
+    "portrait": "/assets/missions/Ugress_l.png",
+    "side": "left",
+    "dialog": "WHAT IS THE MEANING OF THIS?! GUARDS! AT MY COMMAND AT ONCE!",
+    "interaction_type": "next",
+    "target_id": "dwoodfort2_303"
+  },
+  {
+    "id": "dwoodfort2_303",
+    "speaker": "Hogmother",
+    "portrait": "/assets/patrons/hogmother.png",
+    "side": "right",
+    "dialog": "There are no guards, Ugress. You will face us now. I urge you to release the innocent folks you've charmed with your Geas, let them go this instance!",
+    "interaction_type": "next",
+    "target_id": "dwoodfort2_304"
+  },
+  {
+    "id": "dwoodfort2_304",
+    "speaker": "Ugress",
+    "portrait": "/assets/missions/Ugress_l.png",
+    "side": "left",
+    "dialog": "HOW DARE YOU! SMALL BARBARIAN, AT MY HOME?!\n\n(beings chanting spell incantations)\n\nPOWERS OF MIGHT,\nSPELLS OF ENCHANTING,\nDELIVER THIS PEST,\nINTO MY WEBLING.........................",
+    "interaction_type": "next",
+    "target_id": "dwoodfort2_305"
+  },
+  {
+    "id": "dwoodfort2_305",
+    "speaker": "Hogmother",
+    "portrait": "/assets/patrons/hogmother.png",
+    "side": "right",
+    "dialog": "MASTER AWETRUCE NOW !!!",
+    "interaction_type": "next",
+    "target_id": "dwoodfort2_306"
+  },
+  {
+    "id": "dwoodfort2_306",
+    "speaker": "Awotruce",
+    "portrait": "/assets/patrons/direwolf.png",
+    "dialog": "AAAAAAAAAWWWWWWWWWWWWWWWWWWOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO.....",
+    "side": "right",
+    "interaction_type": "next",
+    "target_id": "dwoodfort2_307"
+  },
+  {
+    "id": "dwoodfort2_307",
+    "speaker": "Narrator",
+    "portrait": "",
+    "side": "right",
+    "dialog": "The Direwolf bolts past your in lightning speed, in direct path towards the Ugress.",
+    "interaction_type": "next",
+    "target_id": "dwoodfort2_308"
+  },
+  {
+    "id": "dwoodfort2_308",
+    "speaker": "Ugress",
+    "portrait": "/assets/missions/Ugress_l.png",
+    "side": "left",
+    "dialog": "PATRON OF FIENDS,\nTHE FOREST AWOKE,\nDAMN THIS WOLF,\nCRUSH HIM TO PULP",
+    "interaction_type": "next",
+    "target_id": "dwoodfort2_309"
+  },
+  {
+    "id": "dwoodfort2_309",
+    "speaker": "Narrator",
+    "portrait": "",
+    "side": "right",
+    "dialog": "The Direwolf leaps on the Ugress. Right as she releases a bolt of vile energy in a green blast inאם his chest, and blows the wolf away.\n\nAwetruce have been struck down, and lays to the side in a lifeless heap.",
+    "interaction_type": "next",
+    "target_id": "dwoodfort2_310"
+  },
+  {
+    "id": "dwoodfort2_310",
+    "speaker": "Ugress",
+    "portrait": "/assets/missions/Ugress_l.png",
+    "side": "left",
+    "dialog": "YOU HAVE SUCH NERVE TO BE FACING ME YOU UNDERLINGS, I WILL RULE THIS LAND AND YOU WILL ALL OBEY MY COMMANDS!",
+    "interaction_type": "next",
+    "target_id": "dwoodfort2_311"
+  },
+  {
+    "id": "dwoodfort2_311",
+    "speaker": "Narrator",
+    "portrait": "",
+    "side": "right",
+    "dialog": "The Ugress is a fearsome warlock, but she've forgotten, Direwolfs don't just die in one fell swoop ..................\n\nEVEN A DEAD WOLF'S HEAD CAN STILL BITE",
+    "interaction_type": "next",
+    "target_id": "dwoodfort2_312"
+  },
+  {
+    "id": "dwoodfort2_312",
+    "speaker": "Awotruce",
+    "portrait": "/assets/missions/awetruce_delayeddeath.png",
+    "dialog": "AAAAAAAAAWWWWWWWWWWWWWWWWWWOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO.....",
+    "side": "right",
+    "interaction_type": "next",
+    "target_id": "dwoodfort2_313"
+  },
+  {
+    "id": "dwoodfort2_313",
+    "speaker": "Ugress",
+    "portrait": "/assets/missions/Ugress_l.png",
+    "side": "left",
+    "dialog": "WHA.. WHA.. WHAAAAT!! . . . . . . . . .",
+    "interaction_type": "next",
+    "target_id": "dwoodfort2_314"
+  },
+  {
+    "id": "dwoodfort2_314",
+    "speaker": "Narrator",
+    "portrait": "",
+    "side": "right",
+    "dialog": "The Direwolf leaps again upon the surprised Ugress, ferociously biting into her, and tear her body apart, first he bites into her spellcasting arm, and tears it away, then bites into her neck, and tears her head off...",
+    "interaction_type": "next",
+    "target_id": "dwoodfort2_315"
+  },
+  {
+    "id": "dwoodfort2_315",
+    "speaker": "Narrator",
+    "portrait": "",
+    "side": "right",
+    "dialog": "Then the mighty Direwolf collapses to the ground... dead.",
+    "interaction_type": "next",
+    "target_id": "dwoodfort2_316"
+  },
+  {
+    "id": "dwoodfort2_316",
+    "speaker": "Narrator",
+    "portrait": "",
+    "side": "right",
+    "dialog": "The spell of the Ugress have lifted off the garrisoned troops.\n\nFigures and faces pop out of the huts, slightly confused in their new state, is the Geas finally lifted?",
+    "interaction_type": "next",
+    "target_id": "dwoodfort2_317"
+  },
+  {
+    "id": "dwoodfort2_317",
+    "speaker": "Narrator",
+    "portrait": "",
+    "side": "right",
+    "dialog": "Hogfather appears out of a nearby hut.",
+    "interaction_type": "next",
+    "target_id": "dwoodfort2_318"
+  },
+  {
+    "id": "dwoodfort2_318",
+    "speaker": "Hogmother",
+    "portrait": "/assets/patrons/hogmother.png",
+    "side": "left",
+    "dialog": "Hogfather!",
+    "interaction_type": "next",
+    "target_id": "dwoodfort2_319"
+  },
+  {
+    "id": "dwoodfort2_319",
+    "speaker": "Hogfather",
+    "portrait": "/assets/patrons/hogfather.png",
+    "side": "right",
+    "dialog": "Hogmother! You've came for me......................",
+    "interaction_type": "next",
+    "target_id": "dwoodfort2_320"
+  },
+  {
+    "id": "dwoodfort2_320",
+    "speaker": "Narrator",
+    "portrait": "",
+    "side": "right",
+    "dialog": "The Hogcouple is united once again. Not much words could be exchanged at that moment. The party agreed to take Awetruce the shrine of Narlia, and also the Ugress head as offering to altar, thinking it would please the godess seeing the blight has lifted from her forest.\n\nOne of the captured folk, Marlnus have befriended Hogfather and have joined up with you. Marl is an old adventurer, now a carriagefarer. He offers his services as aid, and his carriage to help the party's logistics planning.",
+    "interaction_type": "next",
+    "target_id": "dwoodfort2_321"
+  },
+  {
+    "id": "dwoodfort2_321",
+    "speaker": "Narrator",
+    "portrait": "",
+    "side": "right",
+    "dialog": "Arriving at the shrine, the forest appears lively more than ever. The flowers are at full bloom, bird singing sounds everywhere. Bright light reflects of the shrines cold white stones. You lay Awetruce to slomber, and the Ugress' head on top of the altar.",
+    "interaction_type": "next",
+    "target_id": "dwoodfort2_322"
+  },
+  {
+    "id": "dwoodfort2_322",
+    "speaker": "Hogmother",
+    "portrait": "/assets/patrons/hogmother.png",
+    "side": "left",
+    "dialog": "I pray this offering pleases you godess, though it was heavy and suddon on all of us, only one had to pay the ultimate price. We will leave your forest now, fare thee well benelovent one.",
+    "interaction_type": "next",
+    "target_id": "dwoodfort2_323"
+  },
+  {
+    "id": "dwoodfort2_323",
+    "speaker": "Narrator",
+    "portrait": "",
+    "side": "right",
+    "dialog": "In this final note, the party with the company of Marlnus heads back to the Inn, Finnik to his village, Wormtail to his sewers, and Awetruce to his final rest.",
+    "interaction_type": "next",
+    "target_id": "dwoodfort2_324"
+  },
+  {
+    "id": "dwoodfort2_324",
     "speaker": "Developer",
     "portrait": "",
     "side": "right",
     "dialog": "End of current development.",
     "interaction_type": "next",
-    "target_id": "dwoodfort2_299end"
+    "target_id": "dwoodfort2_324end"
   },
   {
-    "id": "dwoodfort2_299end",
+    "id": "dwoodfort2_324end",
     "speaker": "Hogmother",
     "portrait": "/assets/patrons/hogmother.png",
     "side": "right",

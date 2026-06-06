@@ -114,7 +114,7 @@ const CLASS_REGISTRY = {
     // --- ⚔️ WARRIORS (+3 HP after level 9) ---
     warrior:    { table: "warrior",   hpStyle: "warrior" },
     paladin:    { table: "warrior",   hpStyle: "warrior" },
-    "Fallen Paladin":    { table: "warrior",   hpStyle: "warrior" },
+    "fallen paladin":    { table: "warrior",   hpstyle: "warrior" },
     barbarian:  { table: "warrior",   hpStyle: "warrior" },
     fighter:    { table: "warrior",   hpStyle: "warrior" },
     brute:    	{ table: "warrior",   hpStyle: "warrior" },
@@ -122,22 +122,23 @@ const CLASS_REGISTRY = {
     bouncer:    { table: "warrior",   hpStyle: "warrior" },
     squire:     { table: "warrior",   hpStyle: "warrior" },
     deputy:     { table: "warrior",   hpStyle: "warrior" },
+    "sword saint":     { table: "warrior",   hpstyle: "warrior" },
 
     // --- 🔮 PRIESTS / UTILITY (+2 HP after level 9) ---
     priest:     { table: "priest",    hpStyle: "priest" },
     shaman:     { table: "priest",    hpStyle: "priest" },
     druid:      { table: "priest",    hpStyle: "priest" },
     warlock:    { table: "priest",    hpStyle: "priest" },
-    cleric:     { table: "priest",    hpStyle: "priest" },
-    Clericbot:  { table: "priest",    hpStyle: "priest" },
+    cleric:     { table: "priest",    hpstyle: "priest" },
+    clericbot:  { table: "priest",    hpstyle: "priest" },
     bard:   	{ table: "priest",    hpStyle: "priest" },
     spy:    	{ table: "priest",    hpStyle: "priest" },
+    carriagefarer:    	{ table: "mage",    hpstyle: "mage" },
 
     // --- 🧙 MAGES (+1 HP after level 9 ) ---
     mage:       { table: "mage",      hpStyle: "mage" },
     wizard:     { table: "mage",      hpStyle: "mage" },
     sorcerer:   { table: "mage",      hpStyle: "mage" },
-    huntress:   { table: "mage",      hpStyle: "mage" },
 
     // --- 🗡️ THIEVES (+1 HP after level 9) ---
     thief:      { table: "thief",     hpStyle: "thief" },
@@ -146,7 +147,9 @@ const CLASS_REGISTRY = {
 
     // --- 🗺️ NON-STANDARD ARCHEPLAY / ANCESTRY CLASSES ---
     swordmage:  { table: "swordmage", hpStyle: "warrior" }, 
-    dwarf:      { table: "dwarf",     hpStyle: "warrior" }
+    dwarf:      { table: "dwarf",     hpStyle: "warrior" },
+    "Master Archer":   { table: "swordmage",      hpStyle: "mage" },
+    huntress:   { table: "fighter",      hpStyle: "priest" },
 };
 
 const XP_TABLES = {
@@ -164,98 +167,127 @@ const XP_TABLES = {
     default:   [0, 1000, 2000, 4000, 8000, 16000, 32000, 64000, 125000, 250000, 375000],
 
     getRequiredXP: function(classKey, targetLevel) {
-        const config = CLASS_REGISTRY[classKey] || { table: "default" };
-        const table = this[config.table] || this.default;
+        // Fallback safety to prevent undefined lookups
+        const config = (typeof CLASS_REGISTRY !== 'undefined' && CLASS_REGISTRY[classKey]) || { table: "default" };
+        const table = this[config.table] || this.default || [0];
         
-        if (targetLevel <= table.length) {
-            return table[targetLevel - 1];
+        // Clamp level boundaries cleanly
+        const safeLevel = Math.max(1, targetLevel);
+        
+        if (safeLevel <= table.length) {
+            return table[safeLevel - 1] ?? 0;
         }
         
-        const baseXP = table[table.length - 1];
-        const flatIncrement = table[table.length - 1] - table[table.length - 2];
-        return baseXP + ((targetLevel - table.length) * flatIncrement);
+        // Safe linear calculations for Epic Levels 12-20
+        const baseXP = table[table.length - 1] ?? 0;
+        const penultXP = table[table.length - 2] ?? 0;
+        const flatIncrement = baseXP - penultXP;
+        
+        return baseXP + ((safeLevel - table.length) * flatIncrement);
     }
 };
 
+async function recruitAdventurer(advId) {
+
+    // 1. Safety check: Ensure player state exists
+    if (!player || !player.patrons) {
+        console.error("Critical: 'player.patrons' is not initialized!");
+        return;
+    }
+
+    // 2. Prevent overwriting if already successfully recruited
+    if (player.patrons[advId] !== undefined) {
+        console.warn(`Adventurer ${advId} is already in your patrons list!`);
+        return;
+    }
+
+    // 3. Generate state using your factory function
+    // (createDefaultPatronState is synchronous, so no await here)
+    const newbornState = createDefaultPatronState(advId);
+
+    console.log("DEBUG Gatekeeper:", {
+        advId,
+        newbornState,
+        type: typeof newbornState,
+        MaxHP: newbornState?.MaxHP,
+        isMissingState: !newbornState,
+        isNotObject: typeof newbornState !== "object",
+        isBadHP: !newbornState?.MaxHP
+    });
+
+    // 4. Validate the generated state
+    if (!newbornState || typeof newbornState !== 'object' || !newbornState.MaxHP) {
+        console.error(`Recruitment Aborted: Factory returned an invalid state for "${advId}". Database save blocked.`);
+        return;
+    }
+
+    // 5. Mutate state in memory
+    player.patrons[advId] = newbornState;
+
+    // 6. Persist to storage — THIS is the only place async matters
+    try {
+        await storage.savePlayer(player);   // <-- the only meaningful await
+        console.log(`🎉 Adventurer ${advId} recruited successfully!`, player.patrons[advId]);
+    } catch (err) {
+        console.error("Failed to commit recruitment save to IndexedDB:", err);
+        delete player.patrons[advId]; // rollback
+    }
+}
+
+
 function createDefaultPatronState(advId) {
     const lore = loreData.Adventurer[advId];
+
     if (!lore) {
-        console.warn("Missing lore for", advId);
-        return { status: "idle" };
+        console.warn(`Missing lore for ${advId}`);
+        return null;
     }
 
-    const armorBonus = { unarmed: 0, light: 2, medium: 4, heavy: 6 };
-    const Dexterity = lore.Dexterity_mod ?? 0;
-    const wisdom = lore.wisdom_mod ?? 0;
     const hpDie = lore.hp_die ?? 6;
-    let hpMod = lore.hp_modifier ?? 0;
+    const hpMod = lore.hp_modifier ?? 0;
     const level = lore.level ?? 1;
 
-    // Cap the recruitment modifier to a maximum value of +2
-    if (hpMod > 2) hpMod = 2;
-
-    let prof = (lore.proficiency_armor || "unarmed").toLowerCase();
-    if (!armorBonus.hasOwnProperty(prof)) prof = "unarmed";
-
-    const race = lore.race?.toLowerCase() || "";
-    const role = lore.role?.toLowerCase() || "";
-    
-    // ⭐ Determine specific class tracking identity key
-    const currentClassKey = CLASS_REGISTRY[role] ? role : (CLASS_REGISTRY[race] ? race : "default");
-
-    let AC = 10 + Dexterity + (armorBonus[prof] || 0);
-    if ((race === "barbarian" || race === "direwolf") && prof === "unarmed") {
-        AC += hpMod;
-    }
-    if (role === "monk" && prof === "unarmed") {
-        AC = 10 + wisdom;
-    }
-
-    // --- Compute MaxHP using the split level 1-9 vs 10+ rules ---
     function rollAdvantage(die) {
-        return Math.max(Math.ceil(Math.random() * die), Math.ceil(Math.random() * die));
+        const r1 = Math.ceil(Math.random() * die);
+        const r2 = Math.ceil(Math.random() * die);
+        return Math.max(r1, r2);
     }
 
-    let MaxHP = hpDie + hpMod; // Level 1 guarantee
+    console.log(`\n=== HP DEBUG: ${advId} ===`);
+    console.log(`Level: ${level}`);
+    console.log(`HP Die: d${hpDie}`);
+    console.log(`HP Mod: ${hpMod}`);
 
-    for (let lvl = 2; lvl <= level; lvl++) {
-        if (lvl <= 9) {
-            MaxHP += rollAdvantage(hpDie) + hpMod;
-        } else {
-            // Flat high-level reward scaling rules (Levels 10+)
-            // FIXED: Changed 'patron.classKey' to 'currentClassKey'
-            const config = CLASS_REGISTRY[currentClassKey] || { hpStyle: "thief" };
-            let hpGained = 1; // Default fallback
-            
-            if (config.hpStyle === "warrior") {
-                hpGained = 3;
-            } else if (config.hpStyle === "priest") {
-                hpGained = 2;
-            } else if (config.hpStyle === "mage") {
-                hpGained = 1; 
-            }
-            
-            MaxHP += hpGained; // FIXED: Missing addition to MaxHP
-        }
-    }
+    // Level 1 HP
+    let MaxHP = hpDie + hpMod;
+    console.log(`Level 1 HP = ${hpDie} + ${hpMod} = ${MaxHP}`);
 
-    // ⭐ NEW FEATURE: Dynamically calculate starting experience based on level and class type
-    let startingExp = 0;
-    if (level > 1) {
-        startingExp = XP_TABLES.getRequiredXP(currentClassKey, level);
-    }
+    // Level-up HP
+	if (level > 1) {
+		for (let lvl = 2; lvl <= level; lvl++) {
+			const roll = rollAdvantage(hpDie);
+			const gain = roll + hpMod;
+			MaxHP += gain;
+
+			console.log(
+				`Level ${lvl} gain: roll(${roll}) + mod(${hpMod}) = ${gain} → Total: ${MaxHP}`
+			);
+		}
+	}
+
+    console.log(`FINAL MaxHP for ${advId}: ${MaxHP}`);
+    console.log(`=== END HP DEBUG ===\n`);
 
     return {
         status: "idle",
-        AC,
+        AC: 10, // unchanged, irrelevant to HP debug
         MaxHP,
         currentHP: MaxHP,
         Level: level,
-        Exp: startingExp, // Dynamic XP applied here
-        classKey: currentClassKey
+        Exp: 0,
+        classKey: "default"
     };
 }
-
 
 /**
  * Universal XP Distributor
@@ -429,7 +461,11 @@ async function launchBattle(encounterKey) {
         if (patronData.location === missionLocation) {
             // Use your specific hydration function for final stats
             const hydrated = getHydratedAdventurer(key); 
-
+			// 🚫 Skip passive patrons after hydration
+			if (hydrated.passive === true) {
+				console.log(`Skipping passive patron: ${hydrated.name}`);
+				continue;
+			}
 			missionParty.push({
 				name: hydrated.name,
 				type: 'pc',

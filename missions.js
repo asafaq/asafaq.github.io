@@ -376,39 +376,50 @@ async function handleMissionEnd(sceneId) {
     const isCampaignEnd = campaignEndScenes.includes(sceneId);
 
     const endings = {
-        // --- TUTORIAL 1 ---
-        "tutor1_110": async () => {
-            player = await storage.loadPlayer(player.id);
-            player.missions ??= {};
-            if (!player.missions.current_mission) player.missions.current_mission = {};
-            if (!player.missions.current_mission.id) player.missions.current_mission.id = {};
-            if (!player.missions.current_mission.party) player.missions.current_mission.party = {};
-            
-            player.missions.tutorial = 1;
-            player.missions.green_1 = 1;
-            
-            recruitAdventurer("adv_Hogperson");
-            recruitAdventurer("adv_Bragain");
-            recruitAdventurer("adv_Claudio");
-            recruitAdventurer("adv_Amyssa");
-			awardManualXP(["Bragain", "Claudio", "Hogperson"], 600);
-			awardManualXP("Amyssa", 1700);
-            player.patrons ??= {};
-            player.patrons.adv_Bragain.location = 3;
-            player.patrons.adv_Hogperson.location = 3;
-            player.patrons.adv_Claudio.location = 0;
-            player.patrons.adv_Amyssa.status = "applicant";
-			player.missions.current_mission.current_party = "party_A";
-			player.missions.current_mission.id = "green_1";
-            
-			const partyKey = player.missions.current_mission.party;
-            buildPartyTraits(partyKey);
-			buildPartySummary(partyKey);
-            Journal.addEntry("You've purchase yourself a Tavern.");
-            Journal.addEntry("You've signed a contract with the government and recieved your Adventurers' Guild Licence.");
-            Journal.addEntry("You've recruited Hogperson, Bragain and Claudio.");
-            loadPage("missions");
-        },
+// --- TUTORIAL 1 ---
+
+"tutor1_110": async () => {
+
+    // Load player (async)
+    player = await storage.loadPlayer(player.id);
+	console.log("LOREDATA CHECK:", Object.keys(loreData.Adventurer));
+    // Ensure mission structure exists
+    player.missions ??= {};
+    player.missions.current_mission ??= {};
+    player.missions.current_mission.party ??= {};
+
+    player.missions.tutorial = 1;
+    player.missions.green_1 = 1;
+
+    // RECRUIT — these MUST be awaited because they save to storage
+    await recruitAdventurer("adv_Hogperson");
+    await recruitAdventurer("adv_Bragain");
+    await recruitAdventurer("adv_Claudio");
+    await recruitAdventurer("adv_Amyssa");
+
+    player.patrons.adv_Bragain.location = 3;
+    player.patrons.adv_Hogperson.location = 3;
+    player.patrons.adv_Claudio.location = 0;
+
+    player.missions.current_mission.current_party = "party_A";
+    player.missions.current_mission.id = "green_1";
+
+    const partyKey = player.missions.current_mission.party;
+    buildPartyTraits(partyKey);
+    buildPartySummary(partyKey);
+
+    Journal.addEntry("You've purchase yourself a Tavern.");
+    Journal.addEntry("You've signed a contract with the government and recieved your Adventurers' Guild Licence.");
+    Journal.addEntry("You've recruited Hogperson, Bragain and Claudio.");
+
+    // XP — if this function writes to storage, it MUST be awaited
+    await awardManualXP(["Bragain", "Claudio", "Hogperson", "Amyssa"], 800);
+
+    player.patrons.adv_Amyssa.status = "applicant";
+
+    loadPage("missions");
+},
+
 
         // --- GREEN 1 ARC (ALL STAGES) ---
         "green1_008END": async () => {
@@ -483,7 +494,7 @@ async function handleMissionEnd(sceneId) {
             player.missions.green_2 ??= 0;
             player.patrons.adv_Amyssa.status = "idle";
 			recruitRandoms();
-            Journal.addEntry("You've recruited Amyssa to sign a 25 silver coins contract.");		
+            Journal.addEntry("You've recruited Amyssa to sign a 25 silver coins contract.");
             loadPage("tavern");
         },
         "green2_008end": async () => {
@@ -628,6 +639,35 @@ async function handleMissionEnd(sceneId) {
             Journal.addEntry("You've started a bushfire, in front of the fortress.");
             player.missions.dwood_fort2 = 2;
             loadPage("mission_dwood_1");
+		},
+
+        "dwoodfort2_223end": async () => {
+            Journal.addEntry("You've emerged out in the Fortress of the Ugress from the sewers, and is ready to face her.");
+            player.missions.dwood_fort2 = 3;
+
+			launchBattle("forest_mix_test", () => {
+				loadPage("mission_dwood_1");
+			});
+		},
+
+        "dwoodfort2_324end": async () => {
+            Journal.addEntry("You've faced the Ugress, killing her.");
+            Journal.addEntry("Awetruce has died, fighting the Ugress.");
+            Journal.addEntry("Marlnus has joined up with you.");
+            Journal.addEntry("Finnick has returned to his village.");
+            player.missions.dwood_fort2 = 4;
+            player.patrons.adv_Finnick.location = 0;
+            player.patrons.adv_Finnick.status = "applicant";
+            player.patrons.adv_Lurch.location = 0;
+            player.patrons.adv_Lurch.status = "applicant";
+            player.patrons.adv_Awetruce.location = 0;
+            player.patrons.adv_Awetruce.status = "dead";
+            player.patrons.adv_Wormtail.location = 0;
+            player.patrons.adv_Wormtail.status = "applicant";
+            recruitAdventurer("adv_Hogfather");
+            recruitAdventurer("adv_Marlnus");
+			endMission();
+            loadPage("tavern");
 		}
     };
 

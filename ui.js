@@ -109,7 +109,7 @@ function getVisiblePatrons() {
 
 	const patronKeys = Object.keys(player.patrons);
 
-	const allowed = ["idle", "applicant", "mission", "secret", "rival"];
+	const allowed = ["idle", "applicant", "mission", "secret", "rival", "dead"];
 
 	const filteredIds = patronKeys.filter(id => {
 		return allowed.includes(player.patrons[id].status);
@@ -2199,25 +2199,6 @@ function rollAdvantage(die) {
     const a = Math.ceil(Math.random() * die);
     const b = Math.ceil(Math.random() * die);
     return Math.max(a, b);
-}
-
-async function recruitAdventurer(advId) {
-    // 1. Get the latest player state from your storage
-    // (Assuming you have a function to get player data)
-
-    // 2. Safety check: Prevent overwriting if already recruited
-    if (player.patrons[advId]) {
-        console.warn("Adventurer already recruited!");
-        return;
-    }
-
-    // 3. Inject the new state using your factory
-    player.patrons[advId] = createDefaultPatronState(advId);
-
-    // 4. Save the updated object back to IDB
-    await storage.savePlayer(player);
-    
-    console.log(`Adventurer ${advId} recruited successfully!`);
 }
 
 const Journal = {
