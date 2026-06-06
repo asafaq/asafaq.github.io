@@ -234,15 +234,20 @@ async function recruitAdventurer(advId) {
     }
 }
 
-
 function createDefaultPatronState(advId) {
     const lore = loreData.Adventurer[advId];
+	console.log("ADV ID RECEIVED:", advId);
+	console.log("LORE EXISTS:", advId in loreData.Adventurer);
+	console.log("LORE ENTRY:", loreData.Adventurer[advId]);
+
 
     if (!lore) {
         console.warn(`Missing lore for ${advId}`);
         return null;
     }
 
+    const Dexterity = lore.Dexterity_mod ?? 0;
+    const wisdom = lore.wisdom_mod ?? 0;
     const hpDie = lore.hp_die ?? 6;
     const hpMod = lore.hp_modifier ?? 0;
     const level = lore.level ?? 1;
@@ -252,11 +257,6 @@ function createDefaultPatronState(advId) {
         const r2 = Math.ceil(Math.random() * die);
         return Math.max(r1, r2);
     }
-
-    console.log(`\n=== HP DEBUG: ${advId} ===`);
-    console.log(`Level: ${level}`);
-    console.log(`HP Die: d${hpDie}`);
-    console.log(`HP Mod: ${hpMod}`);
 
     // Level 1 HP
     let MaxHP = hpDie + hpMod;
@@ -274,13 +274,42 @@ function createDefaultPatronState(advId) {
 			);
 		}
 	}
+	// Armor proficiency → numeric bonus (all lowercase keys)
+    const armorBonus = {
+        unarmed: 0,
+        light: 2,
+        medium: 4,
+        heavy: 6
+    };
 
-    console.log(`FINAL MaxHP for ${advId}: ${MaxHP}`);
-    console.log(`=== END HP DEBUG ===\n`);
+    // Normalize armor proficiency
+    let prof = (lore.proficiency_armor || "unarmed").toLowerCase();
+    if (!armorBonus.hasOwnProperty(prof)) {
+        prof = "unarmed";
+    }
+    // --- Compute AC ---
+    let AC = 10 + Dexterity + (armorBonus[prof] || 0);
+
+    // Barbarian bonus only when unarmed
+    if (race === "barbarian" && prof === "unarmed") {
+        AC += hpMod;
+    }
+
+    // Barbarian bonus only when unarmed
+    if (race === "direwolf" && prof === "unarmed") {
+        AC += hpMod;
+    }
+
+    // Monk AC formula (only when unarmed)
+    if (role === "monk" && prof === "unarmed") {
+        AC = 10 + wisdom;
+    }
+
+
 
     return {
         status: "idle",
-        AC: 10, // unchanged, irrelevant to HP debug
+        AC,
         MaxHP,
         currentHP: MaxHP,
         Level: level,

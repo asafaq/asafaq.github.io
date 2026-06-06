@@ -496,7 +496,7 @@ mission_dwood_1: () => `
 	
 	` : ""}
 	
-    ${player?.missions?.dwood_1 === 5 ? `
+    ${player?.missions?.dwood_1 === 5 && player?.missions?.dwood_fort2 < 3 ? `
 	
 	    <!-- Path Layer -->
     <svg width="100%" height="100%" 
@@ -560,7 +560,8 @@ mission_dwood_1: () => `
     </div>
     ` : ""}
 
-    ${player?.missions?.dwood_1 > 3 ? `
+    ${player?.missions?.dwood_1 > 3 && player?.missions?.dwood_fort2 < 2
+	?`
     <!-- POI: Fort -->
     <div id="dwood_fort"
          class="poi mapLight"
@@ -570,12 +571,22 @@ mission_dwood_1: () => `
     </div>
     ` : ""}
 
-    ${player?.missions?.dwood_fort2 > 0 ? `
+    ${player?.missions?.dwood_fort2 > 0 && player?.missions?.dwood_fort2 < 3 ? `
     <!-- POI: Fort -->
     <div id="dwood_fort2"
          class="poi mapLight"
          data-node="dwood_fort2"
          style="position:absolute; top:64px; left:366px; transform:scale(1.5); z-index:10;">
+         <img src="/assets/missions/mission_indicator_encounter.png">
+    </div>
+    ` : ""}
+
+    ${player?.missions?.dwood_fort2 === 3 ? `
+    <!-- POI: Fort -->
+    <div id="dwood_fort3"
+         class="poi mapLight"
+         data-node="dwood_fort3"
+         style="position:absolute; top:124px; left:406px; transform:scale(1.5); z-index:10;">
          <img src="/assets/missions/mission_indicator_encounter.png">
     </div>
     ` : ""}
@@ -2122,77 +2133,6 @@ function getHydratedAdventurer(advId) {
         ...staticLore,     // Static data from lore.json
         ...playerState     // Dynamic data from save file
     };
-}
-
-function createDefaultPatronState(advId) {
-    const lore = loreData.Adventurer[advId];
-    if (!lore) {
-        console.warn("Missing lore for", advId);
-        return { status: "idle" };
-    }
-
-    const armorBonus = { unarmed: 0, light: 2, medium: 4, heavy: 6 };
-    const Dexterity = lore.Dexterity_mod ?? 0;
-    const wisdom = lore.wisdom_mod ?? 0;
-    const hpDie = lore.hp_die ?? 6;
-    let hpMod = lore.hp_modifier ?? 0;
-    const level = lore.level ?? 1;
-
-    // Cap the recruitment modifier to a maximum value of +2
-    if (hpMod > 2) hpMod = 2;
-
-    let prof = (lore.proficiency_armor || "unarmed").toLowerCase();
-    if (!armorBonus.hasOwnProperty(prof)) prof = "unarmed";
-
-    const race = lore.race?.toLowerCase() || "";
-    const role = lore.role?.toLowerCase() || "";
-    
-    // ⭐ Determine specific class tracking identity key
-    const currentClassKey = CLASS_REGISTRY[role] ? role : (CLASS_REGISTRY[race] ? race : "default");
-
-    let AC = 10 + Dexterity + (armorBonus[prof] || 0);
-    if ((race === "barbarian" || race === "direwolf") && prof === "unarmed") {
-        AC += hpMod;
-    }
-    if (role === "monk" && prof === "unarmed") {
-        AC = 10 + wisdom;
-    }
-
-    // --- Compute MaxHP using the split level 1-9 vs 10+ rules ---
-    function rollAdvantage(die) {
-        return Math.max(Math.ceil(Math.random() * die), Math.ceil(Math.random() * die));
-    }
-
-    let MaxHP = hpDie + hpMod; // Level 1 guarantee
-
-    for (let lvl = 2; lvl <= level; lvl++) {
-        if (lvl <= 9) {
-            MaxHP += rollAdvantage(hpDie) + hpMod;
-		} else {
-			// Flat high-level reward scaling rules (Levels 10+)
-			const config = CLASS_REGISTRY[patron.classKey] || { hpStyle: "thief" };
-			
-			if (config.hpStyle === "warrior") {
-				hpGained = 3;
-			} else if (config.hpStyle === "priest") {
-				hpGained = 2;
-			} else if (config.hpStyle === "mage") {
-				hpGained = 1; // Change this to 1 if you want mages to gain the same flat HP as thieves after level 9
-			} else {
-				hpGained = 1; // Thief standard
-			}
-		}
-
-    return {
-        status: "idle",
-        AC,
-        MaxHP,
-        currentHP: MaxHP,
-        Level: level,
-        Exp: 0,
-        classKey: currentClassKey
-    };
-}
 }
 
 function rollAdvantage(die) {

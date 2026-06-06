@@ -286,6 +286,7 @@ async function renderScene(sceneId) {
 		
     }
 }
+
 let frustrationTimeout; // Keep track of the timer globally
 
 function createBtn(text, targetId, color = null, isDisabled = false, frustrationText = "", shadow = null) {
@@ -594,6 +595,7 @@ async function handleMissionEnd(sceneId) {
 		
         "dwood1_219end": async () => {
             player.missions.dwood_1 = 3;
+			player.missions.dwood_fort2 = 0;
             Journal.addEntry("Claudio and Finnick have decided to outsmart the Trollkin and manipulate the Spellbook out of him.");
 			// change Claudio portrait.
             // change Amyssa portrait.
@@ -608,6 +610,7 @@ async function handleMissionEnd(sceneId) {
 
         "dwoodswamp1_127end": async () => {
             player.missions.dwood_1 = 5;
+            player.missions.dwood_fort2 = 0;
             Journal.addEntry("You've successfully seduced and robbed the Trollkin out of Amyssa's Spellbook.");
             loadPage("mission_dwood_1");
         },
@@ -650,7 +653,7 @@ async function handleMissionEnd(sceneId) {
 			});
 		},
 
-        "dwoodfort2_324end": async () => {
+        "dwoodfort3_124end": async () => {
             Journal.addEntry("You've faced the Ugress, killing her.");
             Journal.addEntry("Awetruce has died, fighting the Ugress.");
             Journal.addEntry("Marlnus has joined up with you.");

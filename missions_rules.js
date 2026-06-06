@@ -498,6 +498,12 @@ const missionNodes = {
         missionId: "dwood_fort1",
         requires:  {	dwood_1: 4	}
     },
+    dwood_fort3: {
+        title: "Darkwood Fort",
+        desc: "A fortified outpost deep in the Dark Woods.",
+        missionId: "dwood_fort3",
+        requires:  {	dwood_fort2: 2	}
+    },
 
     dwood_swamp: {
         title: "Murkwater Swamp",
