@@ -811,19 +811,78 @@ img:not([src]) {
   margin: 4px 0;
 }
 
+/* === POPUP WINDOW === */
 .infoPopupPatron {
-  position: fixed;
-  top: 25%;
-  left: 50%;
-  transform: translateX(-50%);
+  width: 400px;                     /* your requested width */
+  max-width: 90vw;
+  background: #d2b48c;              /* mocha / tan */
+  border: 2px solid #5a4633;        /* darker mocha border */
+  border-radius: 8px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+  overflow: hidden;
+  animation: popupFade 0.15s ease-out;
   z-index: 9999;
-  background: rgba(255, 255, 255, 0.60); /* 25% opacity */
-  max-width: 360px; /* keeps normal windows tidy */
+}
 
-}
+/* Applicant mode slightly larger if you want */
 .infoPopupPatron.applicant-mode {
-  max-width: 450px; /* expands ONLY for applicants */
+  width: 420px;
 }
+
+/* === HEADER === */
+.window-header {
+  background: #5a4633;              /* dark mocha */
+  color: #fff;
+  padding: 10px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 18px;
+}
+
+.window-header button.close-window {
+  background: #8b5e3c;
+  border: none;
+  color: white;
+  padding: 4px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.window-header button.close-window:hover {
+  background: #a06f4a;
+}
+
+/* === BODY === */
+.window-body {
+  padding: 16px;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+/* === PORTRAIT === */
+.patron-portrait
+
+/* === HEADER === */
+.window-header {
+  background: #333;
+  color: #fff;
+  padding: 10px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 18px;
+}
+
+.window-header button.close
+.hiring-referral {
+  margin: 10px 0;
+  padding: 8px;
+  background: rgba(255, 255, 200, 0.2);
+  border-left: 3px solid #d4c45a;
+  font-style: italic;
+}
+
 
 .status-bar {
     display: flex;

@@ -1121,128 +1121,6 @@ main.innerHTML = typeof pages[page] === "function"
   evaluateNotices()
 }
 
-function getIdleDescription(adv, player) {
-  const hydrated = getHydratedAdventurer(adv.id);
-
-  const globalIdle = loreData.passive.idleDescriptions;
-  const traitReferrals = loreData.passive.traitReferrals;
-
-  // 1. If idle → override with trait referral
-  if (hydrated.status === "idle") {
-    return traitReferrals[hydrated.traits] || traitReferrals.default;
-  }
-
-  // 2. Otherwise → use normal idle descriptions
-  return globalIdle[hydrated.status] || globalIdle.default;
-}
-
-function getTraitReferral(adv) {
-  const hydrated = getHydratedAdventurer(adv.id);
-  const traits = loreData.passive.traitReferrals;
-
-  // Only show trait referral when idle
-  if (hydrated.status !== "idle") {
-    return "";
-  }
-
-  // hydrated.trait is an array → loop through it
-  for (const t of hydrated.traits) {
-    if (traits[t]) {
-      return traits[t];
-    }
-  }
-
-  // If none of the traits match → fallback
-  return traits.default;
-}
-
-function initPatronClicks() {
-  document.querySelectorAll('.patron-wrapper').forEach(wrapper => {
-    const zone = wrapper.querySelector('.hover-zone');
-    if (!zone) return;
-
-    zone.addEventListener('mousedown', () => {
-	  const id = zone.dataset.id;
-	  const adv = getHydratedAdventurer(id); // refresh data
-      const large = zone.dataset.large || adv.icon || "/assets/patrons/default.png";
-
-      openPatronWindow(adv, large);
-    });
-  });
-}
-
-async function openPatronWindow(adv, portrait) {
-  const container = document.getElementById("window-container");
-
-  // Hydrate first
-  const hydrated = getHydratedAdventurer(adv.id);
-
-  const idleDescription = getIdleDescription(hydrated, player); // <p><strong>Description:</strong> ${idleDescription}</p>
-  const traitReferral = getTraitReferral(adv);
-  const isApplicant = hydrated.status === "applicant";
-
-  container.innerHTML = `
-    <div class="infoPopupPatron ${isApplicant ? "applicant-mode" : ""}">
-      <div class="window-header">
-        <span>${hydrated.name}</span>
-        <button class="close-window">X</button>
-      </div>
-
-      <div class="window-body patron-window">
-        <img class="patron-portrait" src="${portrait}">
-
-		${!isApplicant ? `
-		  <div class="patron-stats">
-			<p><strong>Status:</strong> ${hydrated.status}</p>
-			${traitReferral ? `<p> ${traitReferral}</p>` : ""}
-		  </div>
-		` : ""}
-
-
-        ${isApplicant ? `
-          <div class="hire-section">
-            <p><strong>Applicant:</strong> Would you like to hire this adventurer?</p>
-            <button id="hire-yes">Hire</button>
-            <button id="hire-no">Decline</button>
-          </div>
-        ` : ""}
-      </div>
-    </div>
-  `;
-
-  container.style.display = "block";
-
-  // Close window button
-  container.querySelector(".close-window").addEventListener("click", () => {
-    container.style.display = "none";
-  });
-
-  // Click outside to close
-  container.addEventListener("mousedown", (e) => {
-    if (e.target === container) {
-      container.style.display = "none";
-    }
-  });
-
-  // Applicant hiring logic
-  if (isApplicant) {
-    const yesBtn = document.getElementById("hire-yes");
-    const noBtn = document.getElementById("hire-no");
-
-    yesBtn.addEventListener("click", () => {
-	  pushStatus("You can't afford Amyssa yet, there isn't any money in the stash!");
-      // console.log(`${hydrated.name} hired!`);
-      // recruitAdventurer(hydrated.id);
-      container.style.display = "none";
-    });
-
-    noBtn.addEventListener("click", () => {
-      console.log(`${hydrated.name} declined.`);
-      container.style.display = "none";
-    });
-  }
-}
-
 function initContractsPage() {
     const visible = getVisiblePatrons();
 
@@ -2251,6 +2129,7 @@ function renderCharSheet(adv) {
                               ? `<li><strong>HP:</strong> ${adv.currentHP} / ${adv.MaxHP}</li>`
                               : ""}
                         ${show(adv.size)        ? `<li><strong>Size:</strong> ${adv.size}</li>` : ""}
+                        ${show(adv.Exp)        ? `<li><strong>Exp:</strong> ${adv.Exp}</li>` : ""}
 
                     </ul>
                 </div>
@@ -2314,6 +2193,7 @@ function renderCharSheet(adv) {
     </div>
 `;
 }
+
 // Journal.addEntry("You discovered a hidden cave.");
 // Journal.addEntry("A strange whisper echoes behind you.");
 

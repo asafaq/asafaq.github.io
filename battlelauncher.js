@@ -24,17 +24,17 @@ window.addEventListener("message", async (event) => {
                     if (!patron.Level) patron.Level = 1;
 
                     // Fallback to determine class configurations on older characters safely
-                    if (!patron.classKey) {
+                    if (!patron.expClassKey) {
                         const lore = loreData.Adventurer[pc.name] || {};
                         const r = lore.role?.toLowerCase() || "";
                         const c = lore.race?.toLowerCase() || "";
-                        patron.classKey = CLASS_REGISTRY[r] ? r : (CLASS_REGISTRY[c] ? c : "default");
+                        patron.expClassKey = CLASS_REGISTRY[r] ? r : (CLASS_REGISTRY[c] ? c : "default");
                     }
 
                     patron.Exp += xpPerPC;
 
                     let nextLevel = patron.Level + 1;
-                    let xpNeeded = XP_TABLES.getRequiredXP(patron.classKey, nextLevel);
+                    let xpNeeded = EXP_TABLES.getRequiredXP(patron.expClassKey, nextLevel);
 
                     while (patron.Exp >= xpNeeded && nextLevel <= 20) {
                         patron.Level = nextLevel;
@@ -54,7 +54,7 @@ window.addEventListener("message", async (event) => {
                             hpGained = Math.max(roll1, roll2) + hpMod;
                         } else {
                             // Flat high-level reward scaling rules
-                            const config = CLASS_REGISTRY[patron.classKey] || { hpStyle: "thief" };
+                            const config = CLASS_REGISTRY[patron.expClassKey] || { hpStyle: "thief" };
                             if (config.hpStyle === "warrior") hpGained = 3;
                             else if (config.hpStyle === "priest") hpGained = 2;
                             else hpGained = 1;
@@ -70,7 +70,7 @@ window.addEventListener("message", async (event) => {
                         }
                         
                         nextLevel = patron.Level + 1;
-                        xpNeeded = XP_TABLES.getRequiredXP(patron.classKey, nextLevel);
+                        xpNeeded = EXP_TABLES.getRequiredXP(patron.expClassKey, nextLevel);
                     }
                 }
             });
@@ -152,7 +152,32 @@ const CLASS_REGISTRY = {
     huntress:   { table: "fighter",      hpStyle: "priest" },
 };
 
-const XP_TABLES = {
+function getClassKey(role) {
+    if (!role) return "default";
+
+    // 1. Clean up input for safe matching
+    const cleanRole = role.toString().trim();
+
+    // 2. Direct lookup for exact matches
+    if (CLASS_REGISTRY.hasOwnProperty(cleanRole)) {
+        return CLASS_REGISTRY[cleanRole].table || "default";
+    }
+
+    // 3. Case-insensitive fallback lookup
+    const lowerRole = cleanRole.toLowerCase();
+    const matchedKey = Object.keys(CLASS_REGISTRY).find(
+        (key) => key.toLowerCase() === lowerRole
+    );
+
+    if (matchedKey) {
+        return CLASS_REGISTRY[matchedKey].table || "default";
+    }
+
+    // 4. Ultimate fallback if role isn't registered
+    return "default";
+}
+
+const EXP_TABLES = {
     // 3 Main Core Classes (Halved requirements)
     warrior:   [0, 1000, 2000, 4000, 9000, 17500, 35000, 62500, 125000, 250000, 375000],
     priest:    [0, 750, 1500, 3000, 6500, 11250, 22500, 45000, 90000, 137500, 225000],
@@ -166,9 +191,9 @@ const XP_TABLES = {
     dwarf:     [0, 1000, 2000, 4000, 9000, 17500, 35000, 62500, 125000, 250000, 375000],
     default:   [0, 1000, 2000, 4000, 8000, 16000, 32000, 64000, 125000, 250000, 375000],
 
-    getRequiredXP: function(classKey, targetLevel) {
+    getRequiredXP: function(expClassKey, targetLevel) {
         // Fallback safety to prevent undefined lookups
-        const config = (typeof CLASS_REGISTRY !== 'undefined' && CLASS_REGISTRY[classKey]) || { table: "default" };
+        const config = (typeof CLASS_REGISTRY !== 'undefined' && CLASS_REGISTRY[expClassKey]) || { table: "default" };
         const table = this[config.table] || this.default || [0];
         
         // Clamp level boundaries cleanly
@@ -236,16 +261,18 @@ async function recruitAdventurer(advId) {
 
 function createDefaultPatronState(advId) {
     const lore = loreData.Adventurer[advId];
-	console.log("ADV ID RECEIVED:", advId);
-	console.log("LORE EXISTS:", advId in loreData.Adventurer);
-	console.log("LORE ENTRY:", loreData.Adventurer[advId]);
-
+	// console.log("ADV ID RECEIVED:", advId);
+	// console.log("LORE EXISTS:", advId in loreData.Adventurer);
+	// console.log("LORE ENTRY:", loreData.Adventurer[advId]);
 
     if (!lore) {
         console.warn(`Missing lore for ${advId}`);
         return null;
     }
 
+    // --- Core Properties ---
+	const race = (lore.race || '').toLowerCase();
+	const role = (lore.role || '').toLowerCase();
     const Dexterity = lore.Dexterity_mod ?? 0;
     const wisdom = lore.wisdom_mod ?? 0;
     const hpDie = lore.hp_die ?? 6;
@@ -265,18 +292,13 @@ function createDefaultPatronState(advId) {
     // Level-up HP
 	if (level > 1) {
 		for (let lvl = 2; lvl <= level; lvl++) {
-			const roll = rollAdvantage(hpDie);
-			const gain = roll + hpMod;
+			const gain = calculateLevelUpHP(lvl, lore);
 			MaxHP += gain;
-
-			console.log(
-				`Level ${lvl} gain: roll(${roll}) + mod(${hpMod}) = ${gain} → Total: ${MaxHP}`
-			);
 		}
-	}
+	}	
 	// Armor proficiency → numeric bonus (all lowercase keys)
     const armorBonus = {
-        unarmed: 0,
+        unarmored: 0,
         light: 2,
         medium: 4,
         heavy: 6
@@ -291,12 +313,12 @@ function createDefaultPatronState(advId) {
     let AC = 10 + Dexterity + (armorBonus[prof] || 0);
 
     // Barbarian bonus only when unarmed
-    if (race === "barbarian" && prof === "unarmed") {
+    if (race === "barbarian" && prof === "unarmored") {
         AC += hpMod;
     }
 
     // Barbarian bonus only when unarmed
-    if (race === "direwolf" && prof === "unarmed") {
+    if (race === "direwolf" && prof === "unarmored") {
         AC += hpMod;
     }
 
@@ -305,6 +327,31 @@ function createDefaultPatronState(advId) {
         AC = 10 + wisdom;
     }
 
+    // --- Dynamic ClassKey and EXP Calculation ---
+    const expClassKey = getClassKey(role); 
+    let initialExp = 0;
+
+    // 1. Safe check that the global tables exist first
+    if (typeof EXP_TABLES !== "undefined") {
+        // 2. Define classTable out here so BOTH blocks below can use it safely
+        const classTable = EXP_TABLES[expClassKey] || EXP_TABLES["default"];
+        
+        if (level > 1) {
+            // Corrected index calculation using level - 1
+            if (classTable && classTable[level - 1] !== undefined) {
+                initialExp = classTable[level - 1];
+            } else {
+                console.warn(`EXP profile missing for class ${expClassKey} at level ${level}. Defaulting to 0.`);
+            }
+        } 
+        else if (level === 1 && (lore.exp === 0 || lore.exp === undefined)) {
+            // Level 2 threshold is exactly at array index 1
+            if (classTable && classTable[1] !== undefined) {
+                initialExp = Math.floor(classTable[1] / 2);
+                console.log(`Level 1 catch-up bonus granted to ${advId}: ${initialExp} EXP (Half of Level 2 target ${classTable[1]})`);
+            }
+        }
+    }
 
 
     return {
@@ -313,10 +360,17 @@ function createDefaultPatronState(advId) {
         MaxHP,
         currentHP: MaxHP,
         Level: level,
-        Exp: 0,
-        classKey: "default"
+        Exp: initialExp, 
+        expClassKey,		 
     };
 }
+
+/**
+ * Calculates HP gain when leveling up (modern D&D style - always roll die)
+ * Used by both character creation and manual XP award.
+ */
+ 
+
 
 /**
  * Universal XP Distributor
@@ -337,11 +391,9 @@ function createDefaultPatronState(advId) {
  
 
 async function awardManualXP(targets, totalXP) {
-    // 1. Normalize targets into an array format
     const targetNames = Array.isArray(targets) ? targets : [targets];
     if (targetNames.length === 0 || totalXP <= 0) return;
 
-    // 2. Calculate the split share
     const xpPerPC = Math.floor(totalXP / targetNames.length);
     if (xpPerPC <= 0) {
         console.warn("❌ Grant cancelled: XP amount too small to divide among targets.");
@@ -350,79 +402,104 @@ async function awardManualXP(targets, totalXP) {
 
     console.log(`Giving ${xpPerPC} Exp to: ${targetNames.join(", ")}`);
 
-	// 3. Process each character profile
-	targetNames.forEach(name => {
-		// ⭐ UNIVERSAL NORMALIZATION STEP
-		// Trim accidental whitespace, lower-case it to safely check for 'adv_', 
-		// then remove the prefix if it exists.
-		let cleanName = name.trim();
-		if (cleanName.toLowerCase().startsWith("adv_")) {
-			cleanName = cleanName.substring(4); // Strips away the 'adv_' prefix
-		}
-
-		// Always re-apply the unified lowercase prefix followed by the exact key text
-		const key = `adv_${cleanName}`;
-		
-		if (player && player.patrons && player.patrons[key]) {
-			const patron = player.patrons[key];
-			
-			// Use cleanName for logs and lookup so that it strips the 'adv_' from the screen output
-			console.log(`🎯 Processing matched key: ${key}`);
-
-			// ... [The rest of your XP allocation and Level Up loop logic goes here, unchanged!] ...
-
-            // 4. Handle Level Up evaluation loops
-            let nextLevel = patron.Level + 1;
-            let xpNeeded = XP_TABLES.getRequiredXP(patron.classKey, nextLevel);
-
-            while (patron.Exp >= xpNeeded && nextLevel <= 20) {
-                patron.Level = nextLevel;
-                let hpGained = 0;
-
-                if (patron.Level <= 9) {
-                    const lore = loreData.Adventurer[name];
-                    const hpDie = lore?.hp_die ?? 6;
-                    let hpMod = lore?.hp_modifier ?? 0;
-                    
-                    if (hpMod > 2) hpMod = 2; // Cap your mod contribution to max +2
-
-                    const roll1 = Math.ceil(Math.random() * hpDie);
-                    const roll2 = Math.ceil(Math.random() * hpDie);
-                    hpGained = Math.max(roll1, roll2) + hpMod;
-                } else {
-                    // Flat level 10+ rewards matching your exact targets
-                    const config = CLASS_REGISTRY[patron.classKey] || { hpStyle: "thief" };
-                    if (config.hpStyle === "warrior") hpGained = 3;
-                    else if (config.hpStyle === "priest") hpGained = 2;
-                    else hpGained = 1; // Mages and Thieves get flat +1 HP
-                }
-
-                patron.MaxHP += hpGained;
-                patron.currentHP = patron.MaxHP; // Fully heal on level up
-
-                if (window.Bus && typeof window.Bus.emit === 'function') {
-                    window.Bus.emit('LOG', `🎉 MANUAL LEVEL UP! ${name} reached Level ${patron.Level}! (+${hpGained} Max HP)`);
-                }
-                
-                nextLevel = patron.Level + 1;
-                xpNeeded = XP_TABLES.getRequiredXP(patron.classKey, nextLevel);
-            }
-        } else {
-            console.warn(`⚠️ Character key "${key}" was not found inside player.patrons.`);
+    // Process each character
+    for (const name of targetNames) {   // ← changed to for...of so we can use await cleanly
+        let cleanName = name.trim();
+        if (cleanName.toLowerCase().startsWith("adv_")) {
+            cleanName = cleanName.substring(4);
         }
-    });
+        const key = `adv_${cleanName}`;
 
-    // 5. Commit mutations permanently to your IndexedDB layout
+        if (!player?.patrons?.[key]) {
+            console.warn(`⚠️ Character key "${key}" not found in player.patrons.`);
+            continue;
+        }
+
+        const patron = player.patrons[key];
+        const oldLevel = patron.Level;
+        const oldExp = patron.Exp || 0;
+
+        patron.Exp = oldExp + xpPerPC;
+        console.log(`→ Added ${xpPerPC} XP to ${cleanName} (${oldExp} → ${patron.Exp})`);
+
+        // === LEVEL UP LOOP ===
+        let leveledUp = false;
+        let nextLevel = patron.Level + 1;
+        let xpNeeded = EXP_TABLES.getRequiredXP(patron.expClassKey, nextLevel);
+
+        while (patron.Exp >= xpNeeded && nextLevel <= 20) {
+            leveledUp = true;
+            patron.Level = nextLevel;
+
+            const lore = loreData.Adventurer[key];
+            const hpGained = calculateLevelUpHP(patron.Level, lore, patron.expClassKey);
+
+            patron.MaxHP += hpGained;
+            patron.currentHP = patron.MaxHP;
+
+            console.log(`🎉 ${cleanName} leveled up to ${patron.Level}! (+${hpGained} HP)`);
+
+            if (window.Bus && typeof window.Bus.emit === 'function') {
+                window.Bus.emit('LOG', `🎉 MANUAL LEVEL UP! ${cleanName} reached Level ${patron.Level}! (+${hpGained} Max HP)`);
+            }
+
+            nextLevel = patron.Level + 1;
+            xpNeeded = EXP_TABLES.getRequiredXP(patron.expClassKey, nextLevel);
+        }
+
+        if (!leveledUp) {
+            console.log(`No level up for ${cleanName} (Exp: ${patron.Exp}, next needed: ${xpNeeded})`);
+        }
+    }
+
+    // === SAVE ONCE AFTER ALL CHARACTERS ARE PROCESSED ===
     try {
         await storage.savePlayer(player);
-        console.log("💾 Storage synced successfully following manual XP injection.");
+        console.log("💾 Storage synced successfully after manual XP award.");
         
-        // UI Hook refresh trigger if you use one
-        if (typeof renderCharacterSheets === "function") renderCharacterSheets();
+        if (typeof renderCharacterSheets === "function") {
+            renderCharacterSheets();
+        }
     } catch (error) {
-        console.error("❌ Failed to commit manual XP adjustments to storage:", error);
+        console.error("❌ Failed to save player data:", error);
     }
 }
+
+function calculateLevelUpHP(level, loreInput, expClassKey = null) {
+    let lore = loreInput;
+    if (!lore) {
+        console.warn(`Missing lore for HP calculation at level ${level} for character "${loreInput}"`);
+        return 1; // safe fallback
+    }
+
+    const hpDie = lore.hp_die ?? 6;
+    let hpMod = lore.hp_modifier ?? 0;
+    if (hpMod > 2) hpMod = 2;   // existing cap kept for now
+
+    let roll;
+
+    if (level >= 10) {
+        // Levels 10-20: Single roll (no advantage)
+        roll = Math.ceil(Math.random() * hpDie);
+        console.log(`Level ${level} HP gain: roll(${roll}) + ${hpMod} = ${roll + hpMod} (die=${hpDie})`);
+    } else {
+        // Levels 1-9: Advantage roll (max of two rolls)
+        const roll1 = Math.ceil(Math.random() * hpDie);
+        const roll2 = Math.ceil(Math.random() * hpDie);
+        roll = Math.max(roll1, roll2);
+        console.log(`Level ${level} HP gain: max(${roll1},${roll2}) + ${hpMod} = ${roll + hpMod} (die=${hpDie})`);
+    }
+
+    let gain = roll + hpMod;
+
+    // Minimum 1 HP gain
+    if (gain < 1) {
+        gain = 1;
+    }
+
+    return gain;
+}
+
 
 
 // Now your old code works again!
@@ -504,7 +581,7 @@ async function launchBattle(encounterKey) {
 				// --- NEW DATA INJECTION ---
 				race: hydrated.race,
 				role: hydrated.role,
-				level: hydrated.level,
+				level: hydrated.Level,
 				// Full Stats
 				stats: {
 					str: hydrated.strengh_mod,

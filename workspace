@@ -1,0 +1,32 @@
+<NotepadPlus>
+    <Project name="Guild">
+        <Folder name="Guild">
+            <File name="1.bat" />
+            <File name="1.txt" />
+            <File name="battle.html" />
+            <File name="battle.JSON" />
+            <File name="battlelauncher.js" />
+            <File name="database.js" />
+            <File name="dir.txt" />
+            <File name="dwood_1.txt" />
+            <File name="favicon.ico" />
+            <File name="index.html" />
+            <File name="inventory,js" />
+            <File name="inventory.js" />
+            <File name="item_db.json" />
+            <File name="login.js" />
+            <File name="lore.json" />
+            <File name="lounge.js" />
+            <File name="missions.css" />
+            <File name="missions.html" />
+            <File name="missions.js" />
+            <File name="missions.json" />
+            <File name="missions_rules.js" />
+            <File name="serv.bat" />
+            <File name="style.css" />
+            <File name="ui.js" />
+            <File name="ui_obsolete.js" />
+            <File name="watch.bat" />
+        </Folder>
+    </Project>
+</NotepadPlus>

@@ -22,7 +22,7 @@
       "sex": 1,
       "size": "Medium",
       "caste": "Noble",
-      "RacialEnemy": "string",
+      "RacialEnemy": "Discounts",
       "proficiency_armor": "Light",
       "proficiency_weapon": "Light",
 	  "inventory" : [
@@ -575,7 +575,7 @@
       "caste": "Commoner",
       "RacialEnemy": "",
       "proficiency_armor": "Light",
-      "proficiency_weapon": "Light",
+      "proficiency_weapon": "Unarmed",
 	  "inventory" : [
 		  { "item": "Crusher's Favorite Mug", "qty": 1, "locked": true },
 		  { "item": null, "qty": 0, "locked": false },
@@ -583,7 +583,8 @@
 		  { "item": null, "qty": 0, "locked": false }
 		],
       "traits": [
-        "Selfish"
+        "Selfish",
+		"Armwrestler"
       ],
       "notes": "The Bar guard and Bouncer none want to mess with."
     },
@@ -1145,6 +1146,9 @@
     },
     "Tracker": {
       "desc": "Tracks the footsteps of their target."
+    },
+    "Armwrestler": {
+      "desc": "Athlete with exceptionally tough arms."
     }
   },
   "Party Traits": {
@@ -1178,6 +1182,14 @@
       "Comedian": "The joyful Claudio is working the crowd, and playing his lute between sessions.",
       "Cheerful": "The Cheerful Hogperson is a pleasant company to be around.",
       "default": "They possess unique qualities that set them apart."
+    },
+    "hiringReferrals": {
+      "Tunnel Surveyer": "Bragain can be assigned to a mining location, but he's currently enjoying his leisure time socializing and drinking.",
+      "Scribe": "Amyssa is focused on her scrolls scribing.",
+      "Comedian": "The joyful Claudio is working the crowd, and playing his lute between sessions.",
+      "Cheerful": "The Cheerful Hogperson is a pleasant company to be around.",
+      "default": "They possess unique qualities that set them apart.",
+	  "Armwrestler": "Crusher is an experienced tavern bouncer, and will keep the peace in the inn. Or else."
     }
   },
   "inventory": {

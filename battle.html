@@ -105,9 +105,12 @@ const Bus = {
 
 let staticObstacles = [], units = [], turn = 0, isMoving = false; battleXP = 0; isReactionPhase = false; roundStarted = false; isHealing = false; healerUnit = null; isCastingSpell = false; spellCaster = null; selectedSpell = null; pendingSpells = []; victoryShown = false; isRangedTargeting = false; rangedShooter = null; isMeleeTargeting = false; meleeAttacker = null; isSneakTargeting = false; sneakAttacker = null;
 
+const STRDEX_TABLE = {
+  str: ['warrior', 'fighter', 'barbarian', 'paladin', 'cleric', 'ranger', 'monk', 'shaman', 'swordmage', 'brute', 'squire', 'paladin', 'bouncer', 'fallen paladin', 'clericbot', 'druid', 'warlock'],
+  dex: ['thief', 'rogue', 'bard', 'deputy', 'miner', 'arcane trickster']
+};
 
 const firstPCIndex = units.findIndex(u => u.type === "pc");
-
 
 function init() {
 
@@ -140,7 +143,7 @@ function init() {
 			hasAction: true,
 			isConcentrating: false,
 			isHiding: p.isHiding || false,
-			isRaging: p.isHiding || false,
+			isRaging: p.isRaging || false,
 			usedRage: p.usedRage || false,
 			canSing: p.canSing ?? true,
 			canHide: p.canHide ?? true,
@@ -150,6 +153,7 @@ function init() {
 			damageBonus: p.damageBonus || 0,
 			isSinging: p.isSinging || false,
 		})),
+		
         ...data.monsters.map(m => ({
             ...m,
             type: 'monster',
@@ -159,6 +163,14 @@ function init() {
             maxHp: m.hp
         }))
     ];
+
+	// Apply STR/DEX bonuses to all units (PCs only)
+	for (let i = 0; i < units.length; i++) {
+		if (units[i].type === 'pc') {
+			units[i] = applyStrDexAttackBonus(units[i]);
+		}
+	}
+
 	// ⭐ Bard song fade: runs at the start of the Bard's next turn
 	const active = units[turn];
     grid.innerHTML = '<div class="grid-overlay"></div><div id="active-ring" class="active-ring"></div>';
@@ -334,6 +346,34 @@ function init() {
 	startReactionPhase();
 }
 
+/**
+ * Applies the appropriate STR or DEX modifier to hitBonus and damageBonus
+ * based on the character's role.
+ */
+function applyStrDexAttackBonus(unit) {
+  if (!unit?.role || unit.type !== 'pc') return unit;
+
+  // Normalize role (case-insensitive)
+  const role = (unit.role || '').toLowerCase().trim();
+
+  let modifier = 0;
+
+  if (STRDEX_TABLE.str.includes(role)) {
+    modifier = unit.stats?.str || 0;           // ← from stats.str
+  } 
+  else if (STRDEX_TABLE.dex.includes(role)) {
+    modifier = unit.stats?.dex || 0;           // ← from stats.dex
+  }
+
+  if (modifier === 0) return unit;
+
+  return {
+    ...unit,
+    hitBonus: (unit.hitBonus || 0) + modifier,
+    damageBonus: (unit.damageBonus || 0) + modifier,
+  };
+}
+
 function applyDamage(target, amount) {
     let dmg = amount;
 
@@ -479,7 +519,6 @@ function update() {
 
     checkVictory();
 }
-
 
 function startRangedTargeting() {
     const u = units[turn];
@@ -647,6 +686,7 @@ function handleRage(u) {
 	u.rageTurnsActive = 1;   // ⭐ Start counting turns
 	
     // ⭐ Temp HP = 5x + 5 (x = level)
+	console.log(u, "level", u.level)
     const lvl = u.level || 1;
     u.tempHp = (5 * lvl) + 5;
 
@@ -666,7 +706,6 @@ function handleEndRage() {
     Bus.emit('LOG', `😤 ${u.name} ends their Rage.`);
     update();
 }
-
 
 function handleHide() {
     const u = units[turn];
@@ -773,7 +812,6 @@ function isAnyBardSinging() {
     return units.some(u => u.type === 'pc' && u.role === 'Bard' && u.isSinging);
 }
 
-
 function handleSing() {
     const bard = units[turn];
     if (bard.role !== "Bard" || !bard.canSing) return;
@@ -819,7 +857,6 @@ function getAdjacentEnemy(attacker) {
         Math.max(Math.abs(t.x - attacker.x), Math.abs(t.y - attacker.y)) === 1
     );
 }
-
 
 function handleRangedAttack(attacker, target) {
     const roll = Math.floor(Math.random() * 20) + 1;
