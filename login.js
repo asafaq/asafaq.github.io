@@ -1,6 +1,6 @@
 // Toggle: true = show login screen, false = skip login entirely
-const ENABLE_LOGIN = true;
-const ENABLE_PRELOAD = true;
+const ENABLE_LOGIN = false;		//always set them up equal values
+const ENABLE_PRELOAD = false;	//always set them up equal values
 
 let preloadedAssets = null;
 let preloadPromise = null;
@@ -62,7 +62,6 @@ const assetUrls = [
   "/assets/patrons/scroll.png",
   "/assets/patrons/Tinman.png"
 ];
-
 
 function beginSilentPreload() {
     preloadPromise = preloadAssets(assetUrls).then(assets => {

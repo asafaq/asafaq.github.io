@@ -103,7 +103,8 @@ const Bus = {
     emit(event, data) { if(this.events[event]) this.events[event].forEach(cb => cb(data)); }
 };
 
-let staticObstacles = [], units = [], turn = 0, isMoving = false; battleXP = 0; isReactionPhase = false; roundStarted = false; isHealing = false; healerUnit = null; isCastingSpell = false; spellCaster = null; selectedSpell = null; pendingSpells = []; victoryShown = false; isRangedTargeting = false; rangedShooter = null; isMeleeTargeting = false; meleeAttacker = null; isSneakTargeting = false; sneakAttacker = null;
+let staticObstacles = [], units = [], turn = 0, isMoving = false; battleXP = 0; isReactionPhase = false; roundStarted = false; isHealing = false; healerUnit = null; isCastingSpell = false; spellCaster = null; selectedSpell = null; pendingSpells = []; victoryShown = false; isRangedTargeting = false; rangedShooter = null; isMeleeTargeting = false; meleeAttacker = null; isSneakTargeting = false; sneakAttacker = null; initiativeOrder = []; turnIndex = 0;
+
 
 const STRDEX_TABLE = {
   str: ['warrior', 'fighter', 'barbarian', 'paladin', 'cleric', 'ranger', 'monk', 'shaman', 'swordmage', 'brute', 'squire', 'paladin', 'bouncer', 'fallen paladin', 'clericbot', 'druid', 'warlock'],
@@ -171,8 +172,9 @@ function init() {
 		}
 	}
 
+	rollInitiativeForAll();   // ← FIRST ROUND INITIATIVE
 	// ⭐ Bard song fade: runs at the start of the Bard's next turn
-	const active = units[turn];
+	const active = units[initiativeOrder[turnIndex].index];
     grid.innerHTML = '<div class="grid-overlay"></div><div id="active-ring" class="active-ring"></div>';
 
     for (let i = 0; i < 100; i++) {
@@ -342,7 +344,17 @@ function init() {
     });
 
     update();
-	roundStarted = false;
+	// Mark that the round has already started
+	roundStarted = true;
+
+	// Start the very first turn properly
+	const first = units[initiativeOrder[turnIndex].index];
+	Bus.emit('LOG', `Turn: ${first.name}`);
+
+	if (first.type === 'monster') {
+		setTimeout(monsterAI, 600);
+	}
+	
 	startReactionPhase();
 }
 
@@ -414,6 +426,26 @@ function applyDamage(target, amount) {
     update();
 }
 
+function rollInitiativeForAll() {
+    initiativeOrder = units.map((u, i) => {
+        const dex = u.stats?.dex ?? 0;
+        const roll = Math.floor(Math.random() * 20) + 1;
+        return {
+            index: i,
+            name: u.name,
+            initiative: roll + dex
+        };
+    });
+
+    initiativeOrder.sort((a, b) => b.initiative - a.initiative);
+
+    Bus.emit("LOG",
+        "Initiative → " +
+        initiativeOrder.map(o => `${o.name}(${o.initiative})`).join(", ")
+    );
+
+    turnIndex = 0;
+}
 
 
 
@@ -439,7 +471,7 @@ function canHeal(role) {
 
 function update() {
     if (isReactionPhase) return; 
-    const active = units[turn];
+    const active = units[initiativeOrder[turnIndex].index];
     if (!active) return;
 
     // 1. ALWAYS update position rings and token visibility for both PCs and Monsters
@@ -521,7 +553,7 @@ function update() {
 }
 
 function startRangedTargeting() {
-    const u = units[turn];
+    const u = units[initiativeOrder[turnIndex].index];
     if (!u.hasAction) return;
 
     isRangedTargeting = true;
@@ -536,7 +568,7 @@ function createBtn(parent, text, func, className = '', id = '') {
     btn.onclick = func;
     if(className) btn.className = className;
     if(id) btn.id = id;
-    if (!units[turn].hasAction && text !== "📍 Move") btn.disabled = true;
+    if (!units[initiativeOrder[turnIndex].index].hasAction && text !== "📍 Move") btn.disabled = true;
     parent.appendChild(btn);
 }
 
@@ -545,7 +577,7 @@ function toggleMove() { isMoving = !isMoving; update(); }
 function processMove(tx, ty, force = false) {
     if (!isMoving && !force) return;
 
-    const u = units[turn];
+    const u = units[initiativeOrder[turnIndex].index];
     const occupied = getOccupiedSquares();
     if (occupied[tx][ty]) return Bus.emit('LOG', "Space occupied!");
 
@@ -648,7 +680,7 @@ function getMonsterStats(unit) {
 }
 
 function handleSpell() {
-    const u = units[turn];
+    const u = units[initiativeOrder[turnIndex].index];
 
     if (!canCast(u.role) || !u.hasAction) return;
 
@@ -696,7 +728,7 @@ function handleRage(u) {
 }
 
 function handleEndRage() {
-    const u = units[turn];
+    const u = units[initiativeOrder[turnIndex].index];
     if (!u.isRaging) return;
 
     u.isRaging = false;
@@ -708,7 +740,7 @@ function handleEndRage() {
 }
 
 function handleHide() {
-    const u = units[turn];
+    const u = units[initiativeOrder[turnIndex].index];
     if (!u.hasAction) return;
     u.isHiding = true; u.hasAction = false;
     Bus.emit('LOG', `${u.name} vanishes...`);
@@ -716,7 +748,7 @@ function handleHide() {
 }
 
 function startSneakTargeting() {
-    const u = units[turn];
+    const u = units[initiativeOrder[turnIndex].index];
     if (!u.hasAction || !u.isHiding) return;
     
     isSneakTargeting = true;
@@ -725,7 +757,7 @@ function startSneakTargeting() {
 }
 
 function handleSneakAttack(target) {
-    const u = units[turn];
+    const u = units[initiativeOrder[turnIndex].index];
     if (!u.hasAction || !u.isHiding) return;
     if (!target || target.hp <= 0) return;
 
@@ -756,7 +788,7 @@ function handleSneakAttack(target) {
 }
 
 function handleHeal() {
-    const u = units[turn];
+    const u = units[initiativeOrder[turnIndex].index];
 
     // Only healers can use this
     if (!HEALER_ROLES.includes(u.role)) {
@@ -786,7 +818,7 @@ function handleHeal() {
 }
 
 function startHealTargeting() {
-    const u = units[turn];
+    const u = units[initiativeOrder[turnIndex].index];
 
     if (!canHeal(u.role) || !u.hasAction) return;
 
@@ -813,7 +845,7 @@ function isAnyBardSinging() {
 }
 
 function handleSing() {
-    const bard = units[turn];
+    const bard = units[initiativeOrder[turnIndex].index];
     if (bard.role !== "Bard" || !bard.canSing) return;
 
     bard.canSing = false;
@@ -837,7 +869,7 @@ function handleSing() {
 }
 
 function startMeleeTargeting() {
-    const u = units[turn];
+    const u = units[initiativeOrder[turnIndex].index];
     if (!u.hasAction) return;
 	console.log("DEBUG: melee targeting started");
 	console.log("DEBUG: isMeleeTargeting =", isMeleeTargeting);
@@ -949,17 +981,29 @@ function startReactionPhase() {
 
         panel.appendChild(div);
     });
+	// Add "Continue" button
+	const cont = document.createElement('button');
+	cont.innerText = "Continue";
+	cont.onclick = () => {
+		isReactionPhase = false;
+		panel.style.display = "none";
 
-    // Add "Continue" button
-    const cont = document.createElement('button');
-    cont.innerText = "Continue";
-    cont.onclick = () => {
-        isReactionPhase = false;
-        panel.style.display = "none";
-        roundStarted = true;   
-        update();
-    };
-    panel.appendChild(cont);
+		// Mark round as started
+		roundStarted = true;
+
+		// 🔹 Start the next turn properly
+		const active = units[initiativeOrder[turnIndex].index];
+		Bus.emit('LOG', `Turn: ${active.name}`);
+
+		update();
+
+		// 🔹 If the next unit is a monster, run its AI
+		if (active.type === "monster") {
+			setTimeout(monsterAI, 600);
+		}
+	};
+	panel.appendChild(cont);
+
 }
 
 function createReactionBtn(parent, text, func) {
@@ -971,59 +1015,72 @@ function createReactionBtn(parent, text, func) {
 
 function endTurn() {
     isMoving = false;
-    const current = units[turn];
 
+    // The unit who just acted
+    const current = units[initiativeOrder[turnIndex].index];
+
+    // Rage tracking
     if (current && current.isRaging) {
         current.rageTurnsActive++;
     }
 
-    // Resolve queued end-of-round spells
-    const lastAliveIndex = units.findLastIndex(u => u.hp > 0);
-    if (turn === lastAliveIndex && pendingSpells.length > 0) {
+    // 🔹 Resolve queued end-of-round spells (initiative-order aware)
+    const lastAliveOrderIndex = [...initiativeOrder]
+        .map((o, idx) => ({ idx, alive: units[o.index].hp > 0 }))
+        .filter(o => o.alive)
+        .map(o => o.idx)
+        .pop();
+
+    if (turnIndex === lastAliveOrderIndex && pendingSpells.length > 0) {
         pendingSpells.forEach(({ caster, target, spell }) => {
             if (!caster.isConcentrating) {
                 Bus.emit('LOG', `💨 ${caster.name}'s ${spell} fizzles.`);
                 return;
             }
-			if (target.hp > 0) {
-				const d = Math.floor(Math.random() * 8) + 2;
-				Bus.emit('LOG', `🔥 ${caster.name}'s ${spell} targets ${target.name}:`);
-
-				// Pass the damage directly to the engine to handle mitigation, health tracking, and rewards
-				applyDamage(target, d);
-			}
+            if (target.hp > 0) {
+                const d = Math.floor(Math.random() * 8) + 2;
+                Bus.emit('LOG', `🔥 ${caster.name}'s ${spell} hits ${target.name}:`);
+                applyDamage(target, d);
+            }
         });
         pendingSpells = [];
     }
 
-    // Cycle to next living combatant
+    // 🔹 Advance to next living combatant in initiativeOrder
     let attempts = 0;
     do {
-        turn = (turn + 1) % units.length;
+        turnIndex = (turnIndex + 1) % initiativeOrder.length;
         attempts++;
-    } while (units[turn].hp <= 0 && attempts < units.length);
+    } while (units[initiativeOrder[turnIndex].index].hp <= 0 && attempts < initiativeOrder.length);
 
-    const active = units[turn];
+    const active = units[initiativeOrder[turnIndex].index];
 
-    // Round Reset / Reaction Phase Trigger Loop
-    const firstPCIndex = units.findIndex(u => u.type === 'pc');
-    if (turn === firstPCIndex) {
+	// Find the first living unit in initiative order
+	const firstAliveOrderIndex = initiativeOrder.findIndex(o => units[o.index].hp > 0);
+
+	// If we wrapped back to the first living unit → new round
+	if (turnIndex === firstAliveOrderIndex) {
+
         roundStarted = false;
 
+        // Bard song fade
         if (isAnyBardSinging()) {
             const singingBard = units.find(u => u.type === "pc" && u.role === "Bard" && u.isSinging);
             if (singingBard) {
                 singingBard.isSinging = false;
                 units.forEach(u => {
                     if (u.type === "pc" && u !== singingBard) {
-                        u.hitBonus -= 1; u.damageBonus -= 1;
+                        u.hitBonus -= 1;
+                        u.damageBonus -= 1;
                     }
                 });
-                singingBard.hitBonus += 1; singingBard.damageBonus += 1;
+                singingBard.hitBonus += 1;
+                singingBard.damageBonus += 1;
                 Bus.emit('LOG', `🎵 ${singingBard.name}'s song fades.`);
             }
         }
 
+        // Reset PC abilities
         units.forEach(pc => {
             if (pc.type !== 'pc') return;
             if (pc.role === "Miner") pc.canHide = true;
@@ -1031,17 +1088,20 @@ function endTurn() {
         });
     }
 
+    // 🔹 Reset action & speed for the new active unit
     active.hasAction = true;
     active.speed = 6;
 
+    // 🔹 Start-of-round reaction phase
     if (!roundStarted) {
         roundStarted = true;
+        rollInitiativeForAll();   // NEW ROUND INITIATIVE
         startReactionPhase();
-        return; 
+        return;
     }
 
     Bus.emit('LOG', `Turn: ${active.name}`);
-    update(); // Now completely safe to call for both types!
+    update();
 
     if (active.type === 'monster') {
         setTimeout(monsterAI, 800);
@@ -1049,60 +1109,151 @@ function endTurn() {
 }
 
 function monsterAI() {
-    const u = units[turn];
+    const u = units[initiativeOrder[turnIndex].index];
     if (!u || u.hp <= 0) return endTurn();
 
-    let target = units.find(t => t.type === 'pc' && t.hp > 0);
+    // Monsters always start with an action
+    u.hasAction = true;
+
+    // Find nearest PC
+    const target = findNearestPC(u);
     if (!target) return endTurn();
 
+    // Move toward target
+    moveMonsterToward(u, target);
+
+    // After moving, check if adjacent
+    if (isAdjacent(u, target) && u.hasAction) {
+        handleAttack(u, target); // consumes action
+    }
+
+
+    // 4. Cleanly pass control to the next character in sequence
+    setTimeout(endTurn, 600);
+}
+
+function findNearestPC(monster) {
+    let nearest = null;
+    let bestDist = Infinity;
+
+    for (const pc of units) {
+        if (pc.type !== "pc" || pc.hp <= 0) continue;
+
+        const dx = Math.abs(pc.x - monster.x);
+        const dy = Math.abs(pc.y - monster.y);
+        const dist = Math.max(dx, dy); // Chebyshev distance (your diagonal rule)
+
+        if (dist < bestDist) {
+            bestDist = dist;
+            nearest = pc;
+        }
+    }
+
+    return nearest;
+}
+
+function moveMonsterToward(u, target) {
+
     let dist = Math.max(Math.abs(u.x - target.x), Math.abs(u.y - target.y));
-    
-    // 1. If not adjacent, try to move closer first
+
     if (dist > 1) {
+
         for (let i = 0; i < u.speed; i++) {
+
             const dx = (u.x < target.x ? 1 : u.x > target.x ? -1 : 0);
             const dy = (u.y < target.y ? 1 : u.y > target.y ? -1 : 0);
 
             const occupied = getOccupiedSquares();
 
-            if (!occupied[u.x + dx]?.[u.y + dy]) {
-                processMove(u.x + dx, u.y + dy, true);
+            // NEW PRIORITY LOGIC:
+            // Prefer the axis with the larger gap
+            const absDx = Math.abs(target.x - u.x);
+            const absDy = Math.abs(target.y - u.y);
+
+            let moved = false;
+
+            if (absDy > absDx) {
+                // Prefer vertical movement
+                if (!occupied[u.x]?.[u.y + dy]) {
+                    processMove(u.x, u.y + dy, true);
+                    moved = true;
+                }
+                else if (!occupied[u.x + dx]?.[u.y]) {
+                    processMove(u.x + dx, u.y, true);
+                    moved = true;
+                }
+                else if (!occupied[u.x + dx]?.[u.y + dy]) {
+                    processMove(u.x + dx, u.y + dy, true);
+                    moved = true;
+                }
             }
-            else if (!occupied[u.x + dx]?.[u.y]) {
-                processMove(u.x + dx, u.y, true);
-            }
-            else if (!occupied[u.x]?.[u.y + dy]) {
-                processMove(u.x, u.y + dy, true);
+            else if (absDx > absDy) {
+                // Prefer horizontal movement
+                if (!occupied[u.x + dx]?.[u.y]) {
+                    processMove(u.x + dx, u.y, true);
+                    moved = true;
+                }
+                else if (!occupied[u.x]?.[u.y + dy]) {
+                    processMove(u.x, u.y + dy, true);
+                    moved = true;
+                }
+                else if (!occupied[u.x + dx]?.[u.y + dy]) {
+                    processMove(u.x + dx, u.y + dy, true);
+                    moved = true;
+                }
             }
             else {
+                // Equal distance → diagonal is fine
+                if (!occupied[u.x + dx]?.[u.y + dy]) {
+                    processMove(u.x + dx, u.y + dy, true);
+                    moved = true;
+                }
+                else if (!occupied[u.x + dx]?.[u.y]) {
+                    processMove(u.x + dx, u.y, true);
+                    moved = true;
+                }
+                else if (!occupied[u.x]?.[u.y + dy]) {
+                    processMove(u.x, u.y + dy, true);
+                    moved = true;
+                }
+            }
+
+            if (!moved) {
                 Bus.emit('LOG', `${u.name} is blocked.`);
                 break;
             }
 
-            // Check distance again after every step taken
-            const newDist = Math.max(Math.abs(u.x - target.x), Math.abs(u.y - target.y));
-            if (newDist <= 1) break;
+            dist = Math.max(Math.abs(u.x - target.x), Math.abs(u.y - target.y));
+            if (dist <= 1) break;
+        }
+    }
+}
+
+function isTileFree(x, y) {
+    // Stay inside the 10×10 grid
+    if (x < 0 || x > 9 || y < 0 || y > 9) {
+        return false;
+    }
+
+    // Check static obstacles
+    if (staticObstacles.some(o => o.x === x && o.y === y)) {
+        return false;
+    }
+
+    // Check if any living unit occupies the tile
+    for (const u of units) {
+        if (u.hp > 0 && u.x === x && u.y === y) {
+            return false;
         }
     }
 
-    // 2. Refresh distance state after movement options run out
-    dist = Math.max(Math.abs(u.x - target.x), Math.abs(u.y - target.y));
+    return true;
+}
 
-    // 3. If adjacent now, unleash the attack!
-    if (dist <= 1) {
-        const adjacentEnemy = getAdjacentEnemy(u);
-        if (adjacentEnemy) {
-            handleAttack(u, adjacentEnemy);
-        } else {
-            Bus.emit('LOG', `${u.name} growls but finds no target.`);
-            u.hasAction = false;
-        }
-    } else {
-        Bus.emit('LOG', `${u.name} cannot reach anyone.`);
-    }
-
-    // 4. Cleanly pass control to the next character in sequence
-    setTimeout(endTurn, 600);
+function isAdjacent(u, target) {
+    const dx = Math.abs(u.x - target.x);
+    const dy = Math.abs(u.y - target.y);
+    return Math.max(dx, dy) === 1;
 }
 
 function awardFoeDefeat(target) {

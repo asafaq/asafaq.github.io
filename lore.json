@@ -2,6 +2,7 @@
   "Adventurer": {
     "adv_Marlnus": {
       "name": "Marlnus",
+	  "contractPrice": 100,
       "icon": "assets/patrons/marlnus_s.png",
       "large": "assets/patrons/marlnus_l.png",
       "top": "160px",
@@ -38,6 +39,7 @@
     },
     "adv_Hogperson": {
       "name": "Hogperson",
+	  "contractPrice": 100,
       "icon": "assets/patrons/hogperson_s.png",
       "large": "assets/patrons/default.png",
       "top": "300px",
@@ -75,6 +77,7 @@
     },
     "adv_Bragain": {
       "name": "Bragain",
+	  "contractPrice": 100,
       "icon": "assets/patrons/dwarven_miner_s.png",
       "large": "assets/patrons/default.png",
       "top": "220px",
@@ -118,6 +121,7 @@
     },
     "adv_Claudio": {
       "name": "Claudio",
+	  "contractPrice": 100,
       "icon": "assets/patrons/Claudio_s.png",
       "large": "assets/patrons/default.png",
       "top": "330px",
@@ -155,6 +159,7 @@
     },
     "adv_Amyssa": {
       "name": "Amyssa",
+	  "contractPrice": 100,
       "icon": "assets/patrons/amyssa_s.png",
       "large": "assets/patrons/default.png",
       "top": "400px",
@@ -194,6 +199,7 @@
     },
     "adv_Hogmother": {
       "name": "Hogmother",
+	  "contractPrice": 100,
       "icon": "assets/patrons/hogmother.png",
       "large": "assets/patrons/hogmother.png",
       "top": "300px",
@@ -233,6 +239,7 @@
     },
     "adv_Tonica": {
       "name": "Tonica",
+	  "contractPrice": 100,
       "large": "assets/patrons/default.png",
       "top": "300px",
       "left": "380px",
@@ -269,6 +276,7 @@
     },
     "adv_Lurch": {
       "name": "Lurch",
+	  "contractPrice": 100,
       "icon": "assets/patrons/lurch_s.png",
       "large": "assets/patrons/lurch.png",
       "top": "300px",
@@ -306,6 +314,7 @@
     },
     "adv_Desmond": {
       "name": "Desmond",
+	  "contractPrice": 100,
       "icon": "assets/patrons/desmond_s.png",
       "large": "assets/patrons/desmond_l.png",
       "top": "270px",
@@ -345,6 +354,7 @@
     },
     "adv_Aasibelle": {
       "name": "Aasibelle",
+	  "contractPrice": 100,
 	  "icon": "assets/patrons/Aasibelle_s2.png",
       "large": "assets/patrons/Aasibelle_s2.png",
       "top": "260px",
@@ -386,6 +396,7 @@
     },
     "adv_Hogfather": {
       "name": "Hogfather",
+	  "contractPrice": 100,
       "icon": "assets/patrons/hogfather.png",
       "top": "300px",
       "left": "120px",
@@ -419,6 +430,7 @@
     },
     "adv_Finnick": {
       "name": "Finnick",
+	  "contractPrice": 100,
       "race": "Halfling",
       "icon": "assets/patrons/halfling_s.png",
       "large": "assets/patrons/halfling_L.png",
@@ -453,6 +465,7 @@
     },
     "adv_Awetruce": {
       "name": "Awetruce",
+	  "contractPrice": 100,
       "race": "Direwolf",
       "icon": "assets/patrons/direwolf_s.png",
       "role": "Druid",
@@ -482,6 +495,7 @@
     },
     "adv_Tinman": {
       "name": "Tinman B-B-TR",
+	  "contractPrice": 100,
 	  "icon": "assets/patrons/Tinman.png",
       "large": "assets/patrons/Tinman.png",
 	  "top": "180px",
@@ -519,6 +533,7 @@
     },
 	"adv_Trollkin": {
       "name": "Trollkin",
+	  "contractPrice": 100,
       "icon": "/assets/patrons/trollkin_s.png",
       "large": "/assets/patrons/trollkin_l.png",
       "top": "350px",
@@ -554,6 +569,7 @@
     },
 	"adv_Crusher": {
       "name": "Crusher",
+	  "contractPrice": 100,
       "icon": "/assets/patrons/crusher_s.png",
       "large": "/assets/patrons/crusher_l.png",
       "top": "400px",
@@ -590,6 +606,7 @@
     },
 	"adv_Wormtail": {
       "name": "Wormtail",
+	  "contractPrice": 100,
       "icon": "/assets/patrons/wormtail_s.png",
       "large": "/assets/patrons/wormtail_l.png",
       "top": "270px",
@@ -623,6 +640,7 @@
     },
 	"adv_Ugress": {
       "name": "Ugress",
+	  "contractPrice": 100,
       "icon": "/assets/patrons/trollkin_s.png",
       "large": "/assets/patrons/trollkin_l.png",
       "top": "350px",
@@ -660,6 +678,7 @@
     },
 	"adv_SandraFreja": {
       "name": "Sandra Freja",
+	  "contractPrice": 100,
       "icon": "/assets/patrons/SandraFreja_s.png",
       "large": "/assets/patrons/SandraFreja_l.png",
       "top": "350px",
@@ -696,6 +715,7 @@
     },
 	"adv_Bjorn": {
       "name": "Bjorn",
+	  "contractPrice": 100,
       "icon": "/assets/patrons/SandraFreja_s.png",
       "large": "/assets/patrons/SandraFreja_l.png",
       "top": "350px",
@@ -733,6 +753,7 @@
     },
 	"adv_Lili": {
       "name": "Lili Two-Bows",
+	  "contractPrice": 100,
       "icon": "/assets/patrons/SandraFreja_s.png",
       "large": "/assets/patrons/SandraFreja_l.png",
       "top": "350px",
@@ -769,6 +790,7 @@
     },
 	"adv_Thoran": {
       "name": "Thoran",
+	  "contractPrice": 100,
       "icon": "/assets/patrons/SandraFreja_s.png",
       "large": "/assets/patrons/SandraFreja_l.png",
       "top": "350px",
@@ -804,6 +826,7 @@
     },
 	"adv_Saint": {
       "name": "Saint",
+	  "contractPrice": 100,
       "icon": "/assets/patrons/SandraFreja_s.png",
       "large": "/assets/patrons/SandraFreja_l.png",
       "top": "350px",
@@ -1170,26 +1193,39 @@
     }
   },
   "passive": {
-    "idleDescriptions": {
-      "resting": "They seem relaxed, taking a quiet moment to themselves.",
-      "wandering": "They wander around aimlessly, observing their surroundings.",
-      "thinking": "Deep in thought, they appear to be planning something.",
-      "default": "They are idle, waiting for something to happen."
+    "idleDesc": {
+      "Bragain": "Bragain can be assigned to a mining location, but he's currently enjoying his leisure time socializing and drinking.",
+      "Amyssa": "Amyssa is focused on her scrolls scribing.",
+      "Claudio": "The joyful Claudio is working the crowd, and playing his lute between sessions.",
+      "Hogperson": "The Cheerful Hogperson is a pleasant company to be around.",
+	  "Crusher": "The Bouncer's watchful eye keeping everyone at order.",
+      "default": "They possess unique qualities that set them apart."
     },
     "traitReferrals": {
-      "Tunnel Surveyer": "Bragain can be assigned to a mining location, but he's currently enjoying his leisure time socializing and drinking.",
-      "Scribe": "Amyssa is focused on her scrolls scribing.",
-      "Comedian": "The joyful Claudio is working the crowd, and playing his lute between sessions.",
-      "Cheerful": "The Cheerful Hogperson is a pleasant company to be around.",
+      "Tunnel Surveyer": "As a Tunnel Surveyer, always keeping an eye structural integrity.",
+      "Scribe": "Really prefers books over people.",
+      "Snob": "Doesn't like to mingle with lower castes.",
+      "Greedy": "There's always a glint in their eyes, when money is involved.",
+      "Comedian": "Joyful, funny, a pleasure to have in your company.",
+      "Cheerful": "Always Cheerful and positive.",
+      "Calm": "Expressions don't always need words around them.",
+      "Apothecary": "Often busy on a new batch.",
+      "Persuasive": "Always ready to hear your opinion and top it off with his own.",
+	  "Immune to Fear": "Can face a wailing ghost that chills your bones without a blink.",
+	  "Armwrestler": "Will take on anyone in counter-top Armwrestling.",
+	  "Inconspicuous": "Barely noticeable.",
+	  "Gardener": "Really prefers to sit in the garden.",
+	  "Dark Ambition": "Incredibly eerie.",
       "default": "They possess unique qualities that set them apart."
     },
     "hiringReferrals": {
-      "Tunnel Surveyer": "Bragain can be assigned to a mining location, but he's currently enjoying his leisure time socializing and drinking.",
-      "Scribe": "Amyssa is focused on her scrolls scribing.",
+      "Bragain": "Bragain can be assigned to a mining location, but he's currently enjoying his leisure time socializing and drinking.",
+      "Amyssa": "Amyssa is focused on her scrolls scribing.",
       "Comedian": "The joyful Claudio is working the crowd, and playing his lute between sessions.",
       "Cheerful": "The Cheerful Hogperson is a pleasant company to be around.",
       "default": "They possess unique qualities that set them apart.",
-	  "Armwrestler": "Crusher is an experienced tavern bouncer, and will keep the peace in the inn. Or else."
+	  "Crusher": "Crusher is an experienced tavern bouncer, and will keep the peace in the inn. Or else.",
+	  "Desmond": "Experienced warrior, but carries a shrouded past and perhaps something more."
     }
   },
   "inventory": {

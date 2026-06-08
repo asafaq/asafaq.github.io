@@ -18,13 +18,22 @@ function renderIdleUI(hydrated, player) {
 
 function renderApplicantUI(hydrated) {
   const hiringText = getHiringReferral(hydrated);
+  const traitReferral = getTraitReferral(hydrated);
+  const cost = hydrated.contractPrice;
+  const silver = player.treasury.silver;
 
   return `
     <div class="hire-section">
       <p><strong>Applicant:</strong> Would you like to hire this adventurer?</p>
 
       <div class="hiring-referral">
-        <p>${hiringText}</p>
+        ${hiringText ? `<p>${hiringText}</p>` : ""}
+        ${traitReferral ? `<p>${traitReferral}</p>` : ""}
+      </div>
+
+      <div class="hire-cost">
+        <p><strong>Contract Price:</strong> ${cost} silver</p>
+        <p><strong>Your Silver:</strong> ${silver} silver</p>
       </div>
 
       <button id="hire-yes">Hire</button>
@@ -32,6 +41,7 @@ function renderApplicantUI(hydrated) {
     </div>
   `;
 }
+
 
 function idleController(hydrated, container) {
   const btn = container.querySelector("#view-charsheet");
@@ -51,14 +61,36 @@ function idleController(hydrated, container) {
   });
 }
 
-function applicantController(hydrated, container) {
-  const yesBtn = container.querySelector("#hire-yes");
+async function applicantController(hydrated, container) {
   const noBtn = container.querySelector("#hire-no");
 
-  yesBtn.addEventListener("click", () => {
-    pushStatus("You can't afford Amyssa yet, there isn't any money in the stash!");
-    container.style.display = "none";
-  });
+  document.getElementById("hire-yes").onclick = async () => {
+  const cost = hydrated.contractPrice;
+
+  if (player.treasury.silver >= cost) {
+
+    // Deduct silver
+    player.treasury.silver -= cost;
+
+    // Update patron status
+    patron.status = "idle";
+
+    // Save your database if needed
+    
+	await storage.savePlayer(player);   // or whatever your save function is
+
+
+
+    // Refresh UI
+    renderTavernPage();
+
+  } else {
+    pushStatus("Not enough silver.");
+  }
+    // Close popup
+  container.style.display = "none";
+};
+
 
   noBtn.addEventListener("click", () => {
     console.log(`${hydrated.name} declined.`);
@@ -67,7 +99,7 @@ function applicantController(hydrated, container) {
 }
 
 async function openPatronWindow(adv, portrait) {
-  const container = document.getElementById("window-container");
+  const container = document.getElementById("global-popup-container");
   const hydrated = getHydratedAdventurer(adv.id);
 
   const status = hydrated.status;
@@ -110,39 +142,17 @@ async function openPatronWindow(adv, portrait) {
   if (controller) controller(hydrated, container);
 }
 
-function getTraitReferral(adv) {
-  const hydrated = getHydratedAdventurer(adv.id);
-  const traits = loreData.passive.traitReferrals;
-
-  // Only show trait referral when idle
-  if (hydrated.status !== "idle") {
-    return "";
-  }
-
-  // hydrated.trait is an array → loop through it
-  for (const t of hydrated.traits) {
-    if (traits[t]) {
-      return traits[t];
-    }
-  }
-
-  // If none of the traits match → fallback
-  return traits.default;
-}
-
 function getHiringReferral(hydrated) {
-  const referrals = loreData.passive.hiringReferrals;
+  const name = hydrated.name;
+  const hireDB = loreData.passive.hiringReferrals;
 
-  // Loop through the adventurer's traits
-  for (const t of hydrated.traits) {
-    if (referrals[t]) {
-      return referrals[t];
-    }
+  if (hireDB[name]) {
+    return hireDB[name];
   }
 
-  // Fallback
-  return referrals.default || "";
+  return hireDB.default || "";
 }
+
 
 function initPatronClicks() {
   document.querySelectorAll('.patron-wrapper').forEach(wrapper => {
@@ -159,18 +169,36 @@ function initPatronClicks() {
   });
 }
 
-function getIdleDescription(adv, player) {
+function getIdleDescription(adv) {
   const hydrated = getHydratedAdventurer(adv.id);
-  const globalIdle = loreData.passive.idleDescriptions;
-  const traitReferrals = loreData.passive.traitReferrals;
+  const name = hydrated.name;
+  const idleDB = loreData.passive.idleDesc;
 
-  // 1. If idle → override with trait referral
-  if (hydrated.status === "idle") {
-    return traitReferrals[hydrated.traits] || traitReferrals.default;
+  // If the name exists in the DB → return it
+  if (idleDB[name]) {
+    return idleDB[name];
   }
 
-  // 2. Otherwise → use normal idle descriptions
-  return globalIdle[hydrated.status] || globalIdle.default;
+  // Fallback
+  return idleDB.default || "They seem to be waiting for something.";
+}
+
+function getTraitReferral(hydrated) {
+  const traitDB = loreData.passive.traitReferrals;
+
+  const matches = [];
+
+  for (const t of hydrated.traits) {
+    if (traitDB[t]) {
+      matches.push(traitDB[t]);
+    }
+  }
+
+  if (matches.length === 0) {
+    return "";
+  }
+
+  return matches.join("<br>");
 }
 
 const patronStatusRenderers = {

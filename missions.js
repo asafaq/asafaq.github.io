@@ -383,6 +383,11 @@ async function handleMissionEnd(sceneId) {
 
     // Load player (async)
     player = await storage.loadPlayer(player.id);
+	
+    player.treasury ??= {};
+    player.treasury.silver ??= {};
+    player.treasury.silver = 10
+	
 	console.log("LOREDATA CHECK:", Object.keys(loreData.Adventurer));
     // Ensure mission structure exists
     player.missions ??= {};
@@ -397,7 +402,6 @@ async function handleMissionEnd(sceneId) {
     await recruitAdventurer("adv_Bragain");
     await recruitAdventurer("adv_Claudio");
     await recruitAdventurer("adv_Amyssa");
-
     player.patrons.adv_Bragain.location = 3;
     player.patrons.adv_Hogperson.location = 3;
     player.patrons.adv_Claudio.location = 0;
@@ -473,6 +477,9 @@ async function handleMissionEnd(sceneId) {
         },
         "green1_056END": async () => {
             player = await storage.loadPlayer(player.id);
+			player.treasury ??= {};
+			player.treasury.silver ??= {};
+			player.treasury.silver = 50
             player.missions.green_1 = 6;
             Journal.addEntry("You've found 50 silver coins and returned to the guild.");
 			endMission();

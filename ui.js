@@ -897,7 +897,6 @@ function enablePatronTouchSupport() {
 // Keep your existing mouse drag & drop functions unchanged
 // (handleGlobalDragStart, handleGlobalDragEnd, handlePatronDrop, etc.)
 
-
 function showTemporaryImage(src) {
 	// showTemporaryImage("/assets/myImage.png");
 
