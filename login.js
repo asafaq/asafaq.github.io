@@ -7,7 +7,9 @@ let preloadPromise = null;
 
 // loading assets into user's working memory depends on having the leading / "/asset will be loaded but not "asset without leading /
 const assetUrls = [
-  "/assets/Contracts/parchment.jpg",
+  "/assets/contracts/background charsheet.jpg",
+  "/assets/contracts/charsheet.png",
+  "/assets/contracts/parchment.jpg",
 
   "/assets/guild/adventurers_license_50.png",
   "/assets/guild/chest60.png",
@@ -15,10 +17,16 @@ const assetUrls = [
   "/assets/guild/guild.png",
   "/assets/guild/guild_master.png",
   "/assets/guild/inventory.png",
+  "/assets/guild/inventory_empty.png",
   "/assets/guild/license_icon.png",
   "/assets/guild/satchel.png",
   "/assets/guild/scroll.png",
   "/assets/guild/tavern.png",
+
+  "/assets/inventory/apple.png",
+  "/assets/inventory/fallback.png",
+  "/assets/inventory/knabsack.png",
+  "/assets/inventory/tankard_beer.png",
 
   "/assets/menu/cogwheel_L.png",
   "/assets/menu/menu3o.png",
@@ -31,6 +39,7 @@ const assetUrls = [
   "/assets/menu/menu_quill.png",
   "/assets/menu/menu_store.png",
   "/assets/menu/menu_tavern.png",
+  "/assets/menu/satchel.png",
 
   "/assets/missions/boulder.png",
   "/assets/missions/fantasy_map_s.png",
@@ -43,10 +52,11 @@ const assetUrls = [
 
   "/assets/patrons/Aasibelle_s.png",
   "/assets/patrons/Aasibelle_s2.png",
-  "/assets/patrons/amyssa_s.png",
-  "/assets/patrons/amyssa_smaller.png",
   "/assets/patrons/Claudio.png",
   "/assets/patrons/Claudio_s.png",
+  "/assets/patrons/Tinman.png",
+  "/assets/patrons/amyssa_s.png",
+  "/assets/patrons/amyssa_smaller.png",
   "/assets/patrons/default.png",
   "/assets/patrons/direwolf.png",
   "/assets/patrons/direwolf_s.png",
@@ -59,8 +69,7 @@ const assetUrls = [
   "/assets/patrons/hogperson_s.png",
   "/assets/patrons/lurch.png",
   "/assets/patrons/lurch_s.png",
-  "/assets/patrons/scroll.png",
-  "/assets/patrons/Tinman.png"
+  "/assets/patrons/scroll.png"
 ];
 
 function beginSilentPreload() {
