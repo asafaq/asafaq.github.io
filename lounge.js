@@ -16,7 +16,7 @@ function renderIdleUI(hydrated, player) {
   `;
 }
 
-function renderApplicantUI(hydrated) {
+function renderApplicantUI(hydrated, player) {
   const hiringText = getHiringReferral(hydrated);
   const traitReferral = getTraitReferral(hydrated);
   const cost = hydrated.contractPrice;
@@ -24,24 +24,28 @@ function renderApplicantUI(hydrated) {
 
   return `
     <div class="hire-section">
-      <p><strong>Applicant:</strong> Would you like to hire this adventurer?</p>
-
+      
       <div class="hiring-referral">
-        ${hiringText ? `<p>${hiringText}</p>` : ""}
+        <p><strong>Applicant:</strong> ${hiringText ? `${hiringText}</p>` : ""}
         ${traitReferral ? `<p>${traitReferral}</p>` : ""}
+	  <button id="view-charsheet" class="charsheet-btn">
+        View Character Sheet
+      </button>
       </div>
 
       <div class="hire-cost">
+	    <p> Would you like to hire this adventurer?</p>
         <p><strong>Contract Price:</strong> ${cost} silver</p>
         <p><strong>Your Silver:</strong> ${silver} silver</p>
       </div>
+
+
 
       <button id="hire-yes">Hire</button>
       <button id="hire-no">Decline</button>
     </div>
   `;
 }
-
 
 function idleController(hydrated, container) {
   const btn = container.querySelector("#view-charsheet");
@@ -63,35 +67,41 @@ function idleController(hydrated, container) {
 
 async function applicantController(hydrated, container) {
   const noBtn = container.querySelector("#hire-no");
+  const yesBtn = container.querySelector("#hire-yes");
+  const sheetBtn = container.querySelector("#view-charsheet");
 
-  document.getElementById("hire-yes").onclick = async () => {
-  const cost = hydrated.contractPrice;
+  // --- Character Sheet Button ---
+  if (sheetBtn) {
+    sheetBtn.addEventListener("click", () => {
+      container.style.display = "none";
+      loadPage("contracts");
 
-  if (player.treasury.silver >= cost) {
-
-    // Deduct silver
-    player.treasury.silver -= cost;
-
-    // Update patron status
-    patron.status = "idle";
-
-    // Save your database if needed
-    
-	await storage.savePlayer(player);   // or whatever your save function is
-
-
-
-    // Refresh UI
-    renderTavernPage();
-
-  } else {
-    pushStatus("Not enough silver.");
+      setTimeout(() => {
+        const fresh = getHydratedAdventurer(hydrated.id);
+        renderCharSheet(fresh);
+      }, 50);
+    });
   }
-    // Close popup
-  container.style.display = "none";
-};
 
+  // --- Hire Yes ---
+  yesBtn.onclick = async () => {
+    const cost = hydrated.contractPrice;
 
+    if (player.treasury.silver >= cost) {
+      player.treasury.silver -= cost;
+      patron.status = "idle";
+
+      await storage.savePlayer(player);
+
+      renderTavernPage();
+    } else {
+      pushStatus("Not enough silver.");
+    }
+
+    container.style.display = "none";
+  };
+
+  // --- Hire No ---
   noBtn.addEventListener("click", () => {
     console.log(`${hydrated.name} declined.`);
     container.style.display = "none";
@@ -113,7 +123,7 @@ async function openPatronWindow(adv, portrait) {
   container.innerHTML = `
     <div class="infoPopupPatron status-${status}">
       <div class="window-header">
-        <span>${hydrated.name}</span>
+        <span>${hydrated.name}, the ${hydrated.role} level: ${hydrated.level}</span>
         <button class="close-window">X</button>
       </div>
 

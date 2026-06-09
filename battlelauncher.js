@@ -645,7 +645,14 @@ function battleOverlay() {
         overlay.innerHTML = `
             <iframe id="battle-frame"
                 src="battle.html"
-                style="width:100%; height:100%; border:none;">
+                transform-origin: center center;
+                style="position: fixed; 
+				border:none;
+				max-width: none !important;
+				max-height: none !important;
+				min-width: 100% !important;
+				min-height: 100% !important;
+				">
             </iframe>
         `;
         document.body.appendChild(overlay);

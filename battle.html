@@ -358,10 +358,6 @@ function init() {
 	startReactionPhase();
 }
 
-/**
- * Applies the appropriate STR or DEX modifier to hitBonus and damageBonus
- * based on the character's role.
- */
 function applyStrDexAttackBonus(unit) {
   if (!unit?.role || unit.type !== 'pc') return unit;
 
@@ -438,7 +434,11 @@ function rollInitiativeForAll() {
     });
 
     initiativeOrder.sort((a, b) => b.initiative - a.initiative);
-
+    // ⭐ Reset ALL units for the new round
+    units.forEach(u => {
+        u.hasAction = true;
+        u.speed = u.maxSpeed ?? 6;
+    });
     Bus.emit("LOG",
         "Initiative → " +
         initiativeOrder.map(o => `${o.name}(${o.initiative})`).join(", ")
@@ -722,7 +722,7 @@ function handleRage(u) {
     const lvl = u.level || 1;
     u.tempHp = (5 * lvl) + 5;
 
-    Bus.emit('LOG', `💢 Primal spirit of might imbues in ${u.name}`);
+    Bus.emit('LOG', `💢 A Primal Spirit of Might imbues in ${u.name}`);
 
     update();
 }
@@ -1059,7 +1059,7 @@ function endTurn() {
 	const firstAliveOrderIndex = initiativeOrder.findIndex(o => units[o.index].hp > 0);
 
 	// If we wrapped back to the first living unit → new round
-	if (turnIndex === firstAliveOrderIndex) {
+	if (turnIndex === firstAliveOrderIndex && roundStarted) {
 
         roundStarted = false;
 
@@ -1087,10 +1087,6 @@ function endTurn() {
             if (pc.role === "Bard") pc.canSing = true;
         });
     }
-
-    // 🔹 Reset action & speed for the new active unit
-    active.hasAction = true;
-    active.speed = 6;
 
     // 🔹 Start-of-round reaction phase
     if (!roundStarted) {

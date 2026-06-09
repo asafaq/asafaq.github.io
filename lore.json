@@ -579,7 +579,7 @@
       "role": "Bouncer",
       "hp_die": 12,
       "hp_modifier": 3,
-      "strengh_mod": 4,
+      "strengh_mod": 5,
       "Dexterity_mod": -1,
       "wisdom_mod": -2,
       "intelligence_mod": -3,
@@ -1198,7 +1198,7 @@
       "Amyssa": "Amyssa is focused on her scrolls scribing.",
       "Claudio": "The joyful Claudio is working the crowd, and playing his lute between sessions.",
       "Hogperson": "The Cheerful Hogperson is a pleasant company to be around.",
-	  "Crusher": "The Bouncer's watchful eye keeping everyone at order.",
+	  "Crusher": "The Bouncer's watchful eye keeping everyone in order.",
       "default": "They possess unique qualities that set them apart."
     },
     "traitReferrals": {
@@ -1213,8 +1213,9 @@
       "Persuasive": "Always ready to hear your opinion and top it off with his own.",
 	  "Immune to Fear": "Can face a wailing ghost that chills your bones without a blink.",
 	  "Armwrestler": "Will take on anyone in counter-top Armwrestling.",
+	  "Unflappable": "There isn't an insult in the lore that he haven't heard before already.",
 	  "Inconspicuous": "Barely noticeable.",
-	  "Gardener": "Really prefers to sit in the garden.",
+	  "Gardener": "Really prefers to stay in his garden.",
 	  "Dark Ambition": "Incredibly eerie.",
       "default": "They possess unique qualities that set them apart."
     },

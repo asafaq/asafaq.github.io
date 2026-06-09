@@ -1,16 +1,16 @@
 html, body {
     position: relative;
+    overflow-x: hidden;
 }
-
 
   * { box-sizing: border-box; margin: 0; padding: 0; 
     user-select: none;
     -webkit-user-select: none;
     -moz-user-select: none;
+	/* outline: 1px solid red !important; */
 }
 
 .status-bar {
-	
     white-space: nowrap;      /* prevents line wrapping */
     overflow: hidden;         /* hides text that doesn't fit */
     text-overflow: ellipsis;  /* adds "..." when text is too long */
@@ -23,12 +23,12 @@ html, body {
 .hidden {
   display: none !important;
 }
-    color: #fff;
-    padding: 6px 12px;
-    border-bottom: 2px solid #444;
-    display: flex;
-    align-items: left;
-    transition: opacity 0.3s ease;
+    /* color: #fff; */
+    /* padding: 6px 12px; */
+    /* border-bottom: 2px solid #444; */
+    /* display: flex; */
+    /* align-items: left; */
+    /* transition: opacity 0.3s ease; */
 }
 .status-bar.hidden {
     opacity: 0;
@@ -64,11 +64,24 @@ html, body {
 .app-wrapper {
     width: 540px;
     height: 960px;
-    margin: 0 auto;
     position: fixed;
-    padding-top: env(safe-area-inset-top, 0);
+    top: 0;
+    left: 0;
     transform-origin: top center;
+    transform: translateX(-50%) scale(var(--scale, 1));
+    /* Prevent any horizontal overflow issues */
+    will-change: transform;
 }
+
+
+/* .app-wrapper { */
+    /* width: 540px; */
+    /* height: 960px; */
+    /* margin: 0 auto; */
+    /* position: fixed; */
+    /* padding-top: env(safe-area-inset-top, 0); */
+    /* transform-origin: top center; */
+/* } */
 
   .app-frame {
     display: none;
@@ -105,6 +118,7 @@ html, body {
     padding-top: 10px;
     gap: 10px;
     border-radius: 8px 0 0 8px;
+    z-index: 40; /* floats above everything */
   }
 
   .right-menu-mini {
@@ -206,7 +220,7 @@ html, body {
   );
   transform: skewX(-25deg);
   pointer-events: none;
-  z-index: 10000;
+  z-index: 31;
   
   /* This starts the 15-second loop automatically */
   animation: idleShine 15s infinite;
@@ -383,7 +397,7 @@ html, body {
   padding-top: 50dvh;
 
   background: rgba(0,0,0,0.4);
-  z-index: 9999;
+  z-index: 30;
   /* mobile safe areas */
   padding-left: env(safe-area-inset-left);
   padding-right: env(safe-area-inset-right);
@@ -845,7 +859,7 @@ img:not([src]) {
   box-shadow: 0 8px 20px rgba(0,0,0,0.4);
   overflow: hidden;
   animation: popupFade 0.15s ease-out;
-  z-index: 9999;
+  z-index: 30;
 }
 
 /* Applicant mode slightly larger if you want */
@@ -938,7 +952,7 @@ img:not([src]) {
     align-items: center;
     justify-content: center;
     font-size: 24px;
-    z-index: 99999;
+    z-index: 309;
 }
 
 #guild-stash {
@@ -954,7 +968,7 @@ img:not([src]) {
   position: absolute;
   top: 70px;   /* below the chest */
   left: 0;
-  z-index: 19999; /* above everything */
+  z-index: 130; /* above everything */
 }
 
 .stash-slot {
@@ -1000,9 +1014,8 @@ img:not([src]) {
     justify-content: center;
     align-items: center;
 
-    z-index: 9999;
+    z-index: 41;
 }
-
 
 #overlay.hidden {
     display: none;
@@ -1064,7 +1077,7 @@ img:not([src]) {
     align-items: center;
     gap: 10px;
 
-    z-index: 9999;
+    z-index: 41;
 }
 
 .close-btn {
@@ -1074,7 +1087,7 @@ img:not([src]) {
     cursor: pointer;
     font-size: 20px;
     color: white;
-    z-index: 10000;
+    z-index: 31;
 }
 
 .satchel-grid {
