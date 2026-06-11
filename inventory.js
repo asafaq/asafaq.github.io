@@ -138,7 +138,6 @@ function initSatchel(mode) {
     setTimeout(() => initSatchelRightClicks(mode), 0);
 }
 
-
 function getSatchelAdventurers(mode) {
     // Convert patrons object → array WITH IDs
     const patrons = Object.entries(player.patrons)

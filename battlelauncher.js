@@ -33,42 +33,23 @@ window.addEventListener("message", async (event) => {
 
                     patron.Exp += xpPerPC;
 
+                    // === LEVEL UP LOOP (now unified with helper) ===
                     let nextLevel = patron.Level + 1;
                     let xpNeeded = EXP_TABLES.getRequiredXP(patron.expClassKey, nextLevel);
 
                     while (patron.Exp >= xpNeeded && nextLevel <= 20) {
                         patron.Level = nextLevel;
-                        let hpGained = 0;
 
-                        // Check if character is inside the rolling tier or flat reward tier
-                        if (patron.Level <= 9) {
-                            const lore = loreData.Adventurer[pc.name];
-                            const hpDie = lore?.hp_die ?? 6;
-                            let hpMod = lore?.hp_modifier ?? 0;
-                            
-                            // Apply your custom rule: max +2 hpMod contribution
-                            if (hpMod > 2) hpMod = 2;
-
-                            const roll1 = Math.ceil(Math.random() * hpDie);
-                            const roll2 = Math.ceil(Math.random() * hpDie);
-                            hpGained = Math.max(roll1, roll2) + hpMod;
-                        } else {
-                            // Flat high-level reward scaling rules
-                            const config = CLASS_REGISTRY[patron.expClassKey] || { hpStyle: "thief" };
-                            if (config.hpStyle === "warrior") hpGained = 3;
-                            else if (config.hpStyle === "priest") hpGained = 2;
-                            else hpGained = 1;
-                            
-                            // Note: hpMod is completely ignored here per your criteria!
-                        }
+                        const lore = loreData.Adventurer[pc.name];
+                        const hpGained = calculateLevelUpHP(patron.Level, lore, patron.expClassKey);
 
                         patron.MaxHP += hpGained;
-                        patron.currentHP = patron.MaxHP; // Leveling up fully heals characters
+                        patron.currentHP = patron.MaxHP; // heal on level up
 
                         if (window.Bus && typeof window.Bus.emit === 'function') {
                             window.Bus.emit('LOG', `🎉 LEVEL UP! ${pc.name} reached Level ${patron.Level}! (+${hpGained} Max HP)`);
                         }
-                        
+
                         nextLevel = patron.Level + 1;
                         xpNeeded = EXP_TABLES.getRequiredXP(patron.expClassKey, nextLevel);
                     }
@@ -76,7 +57,7 @@ window.addEventListener("message", async (event) => {
             });
         }
 
-        // --- (Your standard loot packing and overlay cleanup logic continues below here) ---
+        // --- Loot handling (unchanged) ---
         if (!player.inventory) player.inventory = [];
         if (earnedLoot && earnedLoot.length > 0) {
             earnedLoot.forEach(droppedItem => {
@@ -98,6 +79,117 @@ window.addEventListener("message", async (event) => {
         }
     }
 });
+
+async function awardManualXP(targets, totalXP) {
+    const targetNames = Array.isArray(targets) ? targets : [targets];
+    if (targetNames.length === 0 || totalXP <= 0) return;
+
+    const xpPerPC = Math.floor(totalXP / targetNames.length);
+    if (xpPerPC <= 0) {
+        console.warn("❌ Grant cancelled: XP amount too small to divide among targets.");
+        return;
+    }
+
+    console.log(`Giving ${xpPerPC} Exp to: ${targetNames.join(", ")}`);
+
+    // Process each character
+    for (const name of targetNames) {   // ← changed to for...of so we can use await cleanly
+        let cleanName = name.trim();
+        if (cleanName.toLowerCase().startsWith("adv_")) {
+            cleanName = cleanName.substring(4);
+        }
+        const key = `adv_${cleanName}`;
+
+        if (!player?.patrons?.[key]) {
+            console.warn(`⚠️ Character key "${key}" not found in player.patrons.`);
+            continue;
+        }
+
+        const patron = player.patrons[key];
+        const oldLevel = patron.Level;
+        const oldExp = patron.Exp || 0;
+
+        patron.Exp = oldExp + xpPerPC;
+        console.log(`→ Added ${xpPerPC} XP to ${cleanName} (${oldExp} → ${patron.Exp})`);
+
+        // === LEVEL UP LOOP ===
+        let leveledUp = false;
+        let nextLevel = patron.Level + 1;
+        let xpNeeded = EXP_TABLES.getRequiredXP(patron.expClassKey, nextLevel);
+
+        while (patron.Exp >= xpNeeded && nextLevel <= 20) {
+            leveledUp = true;
+            patron.Level = nextLevel;
+
+            const lore = loreData.Adventurer[key];
+            const hpGained = calculateLevelUpHP(patron.Level, lore, patron.expClassKey);
+
+            patron.MaxHP += hpGained;
+            patron.currentHP = patron.MaxHP;
+
+            console.log(`🎉 ${cleanName} leveled up to ${patron.Level}! (+${hpGained} HP)`);
+
+            if (window.Bus && typeof window.Bus.emit === 'function') {
+                window.Bus.emit('LOG', `🎉 MANUAL LEVEL UP! ${cleanName} reached Level ${patron.Level}! (+${hpGained} Max HP)`);
+            }
+
+            nextLevel = patron.Level + 1;
+            xpNeeded = EXP_TABLES.getRequiredXP(patron.expClassKey, nextLevel);
+        }
+
+        if (!leveledUp) {
+            console.log(`No level up for ${cleanName} (Exp: ${patron.Exp}, next needed: ${xpNeeded})`);
+        }
+    }
+
+    // === SAVE ONCE AFTER ALL CHARACTERS ARE PROCESSED ===
+    try {
+        await storage.savePlayer(player);
+        console.log("💾 Storage synced successfully after manual XP award.");
+        
+        if (typeof renderCharacterSheets === "function") {
+            renderCharacterSheets();
+        }
+    } catch (error) {
+        console.error("❌ Failed to save player data:", error);
+    }
+}
+
+function calculateLevelUpHP(level, loreInput, expClassKey = null) {
+    let lore = loreInput;
+    if (!lore) {
+        console.warn(`Missing lore for HP calculation at level ${level} for character "${loreInput}"`);
+        return 1; // safe fallback
+    }
+
+    const hpDie = lore.hp_die ?? 6;
+    let hpMod = lore.hp_modifier ?? 0;
+    if (hpMod > 2) hpMod = 2;   // existing cap kept for now
+
+    let roll;
+
+    if (level >= 10) {
+        // Levels 10-20: Single roll (no advantage)
+        roll = Math.ceil(Math.random() * hpDie);
+        console.log(`Level ${level} HP gain: roll(${roll}) + ${hpMod} = ${roll + hpMod} (die=${hpDie})`);
+    } else {
+        // Levels 1-9: Advantage roll (max of two rolls)
+        const roll1 = Math.ceil(Math.random() * hpDie);
+        const roll2 = Math.ceil(Math.random() * hpDie);
+        roll = Math.max(roll1, roll2);
+        console.log(`Level ${level} HP gain: max(${roll1},${roll2}) + ${hpMod} = ${roll + hpMod} (die=${hpDie})`);
+    }
+
+    let gain = roll + hpMod;
+
+    // Minimum 1 HP gain
+    if (gain < 1) {
+        gain = 1;
+    }
+
+    return gain;
+}
+
 
 
 // Example function to start a fight
@@ -390,116 +482,6 @@ function createDefaultPatronState(advId) {
 //awardManualXP(missionParty, 1000);
  
 
-async function awardManualXP(targets, totalXP) {
-    const targetNames = Array.isArray(targets) ? targets : [targets];
-    if (targetNames.length === 0 || totalXP <= 0) return;
-
-    const xpPerPC = Math.floor(totalXP / targetNames.length);
-    if (xpPerPC <= 0) {
-        console.warn("❌ Grant cancelled: XP amount too small to divide among targets.");
-        return;
-    }
-
-    console.log(`Giving ${xpPerPC} Exp to: ${targetNames.join(", ")}`);
-
-    // Process each character
-    for (const name of targetNames) {   // ← changed to for...of so we can use await cleanly
-        let cleanName = name.trim();
-        if (cleanName.toLowerCase().startsWith("adv_")) {
-            cleanName = cleanName.substring(4);
-        }
-        const key = `adv_${cleanName}`;
-
-        if (!player?.patrons?.[key]) {
-            console.warn(`⚠️ Character key "${key}" not found in player.patrons.`);
-            continue;
-        }
-
-        const patron = player.patrons[key];
-        const oldLevel = patron.Level;
-        const oldExp = patron.Exp || 0;
-
-        patron.Exp = oldExp + xpPerPC;
-        console.log(`→ Added ${xpPerPC} XP to ${cleanName} (${oldExp} → ${patron.Exp})`);
-
-        // === LEVEL UP LOOP ===
-        let leveledUp = false;
-        let nextLevel = patron.Level + 1;
-        let xpNeeded = EXP_TABLES.getRequiredXP(patron.expClassKey, nextLevel);
-
-        while (patron.Exp >= xpNeeded && nextLevel <= 20) {
-            leveledUp = true;
-            patron.Level = nextLevel;
-
-            const lore = loreData.Adventurer[key];
-            const hpGained = calculateLevelUpHP(patron.Level, lore, patron.expClassKey);
-
-            patron.MaxHP += hpGained;
-            patron.currentHP = patron.MaxHP;
-
-            console.log(`🎉 ${cleanName} leveled up to ${patron.Level}! (+${hpGained} HP)`);
-
-            if (window.Bus && typeof window.Bus.emit === 'function') {
-                window.Bus.emit('LOG', `🎉 MANUAL LEVEL UP! ${cleanName} reached Level ${patron.Level}! (+${hpGained} Max HP)`);
-            }
-
-            nextLevel = patron.Level + 1;
-            xpNeeded = EXP_TABLES.getRequiredXP(patron.expClassKey, nextLevel);
-        }
-
-        if (!leveledUp) {
-            console.log(`No level up for ${cleanName} (Exp: ${patron.Exp}, next needed: ${xpNeeded})`);
-        }
-    }
-
-    // === SAVE ONCE AFTER ALL CHARACTERS ARE PROCESSED ===
-    try {
-        await storage.savePlayer(player);
-        console.log("💾 Storage synced successfully after manual XP award.");
-        
-        if (typeof renderCharacterSheets === "function") {
-            renderCharacterSheets();
-        }
-    } catch (error) {
-        console.error("❌ Failed to save player data:", error);
-    }
-}
-
-function calculateLevelUpHP(level, loreInput, expClassKey = null) {
-    let lore = loreInput;
-    if (!lore) {
-        console.warn(`Missing lore for HP calculation at level ${level} for character "${loreInput}"`);
-        return 1; // safe fallback
-    }
-
-    const hpDie = lore.hp_die ?? 6;
-    let hpMod = lore.hp_modifier ?? 0;
-    if (hpMod > 2) hpMod = 2;   // existing cap kept for now
-
-    let roll;
-
-    if (level >= 10) {
-        // Levels 10-20: Single roll (no advantage)
-        roll = Math.ceil(Math.random() * hpDie);
-        console.log(`Level ${level} HP gain: roll(${roll}) + ${hpMod} = ${roll + hpMod} (die=${hpDie})`);
-    } else {
-        // Levels 1-9: Advantage roll (max of two rolls)
-        const roll1 = Math.ceil(Math.random() * hpDie);
-        const roll2 = Math.ceil(Math.random() * hpDie);
-        roll = Math.max(roll1, roll2);
-        console.log(`Level ${level} HP gain: max(${roll1},${roll2}) + ${hpMod} = ${roll + hpMod} (die=${hpDie})`);
-    }
-
-    let gain = roll + hpMod;
-
-    // Minimum 1 HP gain
-    if (gain < 1) {
-        gain = 1;
-    }
-
-    return gain;
-}
-
 
 
 // Now your old code works again!
@@ -556,15 +538,16 @@ async function launchBattle(encounterKey) {
         });
     });
 
-
-
     const missionParty = [];
     const missionLocation = 3; 		// add a map location dict
+	
     // 4. Build Party using Hydration
     for (let key in player.patrons) {
         const patronData = player.patrons[key];
 
         if (patronData.location === missionLocation) {
+
+			const coords = getPCPosition(missionParty.length);
             // Use your specific hydration function for final stats
             const hydrated = getHydratedAdventurer(key); 
 			// 🚫 Skip passive patrons after hydration
@@ -594,8 +577,8 @@ async function launchBattle(encounterKey) {
 				inventory: hydrated.inventory || [],
 				// --------------------------
 				ac: hydrated.AC,
-				x: 1, 
-				y: 2 + missionParty.length,
+				x: coords.x,
+				y: coords.y,
 				speed: hydrated.speed || 6,
 				maxMove: hydrated.speed || 6,
 				hasAction: true,
@@ -627,6 +610,37 @@ async function launchBattle(encounterKey) {
 	}, 0);
 
 }
+
+/**
+ * Determines starting coordinates for a PC token based on their party order.
+ * 
+ * @param {number} index - The current index of the character in the party (0 to 5).
+ * @returns { {x: number, y: number} } Coordinates object
+ */
+function getPCPosition(index) {
+    // 1. Check for custom mission-defined overrides first
+    const missionPositions = player?.missions?.current_mission?.positions;
+    if (missionPositions && missionPositions[index]) {
+        return {
+            x: missionPositions[index].x,
+            y: missionPositions[index].y
+        };
+    }
+
+    // 2. Default sequential grid layout layout
+    const defaultSlots = [
+        { x: 1, y: 4 }, // 1st character (Index 0)
+        { x: 1, y: 5 }, // 2nd character (Index 1)
+        { x: 1, y: 6 }, // 3rd character (Index 2)
+        { x: 0, y: 4 }, // 4th character (Index 3)
+        { x: 0, y: 5 }, // 5th character (Index 4)
+        { x: 0, y: 6 }  // 6th character (Index 5)
+    ];
+
+    // Fallback safety: if party size somehow exceeds 6, stack them or shift down
+    return defaultSlots[index] || { x: 0, y: 7 + (index - 6) };
+}
+
 
 function battleOverlay() {
     let overlay = document.getElementById('battle-overlay');
@@ -661,3 +675,4 @@ function battleOverlay() {
         document.getElementById('battle-frame').src = "battle.html";
     }
 }
+

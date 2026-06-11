@@ -5,6 +5,12 @@
 	  "contractPrice": 100,
       "icon": "assets/patrons/marlnus_s.png",
       "large": "assets/patrons/marlnus_l.png",
+	  "lounge": {
+		  "preferredType": "bar",
+		  "preferredSeat": null,
+		  "avoidTypes": ["quiet"],
+		  "weight": 5
+			},
       "top": "160px",
       "left": "150px",
       "location": 2,
@@ -394,6 +400,44 @@
       "Holy Aura_comment": "party has +1 hit and Save rolls.",
       "notes": "The premium Pay2Win character. Aasibelle may seem as going out of game balance, but she is a token of gratitude from the development team to the player, and she doesn't have to be played at all as she will cost you no upkeep or space in the tavern."
     },
+    "adv_Inferno": {
+      "name": "Inferno",
+	  "contractPrice": 999,
+	  "icon": "assets/patrons/Aasibelle_s2.png",
+      "large": "assets/patrons/Aasibelle_s2.png",
+      "top": "260px",
+      "left": "180px",
+      "location": 1,
+      "race": "Dragonborne",
+      "role": "Eldrich Knight",
+      "hp_die": 10,
+      "hp_modifier": 3,
+      "strengh_mod": 3,
+      "Dexterity_mod": 0,
+      "wisdom_mod": -1,
+      "intelligence_mod": 3,
+      "charisma_mod": 4,
+      "alignment": "Chaotic",
+      "level": 4,
+      "sex": null,
+      "size": "Medium",
+      "caste": "Omni",
+      "RacialEnemy": "",
+      "proficiency_armor": "Heavy",
+      "proficiency_weapon": "Martial",
+	  	"inventory" : [
+		  { "item": "Hairloom Sapphire", "qty": 1, "locked": true },
+		  { "item": null, "qty": 0, "locked": false },
+		  { "item": null, "qty": 0, "locked": false },
+		  { "item": null, "qty": 0, "locked": false }
+		],
+      "traits": [
+        "Intimidation",
+        "Fire Breath",
+        "Eternal"
+      ],
+      "notes": "The premium Pay2Win character. Aasibelle may seem as going out of game balance, but she is a token of gratitude from the development team to the player, and she doesn't have to be played at all as she will cost you no upkeep or space in the tavern."
+    },
     "adv_Hogfather": {
       "name": "Hogfather",
 	  "contractPrice": 100,
@@ -426,6 +470,40 @@
 		],
 	   "traits": [
         "Cheerful"
+      ]
+    },
+    "adv_Balsazar": {
+      "name": "Balsazar",
+	  "contractPrice": 100,
+      "icon": "assets/patrons/hogfather.png",
+      "top": "300px",
+      "left": "120px",
+      "location": 2,
+      "race": "Halforc",
+      "role": "Blackguard",
+      "hp_die": 10,
+      "hp_modifier": 4,
+      "strengh_mod": 3,
+      "Dexterity_mod": -1,
+      "wisdom_mod": 1,
+      "intelligence_mod": -3,
+      "charisma_mod": 1,
+      "alignment": "Evil",
+      "level": 3,
+      "sex": 1,
+      "size": "Medium",
+      "caste": "Noble",
+      "RacialEnemy": "",
+      "proficiency_armor": "Heavy",
+      "proficiency_weapon": "Martial",
+	  	"inventory" : [
+		  { "item": "Grimoire of Patron", "qty": 1, "locked": true },
+		  { "item": null, "qty": 0, "locked": false },
+		  { "item": null, "qty": 0, "locked": false },
+		  { "item": null, "qty": 0, "locked": false }
+		],
+	   "traits": [
+        "Creepy Breather"
       ]
     },
     "adv_Finnick": {
@@ -569,7 +647,7 @@
     },
 	"adv_Crusher": {
       "name": "Crusher",
-	  "contractPrice": 100,
+	  "contractPrice": 250,
       "icon": "/assets/patrons/crusher_s.png",
       "large": "/assets/patrons/crusher_l.png",
       "top": "400px",

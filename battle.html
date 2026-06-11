@@ -16,7 +16,7 @@
     #end-turn-btn { width: 45px; background: #d35400; color: white; font-weight: bold; writing-mode: vertical-lr; text-orientation: upright; border: none; border-radius: 4px; flex-shrink: 0; cursor: pointer; display: flex; align-items: center; justify-content: center; letter-spacing: 2px; font-size: 0.8rem; }
     .token { width: 46px; height: 46px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; position: absolute; z-index: 3; transition: 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28); pointer-events: none; box-shadow: 0 4px 10px rgba(0,0,0,0.5); font-size: 14px; color: white; border: 2px solid white; background-size: cover; background-position: center; }
     .active-ring { position: absolute; width: 50px; height: 50px; border: 3px solid #f1c40f; border-radius: 50%; transition: 0.3s; pointer-events: none; z-index: 2; box-shadow: 0 0 15px #f1c40f; }
-    .grid-overlay { position: absolute; width: 100%; height: 100%; background-image: linear-gradient(rgba(255,255,255,0.35) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px); background-size: 54px 54px; pointer-events: none; z-index: 10; }
+    .grid-overlay { position: absolute; width: 100%; height: 100%; background-image: linear-gradient(rgba(255,255,255,0.35) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.35) 1px, transparent 1px); background-size: 54px 54px; pointer-events: none; z-index: 10; }
     .cell { width: 54px; height: 54px; float: left; z-index: 1; position: relative; cursor: pointer; }
 	.cell.obstacle {     background-color: rgba(0,0,0,0.6); }
     .btn-move-active { background-color: #27ae60 !important; border: 2px solid white !important; }
@@ -113,7 +113,8 @@ const STRDEX_TABLE = {
 
 const firstPCIndex = units.findIndex(u => u.type === "pc");
 
-function init() {
+// Change init to an async function so it can fetch files
+async function init() {
 
     const savedData = localStorage.getItem('currentBattle');
     if (!savedData) return Bus.emit('LOG', "ERR: No battle data found!");
@@ -124,15 +125,38 @@ function init() {
     window.MONSTER_DB = data.monsterDB;
 
     const grid = document.getElementById('grid');
-    staticObstacles = data.obstacles || [];
-    
-    const mapUrls = {
-        "green_1": "assets/missions/combat_green_1.png",
-        "default": "assets/missions/combat_green_1.png"
-    };
 
-    const bgUrl = mapUrls[data.missionId] || mapUrls["default"];
-    grid.style.backgroundImage = `url('${bgUrl}')`;
+    try {
+        // 1. Direct fetch bypassing any file hierarchy. 
+        // Replace 'battle.json' with your actual relative path (e.g., 'data/battle.json')
+        const response = await fetch('battle.json'); 
+        if (!response.ok) throw new Error("Could not fetch battle.json");
+        const battleConfig = await response.json();
+
+        // 2. Identify the active key (Fallback to missionId since encounterKey was undefined)
+        const activeKey = data.encounterKey || data.missionId;
+        
+        // 3. Resolve the map name through the encounters configuration
+        const encounter = battleConfig.encounters ? battleConfig.encounters[activeKey] : null;
+        const mapName = encounter ? encounter.map : activeKey;
+        
+        // 4. Retrieve the map object from the parsed JSON
+        const currentMap = battleConfig.maps ? battleConfig.maps[mapName] : null;
+
+        // 5. Apply the background URL dynamically
+        const defaultUrl = "/assets/battlemaps/green_1.png";
+        const bgUrl = currentMap ? currentMap.url : defaultUrl;
+        grid.style.backgroundImage = `url('${bgUrl}')`;
+
+        // 6. Pull the obstacles array straight from the JSON map object
+        staticObstacles = currentMap ? currentMap.obstacles : [];
+
+    } catch (error) {
+        console.error("Initialization map loading failed:", error);
+        // Secure fallback so the UI renders safely even on error
+        grid.style.backgroundImage = `url('/assets/battlemaps/green_1.png')`;
+        staticObstacles = [];
+    }
 
 	units = [
 		...data.party.map(p => ({
@@ -423,22 +447,35 @@ function applyDamage(target, amount) {
 }
 
 function rollInitiativeForAll() {
-    initiativeOrder = units.map((u, i) => {
-        const dex = u.stats?.dex ?? 0;
-        const roll = Math.floor(Math.random() * 20) + 1;
-        return {
-            index: i,
-            name: u.name,
-            initiative: roll + dex
-        };
+    // ⭐ FIX 1: Filter out dead units (hp <= 0) before building the initiative tracking array
+    initiativeOrder = units
+        .map((u, i) => {
+            const dex = u.stats?.dex ?? 0;
+            const roll = Math.floor(Math.random() * 20) + 1;
+            return {
+                index: i,
+                name: u.name,
+                hp: u.hp, // Keep track of HP for filtering
+                initiative: roll + dex
+            };
+        })
+        .filter(o => o.hp > 0); // 💀 Remove dead monsters and PCs from initiative entirely
+
+    // Sort living combatants from highest to lowest initiative
+    initiativeOrder.sort((a, b) => b.initiative - a.initiative);
+
+    // ⭐ FIX 2: Reset actions and speed ONLY for living units
+    units.forEach(u => {
+        if (u.hp > 0) {
+            u.hasAction = true;
+            u.speed = u.maxSpeed ?? 6;
+        } else {
+            // Keep dead units clean
+            u.hasAction = false;
+            u.speed = 0;
+        }
     });
 
-    initiativeOrder.sort((a, b) => b.initiative - a.initiative);
-    // ⭐ Reset ALL units for the new round
-    units.forEach(u => {
-        u.hasAction = true;
-        u.speed = u.maxSpeed ?? 6;
-    });
     Bus.emit("LOG",
         "Initiative → " +
         initiativeOrder.map(o => `${o.name}(${o.initiative})`).join(", ")
@@ -446,6 +483,7 @@ function rollInitiativeForAll() {
 
     turnIndex = 0;
 }
+
 
 
 
@@ -720,7 +758,7 @@ function handleRage(u) {
     // ⭐ Temp HP = 5x + 5 (x = level)
 	console.log(u, "level", u.level)
     const lvl = u.level || 1;
-    u.tempHp = (5 * lvl) + 5;
+    u.tempHp = (10 * Math.floor(lvl / 2)) + 5;
 
     Bus.emit('LOG', `💢 A Primal Spirit of Might imbues in ${u.name}`);
 

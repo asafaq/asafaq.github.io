@@ -526,6 +526,20 @@ mission_dwood_1: () => `
 	
 	` : ""}
 	
+    ${player?.missions?.dwood_1 === 5 && player?.missions?.dwood_fort1 === 3 ? `
+	
+	    <!-- display the fire in front of the fort -->
+    <div id="dwood_fire"
+		 class="poi ${
+			 (player?.missions?.dwood_fort1 === 0 ||
+			 player?.missions?.dwood_1 === 2) ? 'mapLight' : ''}"
+         data-node="dwood_fire"
+         style="position:absolute; top:150px; left:290px; transform:scale(0.75); z-index:10;">
+         <img src="/assets/missions/forest_fire.png">
+    </div>
+	
+	` : ""}
+	
     ${player?.missions?.dwood_1 > 1 ? `
     <!-- POI: Glade -->
     <div id="dwood_glade"

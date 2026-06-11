@@ -12,7 +12,8 @@ const missionRules = {
         minMembers: 3,
         maxMembers: 6,
         //requiresRole: "Adv",
-        requiresTrait: null
+        requiresTrait: null,
+		requiresMemberName: "Hogperson"
     },
 
     espionage: {
@@ -416,14 +417,48 @@ function ruleRequiredTrait(members, rules) {
     return true;
 }
 
+// Rule 1: Verifies a member is present by name if required by the mission rules
+function ruleRequiredMember(members, rules) {
+    if (!rules.requiresMemberName) return true;
+
+    // Safe check ensuring m exists and has a name property
+    const hasMember = members.some(m => m && m.name === rules.requiresMemberName);
+    if (!hasMember) {
+        return `This mission requires ${rules.requiresMemberName} to be present.`;
+    }
+
+    return true;
+}
+
+// Rule 2: Globally restricts "Crusher" from all missions except one unique adventure
+function ruleGlobalRestrictedMember(members, rules) {
+    const RESTRICTED_NAME = "Crusher";
+    const EXCEPTION_MISSION_ID = "Crusher's Day Off"; // Replace with your actual exception ID
+
+    const hasRestricted = members.some(m => m && m.name === RESTRICTED_NAME);
+    const currentMissionId = player.missions.current_mission.id;
+
+    // If Crusher is in the party, and it's NOT the allowed unique adventure
+    if (hasRestricted && currentMissionId !== EXCEPTION_MISSION_ID) {
+        return `${RESTRICTED_NAME} cannot go out on missions.`;
+    }
+
+    return true;
+}
+
+
+
 const validationRules = [
     ruleMinMembers,
     ruleMaxMembers,
     ruleRequiredRole,
     ruleRequiredTrait,
     ruleCasteCompatibility,
-    ruleAlignmentCompatibility
+    ruleAlignmentCompatibility,
+    ruleRequiredMember,
+    ruleGlobalRestrictedMember
 ];
+
 
 function validateParty(partyKey) {
     const errors = validatePartyAllErrors(partyKey);

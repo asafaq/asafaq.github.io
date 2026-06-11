@@ -25,7 +25,41 @@
           "spawns": [
             { "x": 8, "y": 4 },
             { "x": 6, "y": 4 },
+            { "x": 5, "y": 4 },
+            { "x": 6, "y": 6 }
+          ]
+        }
+      ]
+    },
+
+    "tutor_test12": {
+      "name": "Training Bushes",
+      "map": "green_2",
+      "monsters": [
+        {
+          "id": "animated_bush",
+          "count": 4,
+          "spawns": [
             { "x": 8, "y": 4 },
+            { "x": 6, "y": 4 },
+            { "x": 4, "y": 4 },
+            { "x": 6, "y": 6 }
+          ]
+        }
+      ]
+    },
+
+    "tutor_test13": {
+      "name": "Training Bushes",
+      "map": "forest",
+      "monsters": [
+        {
+          "id": "animated_bush",
+          "count": 4,
+          "spawns": [
+            { "x": 8, "y": 4 },
+            { "x": 6, "y": 4 },
+            { "x": 7, "y": 4 },
             { "x": 6, "y": 6 }
           ]
         }
@@ -61,10 +95,84 @@
         }
       ]
     },
-	
-	"forest_mix_test": {
+
+	"forest_mix1": {
 	  "name": "Forest Ambush",
-	  "map": "green_1",
+	  "map": "forest",
+	  "monsters": [
+		{
+		  "id": "animated_bush",
+		  "count": 2,
+		  "spawns": [
+			{ "x": 8, "y": 4 },
+			{ "x": 8, "y": 6 }
+		  ]
+		},
+		{
+		  "id": "large_toad",
+		  "count": 2,
+		  "spawns": [
+			{ "x": 6, "y": 3 },
+			{ "x": 7, "y": 2 }
+		  ]
+		},
+		{
+		  "id": "large_centipede",
+		  "count": 1,
+		  "spawns": [
+			{ "x": 6, "y": 6 }
+		  ]
+		},
+		{
+		  "id": "Oogler",
+		  "count": 1,
+		  "spawns": [
+			{ "x": 9, "y": 4 }
+		  ]
+		}
+	  ]
+	},
+
+	"forest_mix2": {
+	  "name": "Forest Ambush",
+	  "map": "forest_temple2",
+	  "monsters": [
+		{
+		  "id": "animated_bush",
+		  "count": 2,
+		  "spawns": [
+			{ "x": 8, "y": 4 },
+			{ "x": 8, "y": 6 }
+		  ]
+		},
+		{
+		  "id": "large_toad",
+		  "count": 2,
+		  "spawns": [
+			{ "x": 6, "y": 3 },
+			{ "x": 7, "y": 2 }
+		  ]
+		},
+		{
+		  "id": "large_centipede",
+		  "count": 1,
+		  "spawns": [
+			{ "x": 5, "y": 5 }
+		  ]
+		},
+		{
+		  "id": "Oogler",
+		  "count": 1,
+		  "spawns": [
+			{ "x": 9, "y": 4 }
+		  ]
+		}
+	  ]
+	},
+
+	"forest_temple": {
+	  "name": "Temple Ambush",
+	  "map": "forest_temple",
 	  "monsters": [
 		{
 		  "id": "animated_bush",
@@ -160,12 +268,150 @@
 		"attackMod": 2,
 		"damageDie": 4,
 		"damageBonus": 1
+    },
+
+    "thief fly": {
+      "name": "Thief Fly",
+      "type": "monster",
+      "hp": 7,
+      "maxHp": 7,
+      "speed": 7,
+	  "xp": 20,
+      "icon": "/assets/monsters/fly1.png",
+      "color": "#c0392b",
+		"ac": 12,
+		"attackMod": 1,
+		"damageDie": 4,
+		"damageBonus": 0
+    },
+
+    "goblin1": {
+      "name": "Goblin Brute",
+      "type": "monster",
+      "hp": 7,
+      "maxHp": 7,
+      "speed": 7,
+	  "xp": 20,
+      "icon": "/assets/monsters/goblin1.png",
+      "color": "#c0392b",
+		"ac": 12,
+		"attackMod": 1,
+		"damageDie": 4,
+		"damageBonus": 0
+    },
+
+    "goblin2": {
+      "name": "Goblin Annoyer",
+      "type": "monster",
+      "hp": 9,
+      "maxHp": 9,
+      "speed": 7,
+	  "xp": 20,
+      "icon": "/assets/monsters/goblin2.png",
+      "color": "#c0392b",
+		"ac": 12,
+		"attackMod": 1,
+		"damageDie": 4,
+		"damageBonus": 0
+    },
+
+    "goblin3": {
+      "name": "Goblin Pester",
+      "type": "monster",
+      "hp": 5,
+      "maxHp": 7,
+      "speed": 7,
+	  "xp": 20,
+      "icon": "/assets/monsters/goblin3.png",
+      "color": "#c0392b",
+		"ac": 12,
+		"attackMod": 2,
+		"damageDie": 4,
+		"damageBonus": 0
+    },
+
+    "goblin4": {
+      "name": "Goblin Savage",
+      "type": "monster",
+      "hp": 11,
+      "maxHp": 11,
+      "speed": 7,
+	  "xp": 20,
+      "icon": "/assets/monsters/goblin4.png",
+      "color": "#c0392b",
+		"ac": 12,
+		"attackMod": 0,
+		"damageDie": 4,
+		"damageBonus": 1
+    },
+
+    "goblin5": {
+      "name": "Goblin Captain",
+      "type": "monster",
+      "hp": 14,
+      "maxHp": 14,
+      "speed": 7,
+	  "xp": 35,
+      "icon": "/assets/monsters/goblin5.png",
+      "color": "#c0392b",
+		"ac": 12,
+		"attackMod": 2,
+		"damageDie": 4,
+		"damageBonus": 1,
+	  "silver": 8
+    },
+
+    "brigan1": {
+      "name": "Brigan Darer",
+      "type": "monster",
+      "hp": 10,
+      "maxHp": 10,
+      "speed": 5,
+	  "xp": 25,
+      "icon": "/assets/monsters/brigan1.png",
+      "color": "#c0392b",
+		"ac": 12,
+		"attackMod": 1,
+		"damageDie": 4,
+		"damageBonus": 1,
+	  "silver": 8
+    },
+
+    "brigan2": {
+      "name": "Brigan Liar",
+      "type": "monster",
+      "hp": 14,
+      "maxHp": 14,
+      "speed": 5,
+	  "xp": 35,
+      "icon": "/assets/monsters/brigan2.png",
+      "color": "#c0392b",
+		"ac": 14,
+		"attackMod": -1,
+		"damageDie": 4,
+		"damageBonus": 1,
+	  "silver": 8
+    },
+
+    "zombie1": {
+      "name": "Rotting Zombie",
+      "type": "monster",
+      "hp": 34,
+      "maxHp": 34,
+      "speed": 5,
+	  "xp": 35,
+      "icon": "/assets/monsters/zombie1.png",
+      "color": "#c0392b",
+		"ac": 7,
+		"attackMod": -3,
+		"damageDie": 4,
+		"damageBonus": 2
     }
   },
 
   "maps": {
     "green_1": {
-      "url": "/assets/mission/combat_green_1.png",
+      "url": "/assets/battlemaps/green_1.png",
       "obstacles": [
         { "x": 3, "y": 7 },
         { "x": 0, "y": 0 },
@@ -177,11 +423,70 @@
     },
 
     "green_2": {
-      "url": "/assets/mission/combat_green_1.png",
+      "url": "/assets/battlemaps/green_12.png",
+      "obstacles": []
+    },
+
+    "forest": {
+      "url": "/assets/battlemaps/forest.png",
       "obstacles": [
-        { "x": 4, "y": 4 },
-        { "x": 4, "y": 5 },
-        { "x": 5, "y": 4 }
+        { "x": 0, "y": 0 },
+        { "x": 0, "y": 1 },
+        { "x": 1, "y": 0 },
+        { "x": 1, "y": 1 },
+        { "x": 2, "y": 0 },
+        { "x": 2, "y": 1 },
+        { "x": 0, "y": 2 },
+        { "x": 2, "y": 8 },
+        { "x": 1, "y": 7 },
+        { "x": 1, "y": 8 },
+        { "x": 7, "y": 7 },
+        { "x": 0, "y": 6 },
+        { "x": 0, "y": 7 },
+        { "x": 8, "y": 7 },
+        { "x": 8, "y": 8 },
+        { "x": 9, "y": 8 },
+        { "x": 9, "y": 9 },
+        { "x": 7, "y": 8 },
+        { "x": 7, "y": 9 }
+      ]
+    },
+
+    "forest_temple": {
+      "url": "/assets/battlemaps/forest_temple.png",
+      "obstacles": [
+        { "x": 1, "y": 2 },
+        { "x": 1, "y": 3 },
+        { "x": 0, "y": 9 },
+        { "x": 1, "y": 9 },
+        { "x": 2, "y": 9 },
+        { "x": 3, "y": 9 },
+        { "x": 4, "y": 9 },
+        { "x": 7, "y": 9 },
+        { "x": 8, "y": 9 },
+        { "x": 9, "y": 9 },
+        { "x": 8, "y": 5 },
+        { "x": 9, "y": 5 },
+        { "x": 8, "y": 0 }
+      ]
+    },
+
+    "forest_temple2": {
+      "url": "/assets/battlemaps/forest_temple2.png",
+      "obstacles": [
+        { "x": 0, "y": 0 },
+        { "x": 1, "y": 0 },
+        { "x": 2, "y": 0 },
+        { "x": 3, "y": 0 },
+        { "x": 7, "y": 0 },
+        { "x": 8, "y": 0 },
+        { "x": 9, "y": 0 },
+        { "x": 1, "y": 7 },
+        { "x": 2, "y": 7 },
+        { "x": 3, "y": 9 },
+        { "x": 7, "y": 9 },
+        { "x": 7, "y": 5 },
+        { "x": 8, "y": 5 }
       ]
     }
   }
