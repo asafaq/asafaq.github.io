@@ -851,7 +851,7 @@ img:not([src]) {
 
 /* === POPUP WINDOW === */
 .infoPopupPatron {
-  width: 400px;
+  width: 460px;
   max-width: 95vw;
   background: #d2b48c;              /* mocha / tan */
   border: 2px solid #5a4633;        /* darker mocha border */
@@ -859,7 +859,7 @@ img:not([src]) {
   box-shadow: 0 8px 20px rgba(0,0,0,0.4);
   overflow: hidden;
   animation: popupFade 0.15s ease-out;
-  z-index: 30;
+  z-index: 42;
 }
 
 /* Applicant mode slightly larger if you want */

@@ -70,6 +70,7 @@ function queueStatus(messages, interval = 4000) {
 
 const DEFAULT_STATUS = "Ready.";
 
+//this pushStatus replaces Alert, it shows in the top status line.
 function pushStatus(message, duration = 5000) {
     const bar = document.querySelector(".status-bar");
     const textEl = bar?.querySelector(".status-bar-text");
@@ -961,8 +962,10 @@ main.innerHTML = typeof pages[page] === "function"
     : pages[page] || "<p>Unknown page</p>";
 
   if (page === "guild") {
-  patronList = getVisiblePatrons();
-  console.log(patronList);
+	patronList = getVisiblePatrons().map(p => getHydratedAdventurer(p.id));
+
+	  // RESET ALL SEATS BEFORE PLACING ANYONE
+	guildSlots.forEach(slot => slot.occupied = false);
 
   const container = document.getElementById("patron-container");
 
@@ -970,10 +973,10 @@ main.innerHTML = typeof pages[page] === "function"
     .filter(patron => patron.location === 1)
     .map(patron => {
       const large = patron.large || patron.icon || "/assets/patrons/default.png";
-
+	  const slot = findBestGuildSlot(patron);
       return `
         <div class="patron-wrapper" 
-             style="position: absolute; top: ${patron.top}; left: ${patron.left};">
+             style="position: absolute; top: ${slot.y}px; left: ${slot.x}px;">
           <img src="${patron.icon}" class="item-icon">
           <div class="hover-zone"
                data-id="${patron.id}"
@@ -998,33 +1001,63 @@ main.innerHTML = typeof pages[page] === "function"
   initPatronClicks();
 }
 
-  if (page === "tavern") {
-    patronList = getVisiblePatrons();
-	console.log(patronList);
-	const container = document.getElementById("patron-container");
 
-	container.innerHTML = patronList
-	  .filter(patron => patron.location === 2)
-	  .map(patron => {
-		const large = patron.large || "/assets/patrons/default.png";
+	if (page === "tavern") {
+  patronList = getVisiblePatrons().map(p => getHydratedAdventurer(p.id))
+	  const container = document.getElementById("patron-container");
+	  // RESET ALL SEATS BEFORE PLACING ANYONE
+	  tavernSlots.forEach(slot => slot.occupied = false);
+	  container.innerHTML = patronList
+		.filter(p => p.location === 2)
+		.map(patron => {
+		  const slot = findBestSlot(patron);
 
-		return `
-		  <div class="patron-wrapper" 
-			   style="position: absolute; top: ${patron.top}; left: ${patron.left};">
-			<img src="${patron.icon}" class="item-icon">
-			<div class="hover-zone"
-				 data-id="${patron.id}"
-				 data-large="${patron.large || patron.icon || 'assets/patrons/default.png'}">
+		  return `
+			<div class="patron-wrapper"
+				 style="position:absolute; top:${slot.y}px; left:${slot.x}px;">
+			  <img src="${patron.icon}" class="item-icon">
+			  <div class="hover-zone"
+				   data-id="${patron.id}"
+				   data-large="${patron.large || patron.icon}">
+			  </div>
+			  <div class="tooltip"></div>
 			</div>
-			<div class="tooltip"></div>
-		  </div>
-		`;
-	  })
-	  .join('');
+		  `;
+		})
+		.join('');
 
-		initPatronClicks();
-		displayRightMenu();
-  }
+	  initPatronClicks();
+	  displayRightMenu();
+	}
+
+
+  // if (page === "tavern") {
+    // patronList = getVisiblePatrons();
+	// console.log(patronList);
+	// const container = document.getElementById("patron-container");
+
+	// container.innerHTML = patronList
+	  // .filter(patron => patron.location === 2)
+	  // .map(patron => {
+		// const large = patron.large || "/assets/patrons/default.png";
+
+		// return `
+		  // <div class="patron-wrapper" 
+			   // style="position: absolute; top: ${patron.top}; left: ${patron.left};">
+			// <img src="${patron.icon}" class="item-icon">
+			// <div class="hover-zone"
+				 // data-id="${patron.id}"
+				 // data-large="${patron.large || patron.icon || 'assets/patrons/default.png'}">
+			// </div>
+			// <div class="tooltip"></div>
+		  // </div>
+		// `;
+	  // })
+	  // .join('');
+
+		// initPatronClicks();
+		// displayRightMenu();
+  // }
  
   if (page === "contracts") {
 	initContractsPage();
@@ -2316,8 +2349,11 @@ document.addEventListener("click", function (e) {
 
 
 
+
 // Re-attach listeners if new dropzones appear
 const dragObserver = new MutationObserver(() => {
     enablePatronDragDrop();
 });
 dragObserver.observe(document.body, { childList: true, subtree: true });
+
+

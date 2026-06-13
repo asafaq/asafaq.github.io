@@ -523,7 +523,7 @@ async function handleMissionEnd(sceneId) {
         "green2_240a_end": async () => {
             player.missions.green_2 = 3;
             recruitAdventurer("adv_Hogmother");
-			awardManualXP("Hogmother", 2000);
+			//awardManualXP("Hogmother", 2000);
             player.patrons.adv_Hogmother.location = 3;
             player.patrons.adv_Hogmother.status = "mission";
 			
@@ -543,12 +543,12 @@ async function handleMissionEnd(sceneId) {
             player.missions.current_mission.locked_mission = "green_3";
             player.missions.current_mission.page = "mission_green_3";
             recruitAdventurer("adv_Lurch");
-			awardManualXP("Lurch", 2000);
+			//awardManualXP("Lurch", 2000);
             player.patrons.adv_Lurch.location = 9;
             player.patrons.adv_Lurch.status = "secret";
 			
             recruitAdventurer("adv_Hogmother");
-			awardManualXP("Hogmother", 2000);
+			//awardManualXP("Hogmother", 2000);
             player.patrons.adv_Hogmother.location = 3;
             player.patrons.adv_Hogmother.status = "mission";
             
@@ -578,7 +578,6 @@ async function handleMissionEnd(sceneId) {
             player.patrons.adv_Awetruce.status = "mission";
             recruitAdventurer("adv_Finnick");
 			
-			awardManualXP("Finnick", 1000);
             player.patrons.adv_Finnick.location = 3;
             player.patrons.adv_Finnick.status = "mission";
             

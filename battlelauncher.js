@@ -18,7 +18,7 @@ window.addEventListener("message", async (event) => {
                     const patron = player.patrons[key];
                     patron.currentHP = pc.hp;
                     
-                    if (pc.hp <= 0) patron.status = 'injured';
+                    //if (pc.hp <= 0) patron.status = 'injured';
 
                     if (typeof patron.Exp === 'undefined') patron.Exp = 0;
                     if (!patron.Level) patron.Level = 1;
@@ -187,6 +187,10 @@ function calculateLevelUpHP(level, loreInput, expClassKey = null) {
         gain = 1;
     }
 
+    // Extract name or fallback to 'The character' if property is missing
+    const characterName = lore.name ?? "The character";
+    pushStatus(`${characterName} has gained level ${level} and gained ${gain} HP`);
+
     return gain;
 }
 
@@ -203,7 +207,7 @@ const Bus = window.parent.Bus;
 
 // Global Registry mapping every class/role to its behavior rules
 const CLASS_REGISTRY = {
-    // --- ⚔️ WARRIORS (+3 HP after level 9) ---
+    // --- ⚔️ WARRIORS  ---
     warrior:    { table: "warrior",   hpStyle: "warrior" },
     paladin:    { table: "warrior",   hpStyle: "warrior" },
     "fallen paladin":    { table: "warrior",   hpstyle: "warrior" },
@@ -216,7 +220,7 @@ const CLASS_REGISTRY = {
     deputy:     { table: "warrior",   hpStyle: "warrior" },
     "sword saint":     { table: "warrior",   hpstyle: "warrior" },
 
-    // --- 🔮 PRIESTS / UTILITY (+2 HP after level 9) ---
+    // --- 🔮 PRIESTS / UTILITY  ---
     priest:     { table: "priest",    hpStyle: "priest" },
     shaman:     { table: "priest",    hpStyle: "priest" },
     druid:      { table: "priest",    hpStyle: "priest" },
@@ -227,12 +231,12 @@ const CLASS_REGISTRY = {
     spy:    	{ table: "priest",    hpStyle: "priest" },
     carriagefarer:    	{ table: "mage",    hpstyle: "mage" },
 
-    // --- 🧙 MAGES (+1 HP after level 9 ) ---
+    // --- 🧙 MAGES  ---
     mage:       { table: "mage",      hpStyle: "mage" },
     wizard:     { table: "mage",      hpStyle: "mage" },
     sorcerer:   { table: "mage",      hpStyle: "mage" },
 
-    // --- 🗡️ THIEVES (+1 HP after level 9) ---
+    // --- 🗡️ THIEVES  ---
     thief:      { table: "thief",     hpStyle: "thief" },
     miner:      { table: "thief",     hpStyle: "thief" },
     "arcane trickster":      { table: "swordmage",     hpStyle: "thief" },
@@ -540,55 +544,77 @@ async function launchBattle(encounterKey) {
 
     const missionParty = [];
     const missionLocation = 3; 		// add a map location dict
-	
+
     // 4. Build Party using Hydration
-    for (let key in player.patrons) {
-        const patronData = player.patrons[key];
+	let eligible = [];
 
-        if (patronData.location === missionLocation) {
+	for (let key in player.patrons) {
+		const patronData = player.patrons[key];
 
-			const coords = getPCPosition(missionParty.length);
-            // Use your specific hydration function for final stats
-            const hydrated = getHydratedAdventurer(key); 
-			// 🚫 Skip passive patrons after hydration
+		if (patronData.location === missionLocation) {
+			const hydrated = getHydratedAdventurer(key);
+
 			if (hydrated.passive === true) {
 				console.log(`Skipping passive patron: ${hydrated.name}`);
 				continue;
 			}
-			missionParty.push({
-				name: hydrated.name,
-				type: 'pc',
-				icon: hydrated.icon,
-				hp: hydrated.currentHP,
-				maxHp: hydrated.MaxHP,
-				// --- NEW DATA INJECTION ---
-				race: hydrated.race,
-				role: hydrated.role,
-				level: hydrated.Level,
-				// Full Stats
-				stats: {
-					str: hydrated.strengh_mod,
-					dex: hydrated.Dexterity_mod,
-					wis: hydrated.wisdom_mod,
-					int: hydrated.intelligence_mod,
-					cha: hydrated.charisma_mod
-				},
-				traits: hydrated.trait || [],
-				inventory: hydrated.inventory || [],
-				// --------------------------
-				ac: hydrated.AC,
-				x: coords.x,
-				y: coords.y,
-				speed: hydrated.speed || 6,
-				maxMove: hydrated.speed || 6,
-				hasAction: true,
-				
-				hitBonus: 0,
-				damageBonus: 0,
-				isSinging: false,
-			});
-        }
-    }
+			if (hydrated.currentHP === 0) {
+				console.log(`Skipping currentHP === 0 patron: ${hydrated.name}`);
+				continue;
+			}
+
+			eligible.push(hydrated);
+		}
+	}
+
+	// ⭐ Sort PCs by HP (highest first)
+	eligible.sort((a, b) => b.currentHP - a.currentHP);
+
+	// ⭐ Assign map positions AFTER sorting
+	eligible.forEach((hydrated, index) => {
+		const coords = getPCPosition(index);
+
+		missionParty.push({
+			name: hydrated.name,
+			type: 'pc',
+			icon: hydrated.icon,
+			hp: hydrated.currentHP,
+			maxHp: hydrated.MaxHP,
+
+			race: hydrated.race,
+			role: hydrated.role,
+			level: hydrated.Level,
+
+			stats: {
+				str: hydrated.strengh_mod,
+				dex: hydrated.Dexterity_mod,
+				wis: hydrated.wisdom_mod,
+				int: hydrated.intelligence_mod,
+				cha: hydrated.charisma_mod
+			},
+
+			traits: hydrated.trait || [],
+			inventory: hydrated.inventory || [],
+
+			ac: hydrated.AC,
+			x: coords.x,
+			y: coords.y,
+
+			speed: hydrated.speed || 6,
+			maxMove: hydrated.speed || 6,
+			hasAction: true,
+
+			hitBonus: 0,
+			damageBonus: 0,
+			isSinging: false,
+		});
+	});
+
+	
+	if (missionParty.length === 0) {
+		pushStatus("No available adventurers for this mission.");
+		return;
+	}
 
 	const payload = {
 		party: missionParty,      // your PCs

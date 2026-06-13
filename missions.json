@@ -44,6 +44,56 @@
     "options": []
   },
   {
+    "id": "Crusher1",
+    "speaker": "Guild Master",
+    "portrait": "/assets/guild/guild_master.png",
+    "side": "left",
+    "dialog": ".......",
+    "interaction_type": "next",
+    "target_id": "crusher2",
+    "options": []
+  },
+  {
+    "id": "crusher2",
+    "speaker": "Crusher",
+    "portrait": "/assets/patrons/crusher_l.png",
+    "side": "right",
+    "dialog": "..........................\n..........................\n\nWhadayawant ..... ?",
+    "interaction_type": "next",
+    "target_id": "crusher3",
+    "options": []
+  },
+  {
+    "id": "crusher3",
+    "speaker": "Guild Master",
+    "portrait": "/assets/guild/guild_master.png",
+    "side": "left",
+    "dialog": "....... What would you say you do here?",
+    "interaction_type": "next",
+    "target_id": "crusher4",
+    "options": []
+  },
+  {
+    "id": "crusher4",
+    "speaker": "Crusher",
+    "portrait": "/assets/patrons/crusher_l.png",
+    "side": "right",
+    "dialog": "Monitoring the situation.",
+    "interaction_type": "next",
+    "target_id": "crusherend",
+    "options": []
+  },
+  {
+    "id": "crusherend",
+    "speaker": "Crusher",
+    "portrait": "/assets/patrons/crusher_l.png",
+    "side": "right",
+    "dialog": "",
+    "interaction_type": "next",
+    "target_id": "END",
+    "options": []
+  },
+  {
     "id": "tutor1_101",
     "speaker": "Tutorial Narrator",
     "portrait": "",
@@ -1614,7 +1664,7 @@
     "speaker": "Hogmother",
     "portrait": "/assets/patrons/hogmother.png",
     "side": "left",
-    "dialog": "Well this is very suddon, but, Master Lurch, we are in a predicament and are willing to hear you out.",
+    "dialog": "Well this is very sudden, but, Master Lurch, we are in a predicament and are willing to hear you out.",
     "interaction_type": "next",
     "target_id": "green2_226"
   },
@@ -3165,7 +3215,7 @@
     "speaker": "Hogmother",
     "portrait": "/assets/patrons/hogmother.png",
     "side": "left",
-    "dialog": "Let us swear an auth, upon this altar. If anything goes wrong, we'll never abandon Finnick, or Claudio, or Amyssa.",
+    "dialog": "Let us swear an oath, upon this altar. If anything goes wrong, we'll never abandon Finnick, or Claudio, or Amyssa.",
     "interaction_type": "next",
     "target_id": "dwood1_310"
   },
@@ -3173,7 +3223,7 @@
     "id": "dwood1_310",
     "speaker": "Narrator",
     "portrait": "",
-    "dialog": "The party finishes their planing and heads out towards that dreaded swamp.",
+    "dialog": "The party finishes their planning and heads out towards that dreaded swamp.",
     "side": "right",
     "interaction_type": "next",
     "target_id": "dwood1_310end"
@@ -4050,7 +4100,7 @@
     "id": "dwoodfort3_106",
     "speaker": "Awotruce",
     "portrait": "/assets/patrons/direwolf.png",
-    "dialog": "AAAAAAAAAWWWWWWWWWWWWWWWWWWOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO.....",
+    "dialog": "AAAAAAAAAWWWWWWWWOOOOOOOOOO.....",
     "side": "right",
     "interaction_type": "next",
     "target_id": "dwoodfort3_107"
@@ -4104,7 +4154,7 @@
     "id": "dwoodfort3_112",
     "speaker": "Awotruce",
     "portrait": "/assets/missions/awetruce_delayeddeath.png",
-    "dialog": "AAAAAAAAAWWWWWWWWWWWWWWWWWWOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO.....",
+    "dialog": "AAAAAAAAAWWWWWWWWOOOOOOOOOO.....",
     "side": "right",
     "interaction_type": "next",
     "target_id": "dwoodfort3_113"
@@ -4195,7 +4245,7 @@
     "speaker": "Hogmother",
     "portrait": "/assets/patrons/hogmother.png",
     "side": "left",
-    "dialog": "I pray this offering pleases you godess, though it was heavy and suddon on all of us, only one had to pay the ultimate price. We will leave your forest now, fare thee well benelovent one.",
+    "dialog": "I pray this offering pleases you godess, though it was heavy and sudden on all of us, only one had to pay the ultimate price. We will leave your forest now, fare thee well benelovent one.",
     "interaction_type": "next",
     "target_id": "dwoodfort3_123"
   },

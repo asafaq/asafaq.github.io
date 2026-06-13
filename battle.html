@@ -103,7 +103,7 @@ const Bus = {
     emit(event, data) { if(this.events[event]) this.events[event].forEach(cb => cb(data)); }
 };
 
-let staticObstacles = [], units = [], turn = 0, isMoving = false; battleXP = 0; isReactionPhase = false; roundStarted = false; isHealing = false; healerUnit = null; isCastingSpell = false; spellCaster = null; selectedSpell = null; pendingSpells = []; victoryShown = false; isRangedTargeting = false; rangedShooter = null; isMeleeTargeting = false; meleeAttacker = null; isSneakTargeting = false; sneakAttacker = null; initiativeOrder = []; turnIndex = 0;
+let staticObstacles = [], units = [], round = 0, isMoving = false; battleXP = 0; isReactionPhase = false; roundStarted = false; isHealing = false; healerUnit = null; isCastingSpell = false; spellCaster = null; selectedSpell = null; pendingSpells = []; victoryShown = false; isRangedTargeting = false; rangedShooter = null; isMeleeTargeting = false; meleeAttacker = null; isSneakTargeting = false; sneakAttacker = null; initiativeOrder = []; turnIndex = 0;
 
 
 const STRDEX_TABLE = {
@@ -378,7 +378,6 @@ async function init() {
 	if (first.type === 'monster') {
 		setTimeout(monsterAI, 600);
 	}
-	
 	startReactionPhase();
 }
 
@@ -448,6 +447,10 @@ function applyDamage(target, amount) {
 
 function rollInitiativeForAll() {
     // ⭐ FIX 1: Filter out dead units (hp <= 0) before building the initiative tracking array
+	round++;
+	Bus.emit('LOG', `It is combat round ${round}.`);
+	if (round > 2) { monsterMoraleCheck() };
+
     initiativeOrder = units
         .map((u, i) => {
             const dex = u.stats?.dex ?? 0;
@@ -484,6 +487,48 @@ function rollInitiativeForAll() {
     turnIndex = 0;
 }
 
+function monsterMoraleCheck(Unit = "all", Mod = 0) {
+
+    // Build a list of monsters to check
+    let targets = [];
+
+    if (Unit === "all") {
+        targets = units.filter(u => u.type === "monster" && u.hp > 0);
+    } else {
+        // Single unit mode
+        if (Unit.type === "monster" && Unit.hp > 0) {
+            targets = [Unit];
+        } else {
+            return; // invalid target or dead
+        }
+    }
+
+    targets.forEach((u, i) => {
+        const roll = Math.floor(Math.random() * 20) + 1;
+        const modifiedRoll = roll + Mod;
+
+        // Morale failure
+        if (modifiedRoll > u.morale) {
+            Bus.emit("LOG",
+                `${u.name} fails morale! Rolled ${modifiedRoll} > Morale ${u.morale}. It flees!`
+            );
+
+            u.hp = 0;
+            u.hasAction = false;
+
+            // Hide token immediately
+            const idx = units.indexOf(u);
+            const token = document.getElementById(`t-${idx}`);
+            if (token) token.style.display = "none";
+
+        } else {
+            //Bus.emit("LOG", `${u.name} holds! Rolled ${modifiedRoll} ≤ Morale ${u.morale}.`            );
+        }
+    });
+
+    // After morale checks, see if the battle ends
+    checkVictory();
+}
 
 
 
@@ -586,6 +631,12 @@ function update() {
     if (canHeal(active.role) && !active.isRaging) {
         createBtn(bar, "💚 Heal", startHealTargeting);
     }
+	createBtn(bar, "🏳️ Retreat", () => {
+		active.hp = 0;          // mark as downed or escaped
+		active.hasAction = false;
+		Bus.emit('LOG', `${active.name} retreats from battle!`);
+		endTurn();              // immediately end their turn
+	});
 
     checkVictory();
 }
@@ -758,7 +809,7 @@ function handleRage(u) {
     // ⭐ Temp HP = 5x + 5 (x = level)
 	console.log(u, "level", u.level)
     const lvl = u.level || 1;
-    u.tempHp = (10 * Math.floor(lvl / 2)) + 5;
+    u.tempHp = 10 * Math.ceil(lvl / 2);
 
     Bus.emit('LOG', `💢 A Primal Spirit of Might imbues in ${u.name}`);
 
@@ -1344,7 +1395,45 @@ function checkVictory() {
     if (units.length === 0 || !roundStarted) return;
 
     const aliveMonsters = units.filter(u => u.type === 'monster' && u.hp > 0);
+	const alivePCs = units.filter(u => u.type === 'pc' && u.hp > 0);
+	if (units.length === 0) {
+		victoryShown = true;
 
+		showDefeatWindow("No combatants remain.", () => {
+			Bus.emit('LOG', "BATTLE ENDED");
+			localStorage.removeItem('currentBattle');
+
+			if (window.parent) {
+				window.parent.postMessage({
+					type: "BATTLE_COMPLETE",
+					result: [],
+					xp: 0,
+					loot: []
+				}, "*");
+			}
+		});
+
+		return;
+	}
+	if (alivePCs.length === 0) {
+		victoryShown = true;
+
+		showDefeatWindow("Your party has fallen.", () => {
+			Bus.emit('LOG', "DEFEAT");
+			localStorage.removeItem('currentBattle');
+
+			if (window.parent) {
+				window.parent.postMessage({
+					type: "BATTLE_COMPLETE",
+					result: [],
+					xp: 0,
+					loot: []
+				}, "*");
+			}
+		});
+
+		return;
+		}
     if (aliveMonsters.length === 0) {
         victoryShown = true; // Set early to prevent parallel executions
 
@@ -1438,6 +1527,27 @@ function showVictoryWindow(summary, onClose) {
 	};
 
 }
+
+function showDefeatWindow(summary, onClose) {
+    showVictoryWindow(
+        `<strong style="color:#e74c3c;">Defeat</strong><br><br>${summary}`,
+        onClose
+    );
+
+    // Change the title text from "Victory!" to "Defeat"
+    const title = document.querySelector("#victory-window h2");
+    if (title) {
+        title.textContent = "Defeat";
+        title.style.color = "#e74c3c";
+    }
+
+    // Change button color
+    const btn = document.getElementById("victory-close");
+    if (btn) {
+        btn.style.background = "#c0392b";
+    }
+}
+
 
 console.log("MONSTER_DB:", window.MONSTER_DB);
 

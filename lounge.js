@@ -2,7 +2,7 @@
 function renderIdleUI(hydrated, player) {
   const idleDescription = getIdleDescription(hydrated, player);
   const traitReferral = getTraitReferral(hydrated);
-
+  console.log(hydrated);
   return `
     <div class="patron-stats">
       <p><strong>Status:</strong> idle</p>
@@ -12,6 +12,12 @@ function renderIdleUI(hydrated, player) {
       <button id="view-charsheet" class="charsheet-btn">
         View Character Sheet
       </button>
+	  
+	  ${hydrated?.dialog > 0 ? `
+        <button id="dialog-btn" class="dialog-btn">
+          Dialog
+        </button>
+      ` : ""}
     </div>
   `;
 }
@@ -31,6 +37,11 @@ function renderApplicantUI(hydrated, player) {
 	  <button id="view-charsheet" class="charsheet-btn">
         View Character Sheet
       </button>
+	    ${hydrated.dialog > 0 ? `
+          <button id="dialog-btn" class="dialog-btn">
+            Dialog
+          </button>
+        ` : ""}
       </div>
 
       <div class="hire-cost">
@@ -48,28 +59,50 @@ function renderApplicantUI(hydrated, player) {
 }
 
 function idleController(hydrated, container) {
-  const btn = container.querySelector("#view-charsheet");
-  if (!btn) return;
+  const sheetBtn = container.querySelector("#view-charsheet");
+  const dialogBtn = container.querySelector("#dialog-btn");
 
-  btn.addEventListener("click", () => {
-    // Switch to the contracts page
-	container.style.display = "none";
+  // --- Character Sheet Button ---
+  if (sheetBtn) {
+    sheetBtn.addEventListener("click", () => {
+      container.style.display = "none";
 
-    loadPage("contracts");
+      loadPage("contracts");
 
-    // After the page loads, render the correct character
-    setTimeout(() => {
-      const fresh = getHydratedAdventurer(hydrated.id);
-      renderCharSheet(fresh);
-    }, 50);
-  });
+      setTimeout(() => {
+        const fresh = getHydratedAdventurer(hydrated.id);
+        renderCharSheet(fresh);
+      }, 50);
+    });
+  }
+
+  // --- Dialog Button ---
+  if (dialogBtn && hydrated.dialog > 0) {
+    dialogBtn.addEventListener("click", () => {
+	  container.style.display = "none";   // <-- close the window
+      const missionId = hydrated.name + hydrated.dialog;
+      console.log("Dialog clicked:", missionId);
+      startMissionSystem(missionId);
+    });
+  }
 }
+
 
 async function applicantController(hydrated, container) {
   const noBtn = container.querySelector("#hire-no");
   const yesBtn = container.querySelector("#hire-yes");
   const sheetBtn = container.querySelector("#view-charsheet");
+  // --- Dialog Button ---
+  const dialogBtn = container.querySelector("#dialog-btn");
 
+  if (dialogBtn && hydrated.dialog > 0) {
+	  dialogBtn.addEventListener("click", () => {
+		container.style.display = "none";   // <-- close the window
+		const missionId = hydrated.name + hydrated.dialog;
+		console.log("Dialog clicked:", missionId);
+		startMissionSystem(missionId);
+	  });
+	}
   // --- Character Sheet Button ---
   if (sheetBtn) {
     sheetBtn.addEventListener("click", () => {
@@ -226,80 +259,106 @@ const patronStatusControllers = {
 
 
 // code for sorting patron locations in idle zones.
-const MAP_WIDTH = 500;
-const MAP_HEIGHT = 600;
-const CELL_SIZE = 60; // patrons spaced ~80px apart
 
-const grid = [];
-for (let x = 0; x < MAP_WIDTH; x += CELL_SIZE) {
-  for (let y = 0; y < MAP_HEIGHT; y += CELL_SIZE) {
-    grid.push({
-      x,
-      y,
-      occupied: false,
-      priority: 1, // default
-      type: "any"
-    });
-  }
-}
+// ---------------------------------------------
+// TAVERN SEATING SYSTEM (Option A: tavernSlots)
+// ---------------------------------------------
 
-function applyZonePriorities() {
-  grid.forEach(cell => {
-
-    // Bar zone (top-left area)
-    if (cell.x < 250 && cell.y < 200) {
-      cell.priority = 3;
-      cell.type = "bar";
-    }
-
-    // Quiet zone (bottom-right area)
-    if (cell.x > 300 && cell.y > 350) {
-      cell.priority = 2;
-      cell.type = "quiet";
-    }
-
-    // Everything else stays priority 1
-  });
-}
-// patron.preference = "bar" | "quiet" | "any"
-
-const tavernSlots = [
-  { id: "bar1", x: 120, y: 80, priority: 3, type: "bar", occupied: false },
-  { id: "bar2", x: 180, y: 80, priority: 3, type: "bar", occupied: false },
-  { id: "table1a", x: 400, y: 300, priority: 2, type: "table", occupied: false },
-  { id: "table1b", x: 450, y: 300, priority: 2, type: "table", occupied: false },
-  { id: "corner1", x: 700, y: 500, priority: 1, type: "quiet", occupied: false },
+const guildSlots = [
+  { id: "table1a", x: 380, y: 220, priority: 3, type: "table1", occupied: false },
+  { id: "table1b", x: 380, y: 300, priority: 3, type: "table1", occupied: false },
+  { id: "table1c", x: 300, y: 300, priority: 3, type: "table1", occupied: false },
+  { id: "table1d", x: 300, y: 220, priority: 3, type: "table1", occupied: false },
+  { id: "table2a", x: 140, y: 390, priority: 2, type: "table2", occupied: false },
+  { id: "table2b", x: 200, y: 390, priority: 2, type: "table2", occupied: false },
+  { id: "table2c", x: 140, y: 320, priority: 2, type: "table2", occupied: false },
+  { id: "table2d", x: 200, y: 320, priority: 2, type: "table2", occupied: false },
+  { id: "floor1", x: 180, y: 260, priority: 1, type: "floor", occupied: false }
 ];
 
+
+// These are the ONLY seating positions in the tavern.
+const tavernSlots = [
+  { id: "bar1", x: 120, y: 240, priority: 3, type: "bar", occupied: false },
+  { id: "bar2", x: 180, y: 240, priority: 3, type: "bar", occupied: false },
+  { id: "bar3", x: 240, y: 240, priority: 3, type: "bar", occupied: false },
+  { id: "bar4", x: 300, y: 240, priority: 3, type: "bar", occupied: false },
+  { id: "center", x: 310, y: 350, priority: 2, type: "center", occupied: false },
+  { id: "counter1", x: 180, y: 170, priority: 1, type: "counter", occupied: false },
+  { id: "counter2", x: 240, y: 170, priority: 1, type: "counter", occupied: false },
+  { id: "counter3", x: 300, y: 170, priority: 1, type: "counter", occupied: false },
+  { id: "table1a", x: 160, y: 380, priority: 4, type: "table", occupied: false },
+  { id: "table1b", x: 20, y: 380, priority: 4, type: "table", occupied: false },
+  { id: "table1c", x: 50, y: 330, priority: 4, type: "table", occupied: false },
+  { id: "table1d", x: 150, y: 330, priority: 4, type: "table", occupied: false },
+  { id: "table1e", x: 90, y: 420, priority: 4, type: "table", occupied: false },
+  { id: "door", x: 240, y: 380, priority: 2, type: "door", occupied: false },
+  { id: "corner1", x: 400, y: 170, priority: 1, type: "quiet", occupied: false },
+  { id: "corner2", x: 400, y: 370, priority: 1, type: "quiet", occupied: false },
+];
+
+// ---------------------------------------------
+// SCORING LOGIC
+// ---------------------------------------------
 function scoreSlotForPatron(slot, patron) {
-  const lounge = patron.lore?.lounge || {};
-  const prefType = lounge.preferredType || "any";
-  const prefSeat = lounge.preferredSeat || null;
-  const avoid = lounge.avoidTypes || [];
-  const weight = lounge.weight || 3;
+
+  const lounge = patron.lounge || {
+    preferredType: "any",
+    preferredSeat: null,
+    avoidTypes: [],
+    weight: 3
+  };
+
+  const prefType = lounge.preferredType;
+  const prefSeat = lounge.preferredSeat;
+  const avoid = lounge.avoidTypes;
+  const weight = lounge.weight;
 
   let score = slot.priority;
 
-  // Strong preference for a specific seat
   if (prefSeat && slot.id === prefSeat) {
     score += 10;
   }
 
-  // Preference for a seat type
   if (prefType !== "any" && slot.type === prefType) {
     score += weight;
   }
 
-  // Avoid certain types
   if (avoid.includes(slot.type)) {
     score -= 5;
   }
 
-  // Slight randomness to avoid ties
   score += Math.random();
 
   return score;
 }
+
+// ---------------------------------------------
+// SLOT SELECTION
+// ---------------------------------------------
+
+function findBestGuildSlot(patron) {
+  let best = null;
+  let bestScore = -Infinity;
+
+  for (const slot of guildSlots) {
+    if (slot.occupied) continue;
+
+    const score = scoreSlotForPatron(slot, patron);
+    if (score > bestScore) {
+      bestScore = score;
+      best = slot;
+    }
+  }
+
+  if (best) {
+    best.occupied = true;
+    return best;
+  }
+
+  return { x: patron.left, y: patron.top };
+}
+
 
 function findBestSlot(patron) {
   let best = null;
@@ -320,35 +379,6 @@ function findBestSlot(patron) {
     return best;
   }
 
-  // fallback
+  // fallback if all seats are taken
   return { x: 0, y: 0 };
-}
-
-if (page === "tavern") {
-  patronList = getVisiblePatrons();
-  const container = document.getElementById("patron-container");
-
-  applyZonePriorities();
-
-  container.innerHTML = patronList
-    .filter(p => p.location === 2)
-    .map(patron => {
-      const cell = findBestCell(patron);
-
-      return `
-        <div class="patron-wrapper"
-             style="position:absolute; top:${cell.y}px; left:${cell.x}px;">
-          <img src="${patron.icon}" class="item-icon">
-          <div class="hover-zone"
-               data-id="${patron.id}"
-               data-large="${patron.large || patron.icon}">
-          </div>
-          <div class="tooltip"></div>
-        </div>
-      `;
-    })
-    .join('');
-
-  initPatronClicks();
-  displayRightMenu();
 }

@@ -131,6 +131,17 @@
 <div id="global-popup-container"></div>
 </div>
 <script>
+(function () {
+  const oldAdd = EventTarget.prototype.addEventListener;
+  EventTarget.prototype.addEventListener = function (type, handler, opts) {
+    if (type === "visibilitychange") {
+      console.log("VISIBILITYCHANGE REGISTERED ON:", this);
+      console.log(handler.toString());
+      console.trace();
+    }
+    return oldAdd.call(this, type, handler, opts);
+  };
+})();
 window.templates = window.templates || {};
 
 templates.satchel_guild = `

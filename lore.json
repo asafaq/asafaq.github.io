@@ -6,8 +6,8 @@
       "icon": "assets/patrons/marlnus_s.png",
       "large": "assets/patrons/marlnus_l.png",
 	  "lounge": {
-		  "preferredType": "bar",
-		  "preferredSeat": null,
+		  "preferredType": "counter",
+		  "preferredSeat": "counter1",
 		  "avoidTypes": ["quiet"],
 		  "weight": 5
 			},
@@ -47,10 +47,16 @@
       "name": "Hogperson",
 	  "contractPrice": 100,
       "icon": "assets/patrons/hogperson_s.png",
-      "large": "assets/patrons/default.png",
+      "large": "assets/patrons/hogperson.png",
       "top": "300px",
       "left": "380px",
       "location": 1,
+	  "lounge": {
+		  "preferredType": "table1",
+		  "preferredSeat": "table1b",
+		  "avoidTypes": [""],
+		  "weight": 5
+			},
       "race": "Barbarian",
       "role": "Brute",
       "hp_die": 12,
@@ -85,10 +91,17 @@
       "name": "Bragain",
 	  "contractPrice": 100,
       "icon": "assets/patrons/dwarven_miner_s.png",
-      "large": "assets/patrons/default.png",
+      "large": "assets/patrons/dwarven_miner.png",
       "top": "220px",
       "left": "380px",
       "location": 1,
+	  "lounge": {
+		  "preferredType": "table1",
+		  "preferredSeat": "table1c",
+		  "avoidTypes": [""],
+		  "weight": 5
+			},
+	  "dialog": 1,
       "race": "Dwarven",
       "role": "Miner",
       "role_comment": "A rogue with a day job. Like a thief, but less proficient",
@@ -129,7 +142,13 @@
       "name": "Claudio",
 	  "contractPrice": 100,
       "icon": "assets/patrons/Claudio_s.png",
-      "large": "assets/patrons/default.png",
+      "large": "assets/patrons/Claudio_s.png",
+	  "lounge": {
+		  "preferredType": "center",
+		  "preferredSeat": null,
+		  "avoidTypes": [],
+		  "weight": 5
+		},
       "top": "330px",
       "left": "250px",
       "location": 2,
@@ -167,10 +186,16 @@
       "name": "Amyssa",
 	  "contractPrice": 100,
       "icon": "assets/patrons/amyssa_s.png",
-      "large": "assets/patrons/default.png",
+      "large": "assets/patrons/amyssa_l.png",
       "top": "400px",
       "left": "120px",
       "location": 2,
+	  "lounge": {
+		  "preferredType": "table",
+		  "preferredSeat": "table1e",
+		  "avoidTypes": [],
+		  "weight": 5
+		},
       "race": "Elf",
       "role": "Swordmage",
       "hp_die": 10,
@@ -210,7 +235,13 @@
       "large": "assets/patrons/hogmother.png",
       "top": "300px",
       "left": "80px",
-      "location": 2,
+      "location": 1,
+	  "lounge": {
+		  "preferredType": "table",
+		  "preferredSeat": "table1c",
+		  "avoidTypes": ["quiet"],
+		  "weight": 5
+			},
       "race": "Barbarian",
       "race_comment": "Wildmen more of a humanoid than a human. Thick Hide for bonus unarmed AC \tRage +10 tempHP.",
       "role": "Shaman",
@@ -288,6 +319,12 @@
       "top": "300px",
       "left": "380px",
       "location": 1,
+	  "lounge": {
+		  "preferredType": "bar",
+		  "preferredSeat": "bar4",
+		  "avoidTypes": ["table"],
+		  "weight": 5
+			},
       "race": "Goblin",
       "role": "Spy",
       "hp_die": 8,
@@ -326,6 +363,12 @@
       "top": "270px",
       "left": "280px",
       "location": 2,
+	  "lounge": {
+		  "preferredType": "bar",
+		  "preferredSeat": "bar2",
+		  "avoidTypes": ["quiet"],
+		  "weight": 5
+			},
       "race": "Human",
       "role": "Fallen Paladin",
       "hp_die": 10,
@@ -366,6 +409,12 @@
       "top": "260px",
       "left": "180px",
       "location": 1,
+	  "lounge": {
+		  "preferredType": "floor",
+		  "preferredSeat": "floor1",
+		  "avoidTypes": [""],
+		  "weight": 5
+			},
       "race": "Angel",
       "role": "Paladin",
       "hp_die": 10,
@@ -409,6 +458,7 @@
       "left": "180px",
       "location": 1,
       "race": "Dragonborne",
+	  "species": "Red Dragon",
       "role": "Eldrich Knight",
       "hp_die": 10,
       "hp_modifier": 3,
@@ -434,9 +484,50 @@
       "traits": [
         "Intimidation",
         "Fire Breath",
-        "Eternal"
+        "Eternal",
+		"Dragon Hide"
       ],
       "notes": "The premium Pay2Win character. Aasibelle may seem as going out of game balance, but she is a token of gratitude from the development team to the player, and she doesn't have to be played at all as she will cost you no upkeep or space in the tavern."
+    },
+    "adv_CptBlackmoor": {
+      "name": "Cpt. Blackmoor",
+	  "contractPrice": 999,
+	  "icon": "assets/patrons/Aasibelle_s2.png",
+      "large": "assets/patrons/Aasibelle_s2.png",
+      "top": "260px",
+      "left": "180px",
+      "location": 1,
+      "race": "Dragonborne",
+	  "species": "Black Dragon",
+      "role": "Corsair",
+      "hp_die": 10,
+      "hp_modifier": 3,
+      "strengh_mod": 2,
+      "Dexterity_mod": 4,
+      "wisdom_mod": -1,
+      "intelligence_mod": 3,
+      "charisma_mod": 1,
+      "alignment": "Chaotic",
+      "level": 7,
+      "sex": null,
+      "size": "Medium",
+      "caste": "Aristocrat",
+      "RacialEnemy": "",
+      "proficiency_armor": "Medium",
+      "proficiency_weapon": "Martial",
+	  	"inventory" : [
+		  { "item": "Hairloom Sapphire", "qty": 1, "locked": true },
+		  { "item": null, "qty": 0, "locked": false },
+		  { "item": null, "qty": 0, "locked": false },
+		  { "item": null, "qty": 0, "locked": false }
+		],
+      "traits": [
+        "Intimidation",
+        "Acid Breath",
+        "Water Breathing",
+		"Dragon Hide"
+      ],
+      "notes": "A dangerous pirate, known as the black terror, can breach hulls of ships all on his own."
     },
     "adv_Hogfather": {
       "name": "Hogfather",
@@ -445,6 +536,12 @@
       "top": "300px",
       "left": "120px",
       "location": 2,
+	  "lounge": {
+		  "preferredType": "table",
+		  "preferredSeat": "table1d",
+		  "avoidTypes": ["quiet"],
+		  "weight": 5
+			},
       "race": "Barbarian",
       "role": "Baker",
       "hp_die": 12,
@@ -579,6 +676,12 @@
 	  "top": "180px",
       "left": "400px",
       "location": 2,
+	  "lounge": {
+		  "preferredType": "quiet",
+		  "preferredSeat": "corner1",
+		  "avoidTypes": ["bar"],
+		  "weight": 5
+			},
       "race": "Warforged",
       "role": "Clericbot",
       "hp_die": 8,
@@ -653,6 +756,13 @@
       "top": "400px",
       "left": "230px",
       "location": 2,
+	  "lounge": {
+		  "preferredType": "door",
+		  "preferredSeat": "door",
+		  "avoidTypes": ["table"],
+		  "weight": 5
+			},
+	  "dialog": 1,
       "race": "Goon",
       "role": "Bouncer",
       "hp_die": 12,
@@ -1275,7 +1385,7 @@
       "Bragain": "Bragain can be assigned to a mining location, but he's currently enjoying his leisure time socializing and drinking.",
       "Amyssa": "Amyssa is focused on her scrolls scribing.",
       "Claudio": "The joyful Claudio is working the crowd, and playing his lute between sessions.",
-      "Hogperson": "The Cheerful Hogperson is a pleasant company to be around.",
+      "Hogperson": "Hogperson is a pleasant company to be around.",
 	  "Crusher": "The Bouncer's watchful eye keeping everyone in order.",
       "default": "They possess unique qualities that set them apart."
     },
@@ -1294,7 +1404,8 @@
 	  "Unflappable": "There isn't an insult in the lore that he haven't heard before already.",
 	  "Inconspicuous": "Barely noticeable.",
 	  "Gardener": "Really prefers to stay in his garden.",
-	  "Dark Ambition": "Incredibly eerie.",
+	  "Dark Ambition": "Incredibly eerie, everyone's thoughs keep wondering in their presence.",
+	  "Acid Breath": "Smells of sulfur and brimstone.",
       "default": "They possess unique qualities that set them apart."
     },
     "hiringReferrals": {
