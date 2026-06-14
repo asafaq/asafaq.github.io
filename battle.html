@@ -3,78 +3,9 @@
 <head>
     <title>D&D Virtual Table Top</title>
     <meta name="viewport" content="width=540, user-scalable=no" charset="UTF-8">
-<style>
-    body { margin: 0; background: #121212; color: #eee; display: flex; justify-content: center; font-family: 'Segoe UI', sans-serif; min-height: 100vw ; overflow: auto; }
-    #screen { width: 540px; height: 960px; background: #222; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 0 50px #000; position: relative; }
-    #grid { width: 540px; height: 540px; position: relative; background-color: #333; border-bottom: 2px solid #444; flex-shrink: 0; overflow: hidden; background-size: cover; background-position: center; }
-    #log { height: 140px; background: #111; padding: 15px; overflow-y: auto; color: #00ff00; font-family: monospace; border-bottom: 2px solid #444; display: flex; flex-direction: column-reverse; box-sizing: border-box; flex-shrink: 0; }
-    #controls { position:relative ; display: flex; flex-direction: row; flex: 1; background: #1a1a1a; padding: 10px; gap: 10px; align-items: stretch; box-sizing: border-box; }
-    #stats-panel { width: 85px; display: flex; flex-direction: column; justify-content: center; background: #2c3e50; border-radius: 4px; padding: 8px; font-size: 0.7rem; color: white; flex-shrink: 0; border-left: 4px solid #3498db; box-sizing: border-box; }
-    #stats-panel strong { display: block; margin-bottom: 2px; color: #f1c40f; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .btn-group { display: grid; flex: 1; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(2, 1fr); gap: 8px; min-width: 0; }
-    .btn-group button { width: 100%; height: 100%; font-size: 0.85rem; background: #444; color: white; border: 1px solid #555; border-radius: 4px; cursor: pointer; }
-    #end-turn-btn { width: 45px; background: #d35400; color: white; font-weight: bold; writing-mode: vertical-lr; text-orientation: upright; border: none; border-radius: 4px; flex-shrink: 0; cursor: pointer; display: flex; align-items: center; justify-content: center; letter-spacing: 2px; font-size: 0.8rem; }
-    .token { width: 46px; height: 46px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; position: absolute; z-index: 3; transition: 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28); pointer-events: none; box-shadow: 0 4px 10px rgba(0,0,0,0.5); font-size: 14px; color: white; border: 2px solid white; background-size: cover; background-position: center; }
-    .active-ring { position: absolute; width: 50px; height: 50px; border: 3px solid #f1c40f; border-radius: 50%; transition: 0.3s; pointer-events: none; z-index: 2; box-shadow: 0 0 15px #f1c40f; }
-    .grid-overlay { position: absolute; width: 100%; height: 100%; background-image: linear-gradient(rgba(255,255,255,0.35) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.35) 1px, transparent 1px); background-size: 54px 54px; pointer-events: none; z-index: 10; }
-    .cell { width: 54px; height: 54px; float: left; z-index: 1; position: relative; cursor: pointer; }
-	.cell.obstacle {     background-color: rgba(0,0,0,0.6); }
-    .btn-move-active { background-color: #27ae60 !important; border: 2px solid white !important; }
-    button:disabled { opacity: 0.4; filter: grayscale(1); cursor: not-allowed; }
-.reaction-panel {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: #121214; /* Solid color matches theme and obscures the active skill keys */
-    padding: 12px;
-    display: none;
-    color: white;
-    z-index: 999; /* Higher priority layer to step completely over the action button map */
-    box-sizing: border-box;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-}
 
-.reaction-entry {
-    margin-bottom: 10px;
-}
+<link rel="stylesheet" href="battle.css">
 
-/* The Restyled Reaction Blocker Panel */
-.reaction-overlay-panel {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: #121214; /* Match your app's dark dashboard or UI theme */
-    z-index: 999; /* Sits completely on top of action buttons */
-    
-    /* Center the reaction contents beautifully */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    padding: 16px;
-    box-sizing: border-box;
-    border-top: 2px solid #3a3a42;
-}
-
-/* Optional styling to make the notification stand out */
-.reaction-title {
-    color: #ffd166;
-    font-size: 1.1rem;
-    font-weight: bold;
-    margin: 0;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-</style>
 </head>
 <body>
 
@@ -93,6 +24,9 @@
         </div>
         <div class="btn-group" id="action-bar"></div>
         <button id="end-turn-btn" onclick="endTurn()">END</button>
+		<div id="dm-screen"></div>
+		<div id="reaction-title">REACTION PHASE</div>
+
     </div>
 </div>
 
@@ -115,6 +49,7 @@ const firstPCIndex = units.findIndex(u => u.type === "pc");
 
 // Change init to an async function so it can fetch files
 async function init() {
+	console.log(`Running init() at round ${round}`);
 
     const savedData = localStorage.getItem('currentBattle');
     if (!savedData) return Bus.emit('LOG', "ERR: No battle data found!");
@@ -197,6 +132,9 @@ async function init() {
 	}
 
 	rollInitiativeForAll();   // ← FIRST ROUND INITIATIVE
+	
+	requestAnimationFrame(() => {startReactionPhase();	});
+	
 	// ⭐ Bard song fade: runs at the start of the Bard's next turn
 	const active = units[initiativeOrder[turnIndex].index];
     grid.innerHTML = '<div class="grid-overlay"></div><div id="active-ring" class="active-ring"></div>';
@@ -371,14 +309,12 @@ async function init() {
 	// Mark that the round has already started
 	roundStarted = true;
 
+	
 	// Start the very first turn properly
-	const first = units[initiativeOrder[turnIndex].index];
-	Bus.emit('LOG', `Turn: ${first.name}`);
+	// const first = units[initiativeOrder[turnIndex].index];
+	// Bus.emit('LOG', `Turn: ${first.name}`);
 
-	if (first.type === 'monster') {
-		setTimeout(monsterAI, 600);
-	}
-	startReactionPhase();
+	//if (first.type === 'monster') { 		setTimeout(monsterAI, 600); 	}
 }
 
 function applyStrDexAttackBonus(unit) {
@@ -554,6 +490,8 @@ function canHeal(role) {
 
 function update() {
     if (isReactionPhase) return; 
+	console.log(`Running update() at round ${round}`);
+
     const active = units[initiativeOrder[turnIndex].index];
     if (!active) return;
 
@@ -578,6 +516,7 @@ function update() {
     const endBtn = document.getElementById('end-turn-btn');
     
     if (active.type === "monster") {
+		showDMScreen();
         bar.innerHTML = '';
         if (endBtn) endBtn.disabled = true;
         checkVictory();
@@ -640,6 +579,15 @@ function update() {
 
     checkVictory();
 }
+
+function showDMScreen() {
+    document.getElementById("dm-screen").style.display = "block";
+}
+
+function hideDMScreen() {
+    document.getElementById("dm-screen").style.display = "none";
+}
+
 
 function startRangedTargeting() {
     const u = units[initiativeOrder[turnIndex].index];
@@ -1002,15 +950,23 @@ function handleRangedAttack(attacker, target) {
 
 function startReactionPhase() {
     isReactionPhase = true;
+    showReactionTitle();
     console.log("REACTION PHASE PCs:", units.filter(u => u.type === "pc"));
 
-    // ⭐ Grab the controls container to append the reaction view inside it
+    // Delay panel build until UI is stable
+	hideDMScreen();
+
+    requestAnimationFrame(() => {
+        requestAnimationFrame(buildReactionPanel);
+    });
+}
+
+function buildReactionPanel() {
     const controlsWindow = document.getElementById('controls');
     let panel = document.getElementById('reaction-panel');
     
     if (panel) {
         panel.innerHTML = "";
-        // Move it into controls if it was anywhere else
         if (controlsWindow && panel.parentNode !== controlsWindow) {
             controlsWindow.appendChild(panel);
         }
@@ -1025,24 +981,30 @@ function startReactionPhase() {
         }
     }
 
-    // Set layout display to flex so centering styles work nicely
     panel.style.display = "flex";
 
-    // --- (Keep your entire existing loop unchanged) ---
+    // Build PC entries
     units.filter(u => u.type === 'pc' && u.hp > 0).forEach((pc, index) => {
         const div = document.createElement('div');
         div.className = "reaction-entry";
-        div.innerText = pc.name + ": "; // Cleaner separator label
 
-        // Add reaction button based on role
+        const header = document.createElement('div');
+        header.className = "reaction-header";
+        header.innerHTML = `<span class="r-name">${pc.name} • ${pc.hp}/${pc.maxHp}</span><span class="r-meta">${pc.role} • L${pc.level || 1}</span>`;
+        div.appendChild(header);
+
+        const actions = document.createElement('div');
+        actions.className = "reaction-actions";
+        div.appendChild(actions);
+
+
+
         if (pc.race === "Barbarian" && !pc.usedRage) {
-            createReactionBtn(div, "Rage", () => {
-                handleRage(pc);
-            });
+            createReactionBtn(actions, "Rage", () => { handleRage(pc); });
         }
 
-        if (pc.role === "Miner" && pc.canHide) {
-            createReactionBtn(div, "Hide", () => {
+        if (isRogue(pc.role) && pc.canHide) {
+            createReactionBtn(actions, "Hide", () => {
                 pc.isHiding = true;
                 pc.canHide = false;
                 Bus.emit('LOG', `${pc.name} hides in the shadows.`);
@@ -1050,49 +1012,49 @@ function startReactionPhase() {
         }
 
         if (pc.role === "Bard" && pc.canSing && !isAnyBardSinging()) {
-            createReactionBtn(div, "Sing", () => {
+            createReactionBtn(actions, "Sing", () => {
                 pc.canSing = false;
                 pc.isSinging = true;
-
                 units.forEach(u => {
                     if (u.type === "pc" && u !== pc) {
                         u.hitBonus = (u.hitBonus || 0) + 1;
                         u.damageBonus = (u.damageBonus || 0) + 1;
                     }
                 });
-
                 pc.hitBonus = (pc.hitBonus || 0) - 1;
                 pc.damageBonus = (pc.damageBonus || 0) - 1;
-
                 Bus.emit('LOG', `${pc.name} sings an inspiring tune! Allies gain +1 hit/dmg, Bard suffers -1 hit/dmg and cannot cast spells.`);
             });
         }
 
+		// ⭐ Drink Potion button
+		createReactionBtn(actions, "Drink: Potion", () => {
+			handleDrinkPotion(pc);
+		});
+		
         panel.appendChild(div);
     });
-	// Add "Continue" button
-	const cont = document.createElement('button');
-	cont.innerText = "Continue";
-	cont.onclick = () => {
-		isReactionPhase = false;
-		panel.style.display = "none";
 
-		// Mark round as started
-		roundStarted = true;
+    // GO button
+    const cont = document.createElement('button');
+    cont.innerText = "GO";
+    cont.classList.add("go-btn");
+    cont.onclick = () => {
+        isReactionPhase = false;
+        panel.style.display = "none";
+        hideReactionTitle();
+        roundStarted = true;
 
-		// 🔹 Start the next turn properly
-		const active = units[initiativeOrder[turnIndex].index];
-		Bus.emit('LOG', `Turn: ${active.name}`);
+        const active = units[initiativeOrder[turnIndex].index];
+        Bus.emit('LOG', `Turn: ${active.name}`);
 
-		update();
+        update();
 
-		// 🔹 If the next unit is a monster, run its AI
-		if (active.type === "monster") {
-			setTimeout(monsterAI, 600);
-		}
-	};
-	panel.appendChild(cont);
-
+        if (active.type === "monster") {
+            setTimeout(monsterAI, 600);
+        }
+    };
+    panel.appendChild(cont);
 }
 
 function createReactionBtn(parent, text, func) {
@@ -1100,6 +1062,29 @@ function createReactionBtn(parent, text, func) {
     btn.innerText = text;
     btn.onclick = func;
     parent.appendChild(btn);
+}
+
+function showReactionTitle() {
+    document.getElementById("reaction-title").style.display = "block";
+}
+
+function hideReactionTitle() {
+    document.getElementById("reaction-title").style.display = "none";
+}
+
+function handleDrinkPotion(user) {
+    if (!user || user.hp <= 0) return;
+
+    // Heal amount: 2–7 HP
+    const heal = Math.floor(Math.random() * 6) + 3;
+
+    const oldHP = user.hp;
+    user.hp = Math.min(user.maxHp, user.hp + heal);
+
+    Bus.emit('LOG', `🧪 ${user.name} drinks a potion and heals ${user.hp - oldHP} HP.`);
+
+    update();
+    buildReactionPanel();   // ⭐ refreshes HP in headers
 }
 
 function endTurn() {
@@ -1181,7 +1166,7 @@ function endTurn() {
     if (!roundStarted) {
         roundStarted = true;
         rollInitiativeForAll();   // NEW ROUND INITIATIVE
-        startReactionPhase();
+		requestAnimationFrame(() => {startReactionPhase();	});
         return;
     }
 
@@ -1214,7 +1199,13 @@ function monsterAI() {
 
 
     // 4. Cleanly pass control to the next character in sequence
-    setTimeout(endTurn, 600);
+    // Hide DM screen AFTER monster finishes
+	update();
+    setTimeout(() => {
+        hideDMScreen();
+        endTurn();
+    }, 600);
+
 }
 
 function findNearestPC(monster) {
@@ -1549,7 +1540,7 @@ function showDefeatWindow(summary, onClose) {
 }
 
 
-console.log("MONSTER_DB:", window.MONSTER_DB);
+//console.log("MONSTER_DB:", window.MONSTER_DB);
 
 
 Bus.on('LOG', (msg) => {

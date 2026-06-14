@@ -585,7 +585,8 @@ img:not([src]) {
 #party-a-patron-inventory,
 #party-a-guide-inventory,
 #party-b-patron-inventory,
-#secret-patron-inventory {
+#secret-patron-inventory,
+#party-a-butler-inventory {
     display: flex;          /* Use Flexbox */
     flex-wrap: wrap;        /* Wrap to next line if too many items */
     gap: 0px;               /* Space between your icons */
@@ -600,9 +601,10 @@ img:not([src]) {
 #guild-patron-inventory { top: 100px; left: 71px; }
 #guild2-patron-inventory { top: 160px; left: 71px; }
 #party-a-patron-inventory { top: 283px; left: 71px; }
-#party-a-guide-inventory { top: 285px; left: 14px; }
+#party-a-guide-inventory { top: 285px; left: 14px; width: 60px; }
 #party-b-patron-inventory { top: 374px; left: 71px; }
 #secret-patron-inventory { top: 714px; left: 4px; }
+#party-a-butler-inventory { top: 283px; left: 400px; width: 60px; }
 
 .patron-slot {
     width: 57px;            /* Match your container size */
@@ -630,6 +632,16 @@ img:not([src]) {
   position: absolute;
   top: 270px;
   left: 18px;
+  z-index: 10;
+  padding: 2px 4px;
+  border-radius: 4px;
+}
+#missions_line7 {
+  color: white;
+  background: #52463A;
+  position: absolute;
+  top: 270px;
+  left: 410px;
   z-index: 10;
   padding: 2px 4px;
   border-radius: 4px;

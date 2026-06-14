@@ -176,7 +176,6 @@
 		  { "item": null, "qty": 0, "locked": false }
 		],
       "traits": [
-        "Persuasive",
         "Comedian"
       ],
       "Comedian_comment": "This guy is a moral boost and parles with foes otherwise non-talkative. Comedian also preforms at the guild to patrons.",
@@ -501,7 +500,7 @@
 	  "species": "Black Dragon",
       "role": "Corsair",
       "hp_die": 10,
-      "hp_modifier": 3,
+      "hp_modifier": 2,
       "strengh_mod": 2,
       "Dexterity_mod": 4,
       "wisdom_mod": -1,

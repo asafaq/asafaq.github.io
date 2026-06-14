@@ -208,6 +208,7 @@ const pages = {
 			<p id="missions_line21"></p>
 			<p id="missions_line3"></p>
 			<p id="missions_line6"></p>
+			<p id="missions_line7"></p>
 			<p id="missions_line9"></p>
 
 		<div id="guild-patron-inventory" class="inventory-row dropzone">
@@ -236,6 +237,7 @@ const pages = {
   <div class="slot"></div>
   <div class="slot"></div>
 </div>
+<div id="party-a-butler-inventory" class="inventory-row dropzone"></div>
 
 <div id="party-b-patron-inventory" class="inventory-row dropzone">
   <div class="slot"></div>
@@ -654,6 +656,7 @@ function renderPatronInventory() {
         4: document.getElementById("party-b-patron-inventory"),
         5: document.getElementById("party-c-patron-inventory"),
         6: document.getElementById("party-a-guide-inventory"),
+        7: document.getElementById("party-a-butler-inventory"),
         9: document.getElementById("secret-patron-inventory")
     };
 
@@ -750,38 +753,77 @@ async function handlePatronDrop(e) {
 
     const advId = e.dataTransfer.getData("advId");
     if (!advId) return;
-
-    const patron = player.patrons[advId];
+	
+    // Hydrate the patron (static lore + player save data)
+    const patron = getHydratedAdventurer(advId);
+	//console.log(patron)
     if (!patron) return;
 
     const origin = patron.location;
-    const newLocation = getLocationFromZone(zone);
+    let newLocation = getLocationFromZone(zone);
+	
+    // Special rule: passive patrons assigned to location 3 go to 7 instead
+    if (patron.passive === true && newLocation === 3) {
+        newLocation = 7;
+    }
+	    // RULE 2: Only passive patrons may enter location 7
+    if (newLocation === 7 && patron.passive !== true) {
+        pushStatus("Only passive patrons can be assigned to this location.");
+		return; // cancel move
+    }
+	// RULE 3: Location 7 can only hold 1 patron
+	if (newLocation === 7 && locationHasPatron(7)) {
+		pushStatus("This location can only hold one patron.");
+		deselectPatron();
+		return;
+	}
+	// RULE 3: Location 3 can hold max 6 patrons
+	if (newLocation === 3 && countPatronsInLocation(3) >= 6) {
+		pushStatus("This party is full (max 6 patrons).");
+		return;
+	}
 
+	
     // Your lock logic...
     const isLocked = loc => ({
         3: player.data.party_A_locked,
         4: player.data.party_B_locked,
         5: player.data.party_C_locked
     }[loc] || false);
-
+	
     if (isLocked(origin) || isLocked(newLocation)) {
         pushStatus("Cannot move patron — party is locked.");
         return;
     }
 
-    // Update data
-    patron.location = newLocation;
+    // IMPORTANT: update the real save data, not the hydrated object
+    player.patrons[advId].location = newLocation;
     await storage.savePlayer(player);
 
     // Move DOM node (best performance)
     const slot = document.querySelector(`.patron-slot[data-adv="${advId}"]`);
-    if (slot) {
-        zone.appendChild(slot);
-    }
+	const targetZone = document.getElementById(locationToId[newLocation]);
+	if (slot) {
+		const targetZone = document.querySelector(`.zone[data-location="${newLocation}"]`);
+		if (targetZone) targetZone.appendChild(slot);
+	}
+
 
     // Only update list, avoid full re-render if possible
     patronList = getVisiblePatrons();
+	renderPatronInventory();
+	enablePatronDragDrop();
 }
+
+const locationToId = {
+    1: "guild-patron-inventory",
+    2: "guild2-patron-inventory",
+    3: "party-a-patron-inventory",
+    4: "party-b-patron-inventory",
+    5: "party-c-patron-inventory",
+    7: "party-a-butler-inventory",
+};
+
 function getLocationFromZone(zone) {
     const id = zone.id;
     if (id === "guild-patron-inventory") return 1;
@@ -790,6 +832,7 @@ function getLocationFromZone(zone) {
     if (id === "party-b-patron-inventory") return 4;
     if (id === "party-c-patron-inventory") return 5;
     if (id === "party-a-guide-inventory") return 6;
+    if (id === "party-a-butler-inventory") return 7;
     if (id === "secret-patron-inventory") return 9;
     return 1; // fallback
 }
@@ -856,24 +899,46 @@ function enablePatronTouchSupport() {
         }
     });
 
-    // === Tap on Drop Zone ===
-    document.querySelectorAll('.dropzone').forEach(zone => {
-        zone.addEventListener('click', async function(e) {
-            if (!selectedPatronId) return;
+	// === Tap on Drop Zone ===
+	document.querySelectorAll('.dropzone').forEach(zone => {
+		zone.addEventListener('click', async function(e) {
+			if (!selectedPatronId) return;
 
-            const patron = player.patrons[selectedPatronId];
-            if (!patron) {
-                deselectPatron();
-                return;
-            }
+            // 🔥 HYDRATION ADDED HERE
+            const patron = getHydratedAdventurer(selectedPatronId);
+			if (!patron) {
+				deselectPatron();
+				return;
+			}
 
-            const origin = patron.location;
-            const newLocation = getLocationFromZone(zone);
+			const origin = patron.location;
+			let newLocation = getLocationFromZone(zone);
+			// RULE 1: Passive patrons dropped into 3 → redirect to 7
+			if (patron.passive === true && newLocation === 3) {
+				newLocation = 7;
+			}
+			        // RULE 2: Only passive patrons may enter location 7
+			if (newLocation === 7 && patron.passive !== true) {
+				pushStatus("Only passive patrons can be assigned to this location.");
+				deselectPatron();
+				return;
+			}
+			// RULE 3: Location 7 can only hold 1 patron
+			if (newLocation === 7 && locationHasPatron(7)) {
+				pushStatus("This location can only hold one patron.");
+				return;
+			}	
+			// RULE 3: Location 3 can hold max 6 patrons
+			if (newLocation === 3 && countPatronsInLocation(3) >= 6) {
+				pushStatus("This party is full (max 6 patrons).");
+				deselectPatron();
+				return;
+			}
 
-            if (origin === newLocation) {
-                deselectPatron();
-                return;
-            }
+			if (origin === newLocation) {
+				deselectPatron();
+				return;
+			}
 
             // Lock checks
             const isLocked = loc => ({
@@ -889,10 +954,20 @@ function enablePatronTouchSupport() {
             }
 
             // Move the element
-            const slot = document.querySelector(`.patron-slot[data-adv="${selectedPatronId}"]`);
-            if (slot) {
-                zone.appendChild(slot);
-            }
+			const slot = document.querySelector(`.patron-slot[data-adv="${selectedPatronId}"]`);
+			const targetZone = document.getElementById(locationToId[newLocation]);
+
+			if (slot && targetZone) {
+				console.log("TOUCH MOVE:", {
+    selectedPatronId,
+    slot: document.querySelector(`.patron-slot[data-adv="${selectedPatronId}"]`),
+    targetZone,
+    newLocation
+});
+
+				targetZone.appendChild(slot);
+			}
+
 
             // Save
             patron.location = newLocation;
@@ -911,6 +986,14 @@ function enablePatronTouchSupport() {
 }
 // Keep your existing mouse drag & drop functions unchanged
 // (handleGlobalDragStart, handleGlobalDragEnd, handlePatronDrop, etc.)
+
+function locationHasPatron(location) {
+    return patronList.some(p => p.location === location);
+}
+
+function countPatronsInLocation(location) {
+    return patronList.filter(p => p.location === location).length;
+}
 
 function showTemporaryImage(src) {
 	// showTemporaryImage("/assets/myImage.png");
@@ -1699,6 +1782,14 @@ async function loadMissionPage() {
 	} else {
 		document.getElementById("missions_line6").textContent = "";
 	}
+
+	const hasPartyAButler = Object.values(player.patrons)
+		.some(p => p.location === 7);
+	if (hasPartyAButler) {
+		document.getElementById("missions_line7").textContent = "Butler";
+	} else {
+		document.getElementById("missions_line6").textContent = "";
+	}
 	const hasSecretPatron = Object.values(player.patrons)
 		.some(p => p.location === 9);
 	if (hasSecretPatron) {
@@ -1865,6 +1956,25 @@ function updatePartyAGuideLine() {
     if (hasPartyAGuidePatron) {
         line.style.display = "inline-block";
         line.textContent = "Guide";
+    } else {
+        line.style.display = "none";
+    }
+
+}
+
+
+
+function updatePartyAButlerLine() {
+		
+    const hasPartyAButlerPatron = Object.values(player.patrons)
+        .some(p => p.location === 7);
+
+    const line = document.getElementById("missions_line7");
+
+
+    if (hasPartyAButlerPatron) {
+        line.style.display = "inline-block";
+        line.textContent = "Butler";
     } else {
         line.style.display = "none";
     }
