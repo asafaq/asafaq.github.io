@@ -811,6 +811,8 @@ async function handlePatronDrop(e) {
 
     // Only update list, avoid full re-render if possible
     patronList = getVisiblePatrons();
+	
+	updatePartyAButlerLine();
 	renderPatronInventory();
 	enablePatronDragDrop();
 }
@@ -875,7 +877,7 @@ function deselectPatron() {
 
 // Main enable function
 function enablePatronTouchSupport() {
-    
+
     // === Tap on Patron ===
     document.addEventListener('click', function(e) {
         if (isDragging) {
@@ -899,46 +901,50 @@ function enablePatronTouchSupport() {
         }
     });
 
-	// === Tap on Drop Zone ===
-	document.querySelectorAll('.dropzone').forEach(zone => {
-		zone.addEventListener('click', async function(e) {
-			if (!selectedPatronId) return;
+    // === Tap on Drop Zone ===
+    document.querySelectorAll('.dropzone').forEach(zone => {
+        zone.addEventListener('click', async function(e) {
+            if (!selectedPatronId) return;
 
-            // 🔥 HYDRATION ADDED HERE
             const patron = getHydratedAdventurer(selectedPatronId);
-			if (!patron) {
-				deselectPatron();
-				return;
-			}
+            if (!patron) {
+                deselectPatron();
+                return;
+            }
 
-			const origin = patron.location;
-			let newLocation = getLocationFromZone(zone);
-			// RULE 1: Passive patrons dropped into 3 → redirect to 7
-			if (patron.passive === true && newLocation === 3) {
-				newLocation = 7;
-			}
-			        // RULE 2: Only passive patrons may enter location 7
-			if (newLocation === 7 && patron.passive !== true) {
-				pushStatus("Only passive patrons can be assigned to this location.");
-				deselectPatron();
-				return;
-			}
-			// RULE 3: Location 7 can only hold 1 patron
-			if (newLocation === 7 && locationHasPatron(7)) {
-				pushStatus("This location can only hold one patron.");
-				return;
-			}	
-			// RULE 3: Location 3 can hold max 6 patrons
-			if (newLocation === 3 && countPatronsInLocation(3) >= 6) {
-				pushStatus("This party is full (max 6 patrons).");
-				deselectPatron();
-				return;
-			}
+            const origin = patron.location;
+            let newLocation = getLocationFromZone(zone);
 
-			if (origin === newLocation) {
-				deselectPatron();
-				return;
-			}
+            // RULE 1: Passive patrons dropped into 3 → redirect to 7
+            if (patron.passive === true && newLocation === 3) {
+                newLocation = 7;
+            }
+
+            // RULE 2: Only passive patrons may enter location 7
+            if (newLocation === 7 && patron.passive !== true) {
+                pushStatus("Only passive patrons can be assigned to this location.");
+                deselectPatron();
+                return;
+            }
+
+            // RULE 3: Location 7 can only hold 1 patron
+            if (newLocation === 7 && locationHasPatron(7)) {
+                pushStatus("This location can only hold one patron.");
+                deselectPatron();
+                return;
+            }
+
+            // RULE 4: Location 3 can hold max 6 patrons
+            if (newLocation === 3 && countPatronsInLocation(3) >= 6) {
+                pushStatus("This party is full (max 6 patrons).");
+                deselectPatron();
+                return;
+            }
+
+            if (origin === newLocation) {
+                deselectPatron();
+                return;
+            }
 
             // Lock checks
             const isLocked = loc => ({
@@ -953,26 +959,26 @@ function enablePatronTouchSupport() {
                 return;
             }
 
-            // Move the element
-			const slot = document.querySelector(`.patron-slot[data-adv="${selectedPatronId}"]`);
-			const targetZone = document.getElementById(locationToId[newLocation]);
+            // Move the element (DOM)
+            const slot = document.querySelector(`.patron-slot[data-adv="${selectedPatronId}"]`);
+            const targetZone = document.getElementById(locationToId[newLocation]);
 
-			if (slot && targetZone) {
-				console.log("TOUCH MOVE:", {
-    selectedPatronId,
-    slot: document.querySelector(`.patron-slot[data-adv="${selectedPatronId}"]`),
-    targetZone,
-    newLocation
-});
+            if (slot && targetZone) {
+                console.log("TOUCH MOVE:", {
+                    selectedPatronId,
+                    slot,
+                    targetZone,
+                    newLocation
+                });
+                targetZone.appendChild(slot);
+            }
 
-				targetZone.appendChild(slot);
-			}
-
-
-            // Save
-            patron.location = newLocation;
+            // ✅ Save to REAL player data
+            player.patrons[selectedPatronId].location = newLocation;
             await storage.savePlayer(player);
+
             patronList = getVisiblePatrons();
+            updatePartyAButlerLine();
 
             deselectPatron();
         });
@@ -2256,7 +2262,7 @@ function renderCharSheet(adv) {
                 <h1 class="char-name">${adv.name}</h1>
 
                 <p><strong>Race:</strong> ${adv.race ?? "Unknown"}</p>
-                <p><strong>Role:</strong> ${adv.role ?? "Unknown"} Lvl: ${adv.level ?? "?"}</p>
+                <p><strong>Role:</strong> ${adv.role ?? "Unknown"} Lvl: ${adv.Level ?? "?"}</p>
                 <p><strong>Alignment:</strong> ${adv.alignment ?? "Neutral"}</p>
                 <p><strong>Caste:</strong> ${adv.caste ?? "Omni"}</p>
             </div>

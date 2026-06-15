@@ -1,5 +1,18 @@
     body { margin: 0; background: #121212; color: #eee; display: flex; justify-content: center; font-family: 'Segoe UI', sans-serif; min-height: 100vw ; overflow: auto; }
     #screen { width: 540px; height: 960px; background: #222; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 0 50px #000; position: relative; }
+#screen-wrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+#screen {
+    transform-origin: top left;
+}
+
     #grid { width: 540px; height: 540px; position: relative; background-color: #333; border-bottom: 2px solid #444; flex-shrink: 0; overflow: hidden; background-size: cover; background-position: center; }
     #log { height: 140px; background: #111; padding: 15px; overflow-y: auto; color: #00ff00; font-family: monospace; border-bottom: 2px solid #444; display: flex; flex-direction: column-reverse; box-sizing: border-box; flex-shrink: 0; }
     #controls { position:relative ; display: flex; flex-direction: row; flex: 1; background: #1a1a1a; padding: 10px; gap: 10px; align-items: stretch; box-sizing: border-box; }
@@ -138,14 +151,21 @@
     position: absolute;
     bottom: 10px;
     right: 10px;
-    transform: translateY(2px);
+    transform-origin: center center;
+    transition: transform 0.15s ease;
 }
 
-.reaction-panel > button:hover {
-    background: var(--r-btn-hover-bg);
-    border-color: var(--r-accent);
-    transform: translateY(-2px);
+.reaction-panel button.go-btn:hover {
+    transform: scale(1.05); /* grows ~1px in all directions */
 }
+
+
+.reaction-panel button.go-btn:hover {
+    transform: scale(1.025);
+}
+
+
+
 
 /* Reaction buttons inside each PC card */
 .reaction-entry button {
@@ -162,7 +182,7 @@
 .reaction-entry button:hover {
     background: var(--r-btn-hover-bg);
     border-color: var(--r-accent);
-    transform: translateY(-2px);
+    /* transform: translateY(-2px); */
 }
 
 #reaction-title {
@@ -204,6 +224,10 @@
     }
 }
 
+.reaction-used {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
 
 #dm-screen {
     position: absolute;

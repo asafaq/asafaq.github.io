@@ -8,7 +8,7 @@
 
 </head>
 <body>
-
+<div id="screen-wrapper">
 <div id="screen">
     <div id="grid">
         <div class="grid-overlay"></div>
@@ -28,6 +28,7 @@
 		<div id="reaction-title">REACTION PHASE</div>
 
     </div>
+</div>
 </div>
 
 <script>
@@ -101,6 +102,7 @@ async function init() {
 			speed: 6,
 			maxSpeed: 6,
 			hasAction: true,
+			hasReacted: false,
 			isConcentrating: false,
 			isHiding: p.isHiding || false,
 			isRaging: p.isRaging || false,
@@ -192,7 +194,7 @@ async function init() {
 				// ⭐ Start concentration
 				spellCaster.isConcentrating = true
 
-				Bus.emit('LOG', `${spellCaster.name} is cast ${selectedSpell} at ${target.name}!`);
+				Bus.emit('LOG', `${spellCaster.name} is casting ${selectedSpell} aiming at ${target.name}!`);
 
 				spellCaster.hasAction = false;
 
@@ -950,6 +952,10 @@ function handleRangedAttack(attacker, target) {
 
 function startReactionPhase() {
     isReactionPhase = true;
+	units.forEach(u => {
+    if (u.type === "pc") u.hasReacted = false;
+	});
+
     showReactionTitle();
     console.log("REACTION PHASE PCs:", units.filter(u => u.type === "pc"));
 
@@ -984,56 +990,54 @@ function buildReactionPanel() {
     panel.style.display = "flex";
 
     // Build PC entries
-    units.filter(u => u.type === 'pc' && u.hp > 0).forEach((pc, index) => {
-        const div = document.createElement('div');
-        div.className = "reaction-entry";
+	units.filter(u => u.type === 'pc' && u.hp > 0).forEach((pc, index) => {
+		const div = document.createElement('div');
+		div.className = "reaction-entry";
 
-        const header = document.createElement('div');
-        header.className = "reaction-header";
-        header.innerHTML = `<span class="r-name">${pc.name} • ${pc.hp}/${pc.maxHp}</span><span class="r-meta">${pc.role} • L${pc.level || 1}</span>`;
-        div.appendChild(header);
+		const header = document.createElement('div');
+		header.className = "reaction-header";
+		header.innerHTML = `<span class="r-name">${pc.name}</span><span class="r-meta">${pc.role} • hp ${pc.hp}/${pc.maxHp}`;
+		div.appendChild(header);
 
-        const actions = document.createElement('div');
-        actions.className = "reaction-actions";
-        div.appendChild(actions);
+		const actions = document.createElement('div');
+		actions.className = "reaction-actions";
+		div.appendChild(actions);
 
+		if (pc.race === "Barbarian" && !pc.usedRage) {
+			createReactionBtn(actions, "Rage", () => { handleRage(pc); }, pc);
+		}
 
+		if (isRogue(pc.role) && pc.canHide) {
+			createReactionBtn(actions, "Hide", () => {
+				pc.isHiding = true;
+				pc.canHide = false;
+				Bus.emit('LOG', `${pc.name} hides in the shadows.`);
+			}, pc);
+		}
 
-        if (pc.race === "Barbarian" && !pc.usedRage) {
-            createReactionBtn(actions, "Rage", () => { handleRage(pc); });
-        }
+		if (pc.role === "Bard" && pc.canSing && !isAnyBardSinging()) {
+			createReactionBtn(actions, "Sing", () => {
+				pc.canSing = false;
+				pc.isSinging = true;
+				units.forEach(u => {
+					if (u.type === "pc" && u !== pc) {
+						u.hitBonus = (u.hitBonus || 0) + 1;
+						u.damageBonus = (u.damageBonus || 0) + 1;
+					}
+				});
+				pc.hitBonus = (pc.hitBonus || 0) - 1;
+				pc.damageBonus = (pc.damageBonus || 0) - 1;
+				Bus.emit('LOG', `${pc.name} sings an inspiring tune!`);
+			}, pc);
+		}
 
-        if (isRogue(pc.role) && pc.canHide) {
-            createReactionBtn(actions, "Hide", () => {
-                pc.isHiding = true;
-                pc.canHide = false;
-                Bus.emit('LOG', `${pc.name} hides in the shadows.`);
-            });
-        }
-
-        if (pc.role === "Bard" && pc.canSing && !isAnyBardSinging()) {
-            createReactionBtn(actions, "Sing", () => {
-                pc.canSing = false;
-                pc.isSinging = true;
-                units.forEach(u => {
-                    if (u.type === "pc" && u !== pc) {
-                        u.hitBonus = (u.hitBonus || 0) + 1;
-                        u.damageBonus = (u.damageBonus || 0) + 1;
-                    }
-                });
-                pc.hitBonus = (pc.hitBonus || 0) - 1;
-                pc.damageBonus = (pc.damageBonus || 0) - 1;
-                Bus.emit('LOG', `${pc.name} sings an inspiring tune! Allies gain +1 hit/dmg, Bard suffers -1 hit/dmg and cannot cast spells.`);
-            });
-        }
-
-		// ⭐ Drink Potion button
 		createReactionBtn(actions, "Drink: Potion", () => {
 			handleDrinkPotion(pc);
-		});
-		
-        panel.appendChild(div);
-    });
+		}, pc);
+
+		panel.appendChild(div);
+	});   // ✔️ Correct
+
 
     // GO button
     const cont = document.createElement('button');
@@ -1057,12 +1061,27 @@ function buildReactionPanel() {
     panel.appendChild(cont);
 }
 
-function createReactionBtn(parent, text, func) {
+function createReactionBtn(parent, text, func, pc) {
     const btn = document.createElement('button');
     btn.innerText = text;
-    btn.onclick = func;
+
+    btn.onclick = () => {
+        if (pc.hasReacted) return; // ❌ Already reacted — ignore
+
+        pc.hasReacted = true;      // ✅ Lock reactions
+        func();                    // Run the actual reaction
+
+        // Disable all buttons for this PC
+        const container = parent.parentNode;
+        container.querySelectorAll("button").forEach(b => {
+            b.disabled = true;
+            b.classList.add("reaction-used");
+        });
+    };
+
     parent.appendChild(btn);
 }
+
 
 function showReactionTitle() {
     document.getElementById("reaction-title").style.display = "block";
@@ -1554,6 +1573,24 @@ init();
 window.addEventListener("beforeunload", () => {
     console.warn("IFRAME IS BEING RELOADED!");
 });
+
+function scaleScreen() {
+    const screen = document.getElementById("screen");
+    const wrapper = document.getElementById("screen-wrapper");
+
+    const baseWidth = 540;
+    const baseHeight = 960;
+
+    const scale = Math.min(
+        wrapper.clientWidth / baseWidth,
+        wrapper.clientHeight / baseHeight
+    );
+
+    screen.style.transform = `scale(${scale})`;
+}
+
+window.addEventListener("resize", scaleScreen);
+window.addEventListener("load", scaleScreen);
 
 </script>
 
