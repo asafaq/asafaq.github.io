@@ -1,7 +1,14 @@
 html, body {
     position: relative;
     overflow-x: hidden;
-}
+    background: #222;
+    font-family: Arial, sans-serif;
+    padding: 0;
+    margin: 0;
+    height: 100%;
+    overflow: hidden; 
+ }
+
 
   * { box-sizing: border-box; margin: 0; padding: 0; 
     user-select: none;
@@ -66,12 +73,12 @@ html, body {
     height: 960px;
     position: fixed;
     top: 0;
-    left: 0;
+    left: 10%;
     transform-origin: top center;
     transform: translateX(-50%) scale(var(--scale, 1));
-    /* Prevent any horizontal overflow issues */
     will-change: transform;
 }
+
 
 
 /* .app-wrapper { */

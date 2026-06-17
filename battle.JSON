@@ -419,6 +419,22 @@
 		"attackMod": -3,
 		"damageDie": 4,
 		"damageBonus": 2
+    },
+
+    "rustmon": {
+      "name": "Rust Monster",
+      "type": "monster",
+      "hp": 34,
+      "maxHp": 34,
+      "speed": 3,
+	  "xp": 35,
+      "icon": "/assets/monsters/zombie1.png",
+      "color": "#c0392b",
+	  "morale": 18,
+		"ac": 7,
+		"attackMod": -3,
+		"damageDie": 1,
+		"damageBonus": 0
     }
   },
 

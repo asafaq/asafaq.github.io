@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=540, user-scalable=no" charset="UTF-8">
 
 <link rel="stylesheet" href="battle.css">
+<link href="https://fonts.googleapis.com/css2?family=Squada+One&display=swap" rel="stylesheet">
 
 </head>
 <body>
@@ -17,15 +18,21 @@
     <div id="log">> Battle Initialized.</div>
 	<div id="reaction-panel" class="reaction-panel"></div>
     <div id="controls">
-        <div id="stats-panel">
-            <strong id="unit-name">Name</strong>
-            <span id="unit-hp">HP: 0</span>
-            <span id="unit-speed">SPD: 0</span>
-        </div>
         <div class="btn-group" id="action-bar"></div>
-        <button id="end-turn-btn" onclick="endTurn()">END</button>
-		<div id="dm-screen"></div>
-		<div id="reaction-title">REACTION PHASE</div>
+		<div id="right-column">
+			<button id="retreat-btn" onclick="handleRetreat()">RETREAT</button>
+
+			<div id="stats-panel">
+				<strong id="unit-name">Name</strong>
+				<span id="unit-hp">HP: 0</span>
+				<span id="unit-speed">SPD: 0</span>
+			</div>
+			<div id="bottom-buttons">
+				<button id="end-turn-btn" onclick="endTurn()">End Turn</button>
+			</div>
+		</div>
+	<div id="dm-screen"></div>
+	<div id="reaction-title">REACTION PHASE</div>
 
     </div>
 </div>
@@ -103,6 +110,8 @@ async function init() {
 			maxSpeed: 6,
 			hasAction: true,
 			hasReacted: false,
+			retreated: false,
+			retreatHp: null,
 			isConcentrating: false,
 			isHiding: p.isHiding || false,
 			isRaging: p.isRaging || false,
@@ -400,7 +409,7 @@ function rollInitiativeForAll() {
                 initiative: roll + dex
             };
         })
-        .filter(o => o.hp > 0); // 💀 Remove dead monsters and PCs from initiative entirely
+        .filter(o => o.hp > 0 && !o.retreated);   // remove dead OR retreated units // 💀 Remove dead monsters and PCs from initiative entirely
 
     // Sort living combatants from highest to lowest initiative
     initiativeOrder.sort((a, b) => b.initiative - a.initiative);
@@ -505,6 +514,10 @@ function update() {
     units.forEach((u, i) => {
         const t = document.getElementById(`t-${i}`);
         if (t) {
+		        if (u.retreated) {
+				t.style.display = "none";
+				return;   }
+        
             t.style.display = u.hp <= 0 ? 'none' : 'flex';
             t.style.left = (u.x * 54 + 4) + 'px';
             t.style.top = (u.y * 54 + 4) + 'px';
@@ -530,7 +543,7 @@ function update() {
     document.getElementById('unit-name').innerText = active.name;
     let hpText = `HP: ${active.hp}`;
     if (active.tempHp && active.tempHp > 0) {
-        hpText += `  🛡️ ${active.tempHp}`;
+        hpText += ` 🛡️${active.tempHp}`;
     }
     document.getElementById('unit-hp').innerText = hpText;
     document.getElementById('unit-speed').innerText = `SPD: ${active.speed}`;
@@ -561,7 +574,7 @@ function update() {
             createBtn(bar, "🗡️ Sneak", startSneakTargeting);
         } else {
             createBtn(bar, "⚔️ Strike", startMeleeTargeting);
-            createBtn(bar, "🌫️ Hide", handleHide);
+            createBtn(bar, "️👤 Hide", handleHide);
         }
     } else {
         createBtn(bar, "⚔️ Strike", startMeleeTargeting);
@@ -572,12 +585,7 @@ function update() {
     if (canHeal(active.role) && !active.isRaging) {
         createBtn(bar, "💚 Heal", startHealTargeting);
     }
-	createBtn(bar, "🏳️ Retreat", () => {
-		active.hp = 0;          // mark as downed or escaped
-		active.hasAction = false;
-		Bus.emit('LOG', `${active.name} retreats from battle!`);
-		endTurn();              // immediately end their turn
-	});
+
 
     checkVictory();
 }
@@ -1184,6 +1192,7 @@ function endTurn() {
     // 🔹 Start-of-round reaction phase
     if (!roundStarted) {
         roundStarted = true;
+		
         rollInitiativeForAll();   // NEW ROUND INITIATIVE
 		requestAnimationFrame(() => {startReactionPhase();	});
         return;
@@ -1398,17 +1407,43 @@ function awardFoeDefeat(target) {
     update();
 }
 
+function handleRetreat() {
+    const activeIndex = initiativeOrder[turnIndex].index;
+    const active = units[activeIndex];
+    if (!active) return;
+
+    // Save their real HP
+    active.retreatHp = active.hp;
+
+    // Mark them as "out" using the existing engine logic
+    active.hp = 0;
+    active.hasAction = false;
+
+    Bus.emit('LOG', `${active.name} retreats from battle!`);
+
+    // Remove from initiative
+    initiativeOrder = initiativeOrder.filter(o => o.index !== activeIndex);
+
+    if (turnIndex >= initiativeOrder.length) {
+        turnIndex = 0;
+    }
+
+    endTurn();
+}
+
 function checkVictory() {
     if (victoryShown) return; 
     
     // ⭐ FIX: Prevent premature activation before round officially starts
     if (units.length === 0 || !roundStarted) return;
 
-    const aliveMonsters = units.filter(u => u.type === 'monster' && u.hp > 0);
+    const aliveMonsters = units.filter(u => u.type === 'monster' && u.hp > 0 && !u.retreated);
 	const alivePCs = units.filter(u => u.type === 'pc' && u.hp > 0);
 	if (units.length === 0) {
 		victoryShown = true;
 
+		refreshRetreatHp();
+		
 		showDefeatWindow("No combatants remain.", () => {
 			Bus.emit('LOG', "BATTLE ENDED");
 			localStorage.removeItem('currentBattle');
@@ -1428,6 +1463,8 @@ function checkVictory() {
 	if (alivePCs.length === 0) {
 		victoryShown = true;
 
+		refreshRetreatHp();
+		
 		showDefeatWindow("Your party has fallen.", () => {
 			Bus.emit('LOG', "DEFEAT");
 			localStorage.removeItem('currentBattle');
@@ -1446,7 +1483,7 @@ function checkVictory() {
 		}
     if (aliveMonsters.length === 0) {
         victoryShown = true; // Set early to prevent parallel executions
-
+		refreshRetreatHp();
         const savedData = JSON.parse(localStorage.getItem('currentBattle')) || {};
         const xp = battleXP;
         const loot = savedData.loot || [];
@@ -1483,6 +1520,15 @@ function checkVictory() {
             }
         });
     }
+}
+
+function refreshRetreatHp() {
+		for (const u of units) {
+			if (u.retreatHp !== null) {
+				u.hp = u.retreatHp;   // restore original HP
+				u.retreatHp = null;   // clear the flag
+			}
+		}
 }
 
 function showVictoryWindow(summary, onClose) {
