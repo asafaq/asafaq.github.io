@@ -7,8 +7,6 @@ let preloadPromise = null;
 
 // loading assets into user's working memory depends on having the leading / "/asset will be loaded but not "asset without leading /
 const assetUrls = [
-  "/assets/contracts/background charsheet.jpg",
-
   "/assets/guild/adventurers_license_50.png",
   "/assets/guild/chest60.png",
   "/assets/guild/default.png",
