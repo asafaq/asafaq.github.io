@@ -14,7 +14,7 @@
 }
 
     #grid { width: 540px; height: 540px; position: relative; background-color: #333; border-bottom: 2px solid #444; flex-shrink: 0; overflow: hidden; background-size: cover; background-position: center; }
-    #log { height: 140px; background: #111; padding: 15px; overflow-y: auto; color: #00ff00; font-family: monospace; border-bottom: 2px solid #444; display: flex; flex-direction: column-reverse; box-sizing: border-box; flex-shrink: 0; }
+    #log { position: relative; height: 140px; background: #111; padding: 15px; overflow-y: auto; color: #00ff00; font-family: monospace; border-bottom: 2px solid #444; display: flex; flex-direction: column-reverse; box-sizing: border-box; flex-shrink: 0; }
     #controls { position:relative ; display: flex; flex-direction: row; flex: 1; background: #1a1a1a; padding: 10px; gap: 10px; align-items: stretch; box-sizing: border-box; }
     #stats-panel { font-family: "monospace", sans-serif; flex: 1; display: flex; flex-direction: column; justify-content: center; background: #2c3e50; border-radius: 4px; padding: 8px; font-size: 0.7rem; color: white; flex-shrink: 0; border-left: 4px solid #3498db; box-sizing: border-box; }
     #stats-panel strong { display: block; margin-bottom: 2px; color: #f1c40f; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -27,6 +27,32 @@
 	.cell.obstacle {     background-color: rgba(0,0,0,0.6); }
     .btn-move-active { background-color: #27ae60 !important; border: 2px solid white !important; }
     button:disabled { opacity: 0.4; filter: grayscale(1); cursor: not-allowed; }
+
+
+#log-buttons {
+    position: absolute;
+    top: 2px;
+    right: 10px;
+    display: flex;
+    gap: 6px;
+    z-index: 9999; /* stays above everything */
+}
+
+#log-buttons button {
+    font-size: 11px;
+    padding: 3px 6px;
+    background: rgba(0,0,0,0.6);
+    color: white;
+    border: 1px solid #444;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#log-buttons button:hover {
+    background: rgba(0,0,0,0.8);
+}
+
+
 /* RIGHT COLUMN — clean, minimal, gapless */
 #right-column {
     display: flex;

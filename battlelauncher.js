@@ -593,7 +593,7 @@ async function launchBattle(encounterKey) {
 				cha: hydrated.charisma_mod
 			},
 
-			traits: hydrated.trait || [],
+			traits: hydrated.traits || [],
 			inventory: hydrated.inventory || [],
 
 			ac: hydrated.AC,

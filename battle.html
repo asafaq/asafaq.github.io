@@ -15,7 +15,12 @@
         <div class="grid-overlay"></div>
         <div id="active-ring" class="active-ring"></div>
     </div>
-    <div id="log">> Battle Initialized.</div>
+    <div id="log">> Battle Initialized.
+		<div id="log-buttons">
+			<button onclick="copyBattleLog()">Copy</button>
+			<button onclick="downloadBattleLog()">TXT</button>
+		</div>
+	</div>
 	<div id="reaction-panel" class="reaction-panel"></div>
     <div id="controls">
         <div class="btn-group" id="action-bar"></div>
@@ -101,15 +106,18 @@ async function init() {
         staticObstacles = [];
     }
 
+	round++;
 	units = [
 		...data.party.map(p => ({
 			...p,
 			type: 'pc',
+			traits: p.traits || [],   // ⭐ FIXED — now traits survive
 			tempHp: p.tempHp || 0,
 			speed: 6,
 			maxSpeed: 6,
 			hasAction: true,
 			hasReacted: false,
+			stunned: false,
 			retreated: false,
 			retreatHp: null,
 			isConcentrating: false,
@@ -131,7 +139,8 @@ async function init() {
             speed: 6,
             maxSpeed: 6,
             hasAction: true,
-            maxHp: m.hp
+            maxHp: m.hp,
+			stunned: false
         }))
     ];
 
@@ -316,9 +325,9 @@ async function init() {
         grid.appendChild(t);
     });
 
-    update();
 	// Mark that the round has already started
 	roundStarted = true;
+    update();
 
 	
 	// Start the very first turn properly
@@ -326,6 +335,122 @@ async function init() {
 	// Bus.emit('LOG', `Turn: ${first.name}`);
 
 	//if (first.type === 'monster') { 		setTimeout(monsterAI, 600); 	}
+}
+
+function update() {
+    if (isReactionPhase) return; 
+	console.log(`Running update() at round ${round}`);
+	
+    const active = units[initiativeOrder[turnIndex].index];
+    if (!active) return;
+
+    // 1. ALWAYS update position rings and token visibility for both PCs and Monsters
+    const ring = document.getElementById('active-ring');
+    ring.style.left = (active.x * 54 + 2) + 'px';
+    ring.style.top = (active.y * 54 + 2) + 'px';
+
+    units.forEach((u, i) => {
+        const t = document.getElementById(`t-${i}`);
+        if (t) {
+		        if (u.retreated) {
+				t.style.display = "none";
+				return;   }
+        
+            t.style.display = u.hp <= 0 ? 'none' : 'flex';
+            t.style.left = (u.x * 54 + 4) + 'px';
+            t.style.top = (u.y * 54 + 4) + 'px';
+            t.style.opacity = u.isHiding ? "0.5" : "1";
+        }
+    });
+
+
+    const bar = document.getElementById('action-bar');
+    const endBtn = document.getElementById('end-turn-btn');
+    //console.log("Traits:", active.traits);		//debug
+	//console.log("isAnyBardSinging:", isAnyBardSinging());
+
+    if (active.type === "monster") {
+		showDMScreen();
+        bar.innerHTML = '';
+        if (endBtn) endBtn.disabled = true;
+        checkVictory();
+        return; 
+    }
+
+    // 2. Human Player character UI rebuild follows normally...
+    if (endBtn) endBtn.disabled = false;
+    document.getElementById('unit-name').innerText = active.name;
+    let hpText = `HP: ${active.hp}`;
+    if (active.tempHp && active.tempHp > 0) {
+        hpText += ` 🛡️${active.tempHp}`;
+    }
+    document.getElementById('unit-hp').innerText = hpText;
+    document.getElementById('unit-speed').innerText = `SPD: ${active.speed}`;
+
+    const hitBonus = active.hitBonus || 0;
+    const dmgBonus = active.damageBonus || 0;
+    let hitEl = document.getElementById('unit-hitBonus') || document.createElement('span');
+    let dmgEl = document.getElementById('unit-damageBonus') || document.createElement('span');
+    hitEl.id = 'unit-hitBonus'; dmgEl.id = 'unit-damageBonus';
+    document.getElementById('stats-panel').appendChild(hitEl);
+    document.getElementById('stats-panel').appendChild(dmgEl);
+    hitEl.style.display = hitBonus !== 0 ? "block" : "none";
+    dmgEl.style.display = dmgBonus !== 0 ? "block" : "none";
+    if (hitBonus !== 0) hitEl.innerText = `HIT: ${hitBonus > 0 ? "+" : ""}${hitBonus}`;
+    if (dmgBonus !== 0) dmgEl.innerText = `DMG: ${dmgBonus > 0 ? "+" : ""}${dmgBonus}`;
+
+    bar.innerHTML = '';
+    createBtn(bar, "📍 Move", toggleMove, isMoving ? 'btn-move-active' : '', "move-btn");
+    
+    if (active.race === "Barbarian" && active.isRaging && active.rageTurnsActive >= 3) {
+        createBtn(bar, "End Rage", handleEndRage);
+    }
+    if (active.role === "Bard") {
+        createBtn(bar, "🏹 Crossbow", startRangedTargeting);
+    }
+    if (isRogue(active.role)) {
+        if (active.isHiding) {
+            createBtn(bar, "🗡️ Sneak", startSneakTargeting);
+        } else {
+            createBtn(bar, "⚔️ Strike", startMeleeTargeting);
+            createBtn(bar, "️👤 Hide", handleHide);
+        }
+    } else {
+        createBtn(bar, "⚔️ Strike", startMeleeTargeting);
+    }
+    if (canCast(active.role) && !active.isSinging && !active.isRaging) {
+        createBtn(bar, "✨ Spell", handleSpell);
+    }
+    if (canHeal(active.role) && !active.isRaging) {
+        createBtn(bar, "💚 Heal", startHealTargeting);
+    }
+	if (
+		active.traits?.includes("Comedian") &&
+		!isAnyBardSinging()
+	) {
+		createBtn(bar, "🎭 Joke", startJokeAction);
+	}
+
+    checkVictory();
+}
+
+function refreshRound() {
+	    // ⭐ FIX 2: Reset actions and speed ONLY for living units
+    units.forEach(u => {
+        if (u.hp > 0) {
+            u.hasAction = true;
+            u.speed = u.maxSpeed ?? 6;
+        } else {
+            // Keep dead units clean
+            u.hasAction = false;
+            u.speed = 0;
+        }
+    });
+
+    // ⭐ FIX 1: Filter out dead units (hp <= 0) before building the initiative tracking array
+	round++;
+	Bus.emit('LOG', `It is combat round ${round}.`);
+	if (round > 2) { monsterMoraleCheck() };
 }
 
 function applyStrDexAttackBonus(unit) {
@@ -393,11 +518,6 @@ function applyDamage(target, amount) {
 }
 
 function rollInitiativeForAll() {
-    // ⭐ FIX 1: Filter out dead units (hp <= 0) before building the initiative tracking array
-	round++;
-	Bus.emit('LOG', `It is combat round ${round}.`);
-	if (round > 2) { monsterMoraleCheck() };
-
     initiativeOrder = units
         .map((u, i) => {
             const dex = u.stats?.dex ?? 0;
@@ -413,18 +533,6 @@ function rollInitiativeForAll() {
 
     // Sort living combatants from highest to lowest initiative
     initiativeOrder.sort((a, b) => b.initiative - a.initiative);
-
-    // ⭐ FIX 2: Reset actions and speed ONLY for living units
-    units.forEach(u => {
-        if (u.hp > 0) {
-            u.hasAction = true;
-            u.speed = u.maxSpeed ?? 6;
-        } else {
-            // Keep dead units clean
-            u.hasAction = false;
-            u.speed = 0;
-        }
-    });
 
     Bus.emit("LOG",
         "Initiative → " +
@@ -499,96 +607,50 @@ function canHeal(role) {
     return ROLE_TYPES.Healer.includes(role);
 }
 
-function update() {
-    if (isReactionPhase) return; 
-	console.log(`Running update() at round ${round}`);
 
-    const active = units[initiativeOrder[turnIndex].index];
-    if (!active) return;
+function startJokeAction() {
+    const u = units[initiativeOrder[turnIndex].index];
+    if (!u.hasAction) return;
 
-    // 1. ALWAYS update position rings and token visibility for both PCs and Monsters
-    const ring = document.getElementById('active-ring');
-    ring.style.left = (active.x * 54 + 2) + 'px';
-    ring.style.top = (active.y * 54 + 2) + 'px';
+    Bus.emit('LOG', `${u.name} tells a joke! 🎭`);
 
-    units.forEach((u, i) => {
-        const t = document.getElementById(`t-${i}`);
-        if (t) {
-		        if (u.retreated) {
-				t.style.display = "none";
-				return;   }
-        
-            t.style.display = u.hp <= 0 ? 'none' : 'flex';
-            t.style.left = (u.x * 54 + 4) + 'px';
-            t.style.top = (u.y * 54 + 4) + 'px';
-            t.style.opacity = u.isHiding ? "0.5" : "1";
+    let jokerCha = (u.stats.cha ?? 0) + 2;
+
+    const stunnedList = [];
+
+    units.forEach(target => {
+        if (target === u || target.hp <= 0) return;
+
+        // Rage immunity
+        if (target.isRaging) return;
+
+        const intScore = target.stats?.int ?? -2;
+        const wisScore = target.stats?.wis ?? -3;
+
+        // Too dumb to understand
+        if (intScore < -2) return;
+
+        const roll = d20();
+        const result = roll - jokerCha + wisScore;
+
+        if (result <= 10) {
+            target.stunned = true;
+            stunnedList.push(`${target.name}(${result})`);
         }
     });
 
-    // 🛑 STOP UI REBUILD HERE IF IT IS A MONSTER'S TURN
-    // This replaces the old "if (active.type === 'monster') return;" that was placed too high up
-    const bar = document.getElementById('action-bar');
-    const endBtn = document.getElementById('end-turn-btn');
-    
-    if (active.type === "monster") {
-		showDMScreen();
-        bar.innerHTML = '';
-        if (endBtn) endBtn.disabled = true;
-        checkVictory();
-        return; 
+    if (stunnedList.length > 0) {
+        Bus.emit('LOG', `🤣 Stunned: ${stunnedList.join(', ')}`);
     }
 
-    // 2. Human Player character UI rebuild follows normally...
-    if (endBtn) endBtn.disabled = false;
-    document.getElementById('unit-name').innerText = active.name;
-    let hpText = `HP: ${active.hp}`;
-    if (active.tempHp && active.tempHp > 0) {
-        hpText += ` 🛡️${active.tempHp}`;
-    }
-    document.getElementById('unit-hp').innerText = hpText;
-    document.getElementById('unit-speed').innerText = `SPD: ${active.speed}`;
-
-    const hitBonus = active.hitBonus || 0;
-    const dmgBonus = active.damageBonus || 0;
-    let hitEl = document.getElementById('unit-hitBonus') || document.createElement('span');
-    let dmgEl = document.getElementById('unit-damageBonus') || document.createElement('span');
-    hitEl.id = 'unit-hitBonus'; dmgEl.id = 'unit-damageBonus';
-    document.getElementById('stats-panel').appendChild(hitEl);
-    document.getElementById('stats-panel').appendChild(dmgEl);
-    hitEl.style.display = hitBonus !== 0 ? "block" : "none";
-    dmgEl.style.display = dmgBonus !== 0 ? "block" : "none";
-    if (hitBonus !== 0) hitEl.innerText = `HIT: ${hitBonus > 0 ? "+" : ""}${hitBonus}`;
-    if (dmgBonus !== 0) dmgEl.innerText = `DMG: ${dmgBonus > 0 ? "+" : ""}${dmgBonus}`;
-
-    bar.innerHTML = '';
-    createBtn(bar, "📍 Move", toggleMove, isMoving ? 'btn-move-active' : '', "move-btn");
-    
-    if (active.race === "Barbarian" && active.isRaging && active.rageTurnsActive >= 3) {
-        createBtn(bar, "End Rage", handleEndRage);
-    }
-    if (active.role === "Bard") {
-        createBtn(bar, "🏹 Crossbow", startRangedTargeting);
-    }
-    if (isRogue(active.role)) {
-        if (active.isHiding) {
-            createBtn(bar, "🗡️ Sneak", startSneakTargeting);
-        } else {
-            createBtn(bar, "⚔️ Strike", startMeleeTargeting);
-            createBtn(bar, "️👤 Hide", handleHide);
-        }
-    } else {
-        createBtn(bar, "⚔️ Strike", startMeleeTargeting);
-    }
-    if (canCast(active.role) && !active.isSinging && !active.isRaging) {
-        createBtn(bar, "✨ Spell", handleSpell);
-    }
-    if (canHeal(active.role) && !active.isRaging) {
-        createBtn(bar, "💚 Heal", startHealTargeting);
-    }
-
-
-    checkVictory();
+    u.hasAction = false;
+    update();
 }
+
+function d20() {
+    return Math.floor(Math.random() * 20) + 1;
+}
+
 
 function showDMScreen() {
     document.getElementById("dm-screen").style.display = "block";
@@ -597,7 +659,6 @@ function showDMScreen() {
 function hideDMScreen() {
     document.getElementById("dm-screen").style.display = "none";
 }
-
 
 function startRangedTargeting() {
     const u = units[initiativeOrder[turnIndex].index];
@@ -1039,7 +1100,7 @@ function buildReactionPanel() {
 			}, pc);
 		}
 
-		createReactionBtn(actions, "Drink: Potion", () => {
+		createReactionBtn(actions, "Healing Potion", () => {
 			handleDrinkPotion(pc);
 		}, pc);
 
@@ -1055,17 +1116,17 @@ function buildReactionPanel() {
         isReactionPhase = false;
         panel.style.display = "none";
         hideReactionTitle();
-        roundStarted = true;
+        //roundStarted = true;
 
         const active = units[initiativeOrder[turnIndex].index];
         Bus.emit('LOG', `Turn: ${active.name}`);
-
         update();
 
         if (active.type === "monster") {
             setTimeout(monsterAI, 600);
         }
     };
+
     panel.appendChild(cont);
 }
 
@@ -1089,7 +1150,6 @@ function createReactionBtn(parent, text, func, pc) {
 
     parent.appendChild(btn);
 }
-
 
 function showReactionTitle() {
     document.getElementById("reaction-title").style.display = "block";
@@ -1117,15 +1177,13 @@ function handleDrinkPotion(user) {
 function endTurn() {
     isMoving = false;
 
-    // The unit who just acted
-    const current = units[initiativeOrder[turnIndex].index];
-
     // Rage tracking
+    const current = units[initiativeOrder[turnIndex].index];
     if (current && current.isRaging) {
         current.rageTurnsActive++;
     }
 
-    // 🔹 Resolve queued end-of-round spells (initiative-order aware)
+    // Resolve end-of-round spells
     const lastAliveOrderIndex = [...initiativeOrder]
         .map((o, idx) => ({ idx, alive: units[o.index].hp > 0 }))
         .filter(o => o.alive)
@@ -1147,22 +1205,36 @@ function endTurn() {
         pendingSpells = [];
     }
 
-    // 🔹 Advance to next living combatant in initiativeOrder
+    // ADVANCE TURN — NO RECURSION
     let attempts = 0;
-    do {
+
+    while (attempts < initiativeOrder.length) {
         turnIndex = (turnIndex + 1) % initiativeOrder.length;
         attempts++;
-    } while (units[initiativeOrder[turnIndex].index].hp <= 0 && attempts < initiativeOrder.length);
+
+        const next = units[initiativeOrder[turnIndex].index];
+
+        if (next.hp <= 0) continue;
+
+        if (next.stunned) {
+            Bus.emit('LOG', `${next.name} is stunned and loses their turn! 🤣`);
+            next.stunned = false;
+			next.hadAction = false;
+            continue; // TURN COUNTS
+        }
+
+        break; // Found next active unit
+    }
 
     const active = units[initiativeOrder[turnIndex].index];
 
-	// Find the first living unit in initiative order
-	const firstAliveOrderIndex = initiativeOrder.findIndex(o => units[o.index].hp > 0);
+    // ROUND BOUNDARY CHECK
+    const firstAliveOrderIndex = initiativeOrder.findIndex(o => units[o.index].hp > 0);
 
-	// If we wrapped back to the first living unit → new round
-	if (turnIndex === firstAliveOrderIndex && roundStarted) {
-
+    if (turnIndex === firstAliveOrderIndex && roundStarted) {
         roundStarted = false;
+
+        refreshRound();
 
         // Bard song fade
         if (isAnyBardSinging()) {
@@ -1189,15 +1261,14 @@ function endTurn() {
         });
     }
 
-    // 🔹 Start-of-round reaction phase
+    // START REACTION PHASE
     if (!roundStarted) {
         roundStarted = true;
-		
-        rollInitiativeForAll();   // NEW ROUND INITIATIVE
-		requestAnimationFrame(() => {startReactionPhase();	});
+        requestAnimationFrame(() => startReactionPhase());
         return;
     }
 
+    // NORMAL TURN
     Bus.emit('LOG', `Turn: ${active.name}`);
     update();
 
@@ -1210,30 +1281,30 @@ function monsterAI() {
     const u = units[initiativeOrder[turnIndex].index];
     if (!u || u.hp <= 0) return endTurn();
 
+    // ⭐ If stunned, skip their turn
+    if (u.stunned) {
+        Bus.emit('LOG', `${u.name} is stunned and loses their turn! 🤣`);
+        //u.stunned = false;
+        return endTurn();
+    }
+
     // Monsters always start with an action
     u.hasAction = true;
 
-    // Find nearest PC
     const target = findNearestPC(u);
     if (!target) return endTurn();
 
-    // Move toward target
     moveMonsterToward(u, target);
 
-    // After moving, check if adjacent
     if (isAdjacent(u, target) && u.hasAction) {
-        handleAttack(u, target); // consumes action
+        handleAttack(u, target);
     }
 
-
-    // 4. Cleanly pass control to the next character in sequence
-    // Hide DM screen AFTER monster finishes
-	update();
+    update();
     setTimeout(() => {
         hideDMScreen();
         endTurn();
     }, 600);
-
 }
 
 function findNearestPC(monster) {
@@ -1613,7 +1684,37 @@ Bus.on('LOG', (msg) => {
     const entry = document.createElement('div');
     entry.innerText = `> ${msg}`;
     l.prepend(entry);
+	//l.append(entry);
+
 });
+
+function copyBattleLog() {
+    const logBox = document.getElementById("log");
+    const lines = [...logBox.children].map(e => e.innerText);
+    const chronological = lines.reverse().join("\n");
+
+    navigator.clipboard.writeText(chronological)
+        .then(() => console.log("Battle log copied to clipboard"))
+        .catch(err => console.error("Copy failed:", err));
+}
+
+
+function downloadBattleLog() {
+    const logBox = document.getElementById("log");
+    const lines = [...logBox.children].map(e => e.innerText);
+    const chronological = lines.reverse().join("\n");
+
+    const blob = new Blob([chronological], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "battle_log.txt";
+    a.click();
+
+    URL.revokeObjectURL(url);
+}
+
 
 init();
 window.addEventListener("beforeunload", () => {

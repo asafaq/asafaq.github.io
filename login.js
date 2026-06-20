@@ -1,6 +1,6 @@
 // Toggle: true = show login screen, false = skip login entirely
-const ENABLE_LOGIN = false;		//always set them up equal values
-const ENABLE_PRELOAD = false;	//always set them up equal values
+const ENABLE_LOGIN = true;		//always set them up equal values
+const ENABLE_PRELOAD = true;	//always set them up equal values
 
 let preloadedAssets = null;
 let preloadPromise = null;
@@ -54,7 +54,7 @@ const assetUrls = [
   "/assets/patrons/Claudio_s.png",
   "/assets/patrons/Tinman.png",
   "/assets/patrons/amyssa_s.png",
-  "/assets/patrons/amyssa_smaller.png",
+  "/assets/patrons/amyssa_l.png",
   "/assets/patrons/default.png",
   "/assets/patrons/direwolf.png",
   "/assets/patrons/direwolf_s.png",
@@ -71,11 +71,16 @@ const assetUrls = [
 ];
 
 function beginSilentPreload() {
-    preloadPromise = preloadAssets(assetUrls).then(assets => {
+    showLoadingOverlay();
+
+    preloadPromise = preloadAssets(assetUrls, (loaded, total) => {
+        updateLoadingText(loaded, total);
+    }).then(assets => {
         preloadedAssets = assets;
-        console.log("Silent preload finished.");
+        hideLoadingOverlay();
     });
 }
+
 
 // assetUrls should be an array of strings, e.g.:
 // const assetUrls = ["img/card1.png", "img/card2.png", ...];
@@ -109,6 +114,17 @@ function preloadAssets(urls) {
             };
         });
     });
+}
+
+function showLoadingOverlay() {
+    document.getElementById("loadingOverlay").style.display = "block";
+}
+function updateLoadingText(loaded, total) {
+    document.getElementById("loadingText").textContent =
+        `Loading assets (${loaded}/${total})`;
+}
+function hideLoadingOverlay() {
+    document.getElementById("loadingOverlay").style.display = "none";
 }
 
 
