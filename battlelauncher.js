@@ -3,6 +3,22 @@
 // --- 2. THE LISTENER (Battle -> Main Page) ---
 // --- 2. THE LISTENER (Battle -> Main Page) ---
 window.addEventListener("message", async (event) => {
+	
+    if (event.data.type === "UNIT_DEFEATED") {
+		
+        const name = event.data.name;
+		if (!player.counter) player.counter = {};
+		if (!player.counter.beaten) player.counter.beaten = {};
+
+        if (!player.counter.beaten[name]) {
+            player.counter.beaten[name] = 0;
+        }
+
+        player.counter.beaten[name]++;
+
+        //Bus.emit('LOG', `📊 ${name} defeated ${player.counter.beaten[name]} times.`);
+    }
+	
     if (event.data.type === "BATTLE_COMPLETE") {
         const results = event.data.result;
         const earnedXP = event.data.xp || 0;
@@ -40,7 +56,7 @@ window.addEventListener("message", async (event) => {
                     while (patron.Exp >= xpNeeded && nextLevel <= 20) {
                         patron.Level = nextLevel;
 
-                        const lore = loreData.Adventurer[pc.name];
+                        const lore = loreData.Adventurer[`adv_${pc.name}`];
                         const hpGained = calculateLevelUpHP(patron.Level, lore, patron.expClassKey);
 
                         patron.MaxHP += hpGained;
@@ -157,6 +173,7 @@ async function awardManualXP(targets, totalXP) {
 
 function calculateLevelUpHP(level, loreInput, expClassKey = null) {
     let lore = loreInput;
+	console.log("calculateLevelUpHP", level, loreInput, expClassKey);
     if (!lore) {
         console.warn(`Missing lore for HP calculation at level ${level} for character "${loreInput}"`);
         return 1; // safe fallback
@@ -164,7 +181,6 @@ function calculateLevelUpHP(level, loreInput, expClassKey = null) {
 
     const hpDie = lore.hp_die ?? 6;
     let hpMod = lore.hp_modifier ?? 0;
-    if (hpMod > 2) hpMod = 2;   // existing cap kept for now
 
     let roll;
 

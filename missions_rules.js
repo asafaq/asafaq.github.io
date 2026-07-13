@@ -33,6 +33,9 @@ const casteOrder = {
     Omni: 999 // special, always allowed
 };
 
+//skills["Deception"]; // → "Charisma"
+//skills.Survival;     // → "Wisdom"
+
 function getEffectiveCaste(patron) {
     let caste = patron.caste;
 
@@ -168,6 +171,16 @@ function getInnateTraits(patron) {
 
     return raceData.Traits; // array of strings
 }
+
+function allPartyTraits(mission) {
+    const m = mission || player?.missions?.current_mission || {};
+
+    return [
+        ...(m.party_traits_visible ?? []),
+        ...(m.party_traits_hidden ?? [])
+    ];
+}
+
 
 const PartySynergies = {
 	"Trouble Makers": {
@@ -333,7 +346,7 @@ function partyHasTrait(traitName) {
 
     const all = [...visible, ...hidden];
 
-    return all.some(t => t.toLowerCase() === traitsName.toLowerCase());
+    return all.some(t => t.toLowerCase() === traitName.toLowerCase());
 }
 
 
@@ -370,6 +383,36 @@ function partyHasAllTraits(traitsList) {
 // if (partyHasAllTraits(["Calm", "Wise"])) {
     // unlockMeditationOption();
 // }
+
+function findMemberTrait(traitName) {
+    const patrons = player.patrons || {};
+    const normalizedTrait = traitName.toLowerCase();
+
+    const matches = [];
+
+    for (const advId in patrons) {
+        const patron = getHydratedAdventurer(advId);
+        if (!patron) continue;
+
+        // Must be in location 3
+        if (patron.location !== 3) continue;
+
+        // Must have traits
+        if (!Array.isArray(patron.traits)) continue;
+
+        // Check trait match (case-insensitive)
+        const hasTrait = patron.traits.some(
+            t => t.toLowerCase() === normalizedTrait
+        );
+
+        if (hasTrait) {
+            matches.push(patron.name);
+        }
+    }
+
+    return matches;
+}
+
 
 
 function ruleMinMembers(members, rules) {
@@ -476,8 +519,6 @@ function validateParty(partyKey) {
     return false;
 }
 
-
-
 function validatePartyAllErrors(partyKey) {
     const members = getPartyMembers(partyKey);
     const missionId = player.missions.current_mission.id;
@@ -508,6 +549,72 @@ function showAllPartyErrors() {
     const msg = "Party cannot depart:\n" + errors.map(e => "• " + e).join("\n");
     pushStatus(msg, 8000);
 }
+
+
+	// adv → the adventurer’s name or ID
+	// ability → the ability modifier (e.g., charisma_mod)
+	// prof → "yes" or "no" (or boolean)
+	// dc → difficulty class (number)
+
+	// const result = rollSkillCheck("Lira", "charisma_mod", "yes", 18);
+	// console.log(result.total);
+	// console.log(result.success); if true that's the skill check result
+	
+	// advType = "normal" → roll 1d20
+	// advType = "advantage" → roll 2d20, take highest
+	// advType = "disadvantage" → roll 2d20, take lowest
+
+function rollSkillCheck(adv, ability, prof, dc, advType = "normal") {
+    // Hydrate the adventurer
+    const patron = getHydratedAdventurer(adv);
+    if (!patron) {
+        console.error("Adventurer not found:", adv);
+        return { success: false, error: "Adventurer not found" };
+    }
+
+    // Ability modifier (e.g., patron.charisma_mod)
+    const abilityMod = patron[ability] || 0;
+
+    // Proficiency bonus
+    const profBonus = (prof === "yes" || prof === true)
+        ? getProficiencyBonus(patron)
+        : 0;
+
+    // Roll logic
+    let roll1 = Math.ceil(Math.random() * 20);
+    let roll2 = null;
+    let finalRoll = roll1;
+
+    if (advType === "advantage") {
+        roll2 = Math.ceil(Math.random() * 20);
+        finalRoll = Math.max(roll1, roll2);
+    }
+
+    if (advType === "disadvantage") {
+        roll2 = Math.ceil(Math.random() * 20);
+        finalRoll = Math.min(roll1, roll2);
+    }
+
+    // Total result
+    const total = finalRoll + abilityMod + profBonus;
+
+    // Success check
+    const success = total >= dc;
+
+    return {
+        patron,
+        roll1,
+        roll2,
+        finalRoll,
+        abilityMod,
+        profBonus,
+        total,
+        dc,
+        success,
+        advType
+    };
+}
+
 
 const missionNodes = {
 	
@@ -675,8 +782,248 @@ function handleNodeEntry(nodeId, player, missionId) {
   }
 }
 
+const encounterDB = {
+    green_2: [
+        {
+            id: "g2_path",
+            cr: "*",
+            type: "status",
+            weight: 30,
+            desc: "The sun is shining, the path is clear, you stride on without interruptions.",
+            tags: ["forest"]
+        },
+        {
+            id: "g2_bandits",
+            cr: 0.75,
+            type: "combat",
+            weight: 30,
+            desc: "A small group of bandits ambush you.",
+            // combat uses launchBattle(id) - not - missionId: "mission_banditAmbush",
+            tags: ["hostile", "forest", "humanoid"]
+        },
+        {
+            id: "g2_bandits2",
+            cr: 2,
+            type: "combat",
+            weight: 30,
+            desc: "A small group of bandits set a toll booth.",
+            missionId: "green_2_g2_bandits2",
+            tags: ["hostile", "forest", "humanoid", "dialog"]
+        },
+        {
+            id: "g2_rustmon",
+            cr: 1,
+            type: "combat",
+            weight: 30,
+            desc: "A curious and ravenous large centipede-like creature rushes you.",
+            tags: ["hostile", "forest"]
+        },
+        {
+            id: "g2_rustmon2",
+            cr: 2,
+            type: "combat",
+            weight: 30,
+            desc: "A curious and ravenous large centipede-like creature rushes you.",
+            tags: ["hostile", "forest"]
+        },
+        {
+            id: "g2_kobolodogs1",
+            cr: "*",
+            type: "combat",
+            weight: 50,
+            desc: "A small group of bandits set a toll booth.",
+            missionId: "green_2_g2_bandits2",
+            tags: ["hostile", "forest", "humanoid", "dialog"]
+        },
+        {
+            id: "green2_*2",
+            cr: "4",
+            type: "dialog",
+            weight: 5,
+            desc: "a Red Deer grazing nearby.",
+            missionId: "green2_*2",
+            tags: ["forest", "dialog", "combat", "neutral"]
+        },
+        {
+            id: "green2_*21",
+            cr: "4",
+            type: "dialog",
+            weight: 5,
+            desc: "a travelling dwarven migrant.",
+            missionId: "green2_*2",
+            tags: ["forest", "dialog", "object", "currency", "neutral", "humanoid"]
+        },
+        {
+            id: "green2_*1",
+            cr: "*",
+            type: "dialog",
+            weight: 0.5,
+            desc: "lucky adventure finding silver coins.",
+            missionId: "green2_*1",
+            tags: ["forest", "dialog", "object", "currency"]
+        }
+    ]
+};
 
-function openMissionNode(nodeId) {
+/* Unused encounterDB entries
+
+,
+        {
+            id: "g2_hermit",
+            cr: 1,
+            type: "dialog",
+            weight: 20,
+            desc: "A wandering hermit offers cryptic advice.",
+            missionId: "mission_hermitDialog",
+            tags: ["npc", "story"]
+        },
+        {
+            id: "g2_lostItem",
+            cr: 0,
+            type: "discovery",
+            weight: 15,
+            desc: "You discover a strange artifact half-buried in moss.",
+            missionId: "mission_itemDiscovery",
+            tags: ["loot", "artifact"]
+        },
+        {
+            id: "g2_detour",
+            cr: 1,
+            type: "detour",
+            weight: 15,
+            desc: "A collapsed tree forces you to take a longer path.",
+            missionId: "mission_detour",
+            tags: ["environment", "movement"]
+        },
+        {
+            id: "g2_spirit",
+            cr: 3,
+            type: "dialog",
+            weight: 10,
+            desc: "A forest spirit challenges your resolve.",
+            missionId: "mission_spiritTrial",
+            tags: ["mystical", "rare"]
+        }
+		
+		
+*/
+
+function calculatePartyCR() {
+    const mission = player.missions.current_mission;
+
+    if (!mission || !mission.current_party) {
+        console.warn("No active mission or party.");
+        return 0;
+    }
+
+    // Your structure: current_party = "party_A"
+    const partyKey = mission.current_party;
+
+    if (partyKey !== "party_A") {
+        console.warn("Party_A is not active.");
+        return 0;
+    }
+
+    // Find all patrons in location 3 (party_A)
+    const partyMembers = Object.values(player.patrons).filter(p => p.location === 3);
+
+    if (partyMembers.length === 0) {
+        console.warn("Party_A has no members.");
+        return 0;
+    }
+
+    const classCount = {};
+    let partyCR = 0;
+
+    for (const member of partyMembers) {
+        const classKey = member.expClassKey;
+
+        if (!classCount[classKey]) classCount[classKey] = 0;
+        classCount[classKey]++;
+
+        const occurrence = classCount[classKey];
+
+        const baseClassScore = Math.max(100 - (occurrence - 1) * 10, 10);
+        const levelScore = baseClassScore * member.Level;
+        const hpPercent = member.currentHP / member.MaxHP;
+        const finalScore = levelScore * hpPercent;
+
+        // console.log(             `Member ${member.name || member.id}: class=${classKey}, occ=${occurrence}, `             + `base=${baseClassScore}, levelScore=${levelScore}, hp%=${hpPercent}, final=${finalScore}`         );
+
+        partyCR += finalScore;
+    }
+
+	partyCR /= 400; //adjusting to 5e CR of a balanced 4-men party.
+    return partyCR;
+}
+
+
+const encounterSettings = {	// default for function pickEncounter
+    useCRFilter: true,      // turn CR filtering on/off
+    crTolerance: 0.25       // ±20% range (0.20 = 20%)
+};
+
+/*
+const encounterSettings = {
+    green_2: { useCRFilter: true, crTolerance: 0.20 },
+    forest_1: { useCRFilter: false },
+    desert_3: { useCRFilter: true, crTolerance: 0.40 }
+};
+
+*/
+function pickEncounter(poiId, options = {}) {
+    const table = encounterDB[poiId];
+    if (!table) return null;
+
+    // Merge defaults with user options
+    const useCRFilter = options.useCRFilter ?? encounterSettings.useCRFilter;
+    const crTolerance = options.crTolerance ?? encounterSettings.crTolerance;
+
+    let finalTable = table;
+
+    if (useCRFilter) {
+        const partyCR = calculatePartyCR();
+
+        const minCR = partyCR * (1 - crTolerance);
+        const maxCR = partyCR * (1 + crTolerance);
+
+	const filtered = table.filter(enc => {
+		if (enc.cr === "*") return true; // wildcard = always allowed
+		return enc.cr >= minCR && enc.cr <= maxCR;
+	});
+
+        if (filtered.length > 0) {
+            finalTable = filtered;
+        }
+    }
+
+    // Weighted RNG
+    const totalWeight = finalTable.reduce((sum, e) => sum + e.weight, 0);
+    let roll = Math.random() * totalWeight;
+
+    for (const enc of finalTable) {
+        if (roll < enc.weight) return enc;
+        roll -= enc.weight;
+    }
+
+    return finalTable[finalTable.length - 1];
+}
+
+/* clicking a Node/POI on map >
+
+missions_rules.js	function openMissionNode(nodeId)
+ui.js			function runMission(node.missionId);
+missions.js		startMissionSystem(startSceneId);
+
+
+1. to make green_2 encounters, we have to start at openMissionNode(nodeId)
+2. identify green_2
+3. run a randomizers, start small with 2-3 events, and few passive events
+4. log events in player.missions.green_2_events[]
+5. make rules to progress green_2 in openMissionNode depending on events.
+*/
+
+async function openMissionNode(nodeId) {
     const node = missionNodes[nodeId];
 
     if (!node) {
@@ -694,5 +1041,53 @@ function openMissionNode(nodeId) {
     pushStatus(`${node.title}: ${node.desc}`);
     // Store selected node for engagement
     selectedNode = node;
+    // Only green_2 uses the encounter database for now
+	if (nodeId === "green_2" && player.missions.green_2 > 1 && player.missions.green_2 < 9) {
+
+        const encounter = pickEncounter("green_2");
+
+        pushStatus(`Encounter: ${encounter.desc} (CR${encounter.cr}, ${encounter.type})`);
+
+
+	// ⭐ NEW: Status encounters
+	if (encounter.type === "status") {
+		pushStatus(encounter.desc);
+		return; // stop here, no combat or mission
+	}
+
+        // Combat encounters use your battle system
+	if (encounter.type === "combat") {
+
+		console.log(`⚔️ launchBattle() triggered for encounter.id="${encounter.id}"`);
+		console.log(`Encounter object (full):`, encounter);
+		console.log(`Executing command: launchBattle("${encounter.id}")`);
+
+		try {
+			console.log(`Calling launchBattle("${encounter.id}")...`);
+			await launchBattle(encounter.id);
+			console.log(`✔ launchBattle("${encounter.id}") completed successfully`);
+		} catch (err) {
+			console.error(`❌ launchBattle("${encounter.id}") FAILED`, err);
+		}
+
+	} else {
+
+		console.log(`📜 runMission() triggered for encounter.missionId="${encounter.missionId}"`);
+		console.log(`Encounter object (full):`, encounter);
+		console.log(`Executing command: runMission("${encounter.missionId}")`);
+
+		try {
+			console.log(`Calling runMission("${encounter.missionId}")...`);
+			runMission(encounter.missionId);
+			console.log(`✔ runMission("${encounter.missionId}") completed successfully`);
+		} catch (err) {
+			console.error(`❌ runMission("${encounter.missionId}") FAILED`, err);
+		}
+	}
+
+        return;
+    }
 	runMission(node.missionId);
 }
+
+

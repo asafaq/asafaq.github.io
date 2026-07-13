@@ -157,6 +157,8 @@
     gap: 10px;
     padding: 10px;
     box-sizing: border-box;
+	align-items: flex-start; /* ← THIS fixes PC3 */
+    align-content: flex-start; /* aligns rows themselves at the top */
 }
 
 /* First 5 PC blocks — unchanged size */
@@ -251,7 +253,7 @@
 
 .reaction-panel button.go-btn {
     position: absolute;
-    bottom: 10px;
+    bottom: 8px;
     right: 10px;
     transform-origin: center center;
     transition: transform 0.15s ease;

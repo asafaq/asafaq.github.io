@@ -544,13 +544,14 @@
     "speaker": "Koboldog",
     "portrait": "/assets/missions/koboldog.png",
     "side": "right",
-    "dialog": "Pay our toll of mere 100 Silver Coins or enter a cage behind us! *bark*",
+    "dialog": "Pay our toll of 100 Silver Coins or enter a cage behind us! *bark*",
     "interaction_type": "selection",
     "options": [
       {
         "text": "Promise to pay them 100 Silvcrs.",
         "target_id": "STAY",
         "disabled": true,
+		"condition": "Liar",
         "frustration_text": "Ugh, if you could only say that with a straight face."
       },
       {
@@ -560,7 +561,7 @@
         "frustration_text": "You are considering it, but retreat doesn't seem much of an option considering they outnumber AND outfeet you."
       },
       {
-        "text": "Hogperson use [Intimidate] with his [Large Club] on the Koboldogs.",
+        "text": "Hogperson will [Intimidate] with his [Large Club] the Koboldogs.",
         "target_id": "green1_031",
         "disabled": false,
         "color": "#FFD700"
@@ -1297,7 +1298,7 @@
   {
     "id": "green2_104",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "portrait": "/assets/patrons/amyssa_l.png",
     "side": "left",
     "dialog": "Wait up.",
     "interaction_type": "next",
@@ -1306,7 +1307,7 @@
   {
     "id": "green2_105",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "portrait": "/assets/patrons/amyssa_l.png",
     "side": "left",
     "dialog": "You guys, hey wait!",
     "interaction_type": "next",
@@ -1315,7 +1316,7 @@
   {
     "id": "green2_106",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "portrait": "/assets/patrons/amyssa_l.png",
     "side": "left",
     "dialog": "Are you going to make me run???",
     "interaction_type": "next",
@@ -1333,7 +1334,7 @@
   {
     "id": "green2_108",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "portrait": "/assets/patrons/amyssa_l.png",
     "side": "left",
     "dialog": "I was thinking about this and I've came here because my conscious just doesn't allow me to relax back at the Tavern",
     "interaction_type": "next",
@@ -1342,7 +1343,7 @@
   {
     "id": "green2_109",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "portrait": "/assets/patrons/amyssa_l.png",
     "side": "left",
     "dialog": "It doesn't feel right at all!",
     "interaction_type": "next",
@@ -1351,7 +1352,7 @@
   {
     "id": "green2_110",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "portrait": "/assets/patrons/amyssa_l.png",
     "side": "left",
     "dialog": "I'm sorry about my behavior.\nI ask for your forgiveness.",
     "interaction_type": "next",
@@ -1360,7 +1361,7 @@
   {
     "id": "green2_111",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "portrait": "/assets/patrons/amyssa_l.png",
     "side": "left",
     "dialog": "You all may really be COMMONERS, ugh\nbut your cause is NOBLE",
     "interaction_type": "next",
@@ -1369,7 +1370,7 @@
   {
     "id": "green2_112",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "portrait": "/assets/patrons/amyssa_l.png",
     "side": "left",
     "dialog": "Please allow me to join your cause, it would bring me honor to serve alongside you.",
     "interaction_type": "next",
@@ -1378,7 +1379,7 @@
   {
     "id": "green2_113",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "portrait": "/assets/patrons/amyssa_l.png",
     "side": "left",
     "dialog": "If you'll allow me, I will put all my might and magic into finding your father, Hogperson.",
     "interaction_type": "selection",
@@ -1426,10 +1427,10 @@
   },
   {
     "id": "green2_117",
-    "speaker": "DEVELOPER NOTES",
+    "speaker": "Narrator",
     "portrait": "",
     "side": "left",
-    "dialog": "IN THE ABSENSE OF CURRENT PATH DEVELOPMENT, WE WILL FAST FORWARD TO THE TOWNSHIP TAVERN",
+    "dialog": "With your new member, the road carries on.",
     "interaction_type": "next",
     "target_id": "green2_117end"
   },
@@ -1438,346 +1439,494 @@
     "speaker": "DEVELOPER NOTES",
     "portrait": "",
     "side": "left",
-    "dialog": "IN THE ABSENSE OF CURRENT PATH DEVELOPMENT, WE WILL FAST FORWARD TO THE TOWNSHIP TAVERN",
+    "dialog": "",
     "interaction_type": "next",
     "target_id": "END"
   },
   {
-    "id": "green2_201",
+    "id": "green2*1_101",
+    "speaker": "Narrator",
+    "portrait": "",
+    "side": "left",
+    "dialog": "While walking the unpaved road you notice a few silver coins scattered on the ground. How fortunate. You pick them up and carry on your way.",
+    "interaction_type": "next",
+    "target_id": "green2_*101end"
+  },
+  {
+    "id": "green2_*101end",
+    "speaker": "Narrator",
+    "portrait": "",
+    "side": "left",
+    "dialog": ".",
+    "interaction_type": "next",
+    "target_id": "END"
+  },
+  {
+    "id": "green2*1_201",
+    "speaker": "Narrator",
+    "portrait": "",
+    "side": "left",
+    "dialog": "You encounter a Red Deer grazing nearby. It's a large male with a full build of antlers, seems rather dangerous. It is grazing and neutral towards your arrival.",
+    "interaction_type": "next",
+    "target_id": "",
+	"options": [
+      {
+        "text": "Leave and allow the beast to graze peacefully.",
+        "target_id": "green2*1_201end",
+        "disabled": false
+      },
+      {
+        "text": "Avert from your path and attack the beast.",
+        "target_id": "green2*1_202end",
+        "disabled": false,
+        "color": "#FF0000"
+      }
+    ]
+  },
+  {
+    "id": "green2*1_201end",
+    "speaker": "Narrator",
+    "portrait": "",
+    "side": "left",
+    "dialog": ".",
+    "interaction_type": "next",
+    "target_id": "END"
+  },
+  {
+    "id": "green2*1_202end",
+    "speaker": "Narrator",
+    "portrait": "",
+    "side": "left",
+    "dialog": ".",
+    "interaction_type": "next",
+    "target_id": "END"
+  },
+  {
+    "id": "green2*1_2101",
+    "speaker": "Narrator",
+    "portrait": "",
+    "side": "left",
+    "dialog": "You cross paths with a Dwarven fellow, he seems like a migrant away from his mountain home.",
+    "interaction_type": "next",
+    "target_id": "",
+	"options": [
+      {
+        "text": "Engage with him in words.",
+        "target_id": "green2*1_2102",
+        "disabled": false
+      },
+      {
+        "text": "Carry on your way.",
+        "target_id": "green2*1_201end",
+        "disabled": false
+      }
+    ]
+  },
+  {
+    "id": "green2*1_2102",
+    "speaker": "Narrator",
+    "portrait": "",
+    "side": "left",
+    "dialog": "The Dwarven Migrant seems apprehensive to deal with strangers. He says he's carrying nothing but raw gemstones that aren't worth much more than a few coins. He is hoping to find a location when he could practice his Gem Cutting art.",
+    "interaction_type": "next",
+    "target_id": "",
+	"options": [
+      {
+        "text": "[Appraisal] Discuss the gem business.",
+        "target_id": "green2*1_2103",
+        "disabled": false,
+        "color": "#FFD700",
+		"condition": "Appraisal"
+      },
+      {
+        "text": "[Pickpocket] Attempt to slip a gem off the migrant.",
+        "target_id": "green2*1_2104",
+        "disabled": false,
+        "color": "#800080",
+		"condition": "Pickpocket"
+      },
+      {
+        "text": "Carry on your way.",
+        "target_id": "green2*1_201end",
+        "disabled": false
+      }
+    ]
+  },
+  {
+    "id": "green2*1_2103",
+    "speaker": "Narrator",
+    "portrait": "",
+    "side": "right",
+    "dialog": "Your Appraisal adept strikes a conversation about the gem market with the Dwarf.",
+    "interaction_type": "next",
+    "target_id": "green2*1_2103end",
+    "options": []
+  },
+  {
+    "id": "green2*1_2107*",
+    "speaker": "Narrator",
+    "portrait": "",
+    "side": "right",
+    "dialog": "The dwarf migrant's eye widen at your knowledge. He says it's rather dangerous for him to wander alone and he've been dodging robbers left and right. He'd rather if you hold on to this gem. He hands you a speciality cut gem he've been hiding. It would be much safer with you.",
+    "interaction_type": "next",
+    "target_id": "green2*1_2107*end",
+    "options": []
+  },
+  {
+    "id": "green2*1_2107",
+    "speaker": "Narrator",
+    "portrait": "",
+    "side": "right",
+    "dialog": "The dwarf migrant likes you and appreciates your small talk. He rewards you a rough gem for your time.",
+    "interaction_type": "next",
+    "target_id": "green2*1_2107end",
+    "options": []
+  },
+  {
+    "id": "green2*1_2103end",
+    "speaker": "Narrator",
+    "portrait": "",
+    "side": "left",
+    "dialog": ".",
+    "interaction_type": "next",
+    "target_id": "END"
+  },
+  {
+    "id": "green2_901",
     "speaker": "Narrator",
     "portrait": "",
     "side": "left",
     "dialog": "The party has reached the Township Tavern.\nThe place is bustling, travellers and entertainment fill the air with they pressence.",
     "interaction_type": "next",
-    "target_id": "green2_202"
+    "target_id": "green2_902"
   },
   {
-    "id": "green2_202",
+    "id": "green2_902",
     "speaker": "Narrator",
     "portrait": "",
     "side": "left",
     "dialog": "There's Hogmother right there! Sitting at her table!",
     "interaction_type": "next",
-    "target_id": "green2_203"
+    "target_id": "green2_903"
   },
   {
-    "id": "green2_203",
+    "id": "green2_903",
     "speaker": "Hogperson",
     "portrait": "/assets/patrons/hogperson.png",
     "side": "left",
     "dialog": "MOTHER!!!",
     "interaction_type": "next",
-    "target_id": "green2_204"
+    "target_id": "green2_904"
   },
   {
-    "id": "green2_204",
+    "id": "green2_904",
     "speaker": "Hogmother",
     "portrait": "/assets/patrons/hogmother.png",
     "side": "right",
     "dialog": "HOGGY!!!",
     "interaction_type": "next",
-    "target_id": "green2_205"
+    "target_id": "green2_905"
   },
   {
-    "id": "green2_205",
+    "id": "green2_905",
     "speaker": "Narrator",
     "portrait": "",
     "side": "left",
     "dialog": "The mother and son greet each other with a warm hug and kisses, and quick word about the letter.",
     "interaction_type": "next",
-    "target_id": "green2_206"
+    "target_id": "green2_906"
   },
   {
-    "id": "green2_206",
+    "id": "green2_906",
     "speaker": "Hogmother",
     "portrait": "/assets/patrons/hogmother.png",
     "side": "right",
     "dialog": "Well Hoggy what a wonderful surprise, I did not expect to see you here!",
     "interaction_type": "next",
-    "target_id": "green2_207"
+    "target_id": "green2_907"
   },
   {
-    "id": "green2_207",
+    "id": "green2_907",
     "speaker": "Hogperson",
     "portrait": "/assets/patrons/hogperson.png",
     "side": "left",
     "dialog": "Well mother, if dad's away nothing is too important to keep me from seeing to it.",
     "interaction_type": "next",
-    "target_id": "green2_208"
+    "target_id": "green2_908"
   },
   {
-    "id": "green2_208",
+    "id": "green2_908",
     "speaker": "Hogmother",
     "portrait": "/assets/patrons/hogmother.png",
     "side": "right",
     "dialog": "Oh that's just splendide! And you've brought some friends along, what a pleasure to meet you all! Let me fill you in on what's been happening.",
     "interaction_type": "next",
-    "target_id": "green2_209"
+    "target_id": "green2_909"
   },
   {
-    "id": "green2_209",
+    "id": "green2_909",
     "speaker": "Hogmother",
     "portrait": "/assets/patrons/hogmother.png",
     "side": "right",
     "dialog": "It appears there's quite some unrest at town right now as a dangerous group have been taking up territory up north across the river, and folks have begone missing!",
     "interaction_type": "next",
-    "target_id": "green2_210"
+    "target_id": "green2_910"
   },
   {
-    "id": "green2_210",
+    "id": "green2_910",
     "speaker": "Hogmother",
     "portrait": "/assets/patrons/hogmother.png",
     "side": "right",
     "dialog": "I still don't quite know what's the offical authorities policy regarding that, word is they might have voluntarily went there to join with them.",
     "interaction_type": "next",
-    "target_id": "green2_211"
+    "target_id": "green2_911"
   },
   {
-    "id": "green2_211",
+    "id": "green2_911",
     "speaker": "Hogmother",
     "portrait": "/assets/patrons/hogmother.png",
     "side": "right",
     "dialog": "I certainly have no intention of sitting here waiting for anyone. I'm going right in there and find Hogfather!",
     "interaction_type": "next",
-    "target_id": "green2_212"
+    "target_id": "green2_912"
   },
   {
-    "id": "green2_212",
+    "id": "green2_912",
     "speaker": "Hogperson",
     "portrait": "/assets/patrons/hogperson.png",
     "side": "left",
     "dialog": "Right ma'. And I'm coming with you.",
     "interaction_type": "next",
-    "target_id": "green2_213"
+    "target_id": "green2_913"
   },
   {
-    "id": "green2_213",
+    "id": "green2_913",
     "speaker": "Bragain",
     "portrait": "/assets/patrons/dwarven_miner.png",
     "side": "right",
     "dialog": "Aye, that seems like a mission to me. I'll be by your side madam.",
     "interaction_type": "next",
-    "target_id": "green2_214"
+    "target_id": "green2_914"
   },
   {
-    "id": "green2_214",
+    "id": "green2_914",
     "speaker": "Claudio",
     "portrait": "/assets/patrons/Claudio.png",
     "side": "right",
     "dialog": "Oh it would be a opportunity I will not miss out on, you will have every ability in my satchel at your disposal madam Hogmother.",
     "interaction_type": "next",
-    "target_id": "green2_215",
+    "target_id": "green2_915",
     "options": []
   },
   {
-    "id": "green2_215",
+    "id": "green2_915",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "portrait": "/assets/patrons/amyssa_l.png",
     "side": "right",
     "dialog": "And you will have my bow!\n\nI mean, I don't have a bow, but, I am coming too!",
     "interaction_type": "next",
-    "target_id": "green2_216"
+    "target_id": "green2_916"
   },
   {
-    "id": "green2_216",
+    "id": "green2_916",
     "speaker": "Hogmother",
     "portrait": "/assets/patrons/hogmother.png",
     "side": "left",
     "dialog": "Oh my! That's such a fortunate turn of events! I did NOT expect such a wonderful party! Hoggy, I've raised you so well! I am so proud of you!",
     "interaction_type": "next",
-    "target_id": "green2_217"
+    "target_id": "green2_917"
   },
   {
-    "id": "green2_217",
+    "id": "green2_917",
     "speaker": "Lurch",
     "portrait": "/assets/patrons/lurch.png",
     "side": "right",
     "dialog": "Pardon me . . . . . ",
     "interaction_type": "next",
-    "target_id": "green2_218"
+    "target_id": "green2_918"
   },
   {
-    "id": "green2_218",
+    "id": "green2_918",
     "speaker": "Hogmother",
     "portrait": "/assets/patrons/hogmother.png",
     "side": "left",
     "dialog": "Oh! Excuse me, yes?",
     "interaction_type": "next",
-    "target_id": "green2_219"
+    "target_id": "green2_919"
   },
   {
-    "id": "green2_219",
+    "id": "green2_919",
     "speaker": "Lurch",
     "portrait": "/assets/patrons/lurch.png",
     "side": "right",
     "dialog": "It would be wise to not draw any further attention, would you join me out in the alley for further discussion?",
     "interaction_type": "next",
-    "target_id": "green2_220"
+    "target_id": "green2_920"
   },
   {
-    "id": "green2_220",
+    "id": "green2_920",
     "speaker": "Narrator",
     "portrait": "",
     "side": "left",
     "dialog": "What was that?!\n\nThat creature just popped out of nowhere.\n\nHe is now leaving through a side entrence amist the commotion of the tavern, rather unnoticed.",
     "interaction_type": "next",
-    "target_id": "green2_221"
+    "target_id": "green2_921"
   },
   {
-    "id": "green2_221",
+    "id": "green2_921",
     "speaker": "Narrator",
     "portrait": "",
     "side": "left",
     "dialog": "The party throws surprised looks at each other, trying to process what just happened.",
     "interaction_type": "next",
-    "target_id": "green2_222"
+    "target_id": "green2_922"
   },
   {
-    "id": "green2_222",
+    "id": "green2_922",
     "speaker": "Narrator",
     "portrait": "",
     "side": "left",
     "dialog": "Hogmother is the first to stand up and follow the creature, the urgency of the case walks before her, and the party follows her outside.",
     "interaction_type": "next",
-    "target_id": "green2_223"
+    "target_id": "green2_923"
   },
   {
-    "id": "green2_223",
+    "id": "green2_923",
     "speaker": "Lurch",
     "portrait": "/assets/patrons/lurch.png",
     "side": "right",
     "dialog": "Ahem . . . . .\n\nExcuse me for not introducing myself, but I've been eavesdropping on your conversation and couldn't participate in public.",
     "interaction_type": "next",
-    "target_id": "green2_224"
+    "target_id": "green2_924"
   },
   {
-    "id": "green2_224",
+    "id": "green2_924",
     "speaker": "Lurch",
     "portrait": "/assets/patrons/lurch.png",
     "side": "right",
     "dialog": "The name is Lurch, expert Reconnaissancer. My services might be of interest to you, if you're willing to listen to me.",
     "interaction_type": "next",
-    "target_id": "green2_225"
+    "target_id": "green2_925"
   },
   {
-    "id": "green2_225",
+    "id": "green2_925",
     "speaker": "Hogmother",
     "portrait": "/assets/patrons/hogmother.png",
     "side": "left",
     "dialog": "Well this is very sudden, but, Master Lurch, we are in a predicament and are willing to hear you out.",
     "interaction_type": "next",
-    "target_id": "green2_226"
+    "target_id": "green2_926"
   },
   {
-    "id": "green2_226",
+    "id": "green2_926",
     "speaker": "Lurch",
     "portrait": "/assets/patrons/lurch.png",
     "side": "right",
     "dialog": "The group out in the woods are no strangers to me. Although I do not affiliate with them, I can walk in and out of their territory with no problem.",
     "interaction_type": "next",
-    "target_id": "green2_227"
+    "target_id": "green2_927"
   },
   {
-    "id": "green2_227",
+    "id": "green2_927",
     "speaker": "Lurch",
     "portrait": "/assets/patrons/lurch.png",
     "side": "right",
     "dialog": "And since you haven't attempted to hide your plans to simply waltz in there, I do not believe you are going to make it. Not without a lot of help.",
     "interaction_type": "next",
-    "target_id": "green2_228"
+    "target_id": "green2_928"
   },
   {
-    "id": "green2_228",
+    "id": "green2_928",
     "speaker": "Hogmother",
     "portrait": "/assets/patrons/hogmother.png",
     "side": "left",
     "dialog": "Well, whether we do or we don't, *I* am going to find Hogfather. And I'm willing to hear your offer for help!",
     "interaction_type": "next",
-    "target_id": "green2_229"
+    "target_id": "green2_929"
   },
   {
-    "id": "green2_229",
+    "id": "green2_929",
     "speaker": "Lurch",
     "portrait": "/assets/patrons/lurch.png",
     "side": "right",
     "dialog": "I see, the presentation of my offer will have to remain mostly in secret, for my own safety, but I will provide you with support from behind the lines, with anything that might tackle you on your way.",
     "interaction_type": "next",
-    "target_id": "green2_230"
+    "target_id": "green2_930"
   },
   {
-    "id": "green2_230",
+    "id": "green2_930",
     "speaker": "Lurch",
     "portrait": "/assets/patrons/lurch.png",
     "side": "right",
     "dialog": "For my service I will request 200 silver coins.",
     "interaction_type": "next",
-    "target_id": "green2_232"
+    "target_id": "green2_932"
   },
   {
-    "id": "green2_232",
+    "id": "green2_932",
     "speaker": "Bragain",
     "portrait": "/assets/patrons/dwarven_miner.png",
     "side": "left",
     "dialog": "Bah! I don't like this. That's a steep amount with nothing to show for? Your goblin-folk are all tricks and mayhem! This is a robbery!",
     "interaction_type": "next",
-    "target_id": "green2_233"
+    "target_id": "green2_933"
   },
   {
-    "id": "green2_233",
+    "id": "green2_933",
     "speaker": "Hogmother",
     "portrait": "/assets/patrons/hogmother.png",
     "side": "left",
     "dialog": "That's enough Master Dwarf.",
     "interaction_type": "next",
-    "target_id": "green2_234"
+    "target_id": "green2_934"
   },
   {
-    "id": "green2_234",
+    "id": "green2_934",
     "speaker": "Bragain",
     "portrait": "/assets/patrons/dwarven_miner.png",
     "side": "left",
     "dialog": "What?! How do you know he will not alert the enemy for our approach! I do not trust this Goblin for one bit!",
     "interaction_type": "next",
-    "target_id": "green2_235"
+    "target_id": "green2_935"
   },
   {
-    "id": "green2_235",
+    "id": "green2_935",
     "speaker": "Lurch",
     "portrait": "/assets/patrons/lurch.png",
     "side": "right",
     "dialog": "well then, the offer falls off the table! This villain can't be dealt with, he'll signal the enemy of the plan and have *me* hanged, just like that!",
     "interaction_type": "next",
-    "target_id": "green2_236"
+    "target_id": "green2_936"
   },
   {
-    "id": "green2_236",
+    "id": "green2_936",
     "speaker": "Bragain",
     "portrait": "/assets/patrons/dwarven_miner.png",
     "side": "right",
     "dialog": "There's nothing I'd like to do more, goblinoid!",
     "interaction_type": "next",
-    "target_id": "green2_237"
+    "target_id": "green2_937"
   },
   {
-    "id": "green2_237",
+    "id": "green2_937",
     "speaker": "Hogmother",
     "portrait": "/assets/patrons/hogmother.png",
     "side": "left",
     "dialog": "There'll be none of that! Not while Hogfather is in distress and not ever!",
     "interaction_type": "next",
-    "target_id": "green2_238"
+    "target_id": "green2_938"
   },
   {
-    "id": "green2_238",
+    "id": "green2_938",
     "speaker": "Hogmother",
     "portrait": "/assets/patrons/hogmother.png",
     "side": "left",
     "dialog": "We are not traitors!!!",
     "interaction_type": "next",
-    "target_id": "green2_239"
+    "target_id": "green2_939"
   },
   {
-    "id": "green2_239",
+    "id": "green2_939",
     "speaker": "Narrator",
     "portrait": "",
     "side": "left",
@@ -1786,28 +1935,28 @@
     "options": [
       {
         "text": "Sternly refuse any further contacts with the Spy.",
-        "target_id": "green2_240a",
+        "target_id": "green2_940a",
         "disabled": false
       },
       {
         "text": "[Calm] Have hogmother Speak softly to Lurch and assert his safety is assured.",
-        "target_id": "green2_240b",
+        "target_id": "green2_940b",
         "disabled": false,
         "color": "#FFD700"
       }
     ]
   },
   {
-    "id": "green2_240a",
+    "id": "green2_940a",
     "speaker": "Narrator",
     "portrait": "",
     "side": "left",
     "dialog": "The party has decided to leave the alley and abandon the dealing with the Goblin. They will head out immidatley towards the forest.",
     "interaction_type": "next",
-    "target_id": "green2_240a_end"
+    "target_id": "green2_940a_end"
   },
   {
-    "id": "green2_240a_end",
+    "id": "green2_940a_end",
     "speaker": "Narrator",
     "portrait": "",
     "side": "left",
@@ -1816,61 +1965,61 @@
     "target_id": "END"
   },
   {
-    "id": "green2_240b",
+    "id": "green2_940b",
     "speaker": "Hogmother",
     "portrait": "/assets/patrons/hogmother.png",
     "side": "left",
     "dialog": "I will cover that payment Master Lurch, and once Hogfather is safe I'll see to a bonus as well.",
     "interaction_type": "next",
-    "target_id": "green2_241b"
+    "target_id": "green2_941b"
   },
   {
-    "id": "green2_241b",
+    "id": "green2_941b",
     "speaker": "Bragain",
     "portrait": "/assets/patrons/dwarven_miner.png",
     "side": "right",
     "dialog": "I don't like this, but lives are on the line. I accept this offer and I'll cover in for your payment too, Lurch, as a token of good will.",
     "interaction_type": "next",
-    "target_id": "green2_242b"
+    "target_id": "green2_942b"
   },
   {
-    "id": "green2_242b",
+    "id": "green2_942b",
     "speaker": "Lurch",
     "portrait": "/assets/patrons/lurch.png",
     "side": "left",
     "dialog": "That settles it then. I shall leave immediately through the tunnels. From this moment forth, we have never met, and I will contact you in secret.",
     "interaction_type": "next",
-    "target_id": "green2_243b"
+    "target_id": "green2_943b"
   },
   {
-    "id": "green2_243b",
+    "id": "green2_943b",
     "speaker": "Narrator",
     "portrait": "",
     "side": "left",
     "dialog": "That's it then. The deal has signed with handshakes and coin. I hope you know what you're doing dealing with Goblins!",
     "interaction_type": "next",
-    "target_id": "green2_244b"
+    "target_id": "green2_944b"
   },
   {
-    "id": "green2_244b",
+    "id": "green2_944b",
     "speaker": "INTRODUCTION",
     "portrait": "/assets/patrons/lurch.png",
     "side": "right",
     "dialog": "Lurch is a Spy, his speciality is espionage in hostile locations without raising suspicion. While his monsterous image may be vile, he's not the worst you can come across.",
     "interaction_type": "next",
-    "target_id": "green2_245b"
+    "target_id": "green2_945b"
   },
   {
-    "id": "green2_245b",
+    "id": "green2_945b",
     "speaker": "Narrator",
     "portrait": "",
     "side": "left",
     "dialog": "The party will head out immidatley towards the forest now.",
     "interaction_type": "next",
-    "target_id": "green2_245b_end"
+    "target_id": "green2_945b_end"
   },
   {
-    "id": "green2_245b_end",
+    "id": "green2_945b_end",
     "speaker": "Narrator",
     "portrait": "",
     "side": "left",
@@ -1908,7 +2057,7 @@
   {
     "id": "green2_303",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "portrait": "/assets/patrons/amyssa_l.png",
     "side": "right",
     "dialog": "Or an elf",
     "interaction_type": "next",
@@ -1935,7 +2084,7 @@
   {
     "id": "green2_306",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "portrait": "/assets/patrons/amyssa_l.png",
     "side": "right",
     "dialog": "............\n\nThat's alright. You're not the only one having second thoughts.",
     "interaction_type": "next",
@@ -1944,7 +2093,7 @@
   {
     "id": "green2_307",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "portrait": "/assets/patrons/amyssa_l.png",
     "side": "right",
     "dialog": "But lives are on the line here. There are greater matters ahead and it's no time to be picky.",
     "interaction_type": "next",
@@ -2237,7 +2386,7 @@
   {
     "id": "green3_226",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "portrait": "/assets/patrons/amyssa_l.png",
     "side": "right",
     "dialog": "???",
     "interaction_type": "next",
@@ -2444,7 +2593,7 @@
   {
     "id": "dwood1_102",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "portrait": "/assets/patrons/amyssa_l.png",
     "side": "right",
     "dialog": "Excuse me, Madam Hogmother",
     "interaction_type": "selection",
@@ -2474,7 +2623,7 @@
   {
     "id": "dwood1_104",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "portrait": "/assets/patrons/amyssa_l.png",
     "side": "right",
     "dialog": "I'm curious, since you're a Shaman, what is it like, seeing the spirits world?",
     "interaction_type": "next",
@@ -2501,7 +2650,7 @@
   {
     "id": "dwood1_107",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "portrait": "/assets/patrons/amyssa_l.png",
     "side": "right",
     "dialog": "And the sights, and scenery, are they not different?",
     "interaction_type": "next",
@@ -2519,7 +2668,7 @@
   {
     "id": "dwood1_109",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "portrait": "/assets/patrons/amyssa_l.png",
     "side": "right",
     "dialog": "Oh, how is that?",
     "interaction_type": "next",
@@ -2537,7 +2686,7 @@
   {
     "id": "dwood1_111",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "portrait": "/assets/patrons/amyssa_l.png",
     "side": "right",
     "dialog": "Oh, but what if they don't go in their path?",
     "interaction_type": "next",
@@ -2555,7 +2704,7 @@
   {
     "id": "dwood1_113",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "portrait": "/assets/patrons/amyssa_l.png",
     "side": "right",
     "dialog": "But what if they're wrong?",
     "interaction_type": "next",
@@ -2573,7 +2722,7 @@
   {
     "id": "dwood1_115",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "portrait": "/assets/patrons/amyssa_l.png",
     "side": "right",
     "dialog": "And what if they die before they reach it?",
     "interaction_type": "next",
@@ -2591,7 +2740,7 @@
   {
     "id": "dwood1_117",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "portrait": "/assets/patrons/amyssa_l.png",
     "side": "right",
     "dialog": "And what happens then? Do they finally die too?",
     "interaction_type": "next",
@@ -2681,7 +2830,7 @@
   {
     "id": "dwood1_158",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "portrait": "/assets/patrons/amyssa_l.png",
     "side": "right",
     "dialog": "What?! . . . . How do you know my name?! . . . . \nHow did you eavesdropped on our conversation?",
     "interaction_type": "next",
@@ -2699,7 +2848,7 @@
   {
     "id": "dwood1_160",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "portrait": "/assets/patrons/amyssa_l.png",
     "side": "right",
     "dialog": "You trollkin truly are vile. Don't you dare come near me",
     "interaction_type": "next",
@@ -2708,7 +2857,7 @@
   {
     "id": "dwood1_161",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "portrait": "/assets/patrons/amyssa_l.png",
     "side": "right",
     "dialog": "I would burn you with my fire darts before you can even spell 'hello'",
     "interaction_type": "next",
@@ -2726,7 +2875,7 @@
   {
     "id": "dwood1_163",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "portrait": "/assets/patrons/amyssa_l.png",
     "side": "right",
     "dialog": "WHAT?! ............",
     "interaction_type": "next",
@@ -2735,7 +2884,7 @@
   {
     "id": "dwood1_164",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "portrait": "/assets/patrons/amyssa_l.png",
     "side": "right",
     "dialog": "How would you know what are the spells I master?",
     "interaction_type": "next",
@@ -2753,7 +2902,7 @@
   {
     "id": "dwood1_165a",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "portrait": "/assets/patrons/amyssa_l.png",
     "side": "right",
     "dialog": "WHHAAAAATTTT?!!!!!! ......................",
     "interaction_type": "next",
@@ -2762,7 +2911,7 @@
   {
     "id": "dwood1_165b",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "portrait": "/assets/patrons/amyssa_l.png",
     "side": "right",
     "dialog": "It's true my spellbook has gone missing!",
     "interaction_type": "next",
@@ -2771,7 +2920,7 @@
   {
     "id": "dwood1_166",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "portrait": "/assets/patrons/amyssa_l.png",
     "side": "right",
     "dialog": "You monster! You've pickpocket me! Bring it back this instance!",
     "interaction_type": "next",
@@ -2825,7 +2974,7 @@
   {
     "id": "dwood1_171",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "portrait": "/assets/patrons/amyssa_l.png",
     "side": "right",
     "dialog": "NO TROLL!! I WILL BURN YOUR ENTIRE FOREST DOWN!! DO YOU HEAR ME !!!!!",
     "interaction_type": "next",
@@ -2834,7 +2983,7 @@
   {
     "id": "dwood1_172",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "portrait": "/assets/patrons/amyssa_l.png",
     "side": "right",
     "dialog": "I WILL HAVE YOUR SWAMP DREDGED DRY AND YOUR SKIN FLAYED ALIVE !!!!",
     "interaction_type": "next",
@@ -2861,7 +3010,7 @@
   {
     "id": "dwood1_175",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "portrait": "/assets/patrons/amyssa_l.png",
     "dialog": "Shut up. How did I ever get involved with this villain.\n\nNow my spellbook is gone and I'm so far from home...",
     "side": "right",
     "interaction_type": "next",
@@ -2897,7 +3046,7 @@
   {
     "id": "dwood1_179",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "portrait": "/assets/patrons/amyssa_l.png",
     "side": "right",
     "dialog": "But it's the opposite way from where Hogfather is?",
     "interaction_type": "next",
@@ -2956,7 +3105,7 @@
   {
     "id": "dwood1_203",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "portrait": "/assets/patrons/amyssa_l.png",
     "side": "left",
     "dialog": "Oh goddess Narlia, how did I get involved in a mess like this. I want to go home.",
     "interaction_type": "next",
@@ -2965,7 +3114,7 @@
   {
     "id": "dwood1_204",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "portrait": "/assets/patrons/amyssa_l.png",
     "dialog": "This spellbook cost me a fortune and it's a lot of time to make and write.",
     "side": "left",
     "interaction_type": "next",
@@ -2974,7 +3123,7 @@
   {
     "id": "dwood1_205",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "portrait": "/assets/patrons/amyssa_l.png",
     "dialog": "I'll have to quit the adventure if I am to write a new one, and to cover the costs it's going to take a long time as well.",
     "side": "left",
     "interaction_type": "next",
@@ -2992,7 +3141,7 @@
   {
     "id": "dwood1_207",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "portrait": "/assets/patrons/amyssa_l.png",
     "dialog": "I really doubt a type like his can be. Maybe I'll just offer myself to him and get it over with quickly.",
     "side": "left",
     "interaction_type": "next",
@@ -3001,7 +3150,7 @@
   {
     "id": "dwood1_208",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "portrait": "/assets/patrons/amyssa_l.png",
     "dialog": "I really doubt a type like his can be. Maybe I'll just offer myself to him and get it over with quickly.",
     "side": "left",
     "interaction_type": "selection",
@@ -3023,7 +3172,7 @@
   {
     "id": "dwood1_209",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "portrait": "/assets/patrons/amyssa_l.png",
     "dialog": "I can't believe that beast is waiting there waiting for me to be offered to him.\n\nHow will I ever get out of this predicament.",
     "side": "left",
     "interaction_type": "next",
@@ -3078,7 +3227,7 @@
   {
     "id": "dwood1_215",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "portrait": "/assets/patrons/amyssa_l.png",
     "dialog": "WHAT?! ........",
     "side": "left",
     "interaction_type": "next",
@@ -3141,7 +3290,7 @@
   {
     "id": "dwood1_302",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "portrait": "/assets/patrons/amyssa_l.png",
     "dialog": "By the goddess!!!\n\nYou look amazing Claudio!",
     "side": "right",
     "interaction_type": "next",
@@ -3150,7 +3299,7 @@
   {
     "id": "dwood1_303",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "portrait": "/assets/patrons/amyssa_l.png",
     "dialog": "What a way to steal the show.",
     "side": "right",
     "interaction_type": "next",
@@ -3168,7 +3317,7 @@
   {
     "id": "dwood1_304a",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "portrait": "/assets/patrons/amyssa_l.png",
     "dialog": "Are you sure you're ready to go through with this plan Finnick? This is going to be very dangerous.",
     "side": "right",
     "interaction_type": "next",
@@ -3177,7 +3326,7 @@
   {
     "id": "dwood1_304b",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "portrait": "/assets/patrons/amyssa_l.png",
     "dialog": "I'm so sorry I'm putting you all through this risk, for a minor thing like a Spellbook. Ugh, I hate it!",
     "side": "right",
     "interaction_type": "next",
@@ -3388,7 +3537,7 @@
   {
     "id": "dwoodswamp1_104",
     "speaker": "Claudio",
-    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "portrait": "/assets/patrons/amyssa_l.png",
     "dialog": "I WILL GO FORTH",
     "side": "left",
     "interaction_type": "next",
@@ -3424,7 +3573,7 @@
   {
     "id": "dwoodswamp1_107",
     "speaker": "Claudio",
-    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "portrait": "/assets/patrons/amyssa_l.png",
     "dialog": "YOOO HOOO !!\n\nTrollkin..........\nWhere arrrrrreeeeee youuuuu.......",
     "side": "left",
     "interaction_type": "next",
@@ -3469,7 +3618,7 @@
   {
     "id": "dwoodswamp1_112",
     "speaker": "Claudio",
-    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "portrait": "/assets/patrons/amyssa_l.png",
     "dialog": "Oh you devil you!! I'm not that kind of girl! You'll have put some more effort into me first!",
     "side": "left",
     "interaction_type": "next",
@@ -3478,7 +3627,7 @@
   {
     "id": "dwoodswamp1_113",
     "speaker": "Claudio",
-    "portrait": "/assets/patrons/amyssa_smaller.png",
+    "portrait": "/assets/patrons/amyssa_l.png",
     "dialog": "*Does some tempting flirting and runs off*",
     "side": "left",
     "interaction_type": "next",

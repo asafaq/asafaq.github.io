@@ -33,8 +33,6 @@ async function deleteRemote(key) {
 
 // Start of local DB
 
-
-
 class databaseStorage {
     constructor() {
         this.dbName = "PlayerDB";

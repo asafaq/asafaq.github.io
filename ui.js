@@ -1040,7 +1040,8 @@ function showTemporaryImage(src) {
 }
 
 async function loadPage(page) {
-	
+	console.log(`called loadPage ${page}`);
+
   if (!player) {
     return; // or show login UI
   }
@@ -1083,7 +1084,6 @@ main.innerHTML = typeof pages[page] === "function"
 
   // NEW: Enable right-click assignment
   initStashRightClicks();
-
   initGuildTooltips();
   showTutorialButton();
   displayRightMenu();
@@ -1091,7 +1091,7 @@ main.innerHTML = typeof pages[page] === "function"
 }
 
 
-	if (page === "tavern") {
+  if (page === "tavern") {
   patronList = getVisiblePatrons().map(p => getHydratedAdventurer(p.id))
 	  const container = document.getElementById("patron-container");
 	  // RESET ALL SEATS BEFORE PLACING ANYONE
@@ -1784,18 +1784,22 @@ async function loadMissionPage() {
 	const hasPartyAGuide = Object.values(player.patrons)
 		.some(p => p.location === 6);
 	if (hasPartyAGuide) {
-		document.getElementById("missions_line6").textContent = "Guide";
+		missions_line6.style.display = "inline-block";
+		missions_line6.textContent = "Guide";
 	} else {
-		document.getElementById("missions_line6").textContent = "";
+		missions_line6.style.display = "none";
 	}
+
 
 	const hasPartyAButler = Object.values(player.patrons)
 		.some(p => p.location === 7);
 	if (hasPartyAButler) {
-		document.getElementById("missions_line7").textContent = "Butler";
+		missions_line7.style.display = "inline-block";
+		missions_line7.textContent = "Butler";
 	} else {
-		document.getElementById("missions_line6").textContent = "";
+		missions_line7.style.display = "none";
 	}
+
 	const hasSecretPatron = Object.values(player.patrons)
 		.some(p => p.location === 9);
 	if (hasSecretPatron) {
@@ -2082,6 +2086,7 @@ function closeTutorial() {
 }
 
 function showMessage(text) {
+	// this function is used by the Login to display output, it's different than the updates in top panel the user sees.
     const status = document.getElementById("status");
     if (!status) return; // silently fail if missing
 
@@ -2239,6 +2244,76 @@ function renderPortraitMenu(list) {
     });
 }
 
+function getProficiencyBonus(adv) {
+    if (!adv || !adv.id) return null;
+
+    const hydrated = getHydratedAdventurer(adv.id);
+
+    const level = hydrated.Level;                 // DB uses Level
+
+    // FIX: support both "role" and "Role"
+    const roleRaw = hydrated.role ?? hydrated.Role ?? "";
+    const role = roleRaw.toLowerCase();
+
+    // --- BASE PROFICIENCY BY LEVEL ---
+    let basePB = 0;
+
+    if (level >= 1 && level <= 4) basePB = 2;
+    else if (level <= 8) basePB = 3;
+    else if (level <= 12) basePB = 4;
+    else if (level <= 16) basePB = 5;
+    else if (level <= 20) basePB = 6;
+    else if (level <= 24) basePB = 7;
+    else if (level <= 28) basePB = 8;
+    else if (level <= 30) basePB = 9;
+
+    // --- THIEF FAMILY ROLES (lowercase) ---
+    const thiefRoles = ["thief", "rogue", "miner"];
+    const isThief = thiefRoles.includes(role);
+
+    // --- BARD SPECIAL CASE (lowercase) ---
+    const isBard = role === "bard";
+
+    // THIEF: always double proficiency
+    if (isThief) {
+        return basePB * 2;
+    }
+
+    // BARD: special rule ONLY at level 2
+    if (isBard && level > 1) {
+        const doubled = basePB * 2;
+        const half    = Math.floor(basePB / 2);
+        return `${doubled} (${half})`;
+    }
+
+    // Normal bard levels
+    if (isBard) {
+        return basePB;
+    }
+
+    return basePB;
+}
+
+function allTraits(adv) {
+    const innate = getInnateTraits(adv);
+    const roleTraits = loreData.Roles[adv.role]?.Traits || [];
+    const advTraits = adv.traits ?? [];
+
+    return [...innate, ...roleTraits, ...advTraits];
+}
+
+function allSecretTraits(adv) {
+    return adv.secretTraits ?? [];
+}
+
+function getAllTraitsBundle(adv) {
+    return {
+        traits: allTraits(adv),
+        secretTraits: allSecretTraits(adv)
+    };
+}
+
+
 function renderCharSheet(adv) {
     const sheet = document.getElementById("charsheet");
     if (!sheet) {
@@ -2292,7 +2367,11 @@ function renderCharSheet(adv) {
                               : ""}
                         ${show(adv.size)        ? `<li><strong>Size:</strong> ${adv.size}</li>` : ""}
                         ${show(adv.Exp)        ? `<li><strong>Exp:</strong> ${adv.Exp}</li>` : ""}
-
+						${(() => {
+							const hydrated = getHydratedAdventurer(adv.id);
+							const pb = getProficiencyBonus({ id: adv.id });
+							return `<li><strong>Prof+:</strong> ${pb}</li>`;
+						})()}
                     </ul>
                 </div>
 

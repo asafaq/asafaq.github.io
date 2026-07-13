@@ -287,6 +287,38 @@ async function renderScene(sceneId) {
     }
 }
 
+function renderMissionOptions(mission) {
+    const partyTraits = allPartyTraits(mission);
+
+    return mission.options
+        .map(opt => {
+            // Hidden option logic
+            if (opt.hidden && opt.requiresTrait) {
+                const hasTrait = partyTraits.includes(opt.requiresTrait);
+
+                if (!hasTrait) {
+                    return ""; // Trait not present → do not show
+                }
+
+                // Trait present → reveal hidden option with special color
+                return `
+                    <div class="mission-option hidden-option" style="color:${opt.color || '#ff00ff'}">
+                        ${opt.text}
+                    </div>
+                `;
+            }
+
+            // Normal option
+            return `
+                <div class="mission-option">
+                    ${opt.text}
+                </div>
+            `;
+        })
+        .join("");
+}
+
+
 let frustrationTimeout; // Keep track of the timer globally
 
 function createBtn(text, targetId, color = null, isDisabled = false, frustrationText = "", shadow = null) {
@@ -340,7 +372,7 @@ function showTemporaryMessage(text) {
 }
 // 3. THE TRIGGER FUNCTION
 // Call this function from your own code to start the system
-async function startMissionSystem(specificSceneId = null) {
+async function  startMissionSystem(specificSceneId = null) {
     try {
         if (!db) await initDB();
         
@@ -362,6 +394,41 @@ async function startMissionSystem(specificSceneId = null) {
 	// green_3: "Entering the Dark Forest",
 	// dwood_1: "In the Dark Forest"
 // };
+
+function addSilver(number, container) {
+    // Convert string numerals to actual numbers
+    const amount = Number(number);
+
+    // Fail if conversion didn't produce a valid number
+    if (!Number.isFinite(amount)) {
+        console.warn("addSilver failed: 'number' must be a valid numeral.");
+        return;
+    }
+
+    // --- STASH ---
+    if (container === "stash") {
+        player.treasury ??= {};
+        player.treasury.silver ??= 0;
+
+        player.treasury.silver += amount;
+        return;
+    }
+
+    // --- SATCHEL ---
+    if (container === "satchel") {
+        player.missions ??= {};
+        player.missions.current_mission ??= {};
+        player.missions.current_mission.satchel ??= {};
+        player.missions.current_mission.satchel.silver ??= 0;
+
+        player.missions.current_mission.satchel.silver += amount;
+        return;
+    }
+
+    console.warn("addSilver failed: container must be 'stash' or 'satchel'.");
+}
+
+
 
 async function handleMissionEnd(sceneId) {
 	
@@ -510,6 +577,62 @@ async function handleMissionEnd(sceneId) {
             Journal.addEntry("You've decided to travel to the Township Tavern and meet up with Hogmother.");
             loadPage("missions");
         },
+        "green2_*101end": async () => {
+            //player.missions.green_2 = 1;
+            //Journal.addEntry("You've decided to travel to the Township Tavern and meet up with Hogmother.");
+            let CR = calculatePartyCR();
+			CR = Math.round(CR);
+			const num = Math.floor(Math.random() * 10) + 1;
+			const result = CR * num;
+			addSilver(result, "satchel")
+			loadPage("mission_green_2");
+			const message = `You've picked up ${result} silver coins.`;
+			pushStatus(message);
+        },
+        "green2_*1_202end": async () => {
+			launchBattle("g2_reddeer");
+        },
+		"green2*1_2103end": async () => {
+			const App = findMemberTrait("Appraisal");   // returns an array of names
+
+			// If you expect only ONE member, take the first:
+			const memberName = App[0];
+			
+			console.log(memberName);
+			const checkAppraisal = rollSkillCheck(memberName, charisma, yes, 18)
+			// Hydrate the adventurer by name
+			// const patron = getHydratedAdventurer(memberName);
+
+			// Get charisma modifier
+			// const Cha = patron.charisma_mod;
+
+			// Get proficiency bonus
+			// const prof = getProficiencyBonus(patron);
+
+			// Roll a d20
+			// const roll = Math.ceil(Math.random() * 20);
+
+			// const result = roll + Cha + prof;
+
+
+			// Compare result
+			// if (result >= 18) {
+			if (checkAppraisal.success) {
+
+				// Roll a d100
+				const roll2 = Math.ceil(Math.random() * 100);
+
+				if (roll2 >= 99) {
+					runMission("green2*1_2107*");   // must be a string
+				} else {
+					runMission("green2*1_2107");
+				}
+			} else {
+				loadPage("mission_green_2");
+			}
+		},
+
+
         "green2_117end": async () => {
             player.missions.green_2 = 2;
             player.patrons.adv_Amyssa.location = 3;
@@ -520,7 +643,7 @@ async function handleMissionEnd(sceneId) {
             Journal.addEntry(`Amyssa has joined the ${player.data.party_A} on their way to ${player.missions.current_mission.id}.`);
             loadPage("mission_green_2");
         },
-        "green2_240a_end": async () => {
+        "green2_940a_end": async () => {
             player.missions.green_2 = 3;
             recruitAdventurer("adv_Hogmother");
 			//awardManualXP("Hogmother", 2000);
@@ -536,7 +659,7 @@ async function handleMissionEnd(sceneId) {
         },
 
         // --- THE "BRANCHING" TRANSITION YOU WROTE ---
-        "green2_245b_end": async () => {
+        "green2_945b_end": async () => {
             player.missions.green_2 = 3;
             player.missions.green_3 = 2;
             player.missions.current_mission.id = "green_3";

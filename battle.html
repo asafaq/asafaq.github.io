@@ -505,8 +505,12 @@ function applyDamage(target, amount) {
         target.x = -1;
         target.y = -1;
 		awardFoeDefeat(target);
-        Bus.emit('LOG', `☠️ ${target.name} falls!`);
-    }
+		//Bus.emit('LOG', `☠️ ${target.name} falls!`);
+
+		parent.postMessage({ type: "UNIT_DEFEATED", name: target.name }, "*");
+		//Bus.emit('LOG', `💀 ${target.name} defeated.`);
+
+
 
     // ⭐ 4. Concentration breaks on ANY real HP damage
     if (target.isConcentrating) {
@@ -516,7 +520,7 @@ function applyDamage(target, amount) {
 
     update();
 }
-
+}
 function rollInitiativeForAll() {
     initiativeOrder = units
         .map((u, i) => {
@@ -708,6 +712,10 @@ function getOccupiedSquares() {
 }
 
 function handleAttack(attacker, target) {
+    console.log(
+        `[ATTACK] atk=${attacker.name} → tgt=${target.name} (${target.hp}hp) dmg=${attacker.damage || "?"} pos=(${target.x},${target.y}) defeated=${target.hp <= 0}`
+    );
+
     if (!attacker.hasAction) return;
     if (!target || target.hp <= 0) return;
 
@@ -716,9 +724,15 @@ function handleAttack(attacker, target) {
 
     if (attacker.type === "pc") {
         hitMod = attacker.stats?.str || 0;
-        if (attacker.role === "Miner" && (attacker.stats?.dex > attacker.stats?.str)) {
+
+        if (attacker.expClassKey === "thief" && (attacker.stats?.dex > attacker.stats?.str)) {
             hitMod = attacker.stats.dex;
         }
+
+        if (attacker.role === "Deputy" && (attacker.stats?.dex > attacker.stats?.str)) {
+            hitMod = attacker.stats.dex;
+        }
+
     } else {
         const m = getMonsterStats(attacker);
         hitMod = m?.hitMod ?? 0;
@@ -743,7 +757,6 @@ function handleAttack(attacker, target) {
     Bus.emit('LOG', `${attacker.name} attacks ${target.name}! (Roll: ${roll} + ${hitMod} + ${attacker.hitBonus || 0})`);
 
     if (isHit) {
-        // --- DAMAGE ---
         let dmg = 0;
 
         if (attacker.type === "pc") {
@@ -756,29 +769,20 @@ function handleAttack(attacker, target) {
             dmg = (Math.floor(Math.random() * die) + 1) + bonus;
         }
 
+        Bus.emit('LOG', `⚔️ ${attacker.name} hits ${target.name} for ${dmg}!`);
         applyDamage(target, dmg);
 
-        Bus.emit('LOG', `⚔️ ${attacker.name} hits ${target.name} for ${dmg}!`);
-
-        if (target.hp <= 0) {
-            target.x = -1;
-            target.y = -1;
-
-            Bus.emit('LOG', `💀 ${target.name} defeated.`);
-
-        }
     } else {
         Bus.emit('LOG', `🛡️ ${attacker.name} misses (${totalToHit} vs AC ${targetAC}).`);
     }
 
     attacker.hasAction = false;
 
-    // ⭐ FIX: Only trigger UI updates if a human player is acting.
-    // Monsters will be updated as a batch when their AI sequence finishes.
     if (attacker.type === "pc") {
         update();
     }
 }
+
 
 function getMonsterStats(unit) {
     if (unit.type !== "monster") return null;
@@ -1626,6 +1630,16 @@ function showVictoryWindow(summary, onClose) {
             <div id="victory-summary" style="margin-bottom:20px; font-size:14px;">
                 ${summary}
             </div>
+			<div style="display: flex; justify-content: center; gap: 10px;">
+			<button onclick="downloadBattleLog()" style="
+				padding:10px 20px;
+				background:#2980b9;
+				border:none;
+				color:white;
+				border-radius:5px;
+				cursor:pointer;
+				font-size:16px;
+			">Battle log .TXT</button>
             <button id="victory-close" style="
                 padding:10px 20px;
                 background:#27ae60;

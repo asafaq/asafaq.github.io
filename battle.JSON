@@ -66,6 +66,22 @@
       ]
     },
 
+    "g2_kobolodogs1": {
+      "name": "Training Bushes",
+      "map": "forest",
+      "monsters": [
+        {
+          "id": "kobolodog1",
+          "count": 4,
+          "spawns": [
+            { "x": 8, "y": 4 },
+            { "x": 6, "y": 4 },
+            { "x": 7, "y": 4 },
+            { "x": 6, "y": 6 }
+          ]
+        }
+      ]
+    },
 
     "tutor_test2": {
       "name": "Training Bushes",
@@ -205,6 +221,111 @@
 		  ]
 		}
 	  ]
+	},
+
+	"g2_bandits": {
+	  "name": "green2_bandits",
+	  "map": "green_2",
+	  "monsters": [
+		{
+		  "id": "brigan1",
+		  "count": 1,
+		  "spawns": [
+			{ "x": 8, "y": 4 }
+		  ]
+		},
+		{
+		  "id": "brigan2",
+		  "count": 1,
+		  "spawns": [
+			{ "x": 6, "y": 3 }
+		  ]
+		},
+		{
+		  "id": "goblin2",
+		  "count": 1,
+		  "spawns": [
+			{ "x": 6, "y": 5 }
+		  ]
+		}
+	  ]
+	},
+
+	"g2_bandits2": {
+	  "name": "green2_bandits",
+	  "map": "green_2",
+	  "monsters": [
+		{
+		  "id": "brigan1",
+		  "count": 2,
+		  "spawns": [
+			{ "x": 8, "y": 4 },
+			{ "x": 8, "y": 6 }
+		  ]
+		},
+		{
+		  "id": "brigan2",
+		  "count": 2,
+		  "spawns": [
+			{ "x": 6, "y": 3 },
+			{ "x": 7, "y": 2 }
+		  ]
+		},
+		{
+		  "id": "goblin2",
+		  "count": 2,
+		  "spawns": [
+			{ "x": 6, "y": 5 },
+			{ "x": 7, "y": 2 }
+		  ]
+		}
+	  ]
+	},
+
+	"g2_rustmon": {
+	  "name": "green2_rustmon",
+	  "map": "green_2",
+	  "monsters": [
+		{
+		  "id": "rustmon",
+		  "count": 2,
+		  "spawns": [
+			{ "x": 8, "y": 4 },
+			{ "x": 8, "y": 6 }
+		  ]
+		}
+	  ]
+	},
+
+	"g2_rustmon2": {
+	  "name": "green2_rustmon2",
+	  "map": "green_2",
+	  "monsters": [
+		{
+		  "id": "rustmon",
+		  "count": 4,
+		  "spawns": [
+			{ "x": 8, "y": 4 },
+			{ "x": 8, "y": 6 },
+			{ "x": 6, "y": 4 },
+			{ "x": 6, "y": 6 }
+		  ]
+		}
+	  ]
+	},
+
+	"g2_reddeer": {
+	  "name": "reddeer",
+	  "map": "green_2",
+	  "monsters": [
+		{
+		  "id": "reddeer",
+		  "count": 1,
+		  "spawns": [
+			{ "x": 8, "y": 4 }
+		  ]
+		}
+	  ]
 	}
 
   },
@@ -282,6 +403,22 @@
       "speed": 7,
 	  "xp": 20,
       "icon": "/assets/monsters/fly1.png",
+      "color": "#c0392b",
+	  "morale": 12,
+		"ac": 12,
+		"attackMod": 1,
+		"damageDie": 4,
+		"damageBonus": 0
+    },
+
+    "kobolodog1": {
+      "name": "Kobolodog",
+      "type": "monster",
+      "hp": 7,
+      "maxHp": 7,
+      "speed": 7,
+	  "xp": 20,
+      "icon": "/assets/missions/koboldog.png",
       "color": "#c0392b",
 	  "morale": 12,
 		"ac": 12,
@@ -428,13 +565,29 @@
       "maxHp": 34,
       "speed": 3,
 	  "xp": 35,
-      "icon": "/assets/monsters/zombie1.png",
+      "icon": "/assets/monsters/bug1.png",
       "color": "#c0392b",
 	  "morale": 18,
 		"ac": 7,
 		"attackMod": -3,
 		"damageDie": 1,
 		"damageBonus": 0
+    },
+
+    "reddeer": {
+      "name": "Red Deer",
+      "type": "monster",
+      "hp": 40,
+      "maxHp": 40,
+      "speed": 9,
+	  "xp": 220,
+      "icon": "/assets/monsters/bear.png",
+      "color": "#c0392b",
+	  "morale": 19,
+		"ac": 15,
+		"attackMod": 3,
+		"damageDie": 8,
+		"damageBonus": 3
     }
   },
 

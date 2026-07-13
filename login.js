@@ -1,6 +1,6 @@
 // Toggle: true = show login screen, false = skip login entirely
 const ENABLE_LOGIN = true;		//always set them up equal values
-const ENABLE_PRELOAD = true;	//always set them up equal values
+const ENABLE_PRELOAD = false;	//always set them up equal values
 
 let preloadedAssets = null;
 let preloadPromise = null;
@@ -127,43 +127,52 @@ function hideLoadingOverlay() {
 
 
 function initLoginSystem() {
-if (!ENABLE_LOGIN) {
-    console.log("LOGIN DISABLED — Auto‑loading player 1");
+    if (!ENABLE_LOGIN) {
+        console.log("LOGIN DISABLED — Auto‑loading player 1");
 
-    // Start background loading
-    if (ENABLE_PRELOAD) beginSilentPreload();
-    loadLore();
+        // Show loading UI BEFORE preload starts
+        if (ENABLE_PRELOAD) {
+            showLoadingScreen();
+            updateLoadingText(0, assetUrls.length);
+            beginSilentPreload();
+        }
 
-    storage.loadPlayer("1").then(async p => {
-        player = p || { id: "1", name: "AutoUser" };
+        loadLore();
 
-        document.querySelector(".login-box").style.display = "none";
-        document.getElementById("app-frame").style.display = "block";
+        storage.loadPlayer("1").then(async p => {
+            player = p || { id: "1", name: "AutoUser" };
 
-		// 🔥 Show loading screen immediately
-		if (ENABLE_PRELOAD) {
-			showLoadingScreen();
-			updateLoadingText(0, assetUrls.length);
-		}
-        // Wait for preload + lore
-        if (ENABLE_PRELOAD && preloadPromise) await preloadPromise;
-        if (lorePromise) await lorePromise;
+            document.querySelector(".login-box").style.display = "none";
+            document.getElementById("app-frame").style.display = "block";
 
-        // Start the game
-        startGame(player, preloadedAssets, loreData);
-    });
+            // Wait for preload + lore
+            if (ENABLE_PRELOAD && preloadPromise) await waitAtLeast(500, preloadPromise); // 500ms minimum
 
-    return;
-}
+            if (lorePromise) await lorePromise;
 
+            startGame(player, preloadedAssets, loreData);
+        });
 
-    // Show login UI
+        return;
+    }
+
+    // LOGIN ENABLED
     document.querySelector(".login-box").style.display = "block";
     document.getElementById("app-frame").style.display = "none";
 
-    // 🔥 Start background loading
-    if (ENABLE_PRELOAD) beginSilentPreload();
+    // Show loading UI BEFORE preload starts
+    if (ENABLE_PRELOAD) {
+        showLoadingScreen();
+        updateLoadingText(0, assetUrls.length);
+        beginSilentPreload();
+    }
+
     loadLore();
+}
+
+async function waitAtLeast(ms, promise) {
+    const delay = new Promise(res => setTimeout(res, ms));
+    await Promise.all([delay, promise]);
 }
 
 function loadLore() {
@@ -214,7 +223,8 @@ async function login() {
 
 	// Wait for preload only if enabled
 	if (ENABLE_PRELOAD && preloadPromise) {
-		await preloadPromise;
+		await waitAtLeast(500, preloadPromise); // 500ms minimum
+
 	}
 
 	startGame(player, preloadedAssets);

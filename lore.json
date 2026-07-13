@@ -108,7 +108,7 @@
       "hp_die": 8,
       "hp_modifier": 2,
       "strengh_mod": 1,
-      "Dexterity_mod": 0,
+      "dexterity_mod": 0,
       "wisdom_mod": 0,
       "intelligence_mod": 0,
       "charisma_mod": -1,
@@ -623,7 +623,7 @@
       "caste": "Noble",
       "RacialEnemy": "Potatoes",
       "proficiency_armor": "Medium",
-      "proficiency_weapon": "Martial",
+      "proficiency_weapon": "Finesse",
 	  	"inventory" : [
 		  { "item": "Small Rapier", "qty": 1, "locked": true },
 		  { "item": null, "qty": 0, "locked": false },
@@ -971,7 +971,8 @@
 		],
       "traits": [
 		"Stern",
-		"Loner"
+		"Loner",
+		"Grouchy"
       ],
       "notes": "A companion of the exiled dragonangel. Mastered a unique technique to release arrows of longbows behind her back, because her arms are too short otherwise."
     },
@@ -1154,7 +1155,7 @@
       ]
     },
     "Wererat": {
-	  "desc": "Lycanthope infected person.",
+	  "desc": "Rodentope infected person.",
       "Traits": [
         "Undergrounder",
 		"Keen Smell",
@@ -1208,7 +1209,7 @@
       "desc": "Tactician adept at espionage and disguise, can pose as an alignment adjacent to their own, meaning neutral could pose as any."
     },
     "Paladin": {
-      "desc": "The Divine Knight, sworn servitude to god, and to his king on the earth."
+      "desc": "The Divine Knight, sworn servitude to god, and to his king on the earthly realm."
     },
     "Fallen Paladin": {
       "desc": "A fighter, forsaken his oath but still has some providence."
@@ -1235,6 +1236,12 @@
       "desc": "A mediator between the Material realm and the Spiritual realm.",
       "Traits": [
         "Spiritual Guide"
+      ]
+    },
+    "Sorcerer": {
+      "desc": "A spellcaster with innate or inherited magical powers.",
+      "Traits": [
+        ""
       ]
     },
     "Druid": {
@@ -1264,6 +1271,16 @@
 		"Tracker",
 		"Patient"
       ]
+    },
+    "Altar Boy": {
+      "desc": "A cleric squire.",
+      "Traits": []
+    },
+    "Corsair": {
+      "desc": "A sea-faring warrior.",
+      "Traits": [
+	    "Navigation, Sea"
+		]
     }
   },
   "Traits": {
@@ -1379,6 +1396,26 @@
       ]
     }
   },
+  "Skills": {
+  "Acrobatics": "Dexterity",
+  "Animal Handling": "Wisdom",
+  "Arcana": "Intelligence",
+  "Athletics": "Strength",
+  "Deception": "Charisma",
+  "History": "Intelligence",
+  "Insight": "Wisdom",
+  "Intimidation": "Charisma",
+  "Investigation": "Intelligence",
+  "Medicine": "Wisdom",
+  "Nature": "Intelligence",
+  "Perception": "Wisdom",
+  "Performance": "Charisma",
+  "Persuasion": "Charisma",
+  "Religion": "Intelligence",
+  "Sleight of Hand": "Dexterity",
+  "Stealth": "Dexterity",
+  "Survival": "Wisdom"
+  },
   "passive": {
     "idleDesc": {
       "Bragain": "Bragain can be assigned to a mining location, but he's currently enjoying his leisure time socializing and drinking.",
@@ -1471,4 +1508,5 @@
 		"desc": "decription"
 	  }
   }
+
 }
