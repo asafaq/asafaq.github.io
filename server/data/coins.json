@@ -1,0 +1,17 @@
+[
+  {
+    "id": "21549599-0d04-47b3-818f-969080b2ad5a",
+    "timestamp": 1784386371275,
+    "createdBy": "1",
+    "currentOwner": "1",
+    "spent": false,
+    "transactionHistory": [
+      {
+        "type": "MINT",
+        "from": null,
+        "to": "1",
+        "timestamp": 1784386371275
+      }
+    ]
+  }
+]

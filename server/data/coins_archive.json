@@ -1,0 +1,107 @@
+[
+  {
+    "id": "ec23e580-e4bd-4475-9dd2-ac9c737aa9eb",
+    "timestamp": 1784384879596,
+    "createdBy": "1",
+    "currentOwner": null,
+    "spent": true,
+    "transactionHistory": [
+      {
+        "type": "MINT",
+        "from": null,
+        "to": "1",
+        "timestamp": 1784384879596
+      },
+      {
+        "type": "SPEND",
+        "from": "1",
+        "to": null,
+        "timestamp": 1784386056270
+      }
+    ]
+  },
+  {
+    "id": "2fa87101-e61f-447f-8b9f-8ccc3e4856af",
+    "timestamp": 1784384879608,
+    "createdBy": "1",
+    "currentOwner": null,
+    "spent": true,
+    "transactionHistory": [
+      {
+        "type": "MINT",
+        "from": null,
+        "to": "1",
+        "timestamp": 1784384879608
+      },
+      {
+        "type": "SPEND",
+        "from": "1",
+        "to": null,
+        "timestamp": 1784386057762
+      }
+    ]
+  },
+  {
+    "id": "4fced60b-3f35-4e4a-90d9-ac42a0514ebc",
+    "timestamp": 1784385340538,
+    "createdBy": "1",
+    "currentOwner": null,
+    "spent": true,
+    "transactionHistory": [
+      {
+        "type": "MINT",
+        "from": null,
+        "to": "1",
+        "timestamp": 1784385340538
+      },
+      {
+        "type": "SPEND",
+        "from": "1",
+        "to": null,
+        "timestamp": 1784386058678
+      }
+    ]
+  },
+  {
+    "id": "7dd42cc9-5a69-4ef8-bf15-d8d6491daed8",
+    "timestamp": 1784385747911,
+    "createdBy": "1",
+    "currentOwner": null,
+    "spent": true,
+    "transactionHistory": [
+      {
+        "type": "MINT",
+        "from": null,
+        "to": "1",
+        "timestamp": 1784385747911
+      },
+      {
+        "type": "SPEND",
+        "from": "1",
+        "to": null,
+        "timestamp": 1784386059502
+      }
+    ]
+  },
+  {
+    "id": "f0d42354-449b-4fb1-878f-12d3c4b55edf",
+    "timestamp": 1784385749143,
+    "createdBy": "1",
+    "currentOwner": null,
+    "spent": true,
+    "transactionHistory": [
+      {
+        "type": "MINT",
+        "from": null,
+        "to": "1",
+        "timestamp": 1784385749143
+      },
+      {
+        "type": "SPEND",
+        "from": "1",
+        "to": null,
+        "timestamp": 1784386060277
+      }
+    ]
+  }
+]
