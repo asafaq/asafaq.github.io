@@ -512,14 +512,14 @@ function applyDamage(target, amount) {
 
 
 
-    // ⭐ 4. Concentration breaks on ANY real HP damage
-    if (target.isConcentrating) {
-        target.isConcentrating = false;
-        Bus.emit('LOG', `💥 ${target.name} loses concentration!`);
-    }
+		// ⭐ 4. Concentration breaks on ANY real HP damage
+		if (target.isConcentrating) {
+			target.isConcentrating = false;
+			Bus.emit('LOG', `💥 ${target.name} loses concentration!`);
+		}
 
     update();
-}
+	}
 }
 function rollInitiativeForAll() {
     initiativeOrder = units

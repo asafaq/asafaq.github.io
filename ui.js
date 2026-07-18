@@ -635,7 +635,58 @@ mission_dwood_1: () => `
 	<button id="saveBtn">Save Changes</button>
 	<div id="saveStatus" style="margin-top: 6px; color: white; font-weight: bold;"></div>
 
+	`,
+
+	shop: `
+	  <div style="padding: 20px; font-family: Arial;">
+
+		<h2>Your Wallet</h2>
+		<h1>Currently this page only runs locally!</h1>
+
+		<div id="coinCountBox" 
+			 style="font-size: 20px; margin-bottom: 20px;">
+		  Loading your coins...
+		</div>
+
+		<h3>Mint Electrum Coins</h3>
+		<div style="margin-top: 10px;">
+		  <input 
+			id="mintAmount" 
+			type="number" 
+			min="1" 
+			placeholder="Amount"
+			style="width: 120px; padding: 6px;"
+		  />
+
+		  <button 
+			id="mintButton"
+			style="padding: 6px 12px; margin-left: 10px; cursor: pointer;"
+		  >
+			Mint
+		  </button>
+		</div>
+
+    <h3 style="margin-top: 30px;">Spend Coins</h3>
+    <div style="margin-top: 10px;">
+      <input 
+        id="spendAmount" 
+        type="number" 
+        min="1" 
+        placeholder="Amount"
+        style="width: 120px; padding: 6px;"
+      />
+
+      <button 
+        id="spendButton"
+        style="padding: 6px 12px; margin-left: 10px; cursor: pointer; background:#c0392b; color:white;"
+      >
+        Spend
+      </button>
+    </div>
+
+	  </div>
 	`
+
 
     // other pages...
   };
@@ -1253,6 +1304,29 @@ main.innerHTML = typeof pages[page] === "function"
   if (page === "mail") {
 	renderMailboxPage();
   }
+  
+	if (page === "shop") {
+	  const user = player.id;
+
+	  // Load coin count
+	  getActiveCoins(user);
+
+	  // Attach mint button
+	  const btn = document.getElementById("mintButton");
+	  btn.onclick = () => {
+		const amount = parseInt(document.getElementById("mintAmount").value);
+		mintCoins(user, amount);
+	  };
+	  
+	  // Spend button
+	  document.getElementById("spendButton").onclick = () => {
+		const amount = parseInt(document.getElementById("spendAmount").value);
+		spendCoins(user, amount);
+	  };
+	}
+
+  
+  
   evaluateNotices()
 }
 

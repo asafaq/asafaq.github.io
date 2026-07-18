@@ -1567,7 +1567,7 @@
     "speaker": "Narrator",
     "portrait": "",
     "side": "right",
-    "dialog": "The dwarf migrant's eye widen at your knowledge. He says it's rather dangerous for him to wander alone and he've been dodging robbers left and right. He'd rather if you hold on to this gem. He hands you a speciality cut gem he've been hiding. It would be much safer with you.",
+    "dialog": "The dwarf migrant's eye widen at your knowledge. He says it's rather dangerous for him to wander alone and he've been dodging robbers left and right. He'd rather if you hold on to this gem. He hands you a speciality cut gem he've been hiding. It would be much safer with you.\n\nYou both part ways and carry on your journey.",
     "interaction_type": "next",
     "target_id": "green2*1_2107*end",
     "options": []
@@ -1577,13 +1577,31 @@
     "speaker": "Narrator",
     "portrait": "",
     "side": "right",
-    "dialog": "The dwarf migrant likes you and appreciates your small talk. He rewards you a rough gem for your time.",
+    "dialog": "The dwarf migrant appreciates your banter. He rewards you with a rough gem from his sack.\n\nYou both part ways and carry on your journey.",
     "interaction_type": "next",
     "target_id": "green2*1_2107end",
     "options": []
   },
   {
     "id": "green2*1_2103end",
+    "speaker": "Narrator",
+    "portrait": "",
+    "side": "left",
+    "dialog": ".",
+    "interaction_type": "next",
+    "target_id": "END"
+  },
+  {
+    "id": "green2*1_2107end",
+    "speaker": "Narrator",
+    "portrait": "",
+    "side": "left",
+    "dialog": ".",
+    "interaction_type": "next",
+    "target_id": "END"
+  },
+  {
+    "id": "green2*1_2107*end",
     "speaker": "Narrator",
     "portrait": "",
     "side": "left",

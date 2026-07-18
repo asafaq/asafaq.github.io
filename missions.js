@@ -589,6 +589,16 @@ async function handleMissionEnd(sceneId) {
 			const message = `You've picked up ${result} silver coins.`;
 			pushStatus(message);
         },
+		"green2_117end": async () => {
+            player.missions.green_2 = 2;
+            player.patrons.adv_Amyssa.location = 3;
+            player.patrons.adv_Amyssa.status = "mission";
+			const partyKey = player.missions.current_mission.party;
+            buildPartyTraits(partyKey);
+			buildPartySummary(partyKey);
+            Journal.addEntry(`Amyssa has joined the ${player.data.party_A} on their way to ${player.missions.current_mission.id}.`);
+            loadPage("mission_green_2");
+        },
         "green2_*1_202end": async () => {
 			launchBattle("g2_reddeer");
         },
@@ -632,17 +642,20 @@ async function handleMissionEnd(sceneId) {
 			}
 		},
 
+		"green2*1_2107end": async () => {
+			const gem = generateGem(count = 1, rarity = null, color = null, cutShape = "raw")
+			player.missions.current_mission.satchel.push(gem);
+			await loadPage("mission_green_2");
+			pushStatus(`You obtained a ${gem.cut !== "raw" ? gem.cut + "‑cut " : ""}${gem.color} ${gem.name} (${gem.rarity}). Value: ${gem.finalValue}.`);
 
-        "green2_117end": async () => {
-            player.missions.green_2 = 2;
-            player.patrons.adv_Amyssa.location = 3;
-            player.patrons.adv_Amyssa.status = "mission";
-			const partyKey = player.missions.current_mission.party;
-            buildPartyTraits(partyKey);
-			buildPartySummary(partyKey);
-            Journal.addEntry(`Amyssa has joined the ${player.data.party_A} on their way to ${player.missions.current_mission.id}.`);
-            loadPage("mission_green_2");
-        },
+		},
+		"green2*1_2107*end": async () => {
+			const gem = generateGem(count = 1, rarity = null, color = null, cutShape = "yes")
+			player.missions.current_mission.satchel.push(gem);
+			await loadPage("mission_green_2");
+			pushStatus(`You obtained a ${gem.cut !== "raw" ? gem.cut + "‑cut " : ""}${gem.color} ${gem.name} (${gem.rarity}). Value: ${gem.finalValue}.`);
+		},
+
         "green2_940a_end": async () => {
             player.missions.green_2 = 3;
             recruitAdventurer("adv_Hogmother");
@@ -650,7 +663,6 @@ async function handleMissionEnd(sceneId) {
             player.patrons.adv_Hogmother.location = 3;
             player.patrons.adv_Hogmother.status = "mission";
 			
-            
 			const partyKey = player.missions.current_mission.party;
             buildPartyTraits(partyKey);
 			buildPartySummary(partyKey);
