@@ -402,7 +402,8 @@
     },
     "adv_Aasibelle": {
       "name": "Aasibelle",
-	  "contractPrice": 100,
+	  "contractPrice": 0,
+	  "Premium": true,
 	  "icon": "assets/patrons/Aasibelle_s2.png",
       "large": "assets/patrons/Aasibelle_s2.png",
       "top": "260px",
@@ -451,6 +452,7 @@
     "adv_Inferno": {
       "name": "Inferno",
 	  "contractPrice": 999,
+	  "Premium": true,
 	  "icon": "assets/patrons/Aasibelle_s2.png",
       "large": "assets/patrons/Aasibelle_s2.png",
       "top": "260px",
@@ -669,7 +671,8 @@
     },
     "adv_Tinman": {
       "name": "Tinman B-B-TR",
-	  "contractPrice": 100,
+	  "contractPrice": 0,
+	  "Premium": true,
 	  "icon": "assets/patrons/Tinman.png",
       "large": "assets/patrons/Tinman.png",
 	  "top": "180px",

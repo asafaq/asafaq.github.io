@@ -660,7 +660,7 @@ mission_dwood_1: () => `
 
 		  <button 
 			id="mintButton"
-			style="padding: 6px 12px; margin-left: 10px; cursor: pointer;"
+			style="padding: 6px 12px; margin-left: 10px; cursor: pointer; background:#add8e6;"
 		  >
 			Mint
 		  </button>
@@ -1320,8 +1320,10 @@ main.innerHTML = typeof pages[page] === "function"
 	  
 	  // Spend button
 	  document.getElementById("spendButton").onclick = () => {
+		const note = "Store purchase";
 		const amount = parseInt(document.getElementById("spendAmount").value);
-		spendCoins(user, amount);
+		console.log("Sending note: frontend ", note);
+		spendCoins(user, amount, note);
 	  };
 	}
 
@@ -2245,10 +2247,22 @@ function getPatronView(advId) {
 function getHydratedAdventurer(advId) {
     const staticLore = loreData.Adventurer[advId] || { name: "Unknown", class: "Commoner" };
     const playerState = player.patrons[advId] || { status: "unrecruited" };
+    // --- BASE PROFICIENCY BY LEVEL ---
+    let basePB = 0;
+	let level = playerState.Level;
 
+    if (level >= 1 && level <= 4) basePB = 2;
+    else if (level <= 8) basePB = 3;
+    else if (level <= 12) basePB = 4;
+    else if (level <= 16) basePB = 5;
+    else if (level <= 20) basePB = 6;
+    else if (level <= 24) basePB = 7;
+    else if (level <= 28) basePB = 8;
+    else if (level <= 30) basePB = 9;
     // This creates a single object merging both
     return {
         id: advId,
+		prof: basePB,
         ...staticLore,     // Static data from lore.json
         ...playerState     // Dynamic data from save file
     };
@@ -2349,16 +2363,14 @@ function getProficiencyBonus(adv) {
     const isBard = role === "bard";
 
     // THIEF: always double proficiency
-    if (isThief) {
-        return basePB * 2;
-    }
+    //if (isThief) {  return basePB * 2;  }
 
     // BARD: special rule ONLY at level 2
-    if (isBard && level > 1) {
-        const doubled = basePB * 2;
-        const half    = Math.floor(basePB / 2);
-        return `${doubled} (${half})`;
-    }
+    //if (isBard && level > 1) {
+    //    const doubled = basePB * 2;
+    //    const half    = Math.floor(basePB / 2);
+    //    return `${doubled} (${half})`;
+    //}
 
     // Normal bard levels
     if (isBard) {

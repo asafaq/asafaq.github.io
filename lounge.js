@@ -27,6 +27,7 @@ function renderApplicantUI(hydrated, player) {
   const traitReferral = getTraitReferral(hydrated);
   const cost = hydrated.contractPrice;
   const silver = player.treasury.silver;
+  const isPremium = hydrated.Premium === true;
 
   return `
     <div class="hire-section">
@@ -44,16 +45,22 @@ function renderApplicantUI(hydrated, player) {
         ` : ""}
       </div>
 
-      <div class="hire-cost">
-	    <p> Would you like to hire this adventurer?</p>
-        <p><strong>Contract Price:</strong> ${cost} silver</p>
-        <p><strong>Your Silver:</strong> ${silver} silver</p>
-      </div>
+		<div class="hire-cost">
+		  <p>Would you like to hire this adventurer?</p>
+
+		  ${
+			isPremium
+			  ? `<p><strong>This contract isn't interested in mere silver.</strong></p>`
+			  : `<p><strong>Contract Price:</strong> ${cost} silver</p>
+				 <p><strong>Your Silver:</strong> ${silver} silver</p>`
+		  }
 
 
 
       <button id="hire-yes">Hire</button>
       <button id="hire-no">Decline</button>
+      <button id="hire-yes2">Hire with Electrum coin</button>
+      <button id="hire-yes3">Hire with Counterfeit Electrum coin</button>
     </div>
   `;
 }
@@ -89,20 +96,41 @@ function idleController(hydrated, container) {
 
 
 async function applicantController(hydrated, container) {
+  const user = player.id;
+  const patron = getHydratedAdventurer(hydrated.id);
+  console.log("DEBUG:", patron )
   const noBtn = container.querySelector("#hire-no");
-  const yesBtn = container.querySelector("#hire-yes");
+  const yesBtn = container.querySelector("#hire-yes");     // silver
+  const yesBtn2 = container.querySelector("#hire-yes2");   // real electrum
+  const yesBtn3 = container.querySelector("#hire-yes3");   // counterfeit electrum
   const sheetBtn = container.querySelector("#view-charsheet");
-  // --- Dialog Button ---
   const dialogBtn = container.querySelector("#dialog-btn");
+  const isPremium = hydrated.Premium === true;
+  //const premiumType = hydrated.premiumType || "electrum";
 
+  // --- Load real electrum coins ---
+  const realElectrumCoins = await getActiveCoins(user); // array of coin objects
+	console.log("DEBUG: realElectrumCoins inside applicantController:", realElectrumCoins);
+	console.log("DEBUG: hasRealElectrum:", Array.isArray(realElectrumCoins) && realElectrumCoins.length > 0);
+
+  const hasRealElectrum = Array.isArray(realElectrumCoins) && realElectrumCoins.length > 0;
+
+  // --- Check counterfeit electrum ---
+  const hasCounterfeitElectrum = player.treasury.counterfeit_electrum >= 1;
+
+  // --- Show/hide buttons ---
+  if (isPremium) { yesBtn.style.display = "none"; } // silver hire
+  if (yesBtn2) yesBtn2.style.display = await hasRealElectrum ? "inline-block" : "none";
+  if (yesBtn3) yesBtn3.style.display = hasCounterfeitElectrum ? "inline-block" : "none";
+
+  // --- Dialog Button ---
   if (dialogBtn && hydrated.dialog > 0) {
-	  dialogBtn.addEventListener("click", () => {
-		container.style.display = "none";   // <-- close the window
-		const missionId = hydrated.name + hydrated.dialog;
-		console.log("Dialog clicked:", missionId);
-		startMissionSystem(missionId);
-	  });
-	}
+    dialogBtn.addEventListener("click", () => {
+      container.style.display = "none";
+      const missionId = hydrated.name + hydrated.dialog;
+      startMissionSystem(missionId);
+    });
+  }
   // --- Character Sheet Button ---
   if (sheetBtn) {
     sheetBtn.addEventListener("click", () => {
@@ -115,18 +143,71 @@ async function applicantController(hydrated, container) {
       }, 50);
     });
   }
+  console.log("DEBUG: yesBtn2 element:", yesBtn2);
+  // --- Hire with REAL Electrum ---
+  if (yesBtn2) {
+    yesBtn2.onclick = async () => {
+      const coins = await getActiveCoins(user);
 
-  // --- Hire Yes ---
+      if (coins && coins.length > 0) {
+        const note = `Hiring ${hydrated.name}`;
+        console.log("Spending 1 electrum coin for hire:", note);
+
+        // Spend exactly 1 coin
+        await spendCoins(user, 1, note);
+		
+        player.patrons[hydrated.id].status = "idle";
+		
+        pushStatus(`Hiring ${hydrated.name}`);
+		Journal.addEntry(`You've recruited ${hydrated.name} on an Electrum coin contract.`);
+        await storage.savePlayer(player);
+		container.style.display = "none";
+      } else {
+        pushStatus("No electrum coins available.");
+      }
+
+      container.style.display = "none";
+    };
+  }
+
+  // --- Hire with Counterfeit Electrum ---
+  if (yesBtn3) {
+    yesBtn3.onclick = async () => {
+      if (player.treasury.counterfeit_electrum >= 1) {
+        player.treasury.counterfeit_electrum -= 1;
+
+        player.patrons[hydrated.id].status = "idle";
+		
+        pushStatus(`Hiring ${hydrated.name}`);
+		Journal.addEntry(`You've recruited ${hydrated.name} on a Counterfeit Electrum coin contract.`);
+        await storage.savePlayer(player);
+		container.style.display = "none";
+      } else {
+        pushStatus("Not enough counterfeit electrum.");
+      }
+
+      container.style.display = "none";
+    };
+  }
+
+  // --- Hire with Silver ---
   yesBtn.onclick = async () => {
     const cost = hydrated.contractPrice;
+	if (hydrated.premium) {
+	  pushStatus("This patron cannot be hired with silver.");
+	  return;
+	}
 
     if (player.treasury.silver >= cost) {
       player.treasury.silver -= cost;
-      patron.status = "idle";
 
+      player.patrons[hydrated.id].status = "idle";
+	  
+      pushStatus(`Hiring ${hydrated.name}`);
+	  
+	  Journal.addEntry(`You've recruited ${hydrated.name} on a ${cost}-silver contract.`);
       await storage.savePlayer(player);
-
-      renderTavernPage();
+	  container.style.display = "none";
     } else {
       pushStatus("Not enough silver.");
     }
@@ -136,7 +217,6 @@ async function applicantController(hydrated, container) {
 
   // --- Hire No ---
   noBtn.addEventListener("click", () => {
-    console.log(`${hydrated.name} declined.`);
     container.style.display = "none";
   });
 }

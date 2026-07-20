@@ -589,7 +589,7 @@ async function launchBattle(encounterKey) {
 	// ⭐ Assign map positions AFTER sorting
 	eligible.forEach((hydrated, index) => {
 		const coords = getPCPosition(index);
-
+		//const prof = getProficiencyBonus({ id: hydrated.name });
 		missionParty.push({
 			name: hydrated.name,
 			type: 'pc',
@@ -608,7 +608,7 @@ async function launchBattle(encounterKey) {
 				int: hydrated.intelligence_mod,
 				cha: hydrated.charisma_mod
 			},
-
+			prof: hydrated.prof,
 			traits: hydrated.traits || [],
 			inventory: hydrated.inventory || [],
 

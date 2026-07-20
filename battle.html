@@ -128,7 +128,9 @@ async function init() {
 			canHide: p.canHide ?? true,
 			maxHp: p.maxHp || p.hp,
 			// ⭐ Preserve bard song state
-			hitBonus: p.hitBonus || 0,
+			//hitBonus: p.hitBonus || 0,
+			hitBonus: (p.hitBonus || 0) + (p.prof || 0),
+			// new hitBonus adds prof 
 			damageBonus: p.damageBonus || 0,
 			isSinging: p.isSinging || false,
 		})),
@@ -460,7 +462,9 @@ function applyStrDexAttackBonus(unit) {
   const role = (unit.role || '').toLowerCase().trim();
 
   let modifier = 0;
-
+  
+  modifier += unit.prof; // this is the weapon proficient level taken from regular prof level, it needs to be later tested if the equipped weapon matches the "proficiency_weapon": "Martial", in the char sheet.
+  
   if (STRDEX_TABLE.str.includes(role)) {
     modifier = unit.stats?.str || 0;           // ← from stats.str
   } 
@@ -723,15 +727,17 @@ function handleAttack(attacker, target) {
     let hitMod = 0;
 
     if (attacker.type === "pc") {
-        hitMod = attacker.stats?.str || 0;
+		// currenyly all hitMod are neutralized to 0, while making use of attacker.hitBonus
+		<!-- hitMod += attacker.prof -->
+		
+        <!-- hitMod = attacker.stats?.str || 0; -->
+        <!-- if (attacker.expClassKey === "thief" && (attacker.stats?.dex > attacker.stats?.str)) { -->
+            <!-- hitMod = attacker.stats.dex; -->
+        <!-- } -->
 
-        if (attacker.expClassKey === "thief" && (attacker.stats?.dex > attacker.stats?.str)) {
-            hitMod = attacker.stats.dex;
-        }
-
-        if (attacker.role === "Deputy" && (attacker.stats?.dex > attacker.stats?.str)) {
-            hitMod = attacker.stats.dex;
-        }
+        <!-- if (attacker.role === "Deputy" && (attacker.stats?.dex > attacker.stats?.str)) { -->
+            <!-- hitMod = attacker.stats.dex; -->
+        <!-- } -->
 
     } else {
         const m = getMonsterStats(attacker);
@@ -1639,7 +1645,7 @@ function showVictoryWindow(summary, onClose) {
 				border-radius:5px;
 				cursor:pointer;
 				font-size:16px;
-			">Battle log .TXT</button>
+			">battle_log.txt</button>
             <button id="victory-close" style="
                 padding:10px 20px;
                 background:#27ae60;

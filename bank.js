@@ -1,27 +1,32 @@
+// http://localhost:3000/coins/active/1
+// http://localhost:3000/coins/spent/1
 
 async function getActiveCoins(user) {
   try {
     const response = await fetch(`http://localhost:3000/coins/active/${user}`);
     const coins = await response.json();
-
+    console.log("DEBUG: getActiveCoins returned:", coins);
+	
     const box = document.getElementById("coinCountBox");
 
-    if (!coins.length) {
-      box.innerText = "You have no active coins.";
-      return;
+    if (box) {
+      if (!coins.length) {
+        box.innerText = "You have no active coins.";
+      } else {
+        box.innerText = `You have ${coins.length} Electrum coin${coins.length !== 1 ? 's' : ''}.`;
+      }
     }
 
-	box.innerText = `You have ${coins.length} Electrum coin${coins.length !== 1 ? 's' : ''}.`;
-    // Build a simple list
-    // box.innerHTML = `
-      // <h3>Your Active Coins</h3>
-      // <ul>
-        // ${coins.map(c => `<li>Coin ID: ${c.id}</li>`).join("")}
-      // </ul>
-    // `;
+    return coins;   // ALWAYS return coins
   } catch (err) {
     console.error("Error fetching coins:", err);
-    document.getElementById("coinCountBox").innerText = "Error loading coins.";
+
+    const box = document.getElementById("coinCountBox");
+    if (box) {
+      box.innerText = "Error loading coins.";
+    }
+
+    return []; // safe fallback
   }
 }
 
@@ -60,7 +65,7 @@ async function mintCoins(user, amount) {
 }
 
 
-async function spendCoins(user, amount) {
+async function spendCoins(user, amount, note) {
   if (!amount || amount < 1) {
     alert("Please enter a valid amount.");
     return;
@@ -82,14 +87,13 @@ async function spendCoins(user, amount) {
     await fetch("http://localhost:3000/coins/spend", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ coinId, user })
+      body: JSON.stringify({ coinId, user, note })
     });
   }
 
   // Refresh wallet
   getActiveCoins(user);
 }
-
 
 async function transferCoin(fromUser, coinId, toUser) {
   //const fromUser = player.id;
