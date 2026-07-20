@@ -20,15 +20,17 @@ router.post('/transfer', (req, res) => {
 });
 
 router.post('/spend', (req, res) => {
-  const { coinId, user } = req.body;
+  console.log("SPEND ROUTE BODY:", req.body);   // <--- ADD THIS
+  const { coinId, user, note } = req.body;
 
   try {
-    const coin = ledger.spendCoin(coinId, user);
+    const coin = ledger.spendCoin(coinId, user, note);
     res.json(coin);
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
 });
+
 
 
 router.get('/:id', (req, res) => {

@@ -14,6 +14,9 @@ my-app/
 // npm run dev
 
 
+
+
+
 const http = require('http');
 
 require('dotenv').config();
@@ -21,6 +24,13 @@ const express = require('express');
 const app = express();
 const PORT = process.env.PORT || 3000;
 const cors = require('cors');
+
+// GLOBAL POST LOGGER (works in Express 5)
+app.post(/.*/, (req, res, next) => {
+  console.log("POST hit:", req.path);
+  next();
+});
+
 app.use(cors());
 
 app.listen(PORT, () => {
@@ -31,7 +41,6 @@ app.use(express.json());
 
 const coinsRoutes = require('./src/routes/coins');
 app.use('/coins', coinsRoutes);
-
 
 
 
