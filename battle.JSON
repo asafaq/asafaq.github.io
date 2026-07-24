@@ -32,6 +32,20 @@
       ]
     },
 
+    "cambion_test1": {
+      "name": "Training cambion",
+      "map": "stone_hall",
+      "monsters": [
+        {
+          "id": "cambion",
+          "count": 1,
+          "spawns": [
+            { "x": 8, "y": 4 }
+          ]
+        }
+      ]
+    },
+
     "tutor_test12": {
       "name": "Training Bushes",
       "map": "green_2",
@@ -342,7 +356,7 @@
       "color": "#e67e22",
 	  "morale": 15,
 		"ac": 8,
-		"attackMod": 0,
+		"hitMod": 0,
 		"damageDie": 4,
 		"damageBonus": 0
     },
@@ -358,7 +372,7 @@
       "color": "#e67e22",
 	  "morale": 15,
 		"ac": 12,
-		"attackMod": 0,
+		"hitMod": 0,
 		"damageDie": 4,
 		"damageBonus": 0
     },
@@ -374,7 +388,7 @@
       "icon": "/assets/monsters/bug1.png",
       "color": "#e67e22",
 		"ac": 10,
-		"attackMod": 0,
+		"hitMod": 0,
 		"damageDie": 4,
 		"damageBonus": 0
     },
@@ -390,7 +404,7 @@
       "color": "#c0392b",
 	  "morale": 20,
 		"ac": 12,
-		"attackMod": 2,
+		"hitMod": 2,
 		"damageDie": 4,
 		"damageBonus": 1
     },
@@ -406,7 +420,7 @@
       "color": "#c0392b",
 	  "morale": 12,
 		"ac": 12,
-		"attackMod": 1,
+		"hitMod": 1,
 		"damageDie": 4,
 		"damageBonus": 0
     },
@@ -422,7 +436,7 @@
       "color": "#c0392b",
 	  "morale": 12,
 		"ac": 12,
-		"attackMod": 1,
+		"hitMod": 1,
 		"damageDie": 4,
 		"damageBonus": 0
     },
@@ -438,7 +452,7 @@
       "color": "#c0392b",
 	  "morale": 12,
 		"ac": 12,
-		"attackMod": 1,
+		"hitMod": 1,
 		"damageDie": 4,
 		"damageBonus": 0
     },
@@ -454,7 +468,7 @@
       "color": "#c0392b",
 	  "morale": 12,
 		"ac": 12,
-		"attackMod": 1,
+		"hitMod": 1,
 		"damageDie": 4,
 		"damageBonus": 0
     },
@@ -470,7 +484,7 @@
       "color": "#c0392b",
 	  "morale": 12,
 		"ac": 12,
-		"attackMod": 2,
+		"hitMod": 2,
 		"damageDie": 4,
 		"damageBonus": 0
     },
@@ -486,7 +500,7 @@
       "color": "#c0392b",
 	  "morale": 12,
 		"ac": 12,
-		"attackMod": 0,
+		"hitMod": 0,
 		"damageDie": 4,
 		"damageBonus": 1
     },
@@ -502,7 +516,7 @@
       "color": "#c0392b",
 	  "morale": 14,
 		"ac": 12,
-		"attackMod": 2,
+		"hitMod": 2,
 		"damageDie": 4,
 		"damageBonus": 1,
 	  "silver": 8
@@ -519,10 +533,11 @@
       "color": "#c0392b",
 	  "morale": 12,
 		"ac": 12,
-		"attackMod": 1,
+		"hitMod": 1,
 		"damageDie": 4,
 		"damageBonus": 1,
-	  "silver": 8
+	  "silver": 8,
+	  "dialog": "brigan_1_01"
     },
 
     "brigan2": {
@@ -536,7 +551,7 @@
       "color": "#c0392b",
 	  "morale": 14,
 		"ac": 14,
-		"attackMod": -1,
+		"hitMod": -1,
 		"damageDie": 4,
 		"damageBonus": 1,
 	  "silver": 8
@@ -553,7 +568,7 @@
       "color": "#c0392b",
 	  "morale": 18,
 		"ac": 7,
-		"attackMod": -3,
+		"hitMod": -3,
 		"damageDie": 4,
 		"damageBonus": 2
     },
@@ -569,25 +584,43 @@
       "color": "#c0392b",
 	  "morale": 18,
 		"ac": 7,
-		"attackMod": -3,
+		"hitMod": -3,
 		"damageDie": 1,
 		"damageBonus": 0
     },
-
     "reddeer": {
       "name": "Red Deer",
       "type": "monster",
       "hp": 40,
       "maxHp": 40,
       "speed": 9,
+	  "size": "L",
+	  "noImageRing": true,
 	  "xp": 220,
       "icon": "/assets/monsters/bear.png",
       "color": "#c0392b",
 	  "morale": 19,
 		"ac": 15,
-		"attackMod": 3,
+		"hitMod": 3,
 		"damageDie": 8,
 		"damageBonus": 3
+    },
+    "cambion": {
+      "name": "Cambion",
+      "type": "monster",
+      "hp": 200,
+      "maxHp": 400,
+      "speed": 19,
+	  "size": "L",
+	  "noImageRing": true,
+	  "xp": 22000,
+      "icon": "/assets/monsters/cambion.png",
+      "color": "#c0392b",
+	  "morale": 25,
+		"ac": 23,
+		"hitMod": 10,
+		"damageDie": 12,
+		"damageBonus": 10
     }
   },
 
@@ -670,6 +703,22 @@
         { "x": 7, "y": 9 },
         { "x": 7, "y": 5 },
         { "x": 8, "y": 5 }
+      ]
+    },
+
+    "stone_hall": {
+      "url": "/assets/battlemaps/stone_hall.png",
+      "obstacles": [
+        { "x": 0, "y": 0 },
+        { "x": 0, "y": 1 },
+        { "x": 0, "y": 2 },
+        { "x": 0, "y": 3 },
+        { "x": 0, "y": 4 },
+        { "x": 0, "y": 5 },
+        { "x": 0, "y": 6 },
+        { "x": 0, "y": 7 },
+        { "x": 0, "y": 8 },
+        { "x": 0, "y": 9 }
       ]
     }
   }

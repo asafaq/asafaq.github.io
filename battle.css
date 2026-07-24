@@ -14,13 +14,84 @@
 }
 
     #grid { width: 540px; height: 540px; position: relative; background-color: #333; border-bottom: 2px solid #444; flex-shrink: 0; overflow: hidden; background-size: cover; background-position: center; }
+/*#grid {
+    width: 540px;
+    height: 540px;
+    position: relative;
+
+    display: grid;
+
+    /* dynamic grid size 
+    grid-template-columns: repeat(var(--grid-w), 1fr);
+    grid-template-rows: repeat(var(--grid-h), 1fr);
+
+    /* center small grids 
+    justify-content: center;
+    align-content: center;
+
+    /* stretch cells evenly 
+    justify-items: stretch;
+    align-items: stretch;
+
+    background-color: #333;
+    border-bottom: 2px solid #444;
+    flex-shrink: 0;
+    overflow: hidden;
+    background-size: cover;
+    background-position: center;
+}
+*/
+
     #log { position: relative; height: 140px; background: #111; padding: 15px; overflow-y: auto; color: #00ff00; font-family: monospace; border-bottom: 2px solid #444; display: flex; flex-direction: column-reverse; box-sizing: border-box; flex-shrink: 0; }
     #controls { position:relative ; display: flex; flex-direction: row; flex: 1; background: #1a1a1a; padding: 10px; gap: 10px; align-items: stretch; box-sizing: border-box; }
     #stats-panel { font-family: "monospace", sans-serif; flex: 1; display: flex; flex-direction: column; justify-content: center; background: #2c3e50; border-radius: 4px; padding: 8px; font-size: 0.7rem; color: white; flex-shrink: 0; border-left: 4px solid #3498db; box-sizing: border-box; }
     #stats-panel strong { display: block; margin-bottom: 2px; color: #f1c40f; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .btn-group { display: grid; flex: 1; grid-template-columns: repeat(5, 1fr); grid-template-rows: repeat(2, 1fr); gap: 8px; min-width: 0; }
     .btn-group button { width: 100%; height: 100%; font-size: 0.85rem; background: #444; color: white; border: 1px solid #555; border-radius: 4px; cursor: pointer; }
-    .token { width: 46px; height: 46px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; position: absolute; z-index: 3; transition: 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28); pointer-events: none; box-shadow: 0 4px 10px rgba(0,0,0,0.5); font-size: 14px; color: white; border: 2px solid white; background-size: cover; background-position: center; }
+    /* .token { width: 46px; height: 46px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; position: absolute; z-index: 3; transition: 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28); pointer-events: none; box-shadow: 0 4px 10px rgba(0,0,0,0.5); font-size: 14px; color: white; border: 2px solid white; background-size: cover; background-position: center; } */
+.token {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    position: absolute;
+    z-index: 3;
+    transition: 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+    pointer-events: none;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    font-size: 14px;
+    color: white;
+
+    /* ⭐ THIS is the unwanted ring */
+    border: 2px solid white;
+
+    background-size: cover;
+    background-position: center;
+}
+.no-image-ring {
+    border: none !important;
+    border-radius: 0 !important; /* optional */
+    background-color: transparent !important;
+    box-shadow: none !important;   /* ⭐ THIS removes the square outline */
+}
+
+
+/* ⭐ NEW: Large monster (2×2 grid cells) */
+.token-large {
+    width: 94px;   /* 2 × 48px */
+    height: 94px;  /* 2 × 48px */
+    background-size: contain; /* show full image */
+    background-repeat: no-repeat;
+}
+.token-huge {
+    width: 144px;   /* 3 × 48 */
+    height: 144px;  /* 3 × 48 */
+    background-size: contain;
+}
+
     .active-ring { position: absolute; width: 50px; height: 50px; border: 3px solid #f1c40f; border-radius: 50%; transition: 0.3s; pointer-events: none; z-index: 2; box-shadow: 0 0 15px #f1c40f; }
     .grid-overlay { position: absolute; width: 100%; height: 100%; background-image: linear-gradient(rgba(255,255,255,0.35) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.35) 1px, transparent 1px); background-size: 54px 54px; pointer-events: none; z-index: 10; }
     .cell { width: 54px; height: 54px; float: left; z-index: 1; position: relative; cursor: pointer; }
@@ -59,24 +130,6 @@
     flex-direction: column;
     width: 85px;
     height: 100%;
-}
-
-/* RETREAT — top 25% */
-#retreat-btn {
-    flex: 1 0 25%;
-    width: 100%;
-    background: #c0392b;
-    border: 1px solid #922b21;
-    color: white;
-    font-weight: bold;
-    border-radius: 4px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-#retreat-btn:hover {
-    background: #e74c3c;
 }
 
 /* STATS — middle 50% */
@@ -126,12 +179,27 @@
     background: #27ae60;
     border-color: #1e8449;
     font-weight: bold;
-    letter-spacing: 2px;
+    letter-spacing: 1px;
 }
 #end-turn-btn:hover {
     background: #2ecc71;
 }
-
+#retreat-btn {
+    flex: 1 0 25%;
+    width: 100%;
+    background: #c0392b;
+    border: 1px solid #922b21;
+    color: white;
+    font-weight: bold;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#retreat-btn:hover {
+    background: #e74c3c;
+}
 /* Reaction UI Variables (same style family as your mission UI) */
 :root {
     --r-panel-bg: rgba(60, 100, 180, 0.35);
@@ -350,4 +418,46 @@
     font-weight: bold;
     letter-spacing: 3px;
     text-shadow: 0 0 10px black;
+}
+
+.confirm-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.confirm-box {
+  background: #222;
+  padding: 20px;
+  border-radius: 8px;
+  color: #fff;
+  width: 300px;
+  text-align: center;
+  box-shadow: 0 0 20px rgba(0,0,0,0.4);
+}
+
+.confirm-buttons button {
+  margin: 10px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+#confirm-yes {
+  background: #4caf50;
+  color: white;
+}
+
+#confirm-no {
+  background: #f44336;
+  color: white;
+}
+
+.hidden {
+  display: none;
 }

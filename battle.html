@@ -9,8 +9,23 @@
 
 </head>
 <body>
+<div id="confirm-modal" class="confirm-modal hidden">
+  <div class="confirm-box">
+    <div id="confirm-message"></div>
+    <div class="confirm-buttons">
+      <button id="confirm-yes">Yes</button>
+      <button id="confirm-no">No</button>
+    </div>
+  </div>
+</div>
+
+<div id="m-viewport" style="display:none;">
+	<div id="m-dialog-box"></div>
+	<div id="m-choices-container"></div>
+</div>
 <div id="screen-wrapper">
 <div id="screen">
+
     <div id="grid">
         <div class="grid-overlay"></div>
         <div id="active-ring" class="active-ring"></div>
@@ -25,7 +40,6 @@
     <div id="controls">
         <div class="btn-group" id="action-bar"></div>
 		<div id="right-column">
-			<button id="retreat-btn" onclick="handleRetreat()">RETREAT</button>
 
 			<div id="stats-panel">
 				<strong id="unit-name">Name</strong>
@@ -33,7 +47,8 @@
 				<span id="unit-speed">SPD: 0</span>
 			</div>
 			<div id="bottom-buttons">
-				<button id="end-turn-btn" onclick="endTurn()">End Turn</button>
+				<button id="end-turn-btn" onclick="endTurn()">END TURN</button>
+				<button id="retreat-btn" onclick="handleRetreat()">RETREAT</button>
 			</div>
 		</div>
 	<div id="dm-screen"></div>
@@ -44,6 +59,8 @@
 </div>
 
 <script>
+
+console.log("Battle iframe loaded:", window.location.href);
 const Bus = {
     events: {},
     on(event, cb) { if(!this.events[event]) this.events[event] = []; this.events[event].push(cb); },
@@ -51,7 +68,14 @@ const Bus = {
 };
 
 let staticObstacles = [], units = [], round = 0, isMoving = false; battleXP = 0; isReactionPhase = false; roundStarted = false; isHealing = false; healerUnit = null; isCastingSpell = false; spellCaster = null; selectedSpell = null; pendingSpells = []; victoryShown = false; isRangedTargeting = false; rangedShooter = null; isMeleeTargeting = false; meleeAttacker = null; isSneakTargeting = false; sneakAttacker = null; initiativeOrder = []; turnIndex = 0;
+fetch('/battle_dialog.json')
+  .then(r => r.json())
+  .then(json => {
 
+      // Share with parent
+      parent.BattleScenes = json;
+
+  });
 
 const STRDEX_TABLE = {
   str: ['warrior', 'fighter', 'barbarian', 'paladin', 'cleric', 'ranger', 'monk', 'shaman', 'swordmage', 'brute', 'squire', 'paladin', 'bouncer', 'fallen paladin', 'clericbot', 'druid', 'warlock'],
@@ -60,7 +84,91 @@ const STRDEX_TABLE = {
 
 const firstPCIndex = units.findIndex(u => u.type === "pc");
 
-// Change init to an async function so it can fetch files
+function findUnitAt(cx, cy) {
+    return units.find(u => {
+			if (u.size === "H") {
+			return (
+				cx >= u.x && cx <= u.x + 2 &&
+				cy >= u.y && cy <= u.y + 2
+			);
+		}
+
+        if (u.size === "L") {
+            return (
+                (u.x === cx && u.y === cy) ||
+                (u.x + 1 === cx && u.y === cy) ||
+                (u.x === cx && u.y + 1 === cy) ||
+                (u.x + 1 === cx && u.y + 1 === cy)
+            );
+        }
+        return u.x === cx && u.y === cy;
+    });
+}
+
+function getChebyshevDistance(attacker, target) {
+	if (target.size === "H") {
+		let best = Infinity;
+		for (let dx = 0; dx < 3; dx++) {
+			for (let dy = 0; dy < 3; dy++) {
+				const tx = target.x + dx;
+				const ty = target.y + dy;
+				const dist = Math.max(Math.abs(tx - attacker.x), Math.abs(ty - attacker.y));
+				if (dist < best) best = dist;
+			}
+		}
+		return best;
+	}
+
+    // If target is Large, check distance to all 4 squares and take the closest
+    if (target.size === "L") {
+        const squares = [
+            { x: target.x,     y: target.y },
+            { x: target.x + 1, y: target.y },
+            { x: target.x,     y: target.y + 1 },
+            { x: target.x + 1, y: target.y + 1 }
+        ];
+
+        let best = Infinity;
+        for (const s of squares) {
+            const dx = Math.abs(s.x - attacker.x);
+            const dy = Math.abs(s.y - attacker.y);
+            const dist = Math.max(dx, dy);
+            if (dist < best) best = dist;
+        }
+        return best;
+    }
+
+    // Normal 1×1 target
+    const dx = Math.abs(target.x - attacker.x);
+    const dy = Math.abs(target.y - attacker.y);
+    return Math.max(dx, dy);
+}
+
+function showConfirmation(message) {
+    return new Promise(resolve => {
+        const modal = document.getElementById('confirm-modal');
+        const msg = document.getElementById('confirm-message');
+        const yesBtn = document.getElementById('confirm-yes');
+        const noBtn = document.getElementById('confirm-no');
+
+        msg.textContent = message;
+        modal.classList.remove('hidden');
+
+        const cleanup = () => {
+            modal.classList.add('hidden');
+            yesBtn.removeEventListener('click', yesHandler);
+            noBtn.removeEventListener('click', noHandler);
+        };
+
+        const yesHandler = () => { cleanup(); resolve(true); };
+        const noHandler = () => { cleanup(); resolve(false); };
+
+        yesBtn.addEventListener('click', yesHandler);
+        noBtn.addEventListener('click', noHandler);
+    });
+}
+
+
 async function init() {
 	console.log(`Running init() at round ${round}`);
 
@@ -172,12 +280,7 @@ async function init() {
 		cell.onclick = () => {
 			// ⭐ HEALING TARGET SELECTION
 			if (isHealing) {
-				const target = units.find(t =>
-					t.x === cx &&
-					t.y === cy &&
-					t.hp > 0 &&
-					t.type === "pc"
-				);
+				const target = findUnitAt(cx, cy);
 
 				if (!target) {
 					Bus.emit('LOG', "Invalid healing target.");
@@ -194,12 +297,7 @@ async function init() {
 			}
 			// ⭐ SPELL TARGETING
 			if (isCastingSpell) {
-				const target = units.find(t =>
-					t.x === cx &&
-					t.y === cy &&
-					t.hp > 0 &&
-					t.type !== spellCaster.type
-				);
+				const target = findUnitAt(cx, cy);
 
 				if (!target) {
 					Bus.emit('LOG', "Invalid spell target.");
@@ -229,12 +327,7 @@ async function init() {
 
 			// ⭐ RANGED TARGETING
 			if (isRangedTargeting) {
-				const target = units.find(t =>
-					t.x === cx &&
-					t.y === cy &&
-					t.hp > 0 &&
-					t.type !== rangedShooter.type
-				);
+				const target = findUnitAt(cx, cy);
 
 				if (!target) {
 					Bus.emit('LOG', "Invalid ranged target.");
@@ -253,18 +346,15 @@ async function init() {
 			// ⭐ MELEE TARGETING
 			// Inside your init() function cell click handler:
 			if (isMeleeTargeting) {
-				const target = units.find(t => t.x === cx && t.y === cy && t.hp > 0 && t.type !== meleeAttacker.type);
+				const target = findUnitAt(cx, cy);
 				if (!target) {
 					Bus.emit('LOG', "Invalid melee target.");
 					isMeleeTargeting = false;
 					meleeAttacker = null;
 					return;
 				}
-				
-				// ⭐ CHANGE: Calculate distance using Math.max to allow diagonal range checks
-				const dx = Math.abs(target.x - meleeAttacker.x);
-				const dy = Math.abs(target.y - meleeAttacker.y);
-				const distance = Math.max(dx, dy); 
+								
+				const distance = getChebyshevDistance(meleeAttacker, target);
 
 				if (distance !== 1) {
 					Bus.emit('LOG', "Target is not in melee range.");
@@ -272,6 +362,7 @@ async function init() {
 					meleeAttacker = null;
 					return;
 				}
+
 				
 				handleAttack(meleeAttacker, target);
 				isMeleeTargeting = false;
@@ -281,7 +372,7 @@ async function init() {
 
 			// Add this inside cell.onclick alongside your other targeting modes:
 			if (isSneakTargeting) {
-				const target = units.find(t => t.x === cx && t.y === cy && t.hp > 0 && t.type !== sneakAttacker.type);
+				const target = findUnitAt(cx, cy);
 				if (!target) {
 					Bus.emit('LOG', "Invalid sneak attack target.");
 					isSneakTargeting = false;
@@ -290,9 +381,9 @@ async function init() {
 				}
 
 				// Range check (using Math.max to respect your diagonal rule)
-				const dx = Math.abs(target.x - sneakAttacker.x);
-				const dy = Math.abs(target.y - sneakAttacker.y);
-				if (Math.max(dx, dy) !== 1) {
+				const distance = getChebyshevDistance(sneakAttacker, target);
+
+				if (distance !== 1) {
 					Bus.emit('LOG', "Target is out of sneak attack range.");
 					isSneakTargeting = false;
 					sneakAttacker = null;
@@ -309,23 +400,38 @@ async function init() {
 			processMove(cx, cy);
 		};
 
-		
-		
-		
         grid.appendChild(cell);
     }
 
-    units.forEach((u, i) => {
-        let t = document.createElement('div');
-        t.id = `t-${i}`;
-        t.className = `token`;
-        t.style.backgroundColor = u.type === 'pc' ? "#3498db" : "#c0392b";
+	units.forEach((u, i) => {
+		let t = document.createElement('div');
+		t.id = `t-${i}`;
 
-        if (u.icon) t.style.backgroundImage = `url('${u.icon}')`;
-        else t.innerText = u.name.substring(0,2).toUpperCase();
+		// Base class
+		t.className = `token`;
 
-        grid.appendChild(t);
-    });
+		// Apply size class
+		if (u.size === "L") {
+			t.classList.add("token-large");
+		}
+		if (u.size === "H") t.classList.add("token-huge");
+		
+		if (u.noImageRing) {
+			t.classList.add("no-image-ring");
+		}
+		// Color
+		t.style.backgroundColor = u.type === 'pc' ? "#3498db" : "#c0392b";
+
+		// Icon or fallback text
+		if (u.icon) {
+			t.style.backgroundImage = `url('${u.icon}')`;
+		} else {
+			t.innerText = u.name.substring(0,2).toUpperCase();
+		}
+
+		grid.appendChild(t);
+	});
+
 
 	// Mark that the round has already started
 	roundStarted = true;
@@ -378,6 +484,9 @@ function update() {
         checkVictory();
         return; 
     }
+	if (active.type === "pc" && active.status === "NPC") {
+		setTimeout(npcAI, 600);
+	}
 
     // 2. Human Player character UI rebuild follows normally...
     if (endBtn) endBtn.disabled = false;
@@ -435,6 +544,76 @@ function update() {
 
     checkVictory();
 }
+
+function npcAI() {
+    const u = units[initiativeOrder[turnIndex].index];
+    if (!u || u.hp <= 0) return endTurn();
+
+    if (u.status !== "NPC") return; // safety
+
+    // NPCs always start with an action
+    u.hasAction = true;
+
+    // Choose script based on role, class, or custom field
+    const script = u.role || "default";
+
+    switch (script) {
+        case "Sorcerer":
+            runSupportMageScript(u);
+            break;
+
+        case "archer":
+            runArcherScript(u);
+            break;
+
+        case "healer":
+            runHealerScript(u);
+            break;
+
+        default:
+            runDefaultNPCScript(u);
+            break;
+    }
+}
+
+function runSupportMageScript(u) {
+
+    const monsters = units.filter(m => m.type === "monster" && m.hp > 0);
+    if (monsters.length === 0) return endTurn();
+
+    const corners = [
+        { x: 0, y: 0 },
+        { x: 0, y: GRID_H - 1 },
+        { x: GRID_W - 1, y: 0 },
+        { x: GRID_W - 1, y: GRID_H - 1 }
+    ];
+
+    let bestCorner = null;
+    let bestDist = -Infinity;
+
+    for (const corner of corners) {
+        let minDist = Infinity;
+
+        for (const m of monsters) {
+            const dx = Math.abs(corner.x - m.x);
+            const dy = Math.abs(corner.y - m.y);
+            const dist = Math.max(dx, dy);
+            if (dist < minDist) minDist = dist;
+        }
+
+        if (minDist > bestDist) {
+            bestDist = minDist;
+            bestCorner = corner;
+        }
+    }
+
+    moveMonsterToward(u, bestCorner);
+
+    npcCastSpell(u);
+
+    endTurn();
+}
+
 
 function refreshRound() {
 	    // ⭐ FIX 2: Reset actions and speed ONLY for living units
@@ -525,6 +704,7 @@ function applyDamage(target, amount) {
     update();
 	}
 }
+
 function rollInitiativeForAll() {
     initiativeOrder = units
         .map((u, i) => {
@@ -708,12 +888,44 @@ function processMove(tx, ty, force = false) {
     }
 }
 
+function mark(map, x, y) {
+    if (x >= 0 && x < 10 && y >= 0 && y < 10) {
+        map[x][y] = true;
+    }
+}
+
 function getOccupiedSquares() {
     const map = Array(10).fill().map(() => Array(10).fill(false));
-    units.filter(u => u.hp > 0).forEach(u => { map[u.x][u.y] = true; });
-    staticObstacles.forEach(obs => { map[obs.x][obs.y] = true; });
+
+    units.filter(u => u.hp > 0).forEach(u => {
+
+        if (u.size === "H") {
+            // 3×3
+            for (let dx = 0; dx < 3; dx++) {
+                for (let dy = 0; dy < 3; dy++) {
+                    mark(map, u.x + dx, u.y + dy);
+                }
+            }
+
+        } else if (u.size === "L") {
+            // 2×2
+            mark(map, u.x,     u.y);
+            mark(map, u.x + 1, u.y);
+            mark(map, u.x,     u.y + 1);
+            mark(map, u.x + 1, u.y + 1);
+
+        } else {
+            // 1×1
+            mark(map, u.x, u.y);
+        }
+    });
+
+    staticObstacles.forEach(obs => mark(map, obs.x, obs.y));
+
     return map;
 }
+
+
 
 function handleAttack(attacker, target) {
     console.log(
@@ -789,7 +1001,6 @@ function handleAttack(attacker, target) {
     }
 }
 
-
 function getMonsterStats(unit) {
     if (unit.type !== "monster") return null;
     if (!window.MONSTER_DB) return null;
@@ -808,6 +1019,24 @@ function handleSpell() {
 
     Bus.emit('LOG', `${u.name} begins chanting the incantations to cast ${selectedSpell}... please select a target`);
 }
+
+function npcCastSpell(u) {
+    // NPCs always cast Magic Missile at nearest monster
+    const target = findNearestMonster(u);
+    if (!target) {
+        Bus.emit('LOG', `${u.name} tries to cast a spell but finds no target.`);
+        return;
+    }
+
+    Bus.emit('LOG', `${u.name} casts Magic Missile at ${target.name}!`);
+
+    // Apply your real damage logic here
+    const dmg = 5; // or whatever your missile damage is
+    target.hp = Math.max(0, target.hp - dmg);
+
+    update();
+}
+
 
 function handleRage(u) {
 
@@ -984,6 +1213,18 @@ function handleSing() {
     Bus.emit('LOG', `🎶 ${bard.name} sings! Allies gain +1 hit/dmg, Bard suffers -1 hit/dmg and cannot cast spells.`);
 
     endReactionPhase();
+}
+
+function getSquares(u) {
+    if (u.size === "L") {
+        return [
+            {x: u.x,     y: u.y},
+            {x: u.x + 1, y: u.y},
+            {x: u.x,     y: u.y + 1},
+            {x: u.x + 1, y: u.y + 1}
+        ];
+    }
+    return [{x: u.x, y: u.y}];
 }
 
 function startMeleeTargeting() {
@@ -1303,7 +1544,17 @@ function monsterAI() {
 
     const target = findNearestPC(u);
     if (!target) return endTurn();
-
+	
+    // ⭐ NEW: Monster dialog (does NOT consume turn)
+    if (u.dialog && !u._dialogPlayed) {
+        u._dialogPlayed = true;   // mark as used
+            // Call the parent's function from inside the iframe
+		if (parent && typeof parent.renderScene === 'function') {
+			parent.renderScene(u.dialog, "battle").catch(err => console.error(err));
+		} else {
+			console.warn("renderScene() not found in parent window");
+		}
+    }
     moveMonsterToward(u, target);
 
     if (isAdjacent(u, target) && u.hasAction) {
@@ -1317,25 +1568,63 @@ function monsterAI() {
     }, 600);
 }
 
+function getSquares(u) {
+    if (u.size === "L") {
+        return [
+            {x: u.x,     y: u.y},
+            {x: u.x + 1, y: u.y},
+            {x: u.x,     y: u.y + 1},
+            {x: u.x + 1, y: u.y + 1}
+        ];
+    }
+    return [{x: u.x, y: u.y}];
+}
+
 function findNearestPC(monster) {
     let nearest = null;
     let bestDist = Infinity;
 
+    // Generate all squares the monster occupies
+    const mSquares = [];
+    const size = monster.size === "H" ? 3 : monster.size === "L" ? 2 : 1;
+
+    for (let dx = 0; dx < size; dx++) {
+        for (let dy = 0; dy < size; dy++) {
+            mSquares.push({ x: monster.x + dx, y: monster.y + dy });
+        }
+    }
+
     for (const pc of units) {
         if (pc.type !== "pc" || pc.hp <= 0) continue;
 
-        const dx = Math.abs(pc.x - monster.x);
-        const dy = Math.abs(pc.y - monster.y);
-        const dist = Math.max(dx, dy); // Chebyshev distance (your diagonal rule)
+        // Generate all squares the PC occupies (usually 1×1)
+        const pcSize = pc.size === "H" ? 3 : pc.size === "L" ? 2 : 1;
+        const pSquares = [];
 
-        if (dist < bestDist) {
-            bestDist = dist;
-            nearest = pc;
+        for (let dx = 0; dx < pcSize; dx++) {
+            for (let dy = 0; dy < pcSize; dy++) {
+                pSquares.push({ x: pc.x + dx, y: pc.y + dy });
+            }
+        }
+
+        // Compare all square pairs
+        for (const m of mSquares) {
+            for (const p of pSquares) {
+                const dx = Math.abs(p.x - m.x);
+                const dy = Math.abs(p.y - m.y);
+                const dist = Math.max(dx, dy);
+
+                if (dist < bestDist) {
+                    bestDist = dist;
+                    nearest = pc;
+                }
+            }
         }
     }
 
     return nearest;
 }
+
 
 function moveMonsterToward(u, target) {
 
@@ -1343,70 +1632,44 @@ function moveMonsterToward(u, target) {
 
     if (dist > 1) {
 
-        for (let i = 0; i < u.speed; i++) {
+        for (let step = 0; step < u.speed; step++) {
 
-            const dx = (u.x < target.x ? 1 : u.x > target.x ? -1 : 0);
-            const dy = (u.y < target.y ? 1 : u.y > target.y ? -1 : 0);
+            const dx = Math.sign(target.x - u.x);
+            const dy = Math.sign(target.y - u.y);
 
             const occupied = getOccupiedSquares();
 
-            // NEW PRIORITY LOGIC:
-            // Prefer the axis with the larger gap
             const absDx = Math.abs(target.x - u.x);
             const absDy = Math.abs(target.y - u.y);
 
             let moved = false;
 
-            if (absDy > absDx) {
-                // Prefer vertical movement
-                if (!occupied[u.x]?.[u.y + dy]) {
-                    processMove(u.x, u.y + dy, true);
-                    moved = true;
+            function tryMove(nx, ny) {
+                if (!occupied[nx]?.[ny]) {
+                    u.x = nx;
+                    u.y = ny;
+                    return true;
                 }
-                else if (!occupied[u.x + dx]?.[u.y]) {
-                    processMove(u.x + dx, u.y, true);
-                    moved = true;
-                }
-                else if (!occupied[u.x + dx]?.[u.y + dy]) {
-                    processMove(u.x + dx, u.y + dy, true);
-                    moved = true;
-                }
-            }
-            else if (absDx > absDy) {
-                // Prefer horizontal movement
-                if (!occupied[u.x + dx]?.[u.y]) {
-                    processMove(u.x + dx, u.y, true);
-                    moved = true;
-                }
-                else if (!occupied[u.x]?.[u.y + dy]) {
-                    processMove(u.x, u.y + dy, true);
-                    moved = true;
-                }
-                else if (!occupied[u.x + dx]?.[u.y + dy]) {
-                    processMove(u.x + dx, u.y + dy, true);
-                    moved = true;
-                }
-            }
-            else {
-                // Equal distance → diagonal is fine
-                if (!occupied[u.x + dx]?.[u.y + dy]) {
-                    processMove(u.x + dx, u.y + dy, true);
-                    moved = true;
-                }
-                else if (!occupied[u.x + dx]?.[u.y]) {
-                    processMove(u.x + dx, u.y, true);
-                    moved = true;
-                }
-                else if (!occupied[u.x]?.[u.y + dy]) {
-                    processMove(u.x, u.y + dy, true);
-                    moved = true;
-                }
+                return false;
             }
 
-            if (!moved) {
-                Bus.emit('LOG', `${u.name} is blocked.`);
-                break;
+            if (absDy > absDx) {
+                moved ||= tryMove(u.x, u.y + dy);
+                moved ||= tryMove(u.x + dx, u.y);
+                moved ||= tryMove(u.x + dx, u.y + dy);
             }
+            else if (absDx > absDy) {
+                moved ||= tryMove(u.x + dx, u.y);
+                moved ||= tryMove(u.x, u.y + dy);
+                moved ||= tryMove(u.x + dx, u.y + dy);
+            }
+            else {
+                moved ||= tryMove(u.x + dx, u.y + dy);
+                moved ||= tryMove(u.x + dx, u.y);
+                moved ||= tryMove(u.x, u.y + dy);
+            }
+
+            if (!moved) break;
 
             dist = Math.max(Math.abs(u.x - target.x), Math.abs(u.y - target.y));
             if (dist <= 1) break;
@@ -1436,9 +1699,18 @@ function isTileFree(x, y) {
 }
 
 function isAdjacent(u, target) {
-    const dx = Math.abs(u.x - target.x);
-    const dy = Math.abs(u.y - target.y);
-    return Math.max(dx, dy) === 1;
+    const uSquares = getSquares(u);
+    const tSquares = getSquares(target);
+
+    for (const a of uSquares) {
+        for (const b of tSquares) {
+            const dx = Math.abs(a.x - b.x);
+            const dy = Math.abs(a.y - b.y);
+            if (Math.max(dx, dy) === 1) return true;
+        }
+    }
+
+    return false;
 }
 
 function awardFoeDefeat(target) {
@@ -1488,21 +1760,23 @@ function awardFoeDefeat(target) {
     update();
 }
 
-function handleRetreat() {
+async function handleRetreat() {
     const activeIndex = initiativeOrder[turnIndex].index;
     const active = units[activeIndex];
     if (!active) return;
 
-    // Save their real HP
-    active.retreatHp = active.hp;
+    const confirmed = await showConfirmation(`${active.name} wants to retreat. Allow it?`);
+    if (!confirmed) {
+        Bus.emit('LOG', `${active.name} decides to stay in the fight!`);
+        return;
+    }
 
-    // Mark them as "out" using the existing engine logic
+    active.retreatHp = active.hp;
     active.hp = 0;
     active.hasAction = false;
 
     Bus.emit('LOG', `${active.name} retreats from battle!`);
 
-    // Remove from initiative
     initiativeOrder = initiativeOrder.filter(o => o.index !== activeIndex);
 
     if (turnIndex >= initiativeOrder.length) {
@@ -1511,6 +1785,7 @@ function handleRetreat() {
 
     endTurn();
 }
+
 
 function checkVictory() {
     if (victoryShown) return; 

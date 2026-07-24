@@ -158,11 +158,52 @@ function resetGame() {
 
 // 2. RENDERING LOGIC
 //async function renderScene(sceneId) {
-async function renderScene(sceneId) {
+async function renderScene(sceneId, source = "story") {
     if (isTyping) return;
-// 1. FIND SCENE DATA
-    const scene = storyData.find(s => s.id === sceneId);
-	console.log(sceneId)
+
+    let scene, viewport, dialogBox, choiceContainer;
+
+if (source === "battle") {
+    // 1. Find battle scene data safely
+    scene = parent.BattleScenes?.find(s => s.id === sceneId) || window.BattleScenes?.find(s => s.id === sceneId);
+
+    // 2. Safely capture the iframe window document
+    const battleFrame = document.getElementById("battle-frame");
+    const battleDoc = battleFrame ? battleFrame.contentWindow.document : document;
+
+    // 3. Attempt to find existing nodes inside the iframe canvas
+    viewport = battleDoc.getElementById('m-viewport');
+    dialogBox = battleDoc.getElementById('m-dialog-box');
+    choiceContainer = battleDoc.getElementById('m-choices-container');
+
+    // 4. If missing, dynamically spawn the containers inside battle.html
+    if (!viewport) {
+        console.log("UI containers missing from iframe. Injecting them now...");
+        
+        const uiContainer = battleDoc.createElement('div');
+        uiContainer.id = 'm-viewport';
+        uiContainer.style.cssText = "position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999; background: rgba(0,0,0,0.4); display: none;";
+        uiContainer.innerHTML = `
+            <div id="m-choices-container" style="position: absolute; bottom: 180px; left: 5%; width: 90%; display: flex; flex-direction: column; gap: 8px; z-index: 10000;"></div>
+            <div id="m-dialog-box" style="position: absolute; bottom: 20px; left: 5%; width: 90%; min-height: 130px; background: rgba(20,20,30,0.9); color: #fff; padding: 15px; border: 2px solid #555; border-radius: 8px; box-sizing: border-box; z-index: 10000;"></div>
+        `;
+        battleDoc.body.appendChild(uiContainer);
+
+        // Re-link our references to the freshly generated nodes
+        viewport = battleDoc.getElementById('m-viewport');
+        dialogBox = battleDoc.getElementById('m-dialog-box');
+        choiceContainer = battleDoc.getElementById('m-choices-container');
+    }
+} else {
+		// Normal story mode
+		scene = storyData.find(s => s.id === sceneId);
+		    // --- 3. DOM ELEMENTS CHECK ---
+		 viewport = document.getElementById('m-viewport');
+		 dialogBox = document.getElementById('m-dialog-box');
+		 choiceContainer = document.getElementById('m-choices-container');
+
+	}
+    console.log("Scene lookup:", sceneId, scene);
     // 2. VALIDATE SCENE EXISTS
     if (!scene) {
         console.error("Scene not found:", sceneId);
@@ -176,15 +217,16 @@ async function renderScene(sceneId) {
         return;
     }
 
-    // --- 3. DOM ELEMENTS CHECK ---
-    const viewport = document.getElementById('m-viewport');
-    const dialogBox = document.getElementById('m-dialog-box');
-    const choiceContainer = document.getElementById('m-choices-container');
 
     if (!viewport || !dialogBox || !choiceContainer) {
+
         console.error("renderScene Error: UI elements not found in DOM.");
         return;
     }
+	// --- TEMPORARY TRACKING LOGS ---
+	console.log("DEBUG: Target Viewport Node:", viewport);
+	console.log("DEBUG: Viewport Parent Element:", viewport?.parentElement?.tagName, "inside Document:", viewport?.ownerDocument?.title || "Iframe/Untitled");
+	console.log("DEBUG: Viewport Computed Style Display:", viewport ? window.getComputedStyle(viewport).display : "N/A");
 
     // Handle unknown scene ID
     if (!scene) {
@@ -207,7 +249,8 @@ async function renderScene(sceneId) {
     `;
 
 // --- 5. TYPEWRITER EFFECT ---
-    const typeTarget = document.getElementById('m-typewriter-container');
+	const targetDoc = (source === "battle") ? (document.getElementById("battle-frame")?.contentWindow.document || document) : document;
+	const typeTarget = targetDoc.getElementById('m-typewriter-container');
     if (typeTarget) {
         isTyping = true;
         typeTarget.innerHTML = "";

@@ -530,9 +530,9 @@ async function loadBattleData() {
 }
 
 
+//document.getElementById("battle-frame").src = "battle.html";
 //launchBattle("tutor_test");
 async function launchBattle(encounterKey) {
-
 	const old = document.getElementById('battle-overlay');
 		if (old) old.remove();
 
@@ -596,7 +596,7 @@ async function launchBattle(encounterKey) {
 			icon: hydrated.icon,
 			hp: hydrated.currentHP,
 			maxHp: hydrated.MaxHP,
-
+			status: hydrated.status,
 			race: hydrated.race,
 			role: hydrated.role,
 			level: hydrated.Level,
@@ -676,11 +676,26 @@ function getPCPosition(index) {
         { x: 1, y: 6 }, // 3rd character (Index 2)
         { x: 0, y: 4 }, // 4th character (Index 3)
         { x: 0, y: 5 }, // 5th character (Index 4)
-        { x: 0, y: 6 }  // 6th character (Index 5)
+        { x: 0, y: 6 }, // 6th character (Index 5)
+        { x: 0, y: 7 }, // 7th character 
+        { x: 0, y: 3 }, // 8th character 
+        { x: 0, y: 8 }, // 9th character 
+        { x: 0, y: 2 }, // 10th character 
+        { x: 0, y: 9 }, // 11th character 
+        { x: 0, y: 1 }  // 12th character 
     ];
 
-    // Fallback safety: if party size somehow exceeds 6, stack them or shift down
-    return defaultSlots[index] || { x: 0, y: 7 + (index - 6) };
+    if (index < defaultSlots.length) {
+        return defaultSlots[index];
+    }
+
+    // ⭐ Auto-place extras in columns to the right
+    const extraIndex = index - defaultSlots.length;
+
+    return {
+        x: 2 + Math.floor(extraIndex / 3), // every 3 PCs move one column right
+        y: 4 + (extraIndex % 3)            // cycle through rows 4,5,6
+    };
 }
 
 

@@ -1,0 +1,21 @@
+[
+  {
+    "id": "brigan_1_01",
+    "speaker": "Brigan Darer",
+    "portrait": "/assets/monsters/brigan1.png",
+    "side": "right",
+    "dialog": "Give up! You don't want to fight us, drop your treasure or risk your dropping blood.",
+    "interaction_type": "next",
+    "target_id": "battle_dialog_END"
+  },
+  {
+    "id": "battle_dialog_END",
+    "speaker": "Brigan Darer",
+    "portrait": "/assets/monsters/brigan1.png",
+    "side": "right",
+    "dialog": ".",
+    "interaction_type": "next",
+    "target_id": "END"
+  }
+  
+]
