@@ -1087,6 +1087,7 @@ async function openMissionNode(nodeId) {
 
         return;
     }
+	player.missions[nodeId] += 1
 	runMission(node.missionId);
 }
 
