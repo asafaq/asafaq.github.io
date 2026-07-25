@@ -158,52 +158,28 @@ function resetGame() {
 
 // 2. RENDERING LOGIC
 //async function renderScene(sceneId) {
-async function renderScene(sceneId, source = "story") {
+
+/*
+condition:     - Requires trait(s). Single or ANY in array.
+condition_not:     - Must NOT have trait.
+disabled:     - true → always disabled.
+condition_alignment:     - Requires at least one member with alignment.
+condition_not_alignment:     - Disabled if ANY member has alignment.
+condition_mission (future):     - Requires mission stage.
+DISABLED IF:
+    missing required trait
+    OR forbidden trait present
+    OR disabled === true
+    OR required alignment missing
+    OR forbidden alignment present
+    OR mission stage unmet (future)
+*/
+
+async function renderScene(sceneId) {
     if (isTyping) return;
-
-    let scene, viewport, dialogBox, choiceContainer;
-
-if (source === "battle") {
-    // 1. Find battle scene data safely
-    scene = parent.BattleScenes?.find(s => s.id === sceneId) || window.BattleScenes?.find(s => s.id === sceneId);
-
-    // 2. Safely capture the iframe window document
-    const battleFrame = document.getElementById("battle-frame");
-    const battleDoc = battleFrame ? battleFrame.contentWindow.document : document;
-
-    // 3. Attempt to find existing nodes inside the iframe canvas
-    viewport = battleDoc.getElementById('m-viewport');
-    dialogBox = battleDoc.getElementById('m-dialog-box');
-    choiceContainer = battleDoc.getElementById('m-choices-container');
-
-    // 4. If missing, dynamically spawn the containers inside battle.html
-    if (!viewport) {
-        console.log("UI containers missing from iframe. Injecting them now...");
-        
-        const uiContainer = battleDoc.createElement('div');
-        uiContainer.id = 'm-viewport';
-        uiContainer.style.cssText = "position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999; background: rgba(0,0,0,0.4); display: none;";
-        uiContainer.innerHTML = `
-            <div id="m-choices-container" style="position: absolute; bottom: 180px; left: 5%; width: 90%; display: flex; flex-direction: column; gap: 8px; z-index: 10000;"></div>
-            <div id="m-dialog-box" style="position: absolute; bottom: 20px; left: 5%; width: 90%; min-height: 130px; background: rgba(20,20,30,0.9); color: #fff; padding: 15px; border: 2px solid #555; border-radius: 8px; box-sizing: border-box; z-index: 10000;"></div>
-        `;
-        battleDoc.body.appendChild(uiContainer);
-
-        // Re-link our references to the freshly generated nodes
-        viewport = battleDoc.getElementById('m-viewport');
-        dialogBox = battleDoc.getElementById('m-dialog-box');
-        choiceContainer = battleDoc.getElementById('m-choices-container');
-    }
-} else {
-		// Normal story mode
-		scene = storyData.find(s => s.id === sceneId);
-		    // --- 3. DOM ELEMENTS CHECK ---
-		 viewport = document.getElementById('m-viewport');
-		 dialogBox = document.getElementById('m-dialog-box');
-		 choiceContainer = document.getElementById('m-choices-container');
-
-	}
-    console.log("Scene lookup:", sceneId, scene);
+// 1. FIND SCENE DATA
+    const scene = storyData.find(s => s.id === sceneId);
+	console.log(sceneId)
     // 2. VALIDATE SCENE EXISTS
     if (!scene) {
         console.error("Scene not found:", sceneId);
@@ -217,16 +193,15 @@ if (source === "battle") {
         return;
     }
 
+    // --- 3. DOM ELEMENTS CHECK ---
+    const viewport = document.getElementById('m-viewport');
+    const dialogBox = document.getElementById('m-dialog-box');
+    const choiceContainer = document.getElementById('m-choices-container');
 
     if (!viewport || !dialogBox || !choiceContainer) {
-
         console.error("renderScene Error: UI elements not found in DOM.");
         return;
     }
-	// --- TEMPORARY TRACKING LOGS ---
-	console.log("DEBUG: Target Viewport Node:", viewport);
-	console.log("DEBUG: Viewport Parent Element:", viewport?.parentElement?.tagName, "inside Document:", viewport?.ownerDocument?.title || "Iframe/Untitled");
-	console.log("DEBUG: Viewport Computed Style Display:", viewport ? window.getComputedStyle(viewport).display : "N/A");
 
     // Handle unknown scene ID
     if (!scene) {
@@ -249,8 +224,7 @@ if (source === "battle") {
     `;
 
 // --- 5. TYPEWRITER EFFECT ---
-	const targetDoc = (source === "battle") ? (document.getElementById("battle-frame")?.contentWindow.document || document) : document;
-	const typeTarget = targetDoc.getElementById('m-typewriter-container');
+    const typeTarget = document.getElementById('m-typewriter-container');
     if (typeTarget) {
         isTyping = true;
         typeTarget.innerHTML = "";
@@ -313,20 +287,25 @@ if (source === "battle") {
 				const hasAlignment = members.some(m => m.alignment === opt.condition_not_alignment);
 				if (hasAlignment) isDisabled = true;
 			}
-
-			// "condition_mission": { "dwood_1": 4 }
-			// Condition: requires mission stage
-
-			
+			// Condition: requires a specific race in current mission
+			if (opt.condition_race) {
+				const races = player?.missions?.current_mission?.summary?.races || [];
+				const hasRace = races.includes(opt.condition_race);
+				if (!hasRace) isDisabled = true;
+			}
+			// Condition: requires mission key to equal a specific number
+			if (opt.condition_key_green2_value !== undefined) {
+				const keys = player?.missions?.green_2keys || {};
+				const matches = keys[opt.condition_key_green2] === opt.condition_key_green2_value;
+				if (!matches) isDisabled = true;
+			}
+			//"condition_key_green2": "shrine",
+			//"condition_key_green2_value": 2
 
 			createBtn(opt.text, opt.target_id, opt.color, isDisabled, opt.frustration_text, opt.shadow);
 		});
 
-		
-		
-		
-		
-		
+	
     }
 }
 
@@ -415,7 +394,7 @@ function showTemporaryMessage(text) {
 }
 // 3. THE TRIGGER FUNCTION
 // Call this function from your own code to start the system
-async function  startMissionSystem(specificSceneId = null) {
+async function startMissionSystem(specificSceneId = null) {
     try {
         if (!db) await initDB();
         
@@ -470,8 +449,6 @@ function addSilver(number, container) {
 
     console.warn("addSilver failed: container must be 'stash' or 'satchel'.");
 }
-
-
 
 async function handleMissionEnd(sceneId) {
 	
@@ -698,6 +675,44 @@ async function handleMissionEnd(sceneId) {
 			await loadPage("mission_green_2");
 			pushStatus(`You obtained a ${gem.cut !== "raw" ? gem.cut + "‑cut " : ""}${gem.color} ${gem.name} (${gem.rarity}). Value: ${gem.finalValue}.`);
 		},
+		"green2*4end": async () => {
+			// unlocking shrine			
+            Journal.addEntry(`the ${player.data.party_A} have taken a detour from their way to ${player.missions.current_mission.id} towards a Shrine.`);
+
+			player.missions.green_2keys ??= {};
+			player.missions.green_2keys.path2 ??= {};
+			player.missions.green_2keys.path2 = 1;
+			loadPage("mission_green_2");
+
+		},
+		"green2*5end": async () => {
+			// skipping shrine, moving on as usual green_2
+            player.missions.green_2 += 1;
+			loadPage("mission_green_2");
+		},
+		"greenshrine1_106end": async () => {
+			player.missions.green_2keys.shrine = 1;
+			Journal.addEntry(`the ${player.data.party_A} have located an odd standing statue in the Shrine.`);
+
+            player.missions.green_2 += 1;
+			loadPage("mission_green_2");
+		},
+		"greenshrine1_209end": async () => {
+			player.missions.green_2keys.shrine = 2;
+			Journal.addEntry(`the ${player.data.party_A} have resolved the standing statue in the Shrine might be a petrified person.`);
+
+			loadPage("mission_green_2");
+		},
+		"greenshrine2_110end": async () => {
+			player.missions.green_2keys.shrine = 3;
+            player.missions.green_3 = 2;
+			Journal.addEntry(`the ${player.data.party_A} have rescued Tonica from her petrified state, and she has joined the party.`);
+
+			await recruitAdventurer("adv_Tonica");
+			player.patrons.adv_Tonica.location = 3;
+			player.patrons.adv_Tonica.status = "mission";
+			loadPage("mission_green_3");
+		},
 
         "green2_940a_end": async () => {
             player.missions.green_2 = 3;
@@ -716,7 +731,7 @@ async function handleMissionEnd(sceneId) {
         // --- THE "BRANCHING" TRANSITION YOU WROTE ---
         "green2_945b_end": async () => {
             player.missions.green_2 = 3;
-            player.missions.green_3 = 2;
+            player.missions.green_3 = 1;
             player.missions.current_mission.id = "green_3";
             player.missions.current_mission.locked_mission = "green_3";
             player.missions.current_mission.page = "mission_green_3";
@@ -923,7 +938,6 @@ function endMission() {
     player.missions.current_mission.id = "";
     player.missions.current_mission.party = "";
 }
-
 
 function recruitRandoms() {
 

@@ -110,7 +110,7 @@ function getVisiblePatrons() {
 
 	const patronKeys = Object.keys(player.patrons);
 
-	const allowed = ["idle", "applicant", "mission", "secret", "rival", "dead"];
+	const allowed = ["idle", "applicant", "mission", "secret", "rival", "dead", "NPC"];
 
 	const filteredIds = patronKeys.filter(id => {
 		return allowed.includes(player.patrons[id].status);
@@ -330,39 +330,36 @@ const pages = {
 		</div>
 
 	`,
-	mission_green_2: `
-	<div id="mission-container" style="position: relative;">
-		<img id="fantasy_map" src="/assets/missions/fantasy_map_s.png" />
+mission_green_2: () =>`
+<div id="mission-container" style="position: relative;">
+  <img id="fantasy_map" src="/assets/missions/fantasy_map_s.png" />
 
-		<!-- Path Layer -->
-		<svg width="100%" height="100%" style="position: absolute; top: 0; left: 0; pointer-events: none;">
-			<!-- 1. The "Hitbox" (Invisible but clickable) -->
-			<path d="M 140 450 C 221 324 413 466 480 340"
-              stroke="transparent" stroke-width="75" fill="none"
-              style="pointer-events: stroke; cursor: pointer;"
-              class="poi"
-              data-node="green_2" />
-			
-			<!-- 2. The Visible Dashed Line -->
-			<path class="marching-path" d="M 140 450 C 221 324 413 466 480 340" 
-				  stroke="rgba(0, 0, 0, 0.7)" stroke-width="4" 
-				  stroke-dasharray="10, 10" stroke-linecap="round" fill="none" />
-		</svg>
+  <!-- Path Layer -->
+  <svg width="100%" height="100%" style="position: absolute; top: 0; left: 0; pointer-events: none; z-index: 5;">
+    <!-- 1. The "Hitbox" (Invisible but clickable) -->
+    <path d="M 140 450 C 221 324 413 466 480 340" stroke="transparent" stroke-width="75" fill="none" style="pointer-events: stroke; cursor: pointer;" class="poi" data-node="green_2" />
+    <!-- 2. The Visible Dashed Line -->
+    <path class="marching-path" d="M 140 450 C 221 324 413 466 480 340" stroke="rgba(0, 0, 0, 0.7)" stroke-width="4" stroke-dasharray="10, 10" stroke-linecap="round" fill="none" />
+  </svg>
 
-		<!-- Homebase -->
-		<div class="guild_homebase shine-container" 
-			 style="position: absolute; top: 420px; left: 110px; transform: scale(0.66); transform-origin: top left;">
-			<img src="/assets/menu/menu_home.png" class="item-icon">
-		</div>
+  <!-- Homebase -->
+  <div class="guild_homebase shine-container" style="position: absolute; top: 420px; left: 110px; transform: scale(0.66); transform-origin: top left; z-index: 10;">
+    <img src="/assets/menu/menu_home.png" class="item-icon">
+  </div>
+	${player?.missions?.green_2keys?.path2 === 1 ? `
+		<div id="green_2_shrine" class="poi mapLight" data-node="green_2_shrine" style="position:absolute; top:445px; left:270px; transform:scale(1.5); transform-origin: top left; z-index:20;"><img src="/assets/missions/mission_indicator_encounter.png"></div>'
+	` : ""}
+}
 
-		<!-- Objective: Fixed Coordinates -->
-		<div class="mission_green2_objective shine-container" 
-			 style="position: absolute; top: 300px; left: 455px; transform: scale(0.66); transform-origin: top left;">
-			<img src="/assets/menu/menu_home.png" class="item-icon">
-		</div>
-	</div>
-	`,
-	mission_green_3: `
+  <!-- Objective: Fixed Coordinates -->
+  <div class="mission_green2_objective shine-container" style="position: absolute; top: 300px; left: 455px; transform: scale(0.66); transform-origin: top left; z-index: 10;">
+    <img src="/assets/menu/menu_home.png" class="item-icon">
+  </div>
+</div>
+`,
+
+
+	mission_green_3: () =>`
 	<div id="mission-container" style="position: relative;">
 		<img id="fantasy_map" src="/assets/missions/fantasy_map_s.png" />
 
@@ -380,7 +377,9 @@ const pages = {
 				  stroke="rgba(0, 0, 0, 0.7)" stroke-width="4" 
 				  stroke-dasharray="10, 10" stroke-linecap="round" fill="none" />
 		</svg>
-
+		${player?.missions?.green_2keys?.shrine > 0 ? `
+			<div id="green_2_shrine" class="poi mapLight" data-node="green_2_shrine" style="position:absolute; top:445px; left:270px; transform:scale(1.5); transform-origin: top left; z-index:20;"><img src="/assets/missions/mission_indicator_encounter.png"></div>'
+		` : ""}
 		<!-- Dark Forest Objective -->
 		<div class="guild_homebase shine-container" 
 			 style="position: absolute; top: 220px; left: 310px; transform: scale(0.66); transform-origin: top left;">
@@ -641,7 +640,7 @@ mission_dwood_1: () => `
 	  <div style="padding: 20px; font-family: Arial;">
 
 		<h2>Your Wallet</h2>
-		<h1>Currently this page only runs locally!</h1>
+		<h3>Currently this page only runs when the backend coin server has been turned on</h3>
 
 		<div id="coinCountBox" 
 			 style="font-size: 20px; margin-bottom: 20px;">
@@ -1092,7 +1091,7 @@ function showTemporaryImage(src) {
 
 async function loadPage(page) {
 	console.log(`called loadPage ${page}`);
-
+	console.log(player?.missions?.green_2keys);
   if (!player) {
     return; // or show login UI
   }
@@ -2408,6 +2407,13 @@ function renderCharSheet(adv) {
     }
 
     const show = v => v !== null && v !== undefined && v !== "";
+	const validItems = adv.inventory.filter(entry => entry.item);
+	const inventoryHtml = validItems
+		.map(entry => `
+			<p><strong>${entry.item}</strong> x${entry.qty}</p>
+		`)
+		.join("");
+
 
     // 1. Extract Lore Descriptions
     // We use optional chaining and a fallback string just in case the key is missing
@@ -2424,6 +2430,7 @@ function renderCharSheet(adv) {
 
                 <p><strong>Race:</strong> ${adv.race ?? "Unknown"}</p>
                 <p><strong>Role:</strong> ${adv.role ?? "Unknown"} Lvl: ${adv.Level ?? "?"}</p>
+				${adv.subrole ? `<p><strong>Subrole:</strong> ${adv.subrole}</p>` : ""}
                 <p><strong>Alignment:</strong> ${adv.alignment ?? "Neutral"}</p>
                 <p><strong>Caste:</strong> ${adv.caste ?? "Omni"}</p>
             </div>
@@ -2512,6 +2519,13 @@ function renderCharSheet(adv) {
                         <p><strong>${adv.role}:</strong> ${roleDesc}</p>
                         <p><strong>${adv.race}:</strong> ${raceDesc}</p>
                     </div>
+
+					<div class="inventory">
+						<h3> Inventory </h3>
+						${inventoryHtml}
+					</div>
+
+
                 </div>
 
             </div>

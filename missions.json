@@ -44,6 +44,36 @@
     "options": []
   },
   {
+    "id": "Bragain1",
+    "speaker": "Bragain",
+    "portrait": "/assets/patrons/dwarven_miner.png",
+    "side": "right",
+    "dialog": "Hello laddy, it's sure is nice to be back to safe grounds. Although, my ol' pick is eager to be hammering on precious veins. I wish I could find some around here.",
+    "interaction_type": "next",
+    "target_id": "patronend",
+    "options": []
+  },
+  {
+    "id": "Hogperson1",
+    "speaker": "Bragain",
+    "portrait": "/assets/patrons/hogperson.png",
+    "side": "right",
+    "dialog": "I'm having a good time at the ol' Inn.",
+    "interaction_type": "next",
+    "target_id": "patronend",
+    "options": []
+  },
+  {
+    "id": "Marlnus1",
+    "speaker": "Bragain",
+    "portrait": "/assets/patrons/marlnus_l.png",
+    "side": "right",
+    "dialog": "Greetings young Master. I'm happy to offer my Chauffeur services and my cart for your party.",
+    "interaction_type": "next",
+    "target_id": "patronend",
+    "options": []
+  },
+  {
     "id": "Crusher1",
     "speaker": "Guild Master",
     "portrait": "/assets/guild/guild_master.png",
@@ -80,13 +110,13 @@
     "side": "right",
     "dialog": "Monitoring the situation.",
     "interaction_type": "next",
-    "target_id": "crusherend",
+    "target_id": "patronend",
     "options": []
   },
   {
-    "id": "crusherend",
-    "speaker": "Crusher",
-    "portrait": "/assets/patrons/crusher_l.png",
+    "id": "patronend",
+    "speaker": "",
+    "portrait": "",
     "side": "right",
     "dialog": "",
     "interaction_type": "next",
@@ -1603,9 +1633,132 @@
   {
     "id": "green2*1_2107*end",
     "speaker": "Narrator",
+    "interaction_type": "next",
+    "target_id": "END"
+  },
+  {
+    "id": "green2_401",
+    "speaker": "Narrator",
     "portrait": "",
     "side": "left",
-    "dialog": ".",
+    "dialog": "The party passes through the Green Road, leading towards town. There are markings on the road, where it is forking to the south, signaling a shrine is locate there. Would you be interested to visit the shrine?",
+    "interaction_type": "next",
+    "target_id": "green2_402"
+  },
+  {
+    "id": "green2_402",
+    "speaker": "Hogperson",
+    "portrait": "/assets/patrons/hogperson.png",
+    "side": "left",
+    "dialog": "Mother would be interested to visit the shrine for sure. Maybe she've passed through there too? Or we just might bump into her on our way there? I hope nothing bad happened and she didn't get stuck there.",
+	"interaction_type": "selection",
+	"options": [
+      {
+        "text": "Detour, head towards the shrine.",
+        "target_id": "green2_403",
+        "disabled": false,
+        "color": "#FFD700"
+      },
+      {
+        "text": "Carry on your way towards town.",
+        "target_id": "green2*5",
+        "disabled": false
+      }
+    ]
+  },
+  {
+    "id": "green2_403",
+    "speaker": "Narrator",
+    "portrait": "",
+    "side": "left",
+    "dialog": "The party will go to visit the shrine.",
+    "interaction_type": "next",
+    "target_id": "green2*4end"
+  },
+  {
+    "id": "green2*5",
+    "speaker": "Narrator",
+    "portrait": "",
+    "side": "left",
+    "dialog": "The party will carry on the Green Road, leading towards town.",
+    "interaction_type": "next",
+    "target_id": "green2*5end"
+  },
+  {
+    "id": "green2*4end",
+    "interaction_type": "next",
+    "target_id": "END"
+  },
+  {
+    "id": "green2*5end",
+    "interaction_type": "next",
+    "target_id": "END"
+  },
+  {
+    "id": "greenshrine1_101",
+    "speaker": "Narrator",
+    "portrait": "",
+    "side": "left",
+    "dialog": "Heading out towards the shrine, the party paces through the unmarked path. It's a nice sunny day in the green pastured lands outside town. Your party's mood is upbeat, the shrine is visable from this point and it would take a short while to reach it.",
+    "interaction_type": "next",
+    "target_id": "greenshrine1_102"
+  },
+  {
+    "id": "greenshrine1_102",
+    "speaker": "Hogperson",
+    "portrait": "/assets/patrons/hogperson.png",
+    "side": "right",
+    "dialog": "That's it. Here we are. Wish mother was here, she knows all about shrines. It looks rather tidy and clean, maybe she was here recently.",
+    "interaction_type": "selection",
+		"options": [
+      {
+        "text": "Have a Dwarf inspect the stones of the shrine.",
+        "target_id": "greenshrine1_103",
+		"condition_race": "Dwarven",
+        "color": "#FFD700"
+      },
+      {
+        "text": "Carry on your way towards town.",
+        "target_id": "green2*5"
+      }
+    ]
+  },
+  {
+    "id": "greenshrine1_103",
+    "speaker": "Bragain",
+    "portrait": "/assets/patrons/dwarven_miner.png",
+    "side": "left",
+    "dialog": "Right! Rocks are my specialty. The place has been built by a mason, but it seems it was built hastily, the cuts on the stone are rather inaccurate and a bit shoddy. Perhaps they were more interested in marking this specific location rather than building a shrine of splendor. The green growth around the place seems to respect the sanctity of the place and not cover it. Not much for that statue over there, it's all covered with vines and ferns.",
+    "interaction_type": "next",
+    "target_id": "greenshrine1_104"
+  },
+  {
+    "id": "greenshrine1_104",
+    "speaker": "Claudio",
+    "portrait": "/assets/patrons/Claudio.png",
+    "side": "right",
+    "dialog": "Why would that be, Bragain?",
+    "interaction_type": "next",
+    "target_id": "greenshrine1_105"
+  },
+  {
+    "id": "greenshrine1_105",
+    "speaker": "Bragain",
+    "portrait": "/assets/patrons/dwarven_miner.png",
+    "side": "left",
+    "dialog": "Beats me, I'm no herbalist. They do look rather different than the rest of the greenery around. The statue stone is far different than the shrine stones, and there are no chistle markings on it, it must have been an entirely different mason to have sculpted it.",
+    "interaction_type": "next",
+    "target_id": "greenshrine1_106"
+  },
+  {
+    "id": "greenshrine1_106",
+    "speaker": "Narrator",
+    "dialog": "After having said a quick prayer for the success of the journey, and the safety of Hogfather, the party heads back to the main path towards town.",
+    "interaction_type": "next",
+    "target_id": "greenshrine1_106end"
+  },
+  {
+    "id": "greenshrine1_106end",
     "interaction_type": "next",
     "target_id": "END"
   },
@@ -2046,85 +2199,284 @@
     "target_id": "END"
   },
   {
-    "id": "green2_301",
+    "id": "green3_101",
     "speaker": "Bragain",
     "portrait": "/assets/patrons/dwarven_miner.png",
     "side": "left",
     "dialog": "I still have a bad feeling about this.",
     "interaction_type": "next",
-    "target_id": "green2_301a"
+    "target_id": "green3_101a"
   },
   {
-    "id": "green2_301a",
+    "id": "green3_101a",
     "speaker": "Bragain",
     "portrait": "/assets/patrons/dwarven_miner.png",
     "side": "left",
     "dialog": "Oh dear Hommond, may the glory of your hammer protect us. I hope we're not straight waltzing to our doom AND our bankrupcy.",
     "interaction_type": "next",
-    "target_id": "green2_302"
+    "target_id": "green3_102"
   },
   {
-    "id": "green2_302",
+    "id": "green3_102",
     "speaker": "Bragain",
     "portrait": "/assets/patrons/dwarven_miner.png",
     "side": "left",
     "dialog": "NEVER trust a Goblin. That's what my folks always say",
     "interaction_type": "next",
-    "target_id": "green2_303"
+    "target_id": "green3_103"
   },
   {
-    "id": "green2_303",
+    "id": "green3_103",
     "speaker": "Amyssa",
     "portrait": "/assets/patrons/amyssa_l.png",
     "side": "right",
     "dialog": "Or an elf",
     "interaction_type": "next",
-    "target_id": "green2_304"
+    "target_id": "green3_104"
   },
   {
-    "id": "green2_304",
+    "id": "green3_104",
     "speaker": "Bragain",
     "portrait": "/assets/patrons/dwarven_miner.png",
     "side": "left",
     "dialog": "OR AN ELF!",
     "interaction_type": "next",
-    "target_id": "green2_305"
+    "target_id": "green3_105"
   },
   {
-    "id": "green2_305",
+    "id": "green3_105",
     "speaker": "Bragain",
     "portrait": "/assets/patrons/dwarven_miner.png",
     "side": "left",
-    "dialog": "Oh I mean, not ALLS elves, not always",
+    "dialog": "Oh I mean, not ALL elves, not always",
     "interaction_type": "next",
-    "target_id": "green2_306"
+    "target_id": "green3_106"
   },
   {
-    "id": "green2_306",
+    "id": "green3_106",
     "speaker": "Amyssa",
     "portrait": "/assets/patrons/amyssa_l.png",
     "side": "right",
     "dialog": "............\n\nThat's alright. You're not the only one having second thoughts.",
     "interaction_type": "next",
-    "target_id": "green2_307"
+    "target_id": "green3_107"
   },
   {
-    "id": "green2_307",
+    "id": "green3_107",
     "speaker": "Amyssa",
     "portrait": "/assets/patrons/amyssa_l.png",
     "side": "right",
     "dialog": "But lives are on the line here. There are greater matters ahead and it's no time to be picky.",
     "interaction_type": "next",
-    "target_id": "green2_308"
+    "target_id": "green3_108"
   },
   {
-    "id": "green2_308",
+    "id": "green3_108",
     "speaker": "Narrator",
-    "portrait": "",
+    "dialog": "The party marches on.....",
+    "interaction_type": "selection",
+    "options": [
+      {
+        "text": "Hasten, towards the forest entrence.",
+        "target_id": "green3_201"
+      },
+      {
+        "text": "Tell Hogmother about the shrine you've passed through on your way here.",
+        "target_id": "greenshrine1_201",
+        "color": "#FFD700",
+		"condition_key_green2": "shrine",
+		"condition_key_green2_value": 1
+
+      }
+    ]
+  },
+  {
+    "id": "greenshrine1_201",
+    "speaker": "Hogperson",
+    "portrait": "/assets/patrons/hogperson.png",
     "side": "left",
-    "dialog": "The party marches on, towards the forest entrence.",
+    "dialog": "Pardon me mother, on our way here we've passed through a shrine located next to the path, have you seen it by any chance?",
     "interaction_type": "next",
-    "target_id": "green3_201"
+    "target_id": "greenshrine1_202"
+  },
+  {
+    "id": "greenshrine1_202",
+    "speaker": "Hogmother",
+    "portrait": "/assets/patrons/hogmother.png",
+    "side": "right",
+    "dialog": "A shrine shrine not far from the path, to the south?",
+    "interaction_type": "next",
+    "target_id": "greenshrine1_203"
+  },
+  {
+    "id": "greenshrine1_203",
+    "speaker": "Hogperson",
+    "portrait": "/assets/patrons/hogperson.png",
+    "side": "left",
+    "dialog": "Yes that.",
+    "interaction_type": "next",
+    "target_id": "greenshrine1_204"
+  },
+  {
+    "id": "greenshrine1_204",
+    "speaker": "Hogmother",
+    "portrait": "/assets/patrons/hogmother.png",
+    "side": "right",
+    "dialog": "Yes I have. Spent a bit of time there praying for advice on what to do. While waiting I cleaned and tidied up the place, but didn't get any answers I'm afraid, so I carried on.",
+    "interaction_type": "next",
+    "target_id": "greenshrine1_205"
+  },
+  {
+    "id": "greenshrine1_205",
+    "speaker": "Bragain",
+    "portrait": "/assets/patrons/dwarven_miner.png",
+    "side": "left",
+    "dialog": "You've missed the statue then have ya'?",
+    "interaction_type": "next",
+    "target_id": "greenshrine1_206"
+  },
+  {
+    "id": "greenshrine1_206",
+    "speaker": "Hogmother",
+    "portrait": "/assets/patrons/hogmother.png",
+    "side": "right",
+    "dialog": "Statue? Pardon me, I don't remember a statue.",
+    "interaction_type": "next",
+    "target_id": "greenshrine1_207"
+  },
+  {
+    "id": "greenshrine1_207",
+    "speaker": "Bragain",
+    "portrait": "/assets/patrons/dwarven_miner.png",
+    "side": "left",
+    "dialog": "I thought it was odd! There was a statue right on view near the shrine, it was covered in ferns. If you've stayed at the shrine it would be impossible to miss it!",
+    "interaction_type": "next",
+    "target_id": "greenshrine1_208"
+  },
+  {
+    "id": "greenshrine1_208",
+    "speaker": "Bragain",
+    "portrait": "/assets/patrons/dwarven_miner.png",
+    "side": "left",
+    "dialog": "That's because it is no statue, there were no chistle marks on it at all! Must be some gargoyle, or a pertified person. Couldn't be a gargoyle, it didn't look like a monsterous winged creature. There's someone trapped in that statue, it must be.",
+    "interaction_type": "next",
+    "target_id": "greenshrine1_209"
+  },
+  {
+    "id": "greenshrine1_209",
+    "speaker": "Hogmother",
+    "portrait": "/assets/patrons/hogmother.png",
+    "side": "right",
+    "dialog": "Oh dear, that poor unlucky sod. First Hogfather than this. We can't just let it go, let us inspect that statue further.",
+    "interaction_type": "next",
+    "target_id": "greenshrine1_209end"
+  },
+  {
+    "id": "greenshrine1_209end",
+    "interaction_type": "next",
+    "target_id": "END"
+  },
+  {
+    "id": "greenshrine2_101",
+    "speaker": "Narrator",
+    "dialog": "The party has returned to the shrine to inspect that statue further. It appears Hogmother has not seen it before.",
+    "interaction_type": "next",
+    "target_id": "greenshrine2_102"
+  },
+  {
+    "id": "greenshrine2_102",
+    "speaker": "Hogmother",
+    "portrait": "/assets/patrons/hogmother.png",
+    "side": "left",
+    "dialog": "Ah yes. There it is, this statue is new to me, among the rest of oddities that have been popping up recently, they must all be connected. Forgive me ferns, allow me to reveal the sculpture to the light. Master dwarf, are you sure this isn't a sculptured art?",
+    "interaction_type": "next",
+    "target_id": "greenshrine2_103"
+  },
+  {
+    "id": "greenshrine2_103",
+    "speaker": "Bragain",
+    "portrait": "/assets/patrons/dwarven_miner.png",
+    "side": "right",
+    "dialog": "Aye, this rock has not been touched by a chistle or a pick. There's unnatural shape to the stone.",
+    "interaction_type": "next",
+    "target_id": "greenshrine2_104"
+  },
+  {
+    "id": "greenshrine2_104",
+    "speaker": "Hogmother",
+    "portrait": "/assets/patrons/hogmother.png",
+    "side": "left",
+    "dialog": "Well then, let us pray, diety of the shrine, allow me a humble servent to take part in restorting the balance of nature in your midst. Living things do not belong in stone. Please provide us the aid to free the captured being, and bestow breath within them once again.",
+    "interaction_type": "next",
+    "target_id": "greenshrine2_105"
+  },
+  {
+    "id": "greenshrine2_105",
+    "speaker": "Narrator",
+    "side": "left",
+    "dialog": "Hogmother pulled out a scroll, it is a 'Remove Petrification' scroll, the party is watching her reading the incantations, hoping for the best.",
+    "interaction_type": "next",
+    "target_id": "greenshrine2_106"
+  },
+  {
+    "id": "greenshrine2_106",
+    "speaker": "Narrator",
+    "side": "left",
+    "dialog": "The stone statue is cracking, tiny bits of it are dropping down, followed by larger pieces collapsing to the ground.\n\nA colorful figure is revealed from Within the statue!!!",
+    "interaction_type": "next",
+    "target_id": "greenshrine2_107"
+  },
+  {
+    "id": "greenshrine2_107",
+    "speaker": "Colorful Figure",
+    "portrait": "/assets/patrons/tonica_L.png",
+    "side": "right",
+    "dialog": "Uuugggggggggggghhhhhhhhhhhh\n\nFantastic, I've been trapped in stone for some time now, I owe your clever party a debt. Allow me to introduce myself!\n\nI am Tonica of the woodland realm, taken an Oath of the Ancients, I was set to be a defender of the woods and taken stewardship oh this piece of green land. Alas, vile creatures have gotten a hold on me with this curse of stone.",
+    "interaction_type": "next",
+    "target_id": "greenshrine2_108"
+  },
+  {
+    "id": "greenshrine2_108",
+    "speaker": "Hogmother",
+    "portrait": "/assets/patrons/hogmother.png",
+    "side": "left",
+    "dialog": "M'lady Tonica! What an honor and a relief to see you are alright after all this time in stone. I am Hogmother and our party is set to investigate several oddities happening around, your curse namely one of them. My husband has gone missing and we're on our way to investigate the trail of his footsteps, tho we do not know what has yet come to pass.",
+    "interaction_type": "next",
+    "target_id": "greenshrine2_109"
+  },
+  {
+    "id": "greenshrine2_109",
+    "speaker": "Tonica",
+    "portrait": "/assets/patrons/tonica_L.png",
+    "side": "right",
+    "dialog": "I've slumbered for too long, if there's distress in the land I will see to it.\n\nAllow me to join forces with you, I will make a valueable ally.",
+    "interaction_type": "selection",
+    "options": [
+      {
+        "text": "Accept Tonica, the Green Knight.",
+        "target_id": "greenshrine2_110"
+      },
+      {
+        "text": "Reject Tonica.",
+        "color": "#ff1100",
+        "disabled": true,
+        "frustration_text": "She seems like a formidable warrior, you wouldn't want to pass her up."
+      }
+    ]
+  },
+  {
+    "id": "greenshrine2_110",
+    "speaker": "Hogmother",
+    "portrait": "/assets/patrons/hogmother.png",
+    "side": "left",
+    "dialog": "We would like nothing more M'lady Tonica!",
+    "interaction_type": "next",
+    "target_id": "greenshrine2_110end"
+  },
+  {
+    "id": "greenshrine2_110end",
+    "interaction_type": "next",
+    "target_id": "END"
   },
   {
     "id": "green3_201",

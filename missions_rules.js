@@ -615,7 +615,6 @@ function rollSkillCheck(adv, ability, prof, dc, advType = "normal") {
     };
 }
 
-
 const missionNodes = {
 	
 	// path : 1
@@ -624,6 +623,8 @@ const missionNodes = {
 	// fort :5 
 	green_1: {   missionId: "green_1",	},
 	green_2: {   missionId: "green_2",	},
+	green_2_shrine: {   missionId: "greenshrine_1",	},
+	greenshrine_2: { missionId: "greenshrine_2",	},
 	green_3: {   missionId: "green_3",	},
     dwood_fort2: {
         title: "Darkwood Fort",
@@ -685,6 +686,12 @@ function missionController(nodeId) {
     const missionId = current.id;
 
     console.log("Mission Controller:", missionId, "Node:", nodeId);
+	if (nodeId === "green_2_shrine") {
+		const shrineKey = player.missions.green_2keys?.shrine || 0;
+
+		if (shrineKey === 1) return openMissionNode("greenshrine_1");
+		if (shrineKey === 2) return openMissionNode("greenshrine_2");
+}
 
     // 1. Dark Woods / node-based missions
     if (missionNodes[nodeId]) {
@@ -708,14 +715,12 @@ function missionController(nodeId) {
 	const missionRules = {
 	  green_1: {
 		"*": { action: "run", mission: "green_1" }
+	  
 	  },
-
 	  dwood_path: {
 		1: { action: "run", mission: "dwood_1" },
 		">1": { action: "status", text: "you've reached the Glade, there's no need to backtrack now, and you can't head towards the fortress yet either." }
 	  },
-
-
 
 	  dwood_shrine: {
 		1: { action: "status", text: "you can't reach the shrine yet." },
@@ -1042,13 +1047,12 @@ async function openMissionNode(nodeId) {
     // Store selected node for engagement
     selectedNode = node;
     // Only green_2 uses the encounter database for now
-	if (nodeId === "green_2" && player.missions.green_2 > 1 && player.missions.green_2 < 9) {
-
-        const encounter = pickEncounter("green_2");
-
-        pushStatus(`Encounter: ${encounter.desc} (CR${encounter.cr}, ${encounter.type})`);
-
-
+	if (   nodeId === "green_2" && [2, 3, 5, 6, 7 ,8].includes(player.missions.green_2)
+		) {
+	const encounter = pickEncounter("green_2");
+	
+	player.missions[nodeId] += 1
+	pushStatus(`Encounter: ${encounter.desc} (CR${encounter.cr}, ${encounter.type})`);
 	// ⭐ NEW: Status encounters
 	if (encounter.type === "status") {
 		pushStatus(encounter.desc);
@@ -1087,7 +1091,6 @@ async function openMissionNode(nodeId) {
 
         return;
     }
-	player.missions[nodeId] += 1
 	runMission(node.missionId);
 }
 

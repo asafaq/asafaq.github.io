@@ -79,7 +79,7 @@ fetch('/battle_dialog.json')
 
 const STRDEX_TABLE = {
   str: ['warrior', 'fighter', 'barbarian', 'paladin', 'cleric', 'ranger', 'monk', 'shaman', 'swordmage', 'brute', 'squire', 'paladin', 'bouncer', 'fallen paladin', 'clericbot', 'druid', 'warlock'],
-  dex: ['thief', 'rogue', 'bard', 'deputy', 'miner', 'arcane trickster']
+  dex: ['thief', 'rogue', 'bard', 'deputy', 'miner', 'arcane trickster', 'green knight']
 };
 
 const firstPCIndex = units.findIndex(u => u.type === "pc");
@@ -512,7 +512,10 @@ function update() {
 
     bar.innerHTML = '';
     createBtn(bar, "📍 Move", toggleMove, isMoving ? 'btn-move-active' : '', "move-btn");
-    
+	const hasElvishBow = active.inventory.some(i => i.item === "Elvish Bow");
+    if (hasElvishBow) {
+		createBtn(bar, "🏹 Elvish Bow", startRangedTargeting);
+	}
     if (active.race === "Barbarian" && active.isRaging && active.rageTurnsActive >= 3) {
         createBtn(bar, "End Rage", handleEndRage);
     }
@@ -527,7 +530,7 @@ function update() {
             createBtn(bar, "️👤 Hide", handleHide);
         }
     } else {
-        createBtn(bar, "⚔️ Strike", startMeleeTargeting);
+        if (!hasElvishBow) createBtn(bar, "⚔️ Strike", startMeleeTargeting);
     }
     if (canCast(active.role) && !active.isSinging && !active.isRaging) {
         createBtn(bar, "✨ Spell", handleSpell);
@@ -541,8 +544,22 @@ function update() {
 	) {
 		createBtn(bar, "🎭 Joke", startJokeAction);
 	}
+	
+	createBtn(bar, "💥 Auto‑Win", autoWinBattle, "", "auto-win-btn");
 
     checkVictory();
+}
+
+function autoWinBattle() {
+    // Set all monsters to 0 HP
+    units.forEach(u => {
+        if (u.type === 'monster') {
+            u.hp = 0;
+        }
+    });
+
+    Bus.emit('LOG', `${u.name} invoked developer's auto-win. Press END TURN to continue.`);
+    // Trigger your existing battle‑end logic
 }
 
 function npcAI() {
