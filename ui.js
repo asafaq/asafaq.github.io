@@ -1,6 +1,5 @@
 // 1. A variable that will hold your data
-let loreData = null;
-let lorePromise = null;
+let loreData = null, lorePromise = null, helperCooldown = false, statusQueue = [], statusIndex = 0;
 
 function updateLoadingText(loaded, total) {	//It updates the text on a loading screen to show how many assets have loaded out of the total
     const el = document.getElementById("loadingScreen");
@@ -51,9 +50,6 @@ function evaluateNotices() {
     pushStatus("", 0);
 }
 
-let statusQueue = [];
-let statusIndex = 0;
-
 function queueStatus(messages, interval = 4000) {
     statusQueue = messages;
     statusIndex = 0;
@@ -96,6 +92,71 @@ function pushStatus(message, duration = 5000) {
 //queueStatus(["Hello", "World"]);
 //queueStatus(["Fast", "Messages"], 1500);
 //pushStatus("Hello, this is your new status bar!");
+
+function getHelperMessages(player) {
+	// data in guild_concept.txt lines 888-930
+    const m = player.missions;
+
+    const rules = [
+        {
+            condition: () => m.tutorial < 2,
+            message: "Continue the tutorial steps to learn the basics."
+        },
+        {
+            condition: () => m.dwood_1 === 0,
+            message: "Head into the Dark Woods. Find the path to the fortress, and Hogfather."
+        },
+        {
+            condition: () => m.dwood_1 === 2,
+            message: "Seek guidance in the shrine located in the Dark Woods."
+        },
+        {
+            condition: () => m.dwood_1 === 3,
+            message: "Finish your prepartions in the shrine located in the Dark Woods."
+        },
+        {
+            condition: () => m.dwood_1 === 4,
+            message: "Head to the swamp and confront the Trollkin."
+        },
+        {
+            condition: () => m.dwood_1 === 5 && m.dwood_fort1 === 2,
+            message: "You must enter the Fort through the back enterence, but it's being watched."
+        },
+        {
+            condition: () => m.dwood_1 === 5 && m.dwood_fort1 === 3,
+            message: "Head to the back entrence of the Fort."
+        },
+        {
+            condition: () => m.dwood_fort2 === 0,
+            message: "You still have to find where to meet with the Spy."
+        },
+        {
+            condition: () => m.dwood_fort2 === 1 && m.dwood_fort1 !== 2,
+            message: "You still have to devise a plan how to defeat the Ugress. Return to Awetruce for console."
+        },
+        {
+            condition: () => m.dwood_fort2 === 3 && m.dwood_fort1 === 3,
+            message: "Confront the Ugress in the main Fort."
+        },
+        {
+            condition: () => m.green_3 < 3,
+            message: "."
+        }
+    ];
+
+    // Collect all matching messages
+    const messages = rules
+        .filter(rule => rule.condition())
+        .map(rule => rule.message);
+
+    // If nothing matched, give a default
+    if (messages.length === 0) {
+       // messages.push("No messages.");
+    }
+
+    return messages;
+}
+
 
 
 
@@ -398,6 +459,12 @@ mission_dwood_1: () => `
 
 
     <img id="fantasy_map" src="/assets/missions/dark_woods_map_s.png" />
+${`
+    <button id="helper-button" class="tutorial-button">
+        Helper
+    </button>
+`}
+
 	    <!-- POI: Platform (always visible) -->
     <div id="dwood_platform"
 		 class="poi ${
@@ -633,13 +700,14 @@ mission_dwood_1: () => `
     </div>
 	<button id="saveBtn">Save Changes</button>
 	<div id="saveStatus" style="margin-top: 6px; color: white; font-weight: bold;"></div>
-
+	<div>Contact the developer on <a href="https://discord.gg/euWseSRKmQ" target="_blank" rel="noopener noreferrer">Discord</a></div>
 	`,
 
 	shop: `
 	  <div style="padding: 20px; font-family: Arial;">
 
 		<h2>Your Wallet</h2>
+		<div id="coinServerStatus">Coin server: checking…</div>
 		<h3>Currently this page only runs when the backend coin server has been turned on</h3>
 
 		<div id="coinCountBox" 
@@ -1089,6 +1157,32 @@ function showTemporaryImage(src) {
     }, 50);
 }
 
+async function checkCoinServer() {
+  const statusEl = document.getElementById("coinServerStatus");
+
+  try {
+    const res = await fetch("http://localhost:3000/status", { method: "GET" });
+
+    if (!res.ok) throw new Error();
+
+    const data = await res.json();
+
+    if (data.online) {
+      statusEl.textContent = "Coin server: ON";
+      statusEl.classList.remove("offline");
+      statusEl.classList.add("online");
+    } else {
+      statusEl.textContent = "Coin server: OFF";
+      statusEl.classList.remove("online");
+      statusEl.classList.add("offline");
+    }
+  } catch {
+    statusEl.textContent = "Coin server: OFF";
+    statusEl.classList.remove("online");
+    statusEl.classList.add("offline");
+  }
+}
+
 async function loadPage(page) {
 	console.log(`called loadPage ${page}`);
 	console.log(player?.missions?.green_2keys);
@@ -1307,6 +1401,8 @@ main.innerHTML = typeof pages[page] === "function"
 	if (page === "shop") {
 	  const user = player.id;
 
+	  // Check coin server status
+	  checkCoinServer();
 	  // Load coin count
 	  getActiveCoins(user);
 
@@ -1316,7 +1412,6 @@ main.innerHTML = typeof pages[page] === "function"
 		const amount = parseInt(document.getElementById("mintAmount").value);
 		mintCoins(user, amount);
 	  };
-	  
 	  // Spend button
 	  document.getElementById("spendButton").onclick = () => {
 		const note = "Store purchase";
@@ -1326,8 +1421,22 @@ main.innerHTML = typeof pages[page] === "function"
 	  };
 	}
 
-  
-  
+if (page === "mission_dwood_1") {
+    document.getElementById("helper-button").onclick = () => {
+
+        if (helperCooldown) return; // ignore spam clicks
+        helperCooldown = true;
+
+        const msgs = getHelperMessages(player);
+        queueStatus(msgs);
+
+        // unlock after rotation finishes
+        setTimeout(() => {
+            helperCooldown = false;
+        }, msgs.length * 8000); // 4 seconds per message
+    };
+}
+	
   evaluateNotices()
 }
 
@@ -1471,7 +1580,7 @@ function showTutorialButton() {
 
 const missionLabels = {
 	green_1: "Tutorial in the Green Pastures",
-	green_2: "Travelling to Townshop Tavern",
+	green_2: "Travelling to Township Tavern",
 	green_3: "Entering the Dark Forest",
 	dwood_1: "In the Dark Forest"
 };
@@ -1769,7 +1878,7 @@ const missionConfig = {
     },
 
     green_2: {
-        label: "Travelling to Townshop Tavern",
+        label: "Travelling to Township Tavern",
         category: "Adventure",
         selectable: true,
         unlock: (player) => player.missions.green_2 <= 2
@@ -1894,11 +2003,13 @@ async function loadMissionPage() {
     `;
 	
     Object.keys(player.missions).forEach(key => {
+		// ignore those mission names, they're not in menu:adventures
         if (key === "current_mission") return;
         if (key === "tutorial") return;
         if (key === "dwood_1") return;
         if (key === "dwood_fort1") return;
         if (key === "dwood_fort2") return;
+        if (key === "green_2keys") return;
 		//here we are setting where do those missions end and exist visability.
         if (key === "green_1" && player.missions.green_1 > 1) return;
         if (key === "green_2" && player.missions.green_2 > 1) return;
@@ -2096,7 +2207,7 @@ async function updateMissionDisplay() {
 
     const missionLabels = {
         green_1: "Tutorial in the Green Pastures",
-		green_2: "Travelling to Townshop Tavern",
+		green_2: "Travelling to Township Tavern",
 		green_3: "Entering the Dark Forest",
 		dwood_1: "The Dark Forest"
     };
@@ -2521,7 +2632,7 @@ function renderCharSheet(adv) {
                     </div>
 
 					<div class="inventory">
-						<h3> Inventory </h3>
+						<h3> Inventory: </h3>
 						${inventoryHtml}
 					</div>
 
@@ -2641,9 +2752,6 @@ document.addEventListener("click", function (e) {
     const nodeId = node.dataset.node;
     missionController(nodeId);
 });
-
-
-
 
 // Re-attach listeners if new dropzones appear
 const dragObserver = new MutationObserver(() => {
