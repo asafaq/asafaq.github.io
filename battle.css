@@ -362,11 +362,9 @@
     bottom: 100%;
     left: 50%;
     transform: translateX(-50%);
-
     padding: 6px 14px;
-
     /* Match reaction button style */
-    background: var(--r-btn-bg);
+    background: rgba(0,0,0,0.85);   /* darker */
     border: 1px solid var(--r-border);
     border-radius: 4px;
 

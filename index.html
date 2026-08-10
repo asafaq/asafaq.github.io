@@ -25,6 +25,7 @@
 			<p>Login / Register</p>
 			<input id="username" type="text" placeholder="Username">
 			<input id="password" type="password" placeholder="Password">
+			<input id="passwordVerify" type="password" placeholder="Verify Password" style="display:none;">
 			<button onclick="login()">Login</button>
 			<p id="status"></p>
 			</div>
@@ -83,7 +84,7 @@
       <img src="assets/menu/menu_mail.png" class="icon">
       <div class="tooltipmenu">Mail</div>
     </div>
-	<div class="menu-item" onclick="loadPage('lore')">
+	<div class="menu-item" onclick="loadPage('book')">
       <img src="assets/menu/menu_lore.png" class="icon">
       <div class="tooltipmenu">Lore</div>
     </div>
@@ -116,10 +117,9 @@
 	<!-- Place this inside your existing 540x960 body -->
 	<div id="m-viewport">
 		<!-- The main dialog container -->
-		<div id="m-dialog-box" class="m-glass-panel">
-			<p style="color: rgba(255,255,255,0.5);">Loading Missions...</p>
-		</div>
-
+		<div id="m-dialog-container"></div>
+		<!-- <div id="m-dialog-box" class="m-glass-panel"> </div> -->
+		
 		<!-- The container for buttons -->
 		<div id="m-choices-container"></div>
 

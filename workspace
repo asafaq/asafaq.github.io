@@ -4,6 +4,7 @@
             <File name="1.bat" />
             <File name="1.txt" />
             <File name="battle.html" />
+            <File name="battle.css" />
             <File name="battle.JSON" />
             <File name="battlelauncher.js" />
             <File name="database.js" />
@@ -27,6 +28,31 @@
             <File name="ui.js" />
             <File name="ui_obsolete.js" />
             <File name="watch.bat" />
+            <File name="bank.js" />
+        </Folder>
+        <Folder name="coin server">
+            <Folder name="data">
+                <File name="server\data\coins.json" />
+                <File name="server\data\coins_archive.json" />
+            </Folder>
+            <Folder name="src">
+                <Folder name="models">
+                    <File name="server\src\models\coin.js" />
+                </Folder>
+                <Folder name="routes">
+                    <File name="server\src\routes\coins.js" />
+                </Folder>
+                <Folder name="services">
+                    <File name="server\src\services\ledger.js" />
+                </Folder>
+            </Folder>
+            <File name="server\1.bat" />
+            <File name="server\package-lock.json" />
+            <File name="server\package.json" />
+            <File name="server\powershell_server.bat" />
+            <File name="server\server.js" />
+            <File name="server\server.log" />
+            <File name="server\vars.env" />
         </Folder>
     </Project>
 </NotepadPlus>

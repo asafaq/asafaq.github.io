@@ -36,7 +36,7 @@
 			<button onclick="downloadBattleLog()">TXT</button>
 		</div>
 	</div>
-	<div id="reaction-panel" class="reaction-panel"></div>
+	<!-- <div id="reaction-panel" class="reaction-panel"></div> -->
     <div id="controls">
         <div class="btn-group" id="action-bar"></div>
 		<div id="right-column">
@@ -67,7 +67,32 @@ const Bus = {
     emit(event, data) { if(this.events[event]) this.events[event].forEach(cb => cb(data)); }
 };
 
-let staticObstacles = [], units = [], round = 0, isMoving = false; battleXP = 0; isReactionPhase = false; roundStarted = false; isHealing = false; healerUnit = null; isCastingSpell = false; spellCaster = null; selectedSpell = null; pendingSpells = []; victoryShown = false; isRangedTargeting = false; rangedShooter = null; isMeleeTargeting = false; meleeAttacker = null; isSneakTargeting = false; sneakAttacker = null; initiativeOrder = []; turnIndex = 0;
+let staticObstacles = [],
+    units = [],
+    round = 0,
+    isMoving = false,
+    battleXP = 0,
+    isReactionPhase = false,
+    roundStarted = false,
+    isHealing = false,
+    healerUnit = null,
+    isCastingSpell = false,
+    spellCaster = null,
+    selectedSpell = null,
+    pendingSpells = [],
+    victoryShown = false,
+    isRangedTargeting = false,
+    rangedShooter = null,
+    isMeleeTargeting = false,
+    meleeAttacker = null,
+    isSneakTargeting = false,
+    sneakAttacker = null,
+    initiativeOrder = [],
+    turnIndex = 0,
+	pendingReactionPanels = 0,
+	currentAttackType = null;
+	
+
 fetch('/battle_dialog.json')
   .then(r => r.json())
   .then(json => {
@@ -365,6 +390,7 @@ async function init() {
 
 				
 				handleAttack(meleeAttacker, target);
+				console.log("init() ran handleAttack(meleeAttacker, target);");
 				isMeleeTargeting = false;
 				meleeAttacker = null;
 				return;
@@ -522,6 +548,9 @@ function update() {
     if (active.role === "Bard") {
         createBtn(bar, "🏹 Crossbow", startRangedTargeting);
     }
+    if (active.skills && active.skills.smite > 0) {
+        createBtn(bar, "🔆 Divine Smite", startSmiteTargeting, "", "", "Holy");
+    }
     if (isRogue(active.role)) {
         if (active.isHiding) {
             createBtn(bar, "🗡️ Sneak", startSneakTargeting);
@@ -545,7 +574,7 @@ function update() {
 		createBtn(bar, "🎭 Joke", startJokeAction);
 	}
 	
-	createBtn(bar, "💥 Auto‑Win", autoWinBattle, "", "auto-win-btn");
+	createBtn(bar, "💥 Developer Auto‑Win", autoWinBattle, "", "auto-win-btn", "Dev");
 
     checkVictory();
 }
@@ -558,7 +587,7 @@ function autoWinBattle() {
         }
     });
 
-    Bus.emit('LOG', `${u.name} invoked developer's auto-win. Press END TURN to continue.`);
+    Bus.emit('LOG', `Invoked developer's auto-win. Press END TURN to continue.`);
     // Trigger your existing battle‑end logic
 }
 
@@ -790,12 +819,19 @@ function monsterMoraleCheck(Unit = "all", Mod = 0) {
     checkVictory();
 }
 
+function isInRange(attacker, target, range) {
+    const dx = Math.abs(attacker.x - target.x);
+    const dy = Math.abs(attacker.y - target.y);
+    const dist = Math.max(dx, dy); // grid distance
+
+    return dist <= range;
+}
 
 
 // High‑level class groups
 const ROLE_TYPES = {
     Rogue: ["Deputy", "Arcane Trickster", "Thief", "Miner"],
-    Caster: ["Bard", "Swordmage", "Shaman", "Arcane Trickster"],
+    Caster: ["Bard", "Swordmage", "Shaman", "Arcane Trickster", "Sorcerer"],
 	Healer: ["Shaman", "Cleric", "Paladin", "Clericbot", "Druid", "Warlock"]
 
 };
@@ -875,13 +911,32 @@ function startRangedTargeting() {
     Bus.emit('LOG', `${u.name} aims their crossbow... select a target`);
 }
 
-function createBtn(parent, text, func, className = '', id = '') {
+
+
+function createBtn(parent, text, func, className = '', id = '', colorPreset = '') {
+	const BTN_COLORS = {
+		Holy: { bg: "yellow", font: "#00008B" },
+		Dev:  { bg: "white",  font: "black" },
+		Danger: { bg: "#8B0000", font: "white" }
+	};
     const btn = document.createElement('button');
     btn.innerText = text;
     btn.onclick = func;
-    if(className) btn.className = className;
-    if(id) btn.id = id;
-    if (!units[initiativeOrder[turnIndex].index].hasAction && text !== "📍 Move") btn.disabled = true;
+
+    if (className) btn.className = className;
+    if (id) btn.id = id;
+
+    // Apply preset colors if defined
+    if (colorPreset && BTN_COLORS[colorPreset]) {
+        btn.style.backgroundColor = BTN_COLORS[colorPreset].bg;
+        btn.style.color = BTN_COLORS[colorPreset].font;
+    }
+
+    // Disable if unit has no action (except Move)
+    if (!units[initiativeOrder[turnIndex].index].hasAction && text !== "📍 Move") {
+        btn.disabled = true;
+    }
+
     parent.appendChild(btn);
 }
 
@@ -942,36 +997,14 @@ function getOccupiedSquares() {
     return map;
 }
 
-
-
-function handleAttack(attacker, target) {
-    console.log(
-        `[ATTACK] atk=${attacker.name} → tgt=${target.name} (${target.hp}hp) dmg=${attacker.damage || "?"} pos=(${target.x},${target.y}) defeated=${target.hp <= 0}`
-    );
-
+function handleAttack(attacker, target, action = null) {
     if (!attacker.hasAction) return;
     if (!target || target.hp <= 0) return;
 
-    // --- ATTACK MODIFIER ---
-    let hitMod = 0;
-
-    if (attacker.type === "pc") {
-		// currenyly all hitMod are neutralized to 0, while making use of attacker.hitBonus
-		<!-- hitMod += attacker.prof -->
-		
-        <!-- hitMod = attacker.stats?.str || 0; -->
-        <!-- if (attacker.expClassKey === "thief" && (attacker.stats?.dex > attacker.stats?.str)) { -->
-            <!-- hitMod = attacker.stats.dex; -->
-        <!-- } -->
-
-        <!-- if (attacker.role === "Deputy" && (attacker.stats?.dex > attacker.stats?.str)) { -->
-            <!-- hitMod = attacker.stats.dex; -->
-        <!-- } -->
-
-    } else {
-        const m = getMonsterStats(attacker);
-        hitMod = m?.hitMod ?? 0;
-    }
+    // --- HIT MOD ---
+    let hitMod = attacker.type === "pc"
+        ? attacker.hitBonus || 0
+        : action?.hitMod ?? getMonsterStats(attacker)?.hitMod ?? 0;
 
     // --- RACIAL BONUS ---
     let racialBonus = 0;
@@ -982,26 +1015,29 @@ function handleAttack(attacker, target) {
 
     // --- ROLL TO HIT ---
     const roll = Math.floor(Math.random() * 20) + 1;
-    const totalToHit = roll + hitMod + racialBonus + (attacker.hitBonus || 0);
+    const totalToHit = roll + hitMod + racialBonus;
 
     const targetAC = target.ac || 10;
-
     const isCrit = roll === 20;
     const isHit = isCrit || (roll !== 1 && totalToHit >= targetAC);
 
-    Bus.emit('LOG', `${attacker.name} attacks ${target.name}! (Roll: ${roll} + ${hitMod} + ${attacker.hitBonus || 0})`);
+    // --- ATTACK NAME ---
+    const attackName =
+        currentAttackType === "smite" ? "Divine Smite" :
+        action ? action.name : "Attack";
 
+    Bus.emit('LOG', `${attacker.name} uses ${attackName} on ${target.name}! (Roll: ${roll} + ${hitMod})`);
+
+    // --- DAMAGE ---
     if (isHit) {
-        let dmg = 0;
+        let dmg = attacker.type === "pc"
+            ? (Math.floor(Math.random() * 6) + 1) + (attacker.damageBonus || 0)
+            : (Math.floor(Math.random() * (action?.damageDie ?? getMonsterStats(attacker)?.damageDie ?? 3)) + 1)
+                + (action?.damageBonus ?? getMonsterStats(attacker)?.damageBonus ?? 0);
 
-        if (attacker.type === "pc") {
-            dmg = (Math.floor(Math.random() * 6) + 1) + hitMod + (attacker.damageBonus || 0);
-        } else {
-            const m = getMonsterStats(attacker);
-            const die = m?.damageDie ?? 3;
-            const bonus = m?.damageBonus ?? 0;
-
-            dmg = (Math.floor(Math.random() * die) + 1) + bonus;
+        // 🔆 SMITE OVERRIDE
+        if (currentAttackType === "smite") {
+            dmg = handleSmiteAttack(attacker, target, dmg);
         }
 
         Bus.emit('LOG', `⚔️ ${attacker.name} hits ${target.name} for ${dmg}!`);
@@ -1011,11 +1047,55 @@ function handleAttack(attacker, target) {
         Bus.emit('LOG', `🛡️ ${attacker.name} misses (${totalToHit} vs AC ${targetAC}).`);
     }
 
-    attacker.hasAction = false;
+    // --- CLEAR SPECIAL ATTACK STATE ---
+    currentAttackType = null;
+    isMeleeTargeting = false;
+    meleeAttacker = null;
 
+    // --- UPDATE AFTER EVERYTHING ---
     if (attacker.type === "pc") {
-        update();
+        attacker.hasAction = false;
+        update();   // ← NOW SAFE
     }
+}
+
+function startSmiteTargeting() {
+    const u = units[initiativeOrder[turnIndex].index];
+    if (!u.hasAction) return;
+    if (u.skills.smite <= 0) {
+        Bus.emit('LOG', `❌ No smite charges left!`);
+        return;
+    }
+
+    currentAttackType = "smite";
+    isMeleeTargeting = true;
+    meleeAttacker = u;
+
+    Bus.emit('LOG', `${u.name} channels divine power... select an adjacent enemy`);
+}
+
+
+function handleSmiteAttack(attacker, target, dmg) {
+
+    // Consume smite resource
+    attacker.skills.smite--;
+
+    // Base smite radiant damage (2d8)
+    let radiant1 = Math.floor(Math.random() * 8) + 1;
+    let radiant2 = Math.floor(Math.random() * 8) + 1;
+
+    dmg += radiant1 + radiant2;
+
+    Bus.emit('LOG', `🔆 Divine Smite! Radiant damage: ${radiant1 + radiant2}`);
+
+    // Bonus vs undead or fiends
+    if (target.type === "undead" || target.type === "fiend") {
+        let radiant3 = Math.floor(Math.random() * 8) + 1;
+        dmg += radiant3;
+        Bus.emit('LOG', `💥 Extra radiant vs ${target.type}: ${radiant3}`);
+    }
+
+    return dmg;
 }
 
 function getMonsterStats(unit) {
@@ -1024,6 +1104,42 @@ function getMonsterStats(unit) {
 
     return window.MONSTER_DB[unit.id] || null;
 }
+
+function getMonsterActionList(monster) {
+    const stats = getMonsterStats(monster);
+    if (!stats.actions) return [];
+
+    let list = [];
+
+    for (const act of stats.actions) {
+        if (act["#"] === null) {
+            // random single action
+            list.push(act);
+        } else {
+            // fixed number of actions
+            for (let i = 0; i < act["#"]; i++) {
+                list.push(act);
+            }
+        }
+    }
+
+    // If monster has "attack": N, limit or expand list
+    const count = stats.attack || 1;
+
+    if (list.length > count) {
+        // randomly pick N actions
+        list = list.sort(() => Math.random() - 0.5).slice(0, count);
+    } else if (list.length < count) {
+        // randomly add more actions until reaching N
+        while (list.length < count) {
+            const random = stats.actions[Math.floor(Math.random() * stats.actions.length)];
+            list.push(random);
+        }
+    }
+
+    return list;
+}
+
 
 function handleSpell() {
     const u = units[initiativeOrder[turnIndex].index];
@@ -1208,14 +1324,13 @@ function isAnyBardSinging() {
     return units.some(u => u.type === 'pc' && u.role === 'Bard' && u.isSinging);
 }
 
-function handleSing() {
-    const bard = units[initiativeOrder[turnIndex].index];
-    if (bard.role !== "Bard" || !bard.canSing) return;
+function handleSing(bard) {
+    if (!bard || bard.role !== "Bard" || !bard.canSing) return;
 
     bard.canSing = false;
     bard.isSinging = true;
 
-    // Buff allies
+    // Buff allies (skip the bard)
     units.forEach(u => {
         if (u.type === "pc" && u !== bard) {
             u.hitBonus += 1;
@@ -1228,8 +1343,6 @@ function handleSing() {
     bard.damageBonus -= 1;
 
     Bus.emit('LOG', `🎶 ${bard.name} sings! Allies gain +1 hit/dmg, Bard suffers -1 hit/dmg and cannot cast spells.`);
-
-    endReactionPhase();
 }
 
 function getSquares(u) {
@@ -1247,10 +1360,6 @@ function getSquares(u) {
 function startMeleeTargeting() {
     const u = units[initiativeOrder[turnIndex].index];
     if (!u.hasAction) return;
-	console.log("DEBUG: melee targeting started");
-	console.log("DEBUG: isMeleeTargeting =", isMeleeTargeting);
-	console.log("DEBUG: meleeAttacker =", meleeAttacker?.name);
-
     isMeleeTargeting = true;
     meleeAttacker = u;
 
@@ -1289,109 +1398,110 @@ function handleRangedAttack(attacker, target) {
 
 function startReactionPhase() {
     isReactionPhase = true;
-	units.forEach(u => {
-    if (u.type === "pc") u.hasReacted = false;
-	});
+
+    units.forEach(u => {
+        if (u.type === "pc") u.hasReacted = false;
+    });
 
     showReactionTitle();
-    console.log("REACTION PHASE PCs:", units.filter(u => u.type === "pc"));
+    hideDMScreen();
 
-    // Delay panel build until UI is stable
-	hideDMScreen();
+    const { groupA, groupB } = getPCGroups();
 
-    requestAnimationFrame(() => {
-        requestAnimationFrame(buildReactionPanel);
-    });
+    // Count how many panels will exist
+    pendingReactionPanels = 1 + (groupB.length > 0 ? 1 : 0);
+
+	requestAnimationFrame(() => {
+		requestAnimationFrame(() => {
+
+			// Draw B first (only if it exists)
+			if (groupB.length > 0) {
+				buildReactionPanel("reaction-panel-B", groupB);
+			}
+
+			// Draw A second (always)
+			buildReactionPanel("reaction-panel-A", groupA);
+
+		});
+	});
+
 }
 
-function buildReactionPanel() {
+function buildReactionPanel(panelId, pcList) {
     const controlsWindow = document.getElementById('controls');
-    let panel = document.getElementById('reaction-panel');
-    
-    if (panel) {
-        panel.innerHTML = "";
-        if (controlsWindow && panel.parentNode !== controlsWindow) {
-            controlsWindow.appendChild(panel);
-        }
-    } else {
+    let panel = document.getElementById(panelId);
+
+    if (!panel) {
         panel = document.createElement('div');
-        panel.id = 'reaction-panel';
+        panel.id = panelId;
         panel.className = 'reaction-panel';
-        if (controlsWindow) {
-            controlsWindow.appendChild(panel);
-        } else {
-            document.body.appendChild(panel);
-        }
+        (controlsWindow || document.body).appendChild(panel);
+    } else {
+        panel.innerHTML = "";
     }
 
     panel.style.display = "flex";
 
     // Build PC entries
-	units.filter(u => u.type === 'pc' && u.hp > 0).forEach((pc, index) => {
-		const div = document.createElement('div');
-		div.className = "reaction-entry";
+    pcList.forEach(pc => {
+        const div = document.createElement('div');
+        div.className = "reaction-entry";
 
-		const header = document.createElement('div');
-		header.className = "reaction-header";
-		header.innerHTML = `<span class="r-name">${pc.name}</span><span class="r-meta">${pc.role} • hp ${pc.hp}/${pc.maxHp}`;
-		div.appendChild(header);
+        const header = document.createElement('div');
+        header.className = "reaction-header";
+        header.innerHTML = `<span class="r-name">${pc.name}</span><span class="r-meta">${pc.role} • hp ${pc.hp}/${pc.maxHp}`;
+        div.appendChild(header);
 
-		const actions = document.createElement('div');
-		actions.className = "reaction-actions";
-		div.appendChild(actions);
+        const actions = document.createElement('div');
+        actions.className = "reaction-actions";
+        div.appendChild(actions);
 
-		if (pc.race === "Barbarian" && !pc.usedRage) {
-			createReactionBtn(actions, "Rage", () => { handleRage(pc); }, pc);
-		}
+        if (pc.race === "Barbarian" && !pc.usedRage) {
+            createReactionBtn(actions, "Rage", () => handleRage(pc), pc);
+        }
 
-		if (isRogue(pc.role) && pc.canHide) {
-			createReactionBtn(actions, "Hide", () => {
-				pc.isHiding = true;
-				pc.canHide = false;
-				Bus.emit('LOG', `${pc.name} hides in the shadows.`);
-			}, pc);
-		}
+        if (isRogue(pc.role) && pc.canHide) {
+            createReactionBtn(actions, "Hide", () => {
+                pc.isHiding = true;
+                pc.canHide = false;
+                Bus.emit('LOG', `${pc.name} hides in the shadows.`);
+            }, pc);
+        }
 
-		if (pc.role === "Bard" && pc.canSing && !isAnyBardSinging()) {
+        if (pc.role === "Bard" && pc.canSing && !isAnyBardSinging()) {
 			createReactionBtn(actions, "Sing", () => {
-				pc.canSing = false;
-				pc.isSinging = true;
-				units.forEach(u => {
-					if (u.type === "pc" && u !== pc) {
-						u.hitBonus = (u.hitBonus || 0) + 1;
-						u.damageBonus = (u.damageBonus || 0) + 1;
-					}
-				});
-				pc.hitBonus = (pc.hitBonus || 0) - 1;
-				pc.damageBonus = (pc.damageBonus || 0) - 1;
-				Bus.emit('LOG', `${pc.name} sings an inspiring tune!`);
+			handleSing(pc);
 			}, pc);
-		}
+        }
 
-		createReactionBtn(actions, "Healing Potion", () => {
-			handleDrinkPotion(pc);
-		}, pc);
+        createReactionBtn(actions, "Healing Potion", () => handleDrinkPotion(pc), pc);
 
-		panel.appendChild(div);
-	});   // ✔️ Correct
-
+        panel.appendChild(div);
+    });
 
     // GO button
     const cont = document.createElement('button');
     cont.innerText = "GO";
     cont.classList.add("go-btn");
+
     cont.onclick = () => {
-        isReactionPhase = false;
         panel.style.display = "none";
-        hideReactionTitle();
-        //roundStarted = true;
 
-        const active = units[initiativeOrder[turnIndex].index];
-        Bus.emit('LOG', `Turn: ${active.name}`);
-        update();
+        pendingReactionPanels--;
 
-        if (active.type === "monster") {
-            setTimeout(monsterAI, 600);
+        // Only end reaction phase when ALL panels are done
+        if (pendingReactionPanels === 0) {
+            isReactionPhase = false;
+            hideReactionTitle();
+
+            const active = units[initiativeOrder[turnIndex].index];
+            Bus.emit('LOG', `Turn: ${active.name}`);
+
+            update();
+
+            if (active.type === "monster") {
+                setTimeout(monsterAI, 600);
+            }
         }
     };
 
@@ -1427,6 +1537,15 @@ function hideReactionTitle() {
     document.getElementById("reaction-title").style.display = "none";
 }
 
+function getPCGroups() {
+    const pcs = units.filter(u => u.type === "pc" && u.hp > 0);
+    return {
+        groupA: pcs.slice(0, 6),   // first 6 PCs
+        groupB: pcs.slice(6, 12)   // PCs 7–12 (only if exist)
+    };
+}
+
+
 function handleDrinkPotion(user) {
     if (!user || user.hp <= 0) return;
 
@@ -1439,7 +1558,7 @@ function handleDrinkPotion(user) {
     Bus.emit('LOG', `🧪 ${user.name} drinks a potion and heals ${user.hp - oldHP} HP.`);
 
     update();
-    buildReactionPanel();   // ⭐ refreshes HP in headers
+    //buildReactionPanel();   // ⭐ refreshes HP in headers
 }
 
 function endTurn() {
@@ -1574,9 +1693,30 @@ function monsterAI() {
     }
     moveMonsterToward(u, target);
 
-    if (isAdjacent(u, target) && u.hasAction) {
-        handleAttack(u, target);
-    }
+	if (u.hasAction) {
+		const actions = getMonsterActionList(u);
+
+		for (const act of actions) {
+
+			const range = act.range || 1;
+
+			// If not in range → move until in range or speed runs out
+			while (!isInRange(u, target, range) && u.remainingSpeed > 0) {
+				moveMonsterToward(u, target);
+			}
+
+			// If in range → attack
+			if (isInRange(u, target, range)) {
+				handleAttack(u, target, act);
+			} else {
+				Bus.emit('LOG', `${u.name} cannot reach ${target.name} for ${act.name}.`);
+			}
+
+			if (target.hp <= 0) break;
+		}
+	}
+
+
 
     update();
     setTimeout(() => {

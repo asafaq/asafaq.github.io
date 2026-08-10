@@ -175,139 +175,306 @@ DISABLED IF:
     OR mission stage unmet (future)
 */
 
+function createDialogWindow(dlg, index = 0) {
+    const div = document.createElement("div");
+    div.className = `m-glass-panel m-side-${dlg.side}`;
+
+    div.innerHTML = `
+        ${dlg.portrait ? `<img src="${dlg.portrait}" class="m-portrait">` : ''}
+        <div class="m-text-area">
+            ${dlg.speaker ? `<div class="m-speaker-name">${dlg.speaker}</div>` : ''}
+            <div class="m-typewriter" id="typewriter-${index}"></div>
+        </div>
+    `;
+
+    return div;
+}
+
 async function renderScene(sceneId) {
+
     if (isTyping) return;
-// 1. FIND SCENE DATA
+
+    // --- 1. FIND SCENE DATA ---
     const scene = storyData.find(s => s.id === sceneId);
-	console.log(sceneId)
-    // 2. VALIDATE SCENE EXISTS
+    console.log(sceneId);
+
+    // --- 2. VALIDATE SCENE EXISTS ---
     if (!scene) {
         console.error("Scene not found:", sceneId);
         pushStatus(`Error: Scene ${sceneId} not found.`);
         return;
     }
-    // 3. CHECK IF THIS SCENE IS AN ENDING
-    // This catches scenes like tutor2_118 that point to "END"
+
+    // --- 3. CHECK IF THIS SCENE IS AN ENDING ---
     if (scene.target_id === "END") {
         await handleMissionEnd(scene.id);
         return;
     }
 
-    // --- 3. DOM ELEMENTS CHECK ---
+    // --- 4. SAVE PROGRESS ---
+    await saveProgress(sceneId);
+
+    // --- 5. DOM ELEMENT LOOKUP ---
     const viewport = document.getElementById('m-viewport');
-    const dialogBox = document.getElementById('m-dialog-box');
+    const container = document.getElementById("m-dialog-container");
     const choiceContainer = document.getElementById('m-choices-container');
 
-    if (!viewport || !dialogBox || !choiceContainer) {
+    if (!viewport || !container || !choiceContainer) {
         console.error("renderScene Error: UI elements not found in DOM.");
         return;
     }
 
-    // Handle unknown scene ID
-    if (!scene) {
-        dialogBox.innerHTML = `Error: Scene ${sceneId} not found in JSON.`;
+    viewport.style.display = 'block';
+
+    // --- CLEAR OLD DIALOG WINDOWS ---
+    container.innerHTML = "";
+
+	// --- 6. NORMALIZE DIALOGS INTO AN ARRAY ---
+	let dialogs = [];
+
+	if (scene.dialogs && Array.isArray(scene.dialogs)) {
+		// New format: dialogs: []
+		dialogs = scene.dialogs;
+	} else {
+		// Old format: dialog, dialog2, dialog3, dialog4...
+		let index = 1;
+
+		while (true) {
+			const key = index === 1 ? "dialog" : `dialog${index}`;
+			if (!scene[key]) break; // stop when no more dialogs
+
+			dialogs.push({
+				text: scene[key],
+				speaker: scene[`speaker${index}`] || scene.speaker || null,
+				portrait: index === 1
+					? scene.portrait
+					: scene[`portrait${index}`] || null,
+				side: scene[`side${index}`] || scene.side || "left"
+			});
+
+			index++;
+		}
+	}
+	dialogs.forEach(d => {
+		if (!d.speaker) d.speaker = scene.speaker;
+	});
+	const allSameSpeaker = dialogs.every(d => d.speaker === dialogs[0].speaker);
+
+	let dialogGroups = [];
+
+	if (allSameSpeaker) {
+		dialogGroups.push({
+			speaker: dialogs[0].speaker,
+			portrait: dialogs[0].portrait,
+			side: dialogs[0].side,
+			texts: dialogs.map(d => d.text)
+		});
+	} else {
+		// Each dialog gets its own window
+		dialogs.forEach(d => {
+			dialogGroups.push({
+				speaker: d.speaker,
+				portrait: d.portrait,
+				side: d.side,
+				texts: [d.text]
+			});
+		});
+	}
+	// --- 7. CREATE DIALOG WINDOWS AND TYPEWRITER LOGIC ---
+
+	// Helper: type a single string into an element with per-character delay
+	async function typeSingle(text, element, charDelay = 15) {
+		for (let c = 0; c < text.length; c++) {
+			element.innerHTML += text.charAt(c);
+			await new Promise(r => setTimeout(r, charDelay));
+		}
+	}
+
+	// Helper: type multiple texts sequentially into the same element
+	async function typewriteMultiple(texts, element, options = {}) {
+		const { charDelay = 15, betweenDelay = 250 } = options;
+		for (let i = 0; i < texts.length; i++) {
+			// If not the first text, add a line break before the next block
+			if (i > 0) element.innerHTML += "<br><br>";
+			await typeSingle(texts[i], element, charDelay);
+			// small pause between blocks so it feels natural
+			if (i < texts.length - 1) await new Promise(r => setTimeout(r, betweenDelay));
+		}
+	}
+
+// --- 7 & 8. SEQUENTIAL WINDOW CREATION + TYPEWRITER ---
+
+isTyping = true;
+
+player = await storage.loadPlayer(player.id);
+const SKIP_TYPEWRITER = player?.data?.skip_typewriter ?? false;
+
+for (let i = 0; i < dialogGroups.length; i++) {
+
+    // 1. Create window only now
+    const win = createDialogWindow(dialogGroups[i], i);
+    container.appendChild(win);
+
+    // 2. Get the typewriter target
+    const target = document.getElementById(`typewriter-${i}`);
+    if (!target) continue;
+
+    target.innerHTML = "";
+
+    const texts = dialogGroups[i].texts || [];
+
+    // 3. Typewriter or instant text
+    if (SKIP_TYPEWRITER) {
+        target.innerHTML = texts.join("<br><br>");
+    } else {
+        await typewriteMultiple(texts, target, { charDelay: 15, betweenDelay: 250 });
+    }
+
+    // 4. After finishing this window, the next one will appear
+}
+
+isTyping = false;
+
+    // --- 9. RENDER CHOICES ---
+    choiceContainer.innerHTML = '';
+
+    if (scene.interaction_type === "next") {
+        createBtn("NEXT >>", scene.target_id);
         return;
     }
 
-    // --- 4. SETUP ---
-    await saveProgress(sceneId);
-    viewport.style.display = 'block';
-    dialogBox.className = `m-glass-panel m-side-${scene.side}`;
-    
-    dialogBox.innerHTML = `
-        ${scene.portrait ? `<img src="${scene.portrait}" class="m-portrait" onerror="this.src='https://placeholder.com'">` : ''}
-        <div class="m-text-area">
-            ${scene.speaker ? `<div class="m-speaker-name">${scene.speaker}</div>` : ''}
-            <div id="m-typewriter-container"></div>
-            <div id="m-frustration-display" style="color: PaleTurquoise; margin-top: 10px; font-style: italic;"></div>
-        </div>
-    `;
+    // --- 10. PROCESS OPTIONS (ALL YOUR ORIGINAL LOGIC) ---
+    if (scene.options) {
 
-// --- 5. TYPEWRITER EFFECT ---
-    const typeTarget = document.getElementById('m-typewriter-container');
-    if (typeTarget) {
-        isTyping = true;
-        typeTarget.innerHTML = "";
+        const processedOptions = [];
 
+        for (const opt of scene.options) {
+            let isDisabled = false;
 
-        player = await storage.loadPlayer(player.id);
-		// Now read the updated value
-		const SKIP_TYPEWRITER = player?.data?.skip_typewriter ?? false;
-        if (SKIP_TYPEWRITER) {
-            // INSTANT MODE
-            typeTarget.innerHTML = scene.dialog;
-        } else {
-            // NORMAL SPEED MODE
-            for (let i = 0; i < scene.dialog.length; i++) {
-                typeTarget.innerHTML += scene.dialog.charAt(i);
-                await new Promise(r => setTimeout(r, 25));
+            // All your condition logic preserved exactly:
+            if (opt.condition_trait) {
+                if (Array.isArray(opt.condition_trait)) {
+                    const hasAny = opt.condition_trait.some(t => partyHasTrait(t));
+                    if (!hasAny) isDisabled = true;
+                } else {
+                    if (!partyHasTrait(opt.condition_trait)) isDisabled = true;
+                }
             }
+
+            if (opt.condition_trait_not) {
+                if (partyHasTrait(opt.condition_trait_not)) {
+                    isDisabled = true;
+                }
+            }
+
+            if (opt.disabled === true) {
+                isDisabled = true;
+            }
+
+            if (opt.condition_alignment) {
+                const hasAlignment = members.some(m => m.alignment === opt.condition_alignment);
+                if (!hasAlignment) isDisabled = true;
+            }
+
+            if (opt.condition_not_alignment) {
+                const hasAlignment = members.some(m => m.alignment === opt.condition_not_alignment);
+                if (hasAlignment) isDisabled = true;
+            }
+
+            if (opt.condition_race) {
+                const races = player?.missions?.current_mission?.summary?.races || [];
+                const hasRace = races.includes(opt.condition_race);
+                if (!hasRace) isDisabled = true;
+            }
+
+            if (opt.condition_key_green2_value !== undefined) {
+                const keys = player?.missions?.green_2keys || {};
+                const matches = keys[opt.condition_key_green2] === opt.condition_key_green2_value;
+                if (!matches) isDisabled = true;
+            }
+
+            if (opt.condition_key_dwood1_value !== undefined) {
+                const keys = player?.missions?.dwood_1 || {};
+                const matches = keys[opt.condition_key_dwood1] >= opt.condition_key_dwood1_value;
+                if (!matches) isDisabled = true;
+            }
+
+            if (opt.condition_key_dwood_fort2_value !== undefined) {
+                const keys = player?.missions?.dwood_fort2 || {};
+                const matches = keys[opt.condition_key_dwood_fort2_value] === opt.condition_key_dwood1_value;
+                if (!matches) isDisabled = true;
+            }
+
+            if (opt.condition_silver_required !== undefined) {
+                const silver = player?.missions?.current_mission?.satchel?.silver ?? 0;
+                if (silver < opt.condition_silver_required) {
+                    isDisabled = true;
+                }
+            }
+
+            if (opt.condition_counterfeit_electrum !== undefined) {
+                if (!player?.treasury || player.treasury.counterfeit_electrum === undefined) {
+                    isDisabled = true;
+                } else {
+                    const counterfeit = player.treasury.counterfeit_electrum;
+                    if (counterfeit < opt.condition_counterfeit_electrum) {
+                        isDisabled = true;
+                    }
+                }
+            }
+
+            if (opt.condition_electrum !== undefined) {
+                const user = player.id;
+                let coins;
+
+                try {
+                    coins = await getActiveCoins(user);
+                } catch (err) {
+                    isDisabled = true;
+                    coins = null;
+                }
+
+                if (!coins || coins.length < opt.condition_electrum) {
+                    isDisabled = true;
+                }
+            }
+
+            processedOptions.push({
+                text: opt.text,
+                target: opt.target_id,
+                color: opt.color,
+                disabled: isDisabled,
+                frustration: opt.frustration_text,
+                shadow: opt.shadow
+            });
         }
-        isTyping = false;
-    }
 
-    // --- 6. RENDER BUTTONS ---
-    choiceContainer.innerHTML = '';
-    if (scene.interaction_type === "next") {
-        createBtn("NEXT >>", scene.target_id);
-    } else if (scene.options) {
-		scene.options.forEach(opt => {
-			let isDisabled = false;
-
-			// Condition: requires a trait
-			if (opt.condition) {
-				if (Array.isArray(opt.condition)) {
-					// ANY of the traits must be present
-					const hasAny = opt.condition.some(t => partyHasTrait(t));
-					if (!hasAny) isDisabled = true;
-				} else {
-					// Single trait
-					if (!partyHasTrait(opt.condition)) isDisabled = true;
-				}
-			}
-
-			// Condition: must NOT have a trait
-			if (opt.condition_not) {
-				if (partyHasTrait(opt.condition_not)) {
-					isDisabled = true;
-				}
-			}
-
-			// Respect explicit disabled flag from JSON
-			if (opt.disabled === true) {
-				isDisabled = true;
-			}
-
-			if (opt.condition_alignment) {
-				const hasAlignment = members.some(m => m.alignment === opt.condition_alignment);
-				if (!hasAlignment) isDisabled = true;
-			}
-
-			if (opt.condition_not_alignment) {
-				const hasAlignment = members.some(m => m.alignment === opt.condition_not_alignment);
-				if (hasAlignment) isDisabled = true;
-			}
-			// Condition: requires a specific race in current mission
-			if (opt.condition_race) {
-				const races = player?.missions?.current_mission?.summary?.races || [];
-				const hasRace = races.includes(opt.condition_race);
-				if (!hasRace) isDisabled = true;
-			}
-			// Condition: requires mission key to equal a specific number
-			if (opt.condition_key_green2_value !== undefined) {
-				const keys = player?.missions?.green_2keys || {};
-				const matches = keys[opt.condition_key_green2] === opt.condition_key_green2_value;
-				if (!matches) isDisabled = true;
-			}
-			//"condition_key_green2": "shrine",
-			//"condition_key_green2_value": 2
-
-			createBtn(opt.text, opt.target_id, opt.color, isDisabled, opt.frustration_text, opt.shadow);
-		});
-
-	
+        // --- 11. RENDER BUTTONS ---
+        for (const opt of processedOptions) {
+            createBtn(opt.text, opt.target, opt.color, opt.disabled, opt.frustration, opt.shadow);
+        }
     }
 }
+
+
+function typewriteMultiple(texts, elementId, callback) {
+    let i = 0;
+
+    function next() {
+        if (i >= texts.length) {
+            callback && callback();
+            return;
+        }
+
+        typewriter(texts[i], elementId, () => {
+            i++;
+            next();
+        });
+    }
+
+    next();
+}
+
 
 function renderMissionOptions(mission) {
     const partyTraits = allPartyTraits(mission);
@@ -376,22 +543,33 @@ function createBtn(text, targetId, color = null, isDisabled = false, frustration
 
 // Add this helper function to show the text briefly
 function showTemporaryMessage(text) {
-    const dialogBox = document.getElementById('m-dialog-box');
+    const container = document.getElementById('m-dialog-container');
+    if (!container) return;
+
+    // Find the last dialog window (the most recent one)
+    const dialogWindows = container.querySelectorAll('.m-glass-panel');
+    const lastWindow = dialogWindows[dialogWindows.length - 1];
+    if (!lastWindow) return;
+
+    // Create the popup message
     const msg = document.createElement('div');
     msg.className = 'm-frustration-popup';
     msg.innerText = text;
-    
-    // Style it so it overlays or sits below the main text
-    msg.style.color = '#ff4444'; // Red for frustration
+
+    // Style it
+    msg.style.color = '#ff4444';
     msg.style.padding = '10px';
     msg.style.marginTop = '10px';
     msg.style.fontStyle = 'italic';
-    
-    dialogBox.appendChild(msg);
-    
-    // Remove it after 3 seconds
+
+    // Append to the last dialog window
+    lastWindow.appendChild(msg);
+
+    // Auto-remove after 3 seconds
     setTimeout(() => msg.remove(), 3000);
 }
+
+
 // 3. THE TRIGGER FUNCTION
 // Call this function from your own code to start the system
 async function startMissionSystem(specificSceneId = null) {
@@ -448,6 +626,23 @@ function addSilver(number, container) {
     }
 
     console.warn("addSilver failed: container must be 'stash' or 'satchel'.");
+}
+
+function addCounterfeitElectrum(number) {
+    // Convert string numerals to actual numbers
+    const amount = Number(number);
+
+    // Fail if conversion didn't produce a valid number
+    if (!Number.isFinite(amount)) {
+        console.warn("addCounterfeitElectrum failed: 'number' must be a valid numeral.");
+        return;
+    }
+
+	player.treasury ??= {};
+	player.treasury.counterfeit_electrum ??= 0;
+
+	player.treasury.counterfeit_electrum += amount;
+	return;
 }
 
 async function handleMissionEnd(sceneId) {
@@ -509,7 +704,7 @@ async function handleMissionEnd(sceneId) {
 
     player.patrons.adv_Amyssa.status = "applicant";
 
-    loadPage("missions");
+    await loadPage("missions");
 },
 
 
@@ -703,10 +898,42 @@ async function handleMissionEnd(sceneId) {
 
 			loadPage("mission_green_2");
 		},
+		"greenshrine1_211aend": async () => {
+			Journal.addEntry(`the ${player.data.party_A} have paid an Electrum coin to Obtain ingredients for scribing a Remove Petrification scroll, allowing Amyssa to scribe the desired scroll..`);
+
+			const user = player.id;
+			const note = "Obtain ingredients for scribing a Remove Petrification scroll";
+
+			console.log("Sending note: frontend ", note);
+			await spendCoins(user, 1, note);
+			
+			player.missions.current_mission.satchel ??= {};
+			player.missions.current_mission.satchel["Remove Petrification Scroll"] ??= 0;
+			player.missions.current_mission.satchel["Remove Petrification Scroll"] += 1;
+			player.missions.green_2keys.shrine = 2;
+		},
+		"greenshrine1_211bend": async () => {
+			Journal.addEntry(`the ${player.data.party_A} have paid a counterfeit Electrum coin to Obtain ingredients for scribing a Remove Petrification scroll, allowing Amyssa to scribe the desired scroll..`);
+			await addCounterfeitElectrum(-1)
+			player.missions.current_mission.satchel ??= {};
+			player.missions.current_mission.satchel["Remove Petrification Scroll"] ??= 0;
+			player.missions.current_mission.satchel["Remove Petrification Scroll"] += 1;
+
+			player.missions.green_2keys.shrine = 2;
+		},
+		"greenshrine1_211cend": async () => {
+			Journal.addEntry(`the ${player.data.party_A} have paid 250 silver coins to Obtain ingredients for scribing a Remove Petrification scroll, allowing Amyssa to scribe the desired scroll..`);
+			await addSilver(-250, "satchel");
+			player.missions.current_mission.satchel ??= {};
+			player.missions.current_mission.satchel["Remove Petrification Scroll"] ??= 0;
+			player.missions.current_mission.satchel["Remove Petrification Scroll"] += 1;
+			player.missions.green_2keys.shrine = 2;
+		},
 		"greenshrine2_110end": async () => {
 			player.missions.green_2keys.shrine = 3;
             player.missions.green_3 = 2;
 			Journal.addEntry(`the ${player.data.party_A} have rescued Tonica from her petrified state, and she has joined the party.`);
+			player.missions.current_mission.satchel["Remove Petrification Scroll"] -= 1;
 
 			await recruitAdventurer("adv_Tonica");
 			player.patrons.adv_Tonica.location = 3;
@@ -794,7 +1021,7 @@ async function handleMissionEnd(sceneId) {
 		
         "dwood1_219end": async () => {
             player.missions.dwood_1 = 3;
-			player.missions.dwood_fort2 = 0;
+			//player.missions.dwood_fort2 = 0;
             Journal.addEntry("Claudio and Finnick have decided to outsmart the Trollkin and manipulate the Spellbook out of him.");
 			// change Claudio portrait.
             // change Amyssa portrait.
@@ -809,7 +1036,7 @@ async function handleMissionEnd(sceneId) {
 
         "dwoodswamp1_127end": async () => {
             player.missions.dwood_1 = 5;
-            player.missions.dwood_fort2 = 0;
+            //player.missions.dwood_fort2 = 0;
             Journal.addEntry("You've successfully seduced and robbed the Trollkin out of Amyssa's Spellbook.");
             loadPage("mission_dwood_1");
         },

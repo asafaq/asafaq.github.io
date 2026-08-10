@@ -44,6 +44,47 @@
     "options": []
   },
   {
+  "id": "scene_admin_win_multi",
+  "speaker": "Commander Vex",
+  "portrait": "https://placeholder.com",
+  "side": "left",
+
+  "dialog": "Impressive..",
+  "dialog2": "But we have much more to do.",
+  "dialog3": "Prepare your squad.",
+
+  "interaction_type": "next",
+  "target_id": "scene_001",
+  "options": []
+  },
+  {
+  "id": "scene_admin_win_multi2",
+  "dialogs": [
+    {
+      "speaker": "Commander Vex - FULL MULTIDIALOG",
+      "portrait": "https://placeholder.com",
+      "side": "left",
+      "text": "Impressive.."
+    },
+    {
+      "speaker": "Lieutenant Mara",
+      "portrait": "https://placeholder.com/mara.png",
+      "side": "right",
+      "text": "The squad is ready, Commander."
+    },
+    {
+      "speaker": "Commander Vex",
+      "portrait": "https://placeholder.com",
+      "side": "left",
+      "text": "Good. We move at dawn."
+    }
+  ],
+  "interaction_type": "next",
+  "target_id": "scene_001",
+  "options": []
+  },
+
+  {
     "id": "Bragain1",
     "speaker": "Bragain",
     "portrait": "/assets/patrons/dwarven_miner.png",
@@ -51,6 +92,43 @@
     "dialog": "Hello laddy, it's sure is nice to be back to safe grounds. Although, my ol' pick is eager to be hammering on precious veins. I wish I could find some around here.",
     "interaction_type": "next",
     "target_id": "patronend",
+    "options": []
+  },
+  {
+    "id": "Amyssa1",
+    "speaker": "Amyssa",
+    "portrait": "/assets/patrons/amyssa_l.png",
+    "side": "right",
+    "dialog": ".......................",
+	"speaker2": "Guild Master",
+    "side2": "left",
+    "portrait2": "/assets/guild/guild_master.png",
+    "dialog2": "......................",
+	"speaker3": "Amyssa",
+    "dialog3": "I'm busy\n\n<scribbles>",
+    "portrait3": "/assets/patrons/amyssa_l.png",
+    "side3": "right",
+    "interaction_type": "next",
+    "target_id": "patronend"
+  },
+  {
+    "id": "Tonica1",
+    "speaker": "Tonica",
+    "portrait": "/assets/patrons/tonica_L.png",
+    "side": "right",
+    "dialog": "Trees are by far the most valuable and rare crop in the universe. More valuable than gold. What do you mean? There are trees everywhere. A tree provides other living things nourishments, housing, kindling in the winter, it is life preserving. Gold is but a matter of trade for the greedy. There's also gold everywhere, the stars sparkling out in the sky are filled with gold, but not even one tree. If the trees go scarce, no amount of gold will prove sufficient.",
+    "interaction_type": "next",
+    "target_id": "patronend",
+    "options": []
+  },
+  {
+    "id": "Tonica2",
+    "speaker": "Tonica",
+    "portrait": "/assets/patrons/tonica_L.png",
+    "side": "right",
+    "dialog": "Pardon me Innkepper, my duty is with the woods. I must fulfill my oath and remain the steward.",
+    "interaction_type": "next",
+    "target_id": "Tonica2",
     "options": []
   },
   {
@@ -115,19 +193,11 @@
   },
   {
     "id": "patronend",
-    "speaker": "",
-    "portrait": "",
-    "side": "right",
-    "dialog": "",
-    "interaction_type": "next",
-    "target_id": "END",
-    "options": []
+    "target_id": "END"
   },
   {
     "id": "tutor1_101",
     "speaker": "Tutorial Narrator",
-    "portrait": "",
-    "side": "left",
     "dialog": "Welcome to the game! As an aspiring entrepreneur looking to start a business in this part of the world, you’ve spent your life savings to become the proud owner of the land deed to this quaint tavern.",
     "interaction_type": "next",
     "target_id": "tutor1_101a",
@@ -581,7 +651,7 @@
         "text": "Promise to pay them 100 Silvcrs.",
         "target_id": "STAY",
         "disabled": true,
-		"condition": "Liar",
+		"condition_trait": "Liar",
         "frustration_text": "Ugh, if you could only say that with a straight face."
       },
       {
@@ -1033,7 +1103,7 @@
   {
     "id": "tutor2_107",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_s.png",
+    "portrait": "/assets/patrons/amyssa_l.png",
     "side": "right",
     "dialog": "** EXCUUUUUUUUUUUUUSE ME **",
     "interaction_type": "next",
@@ -1043,7 +1113,7 @@
   {
     "id": "tutor2_108",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_s.png",
+    "portrait": "/assets/patrons/amyssa_l.png",
     "side": "right",
     "dialog": "I'm NOT joining THOSE peasants\n\nI am a NOBLE!",
     "interaction_type": "next",
@@ -1053,7 +1123,7 @@
   {
     "id": "tutor2_109",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_s.png",
+    "portrait": "/assets/patrons/amyssa_l.png",
     "side": "right",
     "dialog": "I won't risk MY precious hide for just any riff-raff!",
     "interaction_type": "next",
@@ -1073,7 +1143,7 @@
   {
     "id": "tutor2_111",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_s.png",
+    "portrait": "/assets/patrons/amyssa_l.png",
     "side": "right",
     "dialog": "You'll just have to provide me with a party of my own class!",
     "interaction_type": "next",
@@ -1093,7 +1163,7 @@
   {
     "id": "tutor2_112",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_s.png",
+    "portrait": "/assets/patrons/amyssa_l.png",
     "side": "right",
     "dialog": "Meanwhile, I'll be chilling here, if you don't mind!\n\nInnkeeper!!! MORE ALE!!",
     "interaction_type": "next",
@@ -1113,7 +1183,7 @@
   {
     "id": "tutor2_114",
     "speaker": "INTRODUCTION",
-    "portrait": "/assets/patrons/amyssa_s.png",
+    "portrait": "/assets/patrons/amyssa_l.png",
     "side": "right",
     "dialog": "Amyssa is also a [SCRIBE]. While idling, other than just chilling in the guild",
     "interaction_type": "next",
@@ -1123,7 +1193,7 @@
   {
     "id": "tutor2_115",
     "speaker": "Narrator",
-    "portrait": "/assets/patrons/amyssa_s.png",
+    "portrait": "/assets/patrons/amyssa_l.png",
     "side": "right",
     "dialog": "she will scribe spell scrolls once in a while, that Bragain and Claudio can read and cast spells with,",
     "interaction_type": "next",
@@ -1133,7 +1203,7 @@
   {
     "id": "tutor2_116",
     "speaker": "Narrator",
-    "portrait": "/assets/patrons/amyssa_s.png",
+    "portrait": "/assets/patrons/amyssa_l.png",
     "side": "right",
     "dialog": "but not Hogperson because he's a big dummy.",
     "interaction_type": "next",
@@ -1566,14 +1636,14 @@
         "target_id": "green2*1_2103",
         "disabled": false,
         "color": "#FFD700",
-		"condition": "Appraisal"
+		"condition_trait": "Appraisal"
       },
       {
         "text": "[Pickpocket] Attempt to slip a gem off the migrant.",
         "target_id": "green2*1_2104",
         "disabled": false,
         "color": "#800080",
-		"condition": "Pickpocket"
+		"condition_trait": "Pickpocket"
       },
       {
         "text": "Carry on your way.",
@@ -2304,7 +2374,7 @@
     "speaker": "Hogmother",
     "portrait": "/assets/patrons/hogmother.png",
     "side": "right",
-    "dialog": "A shrine shrine not far from the path, to the south?",
+    "dialog": "A shrine not far from the path, to the south?",
     "interaction_type": "next",
     "target_id": "greenshrine1_203"
   },
@@ -2369,10 +2439,108 @@
     "side": "right",
     "dialog": "Oh dear, that poor unlucky sod. First Hogfather than this. We can't just let it go, let us inspect that statue further.",
     "interaction_type": "next",
-    "target_id": "greenshrine1_209end"
+    "target_id": "greenshrine1_210"
+  },
+  {
+    "id": "greenshrine1_210",
+    "speaker": "Narrator",
+    "dialog": "Your itinerary, Guild Master?.",
+    "interaction_type": "selection",
+    "options": [
+      {
+        "text": "Disregard the shrine, hasten towards the forest entrence.",
+        "target_id": "green3_201"
+      },
+      {
+        "text": "[Scribe] Obtain a Remove Petrification scroll.",
+        "color": "#FFD700",
+		"condition_trait": "Scribe",
+		"target_id": "greenshrine1_210a"
+      }
+    ]
+  },
+  {
+    "id": "greenshrine1_210a",
+    "speaker": "Amyssa",
+    "portrait": "/assets/patrons/amyssa_l.png",
+    "side": "left",
+    "dialog": "Pardon me, I am able to scribe a Remove Petrification scroll while we're in town, but the ingredients cost is hefty. I can't cover it all by myself.",
+    "interaction_type": "selection",
+    "options": [
+      {
+        "text": "Disregard scribing the scroll, hasten towards the forest entrence.",
+        "target_id": "green3_201"
+      },
+      {
+        "text": "[Counterfeit Electrum coin] Obtain ingredients for scribing a Remove Petrification scroll.",
+        "target_id": "greenshrine1_211b",
+        "color": "#FFD700",
+		"condition_counterfeit_electrum": 1
+      },
+      {
+        "text": "[Electrum coin] Obtain ingredients for scribing a Remove Petrification scroll.",
+        "target_id": "greenshrine1_211a",
+        "color": "#FFD700",
+		"condition_electrum": 1
+      },
+		{
+		  "text": "[250 Silver coins] Obtain ingredients for scribing a Remove Petrification scroll.",
+		  "condition_silver_required": 250,
+		  "target_id": "greenshrine1_211c",
+		  "frustration_text": "You can't afford it"
+		}
+    ]
+  },
+  {
+    "id": "greenshrine1_211a",
+    "speaker": "Narrator",
+    "dialog": "The party have stayed at the inn for a little long, paying for the scribing ingredients, allowing Amyssa to scribe the desired scroll.",
+    "interaction_type": "next",
+    "target_id": "greenshrine1_211aend"
+  },
+  {
+    "id": "greenshrine1_211b",
+    "speaker": "Narrator",
+    "dialog": "The party have stayed at the inn for a little long, paying for the scribing ingredients, allowing Amyssa to scribe the desired scroll.",
+    "interaction_type": "next",
+    "target_id": "greenshrine1_211bend"
+  },
+  {
+    "id": "greenshrine1_211c",
+    "speaker": "Narrator",
+    "dialog": "The party have stayed at the inn for a little long, paying for the scribing ingredients, allowing Amyssa to scribe the desired scroll.",
+    "interaction_type": "next",
+    "target_id": "greenshrine1_211cend"
+  },
+  {
+    "id": "greenshrine1_211aend",
+    "interaction_type": "next",
+    "target_id": "END"
+  },
+  {
+    "id": "greenshrine1_211bend",
+    "interaction_type": "next",
+    "target_id": "END"
+  },
+  {
+    "id": "greenshrine1_211cend",
+    "interaction_type": "next",
+    "target_id": "END"
   },
   {
     "id": "greenshrine1_209end",
+    "interaction_type": "next",
+    "target_id": "END"
+  },
+  {
+    "id": "greenshrine1_212",
+    "speaker": "Narrator",
+    "dialog": "The party has resolved to stay in the Inn for a while longer, while Amyssa does her most favorite thing, studying at her desk...\n\nIt does take time, but the scroll is ready. Hoping for the best, the party moves on...",
+    "interaction_type": "next",
+    "target_id": "greenshrine1_212end"
+  },
+  {
+    "id": "greenshrine1_212end",
     "interaction_type": "next",
     "target_id": "END"
   },
@@ -2470,6 +2638,15 @@
     "portrait": "/assets/patrons/hogmother.png",
     "side": "left",
     "dialog": "We would like nothing more M'lady Tonica!",
+    "interaction_type": "next",
+    "target_id": "greenshrine2_110a"
+  },
+  {
+    "id": "greenshrine2_110a",
+    "speaker": "INTRODUCTION",
+    "portrait": "/assets/patrons/tonica_L.png",
+    "side": "right",
+    "dialog": "Lady Tonica is a Green Knight.\n\nShe has taken an Oath to protect nature and wilderness. She's a well rounded fighter and can cure allies of poison, or smite her foes.",
     "interaction_type": "next",
     "target_id": "greenshrine2_110end"
   },
@@ -3766,23 +3943,21 @@
     "options": [
       {
         "text": "The Spy, Lurch",
-        "target_id": "dwoodplat1_105",
-        "color": ""
+        "target_id": "dwoodplat1_105"
       },
       {
         "text": "The Trollkin",
         "target_id": "dwoodplat1_102",
-        "color": ""
+		"condition_key_dwood1_value": 2
       },
       {
         "text": "The Ugress",
         "target_id": "dwoodplat1_106",
-        "color": ""
+		"condition_key_dwood_fort2_value": 1
       },
       {
         "text": "That is all Master Awotruce.",
-        "target_id": "dwoodplat1_104end",
-        "color": ""
+        "target_id": "dwoodplat1_104end"
       }
     ]
   },
@@ -3793,10 +3968,10 @@
     "dialog": "This trollkin is a vile aberration upon my woods. Do not mistaken him for a mere court Jester, He is a dangerous spellcaster and not to be taken lightly.",
     "side": "right",
     "interaction_type": "next",
-    "target_id": "dwoodplat1_103"
+    "target_id": "dwoodplat1_102a"
   },
   {
-    "id": "dwoodplat1_102",
+    "id": "dwoodplat1_102a",
     "speaker": "Awotruce",
     "portrait": "/assets/patrons/direwolf.png",
     "dialog": "I would gladly maul his throat, but he rarely leaves his swamp, and it's very difficult to track him on ground.",
@@ -3808,7 +3983,7 @@
     "id": "dwoodplat1_103",
     "speaker": "Awotruce",
     "portrait": "/assets/patrons/direwolf.png",
-    "dialog": "I will not take on the swamp, it's too difficult for me to move on.",
+    "dialog": "I will not set foot on the swamp, it's too difficult for me to move on.",
     "side": "right",
     "interaction_type": "next",
     "target_id": "dwoodplat1_104"
@@ -4293,10 +4468,6 @@
   },
   {
     "id": "dwoodfort2_102end",
-    "speaker": "Narrator",
-    "portrait": "",
-    "side": "left",
-    "dialog": "It's best to signal your Spy by creating a diversion elsewhere, like you've planned.",
     "interaction_type": "next",
     "target_id": "END"
   },
@@ -4629,7 +4800,7 @@
     "speaker": "Narrator",
     "portrait": "",
     "side": "right",
-    "dialog": "The Direwolf bolts past your in lightning speed, in direct path towards the Ugress.",
+    "dialog": "The Direwolf bolts past you faster than lightning, in direct collision towards the Ugress.",
     "interaction_type": "next",
     "target_id": "dwoodfort3_108"
   },
@@ -4685,12 +4856,20 @@
     "side": "left",
     "dialog": "WHA.. WHA.. WHAAAAT!! . . . . . . . . .",
     "interaction_type": "next",
+    "target_id": "dwoodfort3_113a"
+  },
+  {
+    "id": "dwoodfort3_113a",
+    "speaker": "A DIFFERENT, DEEPER VOICE",
+    "portrait": "/assets/missions/Ugress_possesed_l.png",
+    "side": "left",
+    "dialog": "INSIGNIFICENT WOLF . . . \n\nTHIS NATURE NODE IS MINE ! ! !",
+    "interaction_type": "next",
     "target_id": "dwoodfort3_114"
   },
   {
     "id": "dwoodfort3_114",
     "speaker": "Narrator",
-    "portrait": "",
     "side": "right",
     "dialog": "The Direwolf leaps again upon the surprised Ugress, ferociously biting into her, and tear her body apart, first he bites into her spellcasting arm, and tears it away, then bites into her neck, and tears her head off...",
     "interaction_type": "next",
@@ -4699,7 +4878,6 @@
   {
     "id": "dwoodfort3_115",
     "speaker": "Narrator",
-    "portrait": "",
     "side": "right",
     "dialog": "Then the mighty Direwolf collapses to the ground... dead.",
     "interaction_type": "next",
@@ -4708,7 +4886,6 @@
   {
     "id": "dwoodfort3_116",
     "speaker": "Narrator",
-    "portrait": "",
     "side": "right",
     "dialog": "The spell of the Ugress have lifted off the garrisoned troops.\n\nFigures and faces pop out of the huts, slightly confused in their new state, is the Geas finally lifted?",
     "interaction_type": "next",
@@ -4717,7 +4894,6 @@
   {
     "id": "dwoodfort3_117",
     "speaker": "Narrator",
-    "portrait": "",
     "side": "right",
     "dialog": "Hogfather appears out of a nearby hut.",
     "interaction_type": "next",

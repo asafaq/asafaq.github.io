@@ -197,6 +197,7 @@
 		  "avoidTypes": [],
 		  "weight": 5
 		},
+	  "dialog": 1,
       "race": "Elf",
       "role": "Swordmage",
       "hp_die": 10,
@@ -283,6 +284,7 @@
       "top": "300px",
       "left": "380px",
       "location": 1,
+	  "dialog": 1,
       "race": "Half-Elf",
       "role": "Green Knight",
       "subrole": "Oath of the Ancients",
@@ -293,7 +295,7 @@
       "wisdom_mod": 1,
       "intelligence_mod": -3,
       "charisma_mod": 2,
-      "alignment": "Neutral",
+      "alignment": "Good",
       "level": 3,
       "sex": 0,
       "size": "",
@@ -307,10 +309,7 @@
 		  { "item": null, "qty": 0, "locked": false },
 		  { "item": null, "qty": 0, "locked": false }
 		],
-      "traits": [
-        "",
-        ""
-      ],
+      "traits": [],
       "notes": "Petrified, shrine warden."
     },
     "adv_Lurch": {
@@ -1286,6 +1285,12 @@
       "desc": "A sea-faring warrior.",
       "Traits": [
 	    "Navigation, Sea"
+		]
+    },
+    "Green Knight": {
+      "desc": "A Paladin sworn to protect nature and wilderness.",
+      "Traits": [
+	    "Speak with Animals"
 		]
     }
   },

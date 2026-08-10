@@ -55,10 +55,16 @@ function queueStatus(messages, interval = 4000) {
     statusIndex = 0;
 
     function rotate() {
-        if (statusQueue.length === 0) return;
+        if (statusIndex >= statusQueue.length) return;
+
         pushStatus(statusQueue[statusIndex]);
-        statusIndex = (statusIndex + 1) % statusQueue.length;
-        setTimeout(rotate, interval);
+        statusIndex++;
+
+        // only schedule the next one if there are messages remaining
+        if (statusIndex < statusQueue.length) {
+            setTimeout(rotate, interval);
+        }
+        // after the last message we simply stop – nothing else runs
     }
 
     rotate();
@@ -67,7 +73,7 @@ function queueStatus(messages, interval = 4000) {
 const DEFAULT_STATUS = "Ready.";
 
 //this pushStatus replaces Alert, it shows in the top status line.
-function pushStatus(message, duration = 5000) {
+function pushStatus(message, duration = 8000) {
     const bar = document.querySelector(".status-bar");
     const textEl = bar?.querySelector(".status-bar-text");
     if (!bar || !textEl) return;
@@ -135,6 +141,10 @@ function getHelperMessages(player) {
             message: "You still have to devise a plan how to defeat the Ugress. Return to Awetruce for console."
         },
         {
+            condition: () => m.dwood_fort2 === 1 && m.dwood_fort1 === 2,
+            message: "Awetruce will confront the Ugress together with you."
+        },
+        {
             condition: () => m.dwood_fort2 === 3 && m.dwood_fort1 === 3,
             message: "Confront the Ugress in the main Fort."
         },
@@ -148,7 +158,7 @@ function getHelperMessages(player) {
     const messages = rules
         .filter(rule => rule.condition())
         .map(rule => rule.message);
-
+	console.log(messages)
     // If nothing matched, give a default
     if (messages.length === 0) {
        // messages.push("No messages.");
@@ -472,7 +482,7 @@ ${`
 			 player?.missions?.dwood_1 === 2) ? 'mapLight' : ''}"
          data-node="dwood_platform"
          style="position:absolute; top:318px; left:400px; transform:scale(0.35); z-index:10;">
-         <img src="/assets/missions/stone_pedestal.png">
+         <img src="/assets/missions/stone_pedestal_wolf.png">
     </div>
 	
 	
@@ -601,7 +611,7 @@ ${`
     <div id="dwood_fire"
 		 class="poi ${
 			 (player?.missions?.dwood_fort1 === 0 ||
-			 player?.missions?.dwood_1 === 2) ? 'mapLight' : ''}"
+			 player?.missions?.dwood_1 === 3) ? 'mapLight' : ''}"
          data-node="dwood_fire"
          style="position:absolute; top:150px; left:290px; transform:scale(0.75); z-index:10;">
          <img src="/assets/missions/forest_fire.png">
@@ -707,8 +717,8 @@ ${`
 	  <div style="padding: 20px; font-family: Arial;">
 
 		<h2>Your Wallet</h2>
+		<h2>Currently the coin server only runs locally</h2>
 		<div id="coinServerStatus">Coin server: checking…</div>
-		<h3>Currently this page only runs when the backend coin server has been turned on</h3>
 
 		<div id="coinCountBox" 
 			 style="font-size: 20px; margin-bottom: 20px;">
@@ -752,8 +762,9 @@ ${`
     </div>
 
 	  </div>
+	`,
+	book: `<div id="book-container"></div>
 	`
-
 
     // other pages...
   };
@@ -968,7 +979,6 @@ document.addEventListener("dragstart", e => {
 let selectedPatronId = null;
 let isDragging = false;
 
-// Helper functions
 function selectPatron(advId) {
     const patron = player.patrons[advId];
 
@@ -1185,7 +1195,6 @@ async function checkCoinServer() {
 
 async function loadPage(page) {
 	console.log(`called loadPage ${page}`);
-	console.log(player?.missions?.green_2keys);
   if (!player) {
     return; // or show login UI
   }
@@ -1196,6 +1205,7 @@ main.innerHTML = typeof pages[page] === "function"
     : pages[page] || "<p>Unknown page</p>";
 
   if (page === "guild") {
+	console.log(`called  guild`);
 	patronList = getVisiblePatrons().map(p => getHydratedAdventurer(p.id));
 
 	  // RESET ALL SEATS BEFORE PLACING ANYONE
@@ -1404,7 +1414,7 @@ main.innerHTML = typeof pages[page] === "function"
 	  // Check coin server status
 	  checkCoinServer();
 	  // Load coin count
-	  getActiveCoins(user);
+	  await getActiveCoins(user);
 
 	  // Attach mint button
 	  const btn = document.getElementById("mintButton");
@@ -1421,11 +1431,14 @@ main.innerHTML = typeof pages[page] === "function"
 	  };
 	}
 
+
 if (page === "mission_dwood_1") {
     document.getElementById("helper-button").onclick = () => {
-
+		console.log("helper clicked before cooldown")
         if (helperCooldown) return; // ignore spam clicks
         helperCooldown = true;
+		
+		console.log("helper clicked after cooldown")
 
         const msgs = getHelperMessages(player);
         queueStatus(msgs);
@@ -1433,11 +1446,68 @@ if (page === "mission_dwood_1") {
         // unlock after rotation finishes
         setTimeout(() => {
             helperCooldown = false;
-        }, msgs.length * 8000); // 4 seconds per message
+        }, msgs.length * 2000); // 4 seconds per message
     };
-}
+	}
 	
+// if (page === "book") {
+		// loadBook()
+        //show the book page template
+        // document.body.innerHTML = pages.book;
+
+        // document.getElementById("book-container").innerHTML = html;
+
+    // }
   evaluateNotices()
+}
+
+// function loadBook() {
+    // lorePromise = fetch("book.json")
+        // .then(r => r.json())
+        // .then(json => {
+            // bookData = json;
+            // console.log("book loaded.");
+        // });
+// }
+function renderPreciousMetalsPage(data, unlocked = []) {
+  //import bookData from './book.json';
+  const preciousMetals = bookData["Precious Metals"];
+
+  const metals = Object.entries(data);
+
+  return `
+  <div class="book-page">
+
+    <div class="page-header">
+      <h1>Precious Metals</h1>
+      <div class="page-subtitle">An Overview of Rare and Valuable Materials</div>
+    </div>
+
+    <div class="page-section">
+      <h2>Known Precious Metals</h2>
+
+      <ul class="metal-list">
+        ${metals.map(([name, desc]) => {
+          const isLocked = !unlocked.includes(name);
+
+          return `
+            <li class="metal-entry ${isLocked ? "locked" : ""}">
+              <span class="metal-name">${name}</span>
+              <span class="metal-desc">
+                ${isLocked ? `<span class="locked-text">[Information Locked]</span>` : desc}
+              </span>
+            </li>
+          `;
+        }).join("")}
+      </ul>
+    </div>
+
+    <div class="page-footer">
+      <span class="page-note">Some knowledge must be earned.</span>
+    </div>
+
+  </div>
+  `;
 }
 
 function initContractsPage() {

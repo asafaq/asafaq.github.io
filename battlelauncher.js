@@ -32,9 +32,12 @@ window.addEventListener("message", async (event) => {
                 
                 if (player && player.patrons && player.patrons[key]) {
                     const patron = player.patrons[key];
-                    patron.currentHP = pc.hp;
-                    
-                    //if (pc.hp <= 0) patron.status = 'injured';
+                    //sync hp and available skills after fight.
+					patron.currentHP = pc.hp;
+					
+					if (pc.skills) {
+						patron.skills = pc.skills;
+					}
 
                     if (typeof patron.Exp === 'undefined') patron.Exp = 0;
                     if (!patron.Level) patron.Level = 1;
@@ -227,6 +230,7 @@ const CLASS_REGISTRY = {
     warrior:    { table: "warrior",   hpStyle: "warrior" },
     paladin:    { table: "warrior",   hpStyle: "warrior" },
     "fallen paladin":    { table: "warrior",   hpstyle: "warrior" },
+    "green knight":    { table: "warrior",   hpstyle: "warrior" },
     barbarian:  { table: "warrior",   hpStyle: "warrior" },
     fighter:    { table: "warrior",   hpStyle: "warrior" },
     brute:    	{ table: "warrior",   hpStyle: "warrior" },
@@ -609,6 +613,7 @@ async function launchBattle(encounterKey) {
 				cha: hydrated.charisma_mod
 			},
 			prof: hydrated.prof,
+			skills: hydrated.skills || {},
 			traits: hydrated.traits || [],
 			inventory: hydrated.inventory || [],
 
@@ -679,10 +684,10 @@ function getPCPosition(index) {
         { x: 0, y: 6 }, // 6th character (Index 5)
         { x: 0, y: 7 }, // 7th character 
         { x: 0, y: 3 }, // 8th character 
-        { x: 0, y: 8 }, // 9th character 
-        { x: 0, y: 2 }, // 10th character 
-        { x: 0, y: 9 }, // 11th character 
-        { x: 0, y: 1 }  // 12th character 
+        { x: 1, y: 7 }, // 9th character 
+        { x: 1, y: 3 }, // 10th character 
+        { x: 0, y: 8 }, // 11th character 
+        { x: 0, y: 2 }  // 12th character 
     ];
 
     if (index < defaultSlots.length) {

@@ -317,7 +317,7 @@ html, body {
 }
 
 .login-box button {
-    width: 95%;
+    width: 90%;
     padding: 10px;
     background: #4CAF50;
     border: none;
@@ -325,6 +325,9 @@ html, body {
     color: white;
     font-size: 16px;
     cursor: pointer;
+    margin-left: auto;
+    margin-right: auto;
+    box-sizing: border-box;
 }
 
 .login-box button:hover {
@@ -520,6 +523,22 @@ img:not([src]) {
   display: none; /* hidden by default */
   z-index: 20;
 }
+
+#helper-button {
+    position: absolute;
+    top: 2px;      /* adjust as needed */
+    left: 2px;     /* adjust as needed */
+    padding: 10px 16px;
+    background: #4a90e2;
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    display: block;  /* hidden by default */
+    z-index: 30;    /* above map */
+}
+
+
 #continue-mission-A {
   position: absolute;
   top: 593px;
@@ -1229,4 +1248,28 @@ img:not([src]) {
 @keyframes twinkle {
     0%, 100% { transform: scale(0.4); opacity: 0.5; }
     50%      { transform: scale(1.4); opacity: 1; }
+}
+
+#coinServerStatus {
+  padding: 6px 12px;
+  font-weight: 700;
+  font-size: 16px;
+  border-radius: 6px;
+  display: inline-block;
+  margin-bottom: 10px;
+  transition: all 0.2s ease;
+}
+
+/* Online */
+#coinServerStatus.online {
+  background-color: #87A987;   /* bright green */
+  color: #ffffff;              /* white text */
+  border: 5px solid #606C38;   /* darker green border */
+}
+
+/* Offline */
+#coinServerStatus.offline {
+  background-color: #ffffff;   /* white background */
+  color: #e74c3c;              /* strong red text */
+  border: 2px solid #e74c3c;   /* red border */
 }

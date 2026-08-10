@@ -1,0 +1,10 @@
+{
+  "Rules": {},
+  "Precious Metals": {
+    "Copper": "Mostly trades as raw bullions. Use mostly in industry for producing liquid containers, metal coating for finished products, and mixed in tougher alloys.",
+    "Silver": "Valueable enough to be minted in coins and traded bearing the king's crest.",
+    "Gold": "An overvalued metal, its absense is spread due to the greed of vile draconian monsters who hide it in their caverns.",
+    "Electrum": "A precious alloy traded in tablet-like coins."
+  },
+  "Monsters": {}
+}
