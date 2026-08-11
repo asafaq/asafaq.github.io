@@ -1,7 +1,18 @@
 // http://localhost:3000/coins/active/1
 // http://localhost:3000/coins/spent/1
 
+const ENABLE_COIN = false;
+
+function coinGuard() {
+  if (!ENABLE_COIN) {
+    console.warn("Coin system is disabled.");
+    return false;
+  }
+  return true;
+}
+
 async function getActiveCoins(user) {
+  if (!coinGuard()) return [];
   try {
     const response = await fetch(`http://localhost:3000/coins/active/${user}`);
     const coins = await response.json();
@@ -34,6 +45,7 @@ async function getActiveCoins(user) {
 //getActiveCoins();
 
 async function mintCoin(user) {
+  if (!coinGuard()) return [];
   const response = await fetch("http://localhost:3000/coins/mint", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -47,6 +59,7 @@ async function mintCoin(user) {
 //mintCoin();
 
 async function mintCoins(user, amount) {
+  if (!coinGuard()) return [];
   if (!amount || amount < 1) {
     alert("Please enter a valid amount.");
     return;
@@ -66,6 +79,7 @@ async function mintCoins(user, amount) {
 
 
 async function spendCoins(user, amount, note) {
+  if (!coinGuard()) return [];
   if (!amount || amount < 1) {
     alert("Please enter a valid amount.");
     return;
@@ -96,6 +110,7 @@ async function spendCoins(user, amount, note) {
 }
 
 async function transferCoin(fromUser, coinId, toUser) {
+  if (!coinGuard()) return [];
   //const fromUser = player.id;
 
   const response = await fetch("http://localhost:3000/coins/transfer", {
