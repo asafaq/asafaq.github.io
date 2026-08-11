@@ -95,6 +95,15 @@
     "options": []
   },
   {
+    "id": "Amyssa2",
+    "dialog": "We agree.",
+    "speaker": ["Amyssa", "Guild Master"],
+    "portrait": ["/assets/patrons/amyssa_l.png", "/assets/guild/guild_master.png"],
+    "side": ["right", "left"],
+    "interaction_type": "next",
+    "target_id": "patronend"
+  },
+  {
     "id": "Amyssa1",
     "speaker": "Amyssa",
     "portrait": "/assets/patrons/amyssa_l.png",
@@ -105,7 +114,7 @@
     "portrait2": "/assets/guild/guild_master.png",
     "dialog2": "......................",
 	"speaker3": "Amyssa",
-    "dialog3": "I'm busy\n\n<scribbles>",
+    "dialog3": "I'm busy...\n\n<scribbles>",
     "portrait3": "/assets/patrons/amyssa_l.png",
     "side3": "right",
     "interaction_type": "next",
@@ -2895,43 +2904,24 @@
   },
   {
     "id": "green3_222",
-    "speaker": "Hogmother",
-    "portrait": "/assets/patrons/hogmother.png",
-    "side": "left",
+    "speaker": ["Hogmother", "Hogperson"],
+    "portrait": ["/assets/patrons/hogmother.png", "/assets/patrons/hogperson.png"],
+    "side": ["left", "right"],
     "dialog": "???",
     "interaction_type": "next",
     "target_id": "green3_223"
   },
   {
     "id": "green3_223",
-    "speaker": "Hogperson",
-    "portrait": "/assets/patrons/hogperson.png",
-    "side": "left",
+    "speaker": ["Bragain", "Claudio"],
+    "portrait": ["/assets/patrons/dwarven_miner.png", "/assets/patrons/Claudio.png"],
+    "side": ["left", "right"],
     "dialog": "???",
     "interaction_type": "next",
     "target_id": "green3_224"
   },
   {
     "id": "green3_224",
-    "speaker": "Bragain",
-    "portrait": "/assets/patrons/dwarven_miner.png",
-    "side": "left",
-    "dialog": "???",
-    "interaction_type": "next",
-    "target_id": "green3_225"
-  },
-  {
-    "id": "green3_225",
-    "speaker": "Claudio",
-    "portrait": "/assets/patrons/Claudio.png",
-    "side": "right",
-    "dialog": "???",
-    "interaction_type": "next",
-    "target_id": "green3_226",
-    "options": []
-  },
-  {
-    "id": "green3_226",
     "speaker": "Amyssa",
     "portrait": "/assets/patrons/amyssa_l.png",
     "side": "right",

@@ -459,3 +459,66 @@
 .hidden {
   display: none;
 }
+
+#skill-box {
+    position: absolute;
+    z-index: 9999;
+    padding: 0;
+	left: 100px;
+	top: 200px;
+}
+
+#skill-box-inner {
+    padding: 20px;
+    border-radius: 10px;
+    font-family: sans-serif;
+    color: white;
+    border: 3px solid #aaa;
+}
+
+/* Themes */
+.skill-theme-holy {
+    background: #9e7816;
+    border-color: gold;
+}
+
+.skill-theme-nature {
+    background: #003a00;
+    border-color: #00cc44;
+}
+
+.skill-theme-chaos {
+    background: #3a0000;
+    border-color: #cc0033;
+}
+
+/* Confirm button */
+#skill-box-confirm {
+    width: 45%;
+    padding: 8px;
+    background: #4caf50;
+    border: 1px solid #333;   /* 1px border */
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.cancel-btn {
+    background-color: #c0392b;
+    width: 45%;
+    color: white;
+    padding: 8px 16px;
+    border: 1px solid #333;   /* 1px border */
+    border-radius: 6px;
+    margin-left: 10px;
+}
+
+.skill-target-info strong {
+    color: #444;
+}
+
+.skill-target-info {
+    margin-bottom: 10px;
+    line-height: 1.4;
+}

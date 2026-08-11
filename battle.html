@@ -9,6 +9,7 @@
 
 </head>
 <body>
+
 <div id="confirm-modal" class="confirm-modal hidden">
   <div class="confirm-box">
     <div id="confirm-message"></div>
@@ -24,8 +25,21 @@
 	<div id="m-choices-container"></div>
 </div>
 <div id="screen-wrapper">
-<div id="screen">
 
+<div id="screen">
+	<div id="skill-box" style="display:none;">
+		<div id="skill-box-inner">
+			<h1 id="skill-box-title"></h1>
+
+			<div id="skill-box-content"></div>
+
+
+			<div class="skill-box-buttons">
+				<button id="skill-box-confirm">Confirm</button>
+				<button id="skill-box-cancel" class="cancel-btn">Cancel</button>
+			</div>
+		</div>
+	</div>
     <div id="grid">
         <div class="grid-overlay"></div>
         <div id="active-ring" class="active-ring"></div>
@@ -91,7 +105,10 @@ let staticObstacles = [],
     turnIndex = 0,
 	pendingReactionPanels = 0,
 	currentAttackType = null;
-	
+	 isLayOnHandsTargeting = false;
+	 layOnHandsUser = null;
+	 layOnHandsAmount = 0;
+	 layOnHandsCure = false; 
 
 fetch('/battle_dialog.json')
   .then(r => r.json())
@@ -302,7 +319,81 @@ async function init() {
 		if (staticObstacles.some(o => o.x === cx && o.y === cy)) {
 			cell.classList.add("obstacle");
 		}
-		cell.onclick = () => {
+		cell.onclick = async () => {
+			// ⭐ LAY ON HANDS TARGETING
+			
+			console.log("LayOnHands active:", isLayOnHandsTargeting);
+			if (isLayOnHandsTargeting) {
+				const target = findUnitAt(cx, cy);
+				console.log("Clicked coords:", cx, cy);
+				console.log("Caster coords:", layOnHandsUser.x, layOnHandsUser.y);
+				console.log("findUnitAt result:", target);
+
+				if (!target || target.type !== "pc") {
+					Bus.emit('LOG', "Invalid Lay on Hands target.");
+					isLayOnHandsTargeting = false;
+					layOnHandsUser = null;
+					return;
+				}
+
+				const distance = getChebyshevDistance(layOnHandsUser, target);
+				if (distance !== 1 && distance !== 0) {
+					Bus.emit('LOG', "Target is not in melee range.");
+					isLayOnHandsTargeting = false;
+					layOnHandsUser = null;
+					return;
+				}
+
+				const pool = layOnHandsUser.skills.layonhands;
+				const missing = target.maxHp - target.hp;
+
+				const canCure = target.status?.poison || target.status?.disease;
+				const cureChecked = canCure ? true : false;
+				const cureDisabled = pool < 5;
+
+				console.log("Opening skill box now...");
+				showDMScreen();
+				let statusText = "";
+
+				if (target.status?.poison) statusText += "Poisoned ";
+				if (target.status?.disease) statusText += "Diseased ";
+
+				statusText = statusText.trim();
+				if (statusText === "") statusText = "Healthy";
+
+				const result = await skillBox(
+					"Holy",
+					null, null,
+					true, true,
+					{
+						title: "Lay On Hands",
+						pool: pool,
+						targetName: target.name,
+						targetHp: target.hp,
+						targetMaxHp: target.maxHp,
+						statusText: statusText,
+						intLabel: "Heal Amount:",
+						min: 1,
+						max: Math.min(pool, missing),
+						value: Math.min(pool, missing),
+						checkboxLabel: "Cure poison/disease (cost 5)",
+						checkboxChecked: cureChecked,
+						checkboxDisabled: cureDisabled
+					}
+				);
+				hideDMScreen();
+				if (result.cancelled) {
+					Bus.emit('LOG', "Lay On Hands cancelled.");
+					isLayOnHandsTargeting = false;
+					layOnHandsUser = null;
+					return;
+				}
+				handleLayOnHands(layOnHandsUser, target, result.amount, result.checked);
+				isLayOnHandsTargeting = false;
+				layOnHandsUser = null;
+				return;
+			}
+					
 			// ⭐ HEALING TARGET SELECTION
 			if (isHealing) {
 				const target = findUnitAt(cx, cy);
@@ -474,7 +565,7 @@ async function init() {
 function update() {
     if (isReactionPhase) return; 
 	console.log(`Running update() at round ${round}`);
-	
+
     const active = units[initiativeOrder[turnIndex].index];
     if (!active) return;
 
@@ -567,6 +658,9 @@ function update() {
     if (canHeal(active.role) && !active.isRaging) {
         createBtn(bar, "💚 Heal", startHealTargeting);
     }
+	if (active.skills && active.skills.layonhands > 0) {
+		createBtn(bar, "🤲 Lay on Hands", startLayOnHandsTargeting, "", "", "Holy");
+	}
 	if (
 		active.traits?.includes("Comedian") &&
 		!isAnyBardSinging()
@@ -578,6 +672,95 @@ function update() {
 
     checkVictory();
 }
+
+function skillBox(theme, x, y, integerNeeded, checkboxNeeded, defaults = {}) {
+    return new Promise(resolve => {
+
+        const box = document.getElementById("skill-box");
+        const inner = document.getElementById("skill-box-inner");
+        const content = document.getElementById("skill-box-content");
+        const title = document.getElementById("skill-box-title");
+
+        // Reset content
+        content.innerHTML = "";
+		content.innerHTML = `
+			<div class="skill-target-info">
+				<strong>Available:</strong> ${defaults.pool}
+				<strong>Target:</strong> ${defaults.targetName}  
+				<br>
+				<strong>HP:</strong> ${defaults.targetHp}/${defaults.targetMaxHp}
+				<strong>Status:</strong> ${defaults.statusText}
+			</div>
+		`;
+
+        // Apply theme
+        inner.className = "";
+        if (theme === "Holy") inner.classList.add("skill-theme-holy");
+        if (theme === "Nature") inner.classList.add("skill-theme-nature");
+        if (theme === "Chaos") inner.classList.add("skill-theme-chaos");
+		// size
+		inner.style.width = x + "px";
+		inner.style.height = y + "px";
+
+        // Title
+        title.innerText = defaults.title || "Skill Input";
+
+        // Integer input
+        let intInput = null;
+        if (integerNeeded) {
+            intInput = document.createElement("input");
+            intInput.type = "number";
+            intInput.min = defaults.min || 1;
+            intInput.max = defaults.max || 999;
+            intInput.value = defaults.value || defaults.max || 1;
+            intInput.style.width = "80px";
+            intInput.style.marginBottom = "10px";
+
+            const label = document.createElement("label");
+            label.innerText = defaults.intLabel || "Amount:";
+            label.appendChild(document.createElement("br"));
+            label.appendChild(intInput);
+
+            content.appendChild(label);
+        }
+
+        // Checkbox
+        let checkbox = null;
+        if (checkboxNeeded) {
+            checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
+            checkbox.checked = defaults.checkboxChecked || false;
+            checkbox.disabled = defaults.checkboxDisabled || false;
+
+            const label = document.createElement("label");
+            label.style.display = "block";
+            label.style.marginTop = "10px";
+            label.appendChild(checkbox);
+            label.appendChild(document.createTextNode(" " + (defaults.checkboxLabel || "Option")));
+
+            content.appendChild(label);
+        }
+
+        // Show box
+        box.style.display = "block";
+
+        // Confirm button
+        document.getElementById("skill-box-confirm").onclick = () => {
+            box.style.display = "none";
+
+            resolve({
+                amount: intInput ? parseInt(intInput.value) : null,
+                checked: checkbox ? checkbox.checked : null
+            });
+        };
+		document.getElementById("skill-box-cancel").onclick = () => {
+			box.style.display = "none";
+			resolve({ cancelled: true });
+		};
+
+    });
+}
+
 
 function autoWinBattle() {
     // Set all monsters to 0 HP
@@ -1317,6 +1500,46 @@ function applyHeal(healer, target) {
 
     Bus.emit('LOG', `💚 ${healer.name} heals ${target.name} for ${target.hp - before} HP.`);
 
+    update();
+}
+
+async function startLayOnHandsTargeting() {
+    const u = units[initiativeOrder[turnIndex].index];
+
+    if (!u.hasAction) return;
+
+    isLayOnHandsTargeting = true;
+    layOnHandsUser = u;
+
+    Bus.emit('LOG', `${u.name} prepares Lay on Hands... select an adjacent ally`);
+}
+
+function handleLayOnHands(attacker, target, amount, cure) {
+
+    let totalCost = amount;
+
+    if (cure) {
+        totalCost += 5;
+        target.status.poison = false;
+        target.status.disease = false;
+
+        Bus.emit('LOG', `✨ ${attacker.name} cures all disease and poison from ${target.name}!`);
+    }
+
+    if (totalCost > attacker.skills.layonhands) {
+        Bus.emit('LOG', `❌ Not enough Lay on Hands points.`);
+        return;
+    }
+
+    attacker.skills.layonhands -= totalCost;
+
+    // Healing
+    const before = target.hp;
+    target.hp = Math.min(target.maxHp, target.hp + amount);
+
+    Bus.emit('LOG', `💚 ${attacker.name} heals ${target.name} for ${target.hp - before} HP.`);
+
+    attacker.hasAction = false;
     update();
 }
 

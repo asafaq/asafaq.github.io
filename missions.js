@@ -176,11 +176,19 @@ DISABLED IF:
 */
 
 function createDialogWindow(dlg, index = 0) {
+    const isDual = dlg.portrait && dlg.portrait.length > 1;
+
     const div = document.createElement("div");
-    div.className = `m-glass-panel m-side-${dlg.side}`;
+    div.className = `m-glass-panel ${isDual ? "m-glass-panel-dual" : ""}`;
 
     div.innerHTML = `
-        ${dlg.portrait ? `<img src="${dlg.portrait}" class="m-portrait">` : ''}
+        ${dlg.portrait && dlg.portrait.length
+            ? dlg.portrait.map((p, idx) => {
+                const side = dlg.side[idx] || dlg.side[0] || "left";
+                return `<img src="${p}" class="m-portrait m-portrait-${side}">`;
+              }).join("")
+            : ""
+        }
         <div class="m-text-area">
             ${dlg.speaker ? `<div class="m-speaker-name">${dlg.speaker}</div>` : ''}
             <div class="m-typewriter" id="typewriter-${index}"></div>
@@ -189,6 +197,7 @@ function createDialogWindow(dlg, index = 0) {
 
     return div;
 }
+
 
 async function renderScene(sceneId) {
 
@@ -243,14 +252,30 @@ async function renderScene(sceneId) {
 			const key = index === 1 ? "dialog" : `dialog${index}`;
 			if (!scene[key]) break; // stop when no more dialogs
 
-			dialogs.push({
-				text: scene[key],
-				speaker: scene[`speaker${index}`] || scene.speaker || null,
-				portrait: index === 1
-					? scene.portrait
-					: scene[`portrait${index}`] || null,
-				side: scene[`side${index}`] || scene.side || "left"
-			});
+				dialogs.push({
+					text: scene[key],
+					speaker: scene[`speaker${index}`] || scene.speaker || null,
+
+					// ⭐ Portrait normalization (Step 2)
+					portrait: (() => {
+						const raw = index === 1
+							? scene.portrait
+							: scene[`portrait${index}`];
+
+						if (!raw) return null;
+						return Array.isArray(raw) ? raw : [raw];
+					})(),
+
+					side: (() => {
+						const raw = index === 1
+							? scene.side
+							: scene[`side${index}`];
+
+						if (!raw) return ["left"]; // default
+						return Array.isArray(raw) ? raw : [raw];
+					})()
+				});
+
 
 			index++;
 		}
@@ -525,18 +550,35 @@ function createBtn(text, targetId, color = null, isDisabled = false, frustration
         btn.style.textShadow = shadow;
     }
 
-    btn.onclick = () => {
-        if (isDisabled && frustrationText) {
-            const display = document.getElementById('m-frustration-display');
-            clearTimeout(frustrationTimeout);
-            display.innerText = frustrationText;
-            frustrationTimeout = setTimeout(() => {
-                display.innerText = "";
-            }, 3000);
-        } else {
-            renderScene(targetId);
-        }
-    };
+	btn.onclick = () => {
+		if (isDisabled && frustrationText) {
+
+			let display = document.getElementById('m-frustration-display');
+
+			// If missing, create it inside #m-viewport
+			if (!display) {
+				display = document.createElement('div');
+				display.id = 'm-frustration-display';
+				display.className = 'm-frustration-display';
+
+				const viewport = document.getElementById('m-viewport');
+				viewport.appendChild(display);
+			}
+
+			clearTimeout(frustrationTimeout);
+			display.innerText = frustrationText;
+
+			frustrationTimeout = setTimeout(() => {
+				display.innerText = "";
+			}, 3000);
+
+			return;
+		}
+
+		renderScene(targetId);
+	};
+
+
     
     document.getElementById('m-choices-container').appendChild(btn);
 }
