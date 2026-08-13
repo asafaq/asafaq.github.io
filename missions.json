@@ -1387,13 +1387,28 @@
     "target_id": "green2_102"
   },
   {
+    "id": "green2_102bgn",
+    "speaker": "Bragain",
+    "portrait": "/assets/patrons/dwarven_miner.png",
+    "side": "left",
+    "dialog": "Argh, outdoors again. What I wouldn't give to be deep underground in my workshop surrounded by my clan again.",
+    "interaction_type": "next",
+    "target_id": "green2_103"
+  },
+  {
     "id": "green2_102",
     "speaker": "Narrator",
     "portrait": "",
     "side": "left",
     "dialog": "The long winding road by the mountain and the more-mountains is your path, straight up ahead.",
     "interaction_type": "next",
-    "target_id": "green2_103"
+    "target_id": "green2_102bgn",
+	"branches": [
+    {
+      "condition": "party_member",
+      "value": "Bragain",
+      "target_id": "green2_102bgn"
+    }]
   },
   {
     "id": "green2_103",
@@ -1882,7 +1897,7 @@
     "speaker": "Narrator",
     "portrait": "",
     "side": "left",
-    "dialog": "The mother and son greet each other with a warm hug and kisses, and quick word about the letter.",
+    "dialog": "The mother and son greet each other with a warm hug and kisses, and a quick word about the letter.",
     "interaction_type": "next",
     "target_id": "green2_906"
   },
@@ -1988,7 +2003,7 @@
   },
   {
     "id": "green2_917",
-    "speaker": "Lurch",
+    "speaker": "Create",
     "portrait": "/assets/patrons/lurch.png",
     "side": "right",
     "dialog": "Pardon me . . . . . ",
@@ -2006,7 +2021,7 @@
   },
   {
     "id": "green2_919",
-    "speaker": "Lurch",
+    "speaker": "Create",
     "portrait": "/assets/patrons/lurch.png",
     "side": "right",
     "dialog": "It would be wise to not draw any further attention, would you join me out in the alley for further discussion?",
@@ -2042,7 +2057,7 @@
   },
   {
     "id": "green2_923",
-    "speaker": "Lurch",
+    "speaker": "Create",
     "portrait": "/assets/patrons/lurch.png",
     "side": "right",
     "dialog": "Ahem . . . . .\n\nExcuse me for not introducing myself, but I've been eavesdropping on your conversation and couldn't participate in public.",
@@ -2125,7 +2140,7 @@
     "id": "green2_933",
     "speaker": "Hogmother",
     "portrait": "/assets/patrons/hogmother.png",
-    "side": "left",
+    "side": "right",
     "dialog": "That's enough Master Dwarf.",
     "interaction_type": "next",
     "target_id": "green2_934"
@@ -2161,7 +2176,7 @@
     "id": "green2_937",
     "speaker": "Hogmother",
     "portrait": "/assets/patrons/hogmother.png",
-    "side": "left",
+    "side": "right",
     "dialog": "There'll be none of that! Not while Hogfather is in distress and not ever!",
     "interaction_type": "next",
     "target_id": "green2_938"
@@ -2170,7 +2185,7 @@
     "id": "green2_938",
     "speaker": "Hogmother",
     "portrait": "/assets/patrons/hogmother.png",
-    "side": "left",
+    "side": "right",
     "dialog": "We are not traitors!!!",
     "interaction_type": "next",
     "target_id": "green2_939"
@@ -2291,7 +2306,7 @@
     "speaker": "Bragain",
     "portrait": "/assets/patrons/dwarven_miner.png",
     "side": "left",
-    "dialog": "Oh dear Hommond, may the glory of your hammer protect us. I hope we're not straight waltzing to our doom AND our bankrupcy.",
+    "dialog": "Oh dear Hommond, may the glory of your hammer protect us. I hope we're not waltzing straight to our doom AND our bankrupcy.",
     "interaction_type": "next",
     "target_id": "green3_102"
   },
@@ -2608,7 +2623,8 @@
     "speaker": "Colorful Figure",
     "portrait": "/assets/patrons/tonica_L.png",
     "side": "right",
-    "dialog": "Uuugggggggggggghhhhhhhhhhhh\n\nFantastic, I've been trapped in stone for some time now, I owe your clever party a debt. Allow me to introduce myself!\n\nI am Tonica of the woodland realm, taken an Oath of the Ancients, I was set to be a defender of the woods and taken stewardship oh this piece of green land. Alas, vile creatures have gotten a hold on me with this curse of stone.",
+    "dialog": "Uuugggggggggggghhhhhhhhhhhh\n\nFantastic, I've been trapped in stone for some time now, I owe your clever party a debt. Allow me to introduce myself!",
+	"dialog2": "I am Tonica of the woodland realm, taken an Oath of the Ancients, I was set to be a defender of the woods and taken stewardship oh this piece of green land. Alas, vile creatures have gotten a hold on me with this curse of stone.",
     "interaction_type": "next",
     "target_id": "greenshrine2_108"
   },
@@ -2852,7 +2868,7 @@
     "id": "green3_218",
     "speaker": "Awotruce",
     "portrait": "/assets/patrons/direwolf.png",
-    "dialog": "It's been an eternity or so since I've seen such determination.\n\nFine, I will allow you passage in my woods, and I will watch you closely.",
+    "dialog": "It's been an eternity or so since I've seen such determination.\n\nFine, I will allow you passage, and I will watch you closely.",
     "side": "right",
     "interaction_type": "next",
     "target_id": "green3_219"
@@ -3314,7 +3330,7 @@
     "id": "dwood1_152",
     "speaker": "Narrator",
     "portrait": "",
-    "dialog": "The party reaches a central raisen location in the woods, they can  overlook the different paths from here",
+    "dialog": "The party reaches a central risen location in the woods, they can  overlook the different paths from here",
     "side": "right",
     "interaction_type": "next",
     "target_id": "dwood1_153"
@@ -4808,7 +4824,7 @@
     "speaker": "Narrator",
     "portrait": "",
     "side": "right",
-    "dialog": "The Direwolf leaps on the Ugress. Right as she releases a bolt of vile energy in a green blast inאם his chest, and blows the wolf away.\n\nAwetruce have been struck down, and lays to the side in a lifeless heap.",
+    "dialog": "The Direwolf leaps on the Ugress. Right as she releases a bolt of vile energy in a green blast to his chest, and blows the wolf away.\n\nAwetruce have been struck down, and lays to the side in a lifeless heap.",
     "interaction_type": "next",
     "target_id": "dwoodfort3_110"
   },

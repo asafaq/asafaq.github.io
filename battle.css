@@ -1,6 +1,7 @@
     body { margin: 0; background: #121212; color: #eee; display: flex; justify-content: center; font-family: 'Segoe UI', sans-serif; min-height: 100vw ; overflow: auto; }
     #screen { width: 540px; height: 960px; background: #222; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 0 50px #000; position: relative; }
 #screen-wrapper {
+	top: 0px;
     width: 100vw;
     height: 100vh;
     display: flex;
@@ -9,11 +10,7 @@
     overflow: hidden;
 }
 
-#screen {
-    transform-origin: top left;
-}
-
-    #grid { width: 540px; height: 540px; position: relative; background-color: #333; border-bottom: 2px solid #444; flex-shrink: 0; overflow: hidden; background-size: cover; background-position: center; }
+#grid { width: 540px; height: 540px; position: relative; background-color: #333; border-bottom: 2px solid #444; flex-shrink: 0; overflow: hidden; background-size: cover; background-position: center; }
 /*#grid {
     width: 540px;
     height: 540px;
@@ -71,6 +68,10 @@
     background-size: cover;
     background-position: center;
 }
+
+.token_enemy {
+    border: 2px solid grey;
+}
 .no-image-ring {
     border: none !important;
     border-radius: 0 !important; /* optional */
@@ -101,9 +102,9 @@
 
 
 #log-buttons {
-    position: absolute;
-    top: 2px;
-    right: 10px;
+    position: fixed;
+    top: 542px;
+    right: 17px;
     display: flex;
     gap: 6px;
     z-index: 9999; /* stays above everything */
@@ -483,7 +484,7 @@
 }
 
 .skill-theme-nature {
-    background: #003a00;
+    background: #05ad19;
     border-color: #00cc44;
 }
 

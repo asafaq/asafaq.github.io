@@ -237,6 +237,7 @@ async function renderScene(sceneId) {
 
     // --- CLEAR OLD DIALOG WINDOWS ---
     container.innerHTML = "";
+	choiceContainer.innerHTML = '';
 
 	// --- 6. NORMALIZE DIALOGS INTO AN ARRAY ---
 	let dialogs = [];
@@ -363,10 +364,12 @@ isTyping = false;
     // --- 9. RENDER CHOICES ---
     choiceContainer.innerHTML = '';
 
-    if (scene.interaction_type === "next") {
-        createBtn("NEXT >>", scene.target_id);
-        return;
-    }
+	if (scene.interaction_type === "next") {
+		const nextTarget = resolveNextTarget(scene, player);
+		createBtn("NEXT >>", nextTarget);
+		return;
+	}
+
 
     // --- 10. PROCESS OPTIONS (ALL YOUR ORIGINAL LOGIC) ---
     if (scene.options) {
@@ -478,9 +481,69 @@ isTyping = false;
         for (const opt of processedOptions) {
             createBtn(opt.text, opt.target, opt.color, opt.disabled, opt.frustration, opt.shadow);
         }
+		// Reposition dialog container after choices load
+		adjustDialogContainer();
     }
 }
 
+function adjustDialogContainer() {
+    const container = document.getElementById("m-dialog-container");
+    const choiceContainer = document.getElementById("m-choices-container");
+
+    // Example: push dialog container upward so choices are always visible
+    const choiceHeight = choiceContainer.offsetHeight;
+
+    container.style.marginBottom = (choiceHeight - 25) + "px";
+}
+
+function resolveNextTarget(scene, player) {
+    // If no branching rules exist, return default
+	  // "branches": [
+		// {
+		  // "condition": "party_member",
+		  // "value": "Adv_Tonica",
+		  // "target": "Mission0101"
+		// }]
+
+    if (!scene.branches || scene.branches.length === 0) {
+        return scene.target_id;
+    }
+
+    for (const branch of scene.branches) {
+
+        switch (branch.condition) {
+
+            case "party_member":
+				// get location of adv_[branch.value]
+				// equal it to current_party: "party_A"
+				current_party = player.missions.current_mission.current_party
+				PartyMembers = getPartyMembers(current_party) 
+				const names = PartyMembers.map(m => m.name)
+				console.log(names, branch.value);
+					if (names.includes(branch.value)) {
+						console.log(names, branch.target_id);
+					return branch.target_id;}
+                break;
+
+            case "flag":
+                if (player.flags[branch.value] === true) {
+                    return branch.target_id;
+                }
+                break;
+
+            case "variable_equals":
+                if (player.vars[branch.value.name] === branch.value.equals) {
+                    return branch.target_id;
+                }
+                break;
+
+            // Add more condition types here
+        }
+    }
+
+    // Fallback
+    return scene.target_id;
+}
 
 function typewriteMultiple(texts, elementId, callback) {
     let i = 0;
@@ -794,7 +857,7 @@ async function handleMissionEnd(sceneId) {
             buildPartyTraits(partyKey);
 			setPartyStatus(partyKey, "mission")
             Journal.addEntry("You've successfully demoralized a band of Koboldogs.");
-            Journal.addEntry("You've saved Claudio from a cage.");
+            Journal.addEntry("You've saved Claudio from a slaver's cage.");
 			awardManualXP(["Bragain", "Claudio", "Hogperson"], 150);
 			
             loadPage("mission_green_1");
@@ -919,6 +982,8 @@ async function handleMissionEnd(sceneId) {
 			player.missions.green_2keys ??= {};
 			player.missions.green_2keys.path2 ??= {};
 			player.missions.green_2keys.path2 = 1;
+
+            player.missions.green_2 += 1;
 			loadPage("mission_green_2");
 
 		},
@@ -1116,7 +1181,7 @@ async function handleMissionEnd(sceneId) {
             Journal.addEntry("You've emerged out in the Fortress of the Ugress from the sewers, and is ready to face her.");
             player.missions.dwood_fort2 = 3;
 
-			launchBattle("forest_mix_test", () => {
+			launchBattle("forest_mix3", () => {
 				loadPage("mission_dwood_1");
 			});
 		},

@@ -293,7 +293,7 @@
       "strengh_mod": 0,
       "Dexterity_mod": 3,
       "wisdom_mod": 1,
-      "intelligence_mod": -3,
+      "intelligence_mod": -1,
       "charisma_mod": 2,
       "alignment": "Good",
       "level": 3,
@@ -1165,7 +1165,10 @@
         "Undergrounder",
 		"Keen Smell",
 		"Ambusher",
-		"Cursed Bite"
+		"Cursed Bite",
+		"Climber",
+		"Stealthy",
+		"Silverphobic"
       ]
     },
     "Amazon": {

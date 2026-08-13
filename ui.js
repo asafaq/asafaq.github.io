@@ -605,7 +605,7 @@ ${`
 	
 	` : ""}
 	
-    ${player?.missions?.dwood_1 === 5 && player?.missions?.dwood_fort1 === 3 ? `
+    ${player?.missions?.dwood_1 === 5 && player?.missions?.dwood_fort1 === 3 && player?.missions?.dwood_fort2 === 2 ? `
 	
 	    <!-- display the fire in front of the fort -->
     <div id="dwood_fire"
@@ -1168,6 +1168,8 @@ function showTemporaryImage(src) {
 }
 
 async function checkCoinServer() {
+  
+  if (!coinGuard()) return [];
   const statusEl = document.getElementById("coinServerStatus");
 
   try {

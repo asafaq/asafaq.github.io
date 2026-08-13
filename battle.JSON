@@ -126,6 +126,27 @@
       ]
     },
 
+    "tutor_armogre": {
+      "name": "armored_ogre",
+      "map": "green_2",
+      "monsters": [
+        {
+          "id": "armored_ogre",
+          "count": 1,
+          "spawns": [
+            { "x": 7, "y": 5 }
+          ]
+        },
+        {
+          "id": "owlbear",
+          "count": 1,
+          "spawns": [
+            { "x": 6, "y": 8 }
+          ]
+        }
+      ]
+    },
+
 	"forest_mix1": {
 	  "name": "Forest Ambush",
 	  "map": "forest",
@@ -721,6 +742,7 @@
 			"type": "blunt",
 			"#": 2,
 			"hitMod": 3,
+			"range": 2,
 			"damageDie": 4,
 			"damageBonus": 1	},
 			{
@@ -728,9 +750,72 @@
 			"type": "slashing",
 			"#": 1,
 			"hitMod": 3,
+			"range": 2,
 			"damageDie": 8,
 			"damageBonus": 1	}
 			]
+    },
+    "owlbear": {
+      "name": "Owl Bear",
+      "type": "beast",
+      "hp": 59,
+      "maxHp": 59,
+      "speed": 7,
+	  "size": "L",
+	  "stats": {  "dex": 1},
+	  "noImageRing": false,
+	  "xp": 320,
+      "icon": "/assets/monsters/owlbear.png",
+      "color": "#c0392b",
+	  "morale": 19,
+		"ac": 13,
+		"attack": 2,
+		"actions": [
+			{
+			"name": "Rend",
+			"type": "slashing",
+			"#": 2,
+			"range": 2,
+			"hitMod": 7,
+			"damageDie": 10,
+			"damageBonus": 5	},
+			{
+			"name": "Beak Bite",
+			"type": "slashing",
+			"#": 1,
+			"hitMod": 7,
+			"damageDie": 8,
+			"range": 2,
+			"damageBonus": 1	}
+			]
+    },
+    "armored_ogre": {
+      "name": "Armored Ogre",
+      "type": "giant",
+	  "stats": {  "dex": -1},
+      "hp": 94,
+      "maxHp": 94,
+      "speed": 6,
+	  "size": "L",
+	  "range": 2,
+	  "noImageRing": false,
+	  "xp": 750,
+      "icon": "/assets/monsters/armored_ogre.png",
+      "color": "#c0392b",
+	  "morale": 19,
+		"ac": 16,
+		"attack": 1,
+		"actions": [
+			{
+			"name": "Large Spiked Club",
+			"type": "blunt",
+			"#": null,
+			"hitMod": 6,
+			"range": 2,
+			"damageDie": 7,
+			"damageBonus": 5	}
+			],
+	  "silver": 180
     },
     "cambion": {
       "name": "Cambion",
@@ -750,6 +835,7 @@
 			{
 			"name": "Devil Claws",
 			"type": "slashing",
+			"range": 2,
 			"#": null,
 			"hitMod": 10,
 			"damageDie": 12,

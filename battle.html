@@ -347,19 +347,19 @@ async function init() {
 				const pool = layOnHandsUser.skills.layonhands;
 				const missing = target.maxHp - target.hp;
 
-				const canCure = target.status?.poison || target.status?.disease;
+				const canCure = target.statuseffect?.poison || target.statuseffect?.disease;
 				const cureChecked = canCure ? true : false;
 				const cureDisabled = pool < 5;
 
 				console.log("Opening skill box now...");
 				showDMScreen();
-				let statusText = "";
+				let statuseffectText = "";
 
-				if (target.status?.poison) statusText += "Poisoned ";
-				if (target.status?.disease) statusText += "Diseased ";
+				if (target.statuseffect?.poison) statuseffectText += "Poisoned ";
+				if (target.statuseffect?.disease) statuseffectText += "Diseased ";
 
-				statusText = statusText.trim();
-				if (statusText === "") statusText = "Healthy";
+				statuseffectText = statuseffectText.trim();
+				if (statuseffectText === "") statuseffectText = "Healthy";
 
 				const result = await skillBox(
 					"Holy",
@@ -371,7 +371,7 @@ async function init() {
 						targetName: target.name,
 						targetHp: target.hp,
 						targetMaxHp: target.maxHp,
-						statusText: statusText,
+						statuseffectText: statuseffectText,
 						intLabel: "Heal Amount:",
 						min: 1,
 						max: Math.min(pool, missing),
@@ -535,6 +535,9 @@ async function init() {
 		
 		if (u.noImageRing) {
 			t.classList.add("no-image-ring");
+		}		
+		if (u.type !== "pc") {
+			t.classList.add("token_enemy");
 		}
 		// Color
 		t.style.backgroundColor = u.type === 'pc' ? "#3498db" : "#c0392b";
@@ -689,7 +692,7 @@ function skillBox(theme, x, y, integerNeeded, checkboxNeeded, defaults = {}) {
 				<strong>Target:</strong> ${defaults.targetName}  
 				<br>
 				<strong>HP:</strong> ${defaults.targetHp}/${defaults.targetMaxHp}
-				<strong>Status:</strong> ${defaults.statusText}
+				<strong>statuseffect:</strong> ${defaults.statuseffectText}
 			</div>
 		`;
 
@@ -1520,8 +1523,8 @@ function handleLayOnHands(attacker, target, amount, cure) {
 
     if (cure) {
         totalCost += 5;
-        target.status.poison = false;
-        target.status.disease = false;
+        target.statuseffect.poison = false;
+        target.statuseffect.disease = false;
 
         Bus.emit('LOG', `✨ ${attacker.name} cures all disease and poison from ${target.name}!`);
     }

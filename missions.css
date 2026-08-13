@@ -83,8 +83,8 @@
 .m-portrait {
     align-self: flex-start;
     margin-right: 12px;
-    width: 90px;
-    height: 90px;
+    width: 100px;
+    height: 100px;
     flex-shrink: 0;
     border: 1px solid var(--m-neon-blue);
     border-radius: 4px;

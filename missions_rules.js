@@ -793,7 +793,7 @@ const encounterDB = {
             id: "g2_path",
             cr: "*",
             type: "status",
-            weight: 30,
+            weight: 100,
             desc: "The sun is shining, the path is clear, you stride on without interruptions.",
             tags: ["forest"]
         },
