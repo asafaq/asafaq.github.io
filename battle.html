@@ -210,6 +210,113 @@ function showConfirmation(message) {
     });
 }
 
+function expandObstacles(obstacles = []) {
+    const result = [];
+
+    for (const obstacle of obstacles) {
+
+        // -----------------------------------------
+        // Single cell
+        // { cell: [x, y] }
+        // -----------------------------------------
+        if (obstacle.cell) {
+            const [x, y] = obstacle.cell;
+
+            result.push({ x, y });
+            continue;
+        }
+
+
+        // -----------------------------------------
+        // Rectangle
+        // { rect: [x1, y1, x2, y2] }
+        // -----------------------------------------
+        if (obstacle.rect) {
+            const [x1, y1, x2, y2] = obstacle.rect;
+
+            const minX = Math.min(x1, x2);
+            const maxX = Math.max(x1, x2);
+
+            const minY = Math.min(y1, y2);
+            const maxY = Math.max(y1, y2);
+
+            for (let y = minY; y <= maxY; y++) {
+                for (let x = minX; x <= maxX; x++) {
+                    result.push({ x, y });
+                }
+            }
+
+            continue;
+        }
+
+
+        // -----------------------------------------
+        // Horizontal / vertical line
+        // { line: [x1, y1, x2, y2] }
+        // -----------------------------------------
+        if (obstacle.line) {
+            const [x1, y1, x2, y2] = obstacle.line;
+
+            // Horizontal
+            if (y1 === y2) {
+                const minX = Math.min(x1, x2);
+                const maxX = Math.max(x1, x2);
+
+                for (let x = minX; x <= maxX; x++) {
+                    result.push({ x, y: y1 });
+                }
+            }
+
+            // Vertical
+            else if (x1 === x2) {
+                const minY = Math.min(y1, y2);
+                const maxY = Math.max(y1, y2);
+
+                for (let y = minY; y <= maxY; y++) {
+                    result.push({ x: x1, y });
+                }
+            }
+
+            // Invalid diagonal line
+            else {
+                console.warn(
+                    "Obstacle line must be horizontal or vertical:",
+                    obstacle
+                );
+            }
+
+            continue;
+        }
+
+
+        // -----------------------------------------
+        // Backwards compatibility
+        // { x: 3, y: 7 }
+        // -----------------------------------------
+        if (
+            obstacle.x !== undefined &&
+            obstacle.y !== undefined
+        ) {
+            result.push({
+                x: obstacle.x,
+                y: obstacle.y
+            });
+
+            continue;
+        }
+
+
+        // -----------------------------------------
+        // Unknown obstacle format
+        // -----------------------------------------
+        console.warn(
+            "Unknown obstacle format:",
+            obstacle
+        );
+    }
+
+    return result;
+}
 
 async function init() {
 	console.log(`Running init() at round ${round}`);
@@ -247,8 +354,10 @@ async function init() {
         grid.style.backgroundImage = `url('${bgUrl}')`;
 
         // 6. Pull the obstacles array straight from the JSON map object
-        staticObstacles = currentMap ? currentMap.obstacles : [];
-
+        //staticObstacles = currentMap ? currentMap.obstacles : [];
+		staticObstacles = currentMap
+			? expandObstacles(currentMap.obstacles || [])
+			: [];
     } catch (error) {
         console.error("Initialization map loading failed:", error);
         // Secure fallback so the UI renders safely even on error
