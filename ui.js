@@ -763,7 +763,11 @@ ${`
 
 	  </div>
 	`,
-	book: `<div id="book-container"></div>
+	  book: `
+      <div id="book-container">
+      <h1>Lore Book</h1>
+      <div id="lore-sections"></div>
+    </div>
 	`
 
     // other pages...
@@ -1451,65 +1455,67 @@ if (page === "mission_dwood_1") {
         }, msgs.length * 2000); // 4 seconds per message
     };
 	}
-	
-// if (page === "book") {
-		// loadBook()
-        //show the book page template
-        // document.body.innerHTML = pages.book;
 
-        // document.getElementById("book-container").innerHTML = html;
 
-    // }
-  evaluateNotices()
+if (page === "book") {
+  hideRightMenu()
+  fetch("book.json")
+    .then(res => res.json())
+    .then(book => {
+      const container = document.getElementById("lore-sections");
+
+      Object.keys(book).forEach(sectionName => {
+        const sectionData = book[sectionName];
+
+        const sectionTitle = document.createElement("h2");
+        sectionTitle.textContent = sectionName;
+        sectionTitle.style.fontSize = "18px";
+        sectionTitle.style.marginTop = "20px";
+        container.appendChild(sectionTitle);
+
+        Object.keys(sectionData).forEach(itemName => {
+          const itemTitle = document.createElement("div");
+          itemTitle.textContent = itemName;
+          itemTitle.style.cursor = "pointer";
+          itemTitle.style.textDecoration = "underline";
+          itemTitle.style.margin = "4px 0";
+
+          const itemContent = document.createElement("div");
+          itemContent.textContent = sectionData[itemName];
+          itemContent.style.display = "none";
+          itemContent.style.marginLeft = "15px";
+          itemContent.style.fontSize = "14px";
+
+          // Toggle display
+          itemTitle.addEventListener("click", () => {
+            itemContent.style.display =
+              itemContent.style.display === "none" ? "block" : "none";
+          });
+
+          // ⭐ EASTER EGG: Electrum one-time reward
+          if (itemName.toLowerCase() === "electrum") {
+            itemTitle.addEventListener("click", async () => {
+              if (!player.data.electrumRewardGiven) {
+                player.data.electrumRewardGiven = true;
+
+                // Give the player 1 Electrum coin
+				startMissionSystem("Counterfeit_Electrum1")
+                //alert("You discovered a hidden secret! You received 1 Electrum coin.");
+				
+                addCounterfeitElectrum(1);
+				await storage.savePlayer(player);
+              }
+            });
+          }
+
+          container.appendChild(itemTitle);
+          container.appendChild(itemContent);
+        });
+      });
+    });
 }
 
-// function loadBook() {
-    // lorePromise = fetch("book.json")
-        // .then(r => r.json())
-        // .then(json => {
-            // bookData = json;
-            // console.log("book loaded.");
-        // });
-// }
-function renderPreciousMetalsPage(data, unlocked = []) {
-  //import bookData from './book.json';
-  const preciousMetals = bookData["Precious Metals"];
-
-  const metals = Object.entries(data);
-
-  return `
-  <div class="book-page">
-
-    <div class="page-header">
-      <h1>Precious Metals</h1>
-      <div class="page-subtitle">An Overview of Rare and Valuable Materials</div>
-    </div>
-
-    <div class="page-section">
-      <h2>Known Precious Metals</h2>
-
-      <ul class="metal-list">
-        ${metals.map(([name, desc]) => {
-          const isLocked = !unlocked.includes(name);
-
-          return `
-            <li class="metal-entry ${isLocked ? "locked" : ""}">
-              <span class="metal-name">${name}</span>
-              <span class="metal-desc">
-                ${isLocked ? `<span class="locked-text">[Information Locked]</span>` : desc}
-              </span>
-            </li>
-          `;
-        }).join("")}
-      </ul>
-    </div>
-
-    <div class="page-footer">
-      <span class="page-note">Some knowledge must be earned.</span>
-    </div>
-
-  </div>
-  `;
+  evaluateNotices()
 }
 
 function initContractsPage() {

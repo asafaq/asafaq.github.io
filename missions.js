@@ -176,6 +176,7 @@ DISABLED IF:
 */
 
 function createDialogWindow(dlg, index = 0) {
+
     const isDual = dlg.portrait && dlg.portrait.length > 1;
 
     const div = document.createElement("div");
@@ -185,19 +186,33 @@ function createDialogWindow(dlg, index = 0) {
         ${dlg.portrait && dlg.portrait.length
             ? dlg.portrait.map((p, idx) => {
                 const side = dlg.side[idx] || dlg.side[0] || "left";
-                return `<img src="${p}" class="m-portrait m-portrait-${side}">`;
-              }).join("")
+
+                return `
+                    <img src="${p}" class="m-portrait m-portrait-${side}">
+                `;
+            }).join("")
             : ""
         }
+
         <div class="m-text-area">
-            ${dlg.speaker ? `<div class="m-speaker-name">${dlg.speaker}</div>` : ''}
+
+            ${dlg.speaker
+                ? `<div class="m-speaker-name">${dlg.speaker}</div>`
+                : ''
+            }
+
             <div class="m-typewriter" id="typewriter-${index}"></div>
+
+            <div
+                class="m-frustration-display"
+                id="m-frustration-display-${index}"
+            ></div>
+
         </div>
     `;
 
     return div;
 }
-
 
 async function renderScene(sceneId) {
 
@@ -372,118 +387,34 @@ isTyping = false;
 
 
     // --- 10. PROCESS OPTIONS (ALL YOUR ORIGINAL LOGIC) ---
-    if (scene.options) {
+// --- 10. FILTER AND RENDER OPTIONS ---
 
-        const processedOptions = [];
+if (scene.options?.length) {
 
-        for (const opt of scene.options) {
-            let isDisabled = false;
+    // Filter conditional options BEFORE creating any UI.
+    const availableOptions =
+        await getAvailableOptions(scene.options);
 
-            // All your condition logic preserved exactly:
-            if (opt.condition_trait) {
-                if (Array.isArray(opt.condition_trait)) {
-                    const hasAny = opt.condition_trait.some(t => partyHasTrait(t));
-                    if (!hasAny) isDisabled = true;
-                } else {
-                    if (!partyHasTrait(opt.condition_trait)) isDisabled = true;
-                }
-            }
+    // Create all visible options.
+    // Disabled options are still shown.
+    for (const opt of availableOptions) {
 
-            if (opt.condition_trait_not) {
-                if (partyHasTrait(opt.condition_trait_not)) {
-                    isDisabled = true;
-                }
-            }
-
-            if (opt.disabled === true) {
-                isDisabled = true;
-            }
-
-            if (opt.condition_alignment) {
-                const hasAlignment = members.some(m => m.alignment === opt.condition_alignment);
-                if (!hasAlignment) isDisabled = true;
-            }
-
-            if (opt.condition_not_alignment) {
-                const hasAlignment = members.some(m => m.alignment === opt.condition_not_alignment);
-                if (hasAlignment) isDisabled = true;
-            }
-
-            if (opt.condition_race) {
-                const races = player?.missions?.current_mission?.summary?.races || [];
-                const hasRace = races.includes(opt.condition_race);
-                if (!hasRace) isDisabled = true;
-            }
-
-            if (opt.condition_key_green2_value !== undefined) {
-                const keys = player?.missions?.green_2keys || {};
-                const matches = keys[opt.condition_key_green2] === opt.condition_key_green2_value;
-                if (!matches) isDisabled = true;
-            }
-
-            if (opt.condition_key_dwood1_value !== undefined) {
-                const keys = player?.missions?.dwood_1 || {};
-                const matches = keys[opt.condition_key_dwood1] >= opt.condition_key_dwood1_value;
-                if (!matches) isDisabled = true;
-            }
-
-            if (opt.condition_key_dwood_fort2_value !== undefined) {
-                const keys = player?.missions?.dwood_fort2 || {};
-                const matches = keys[opt.condition_key_dwood_fort2_value] === opt.condition_key_dwood1_value;
-                if (!matches) isDisabled = true;
-            }
-
-            if (opt.condition_silver_required !== undefined) {
-                const silver = player?.missions?.current_mission?.satchel?.silver ?? 0;
-                if (silver < opt.condition_silver_required) {
-                    isDisabled = true;
-                }
-            }
-
-            if (opt.condition_counterfeit_electrum !== undefined) {
-                if (!player?.treasury || player.treasury.counterfeit_electrum === undefined) {
-                    isDisabled = true;
-                } else {
-                    const counterfeit = player.treasury.counterfeit_electrum;
-                    if (counterfeit < opt.condition_counterfeit_electrum) {
-                        isDisabled = true;
-                    }
-                }
-            }
-
-            if (opt.condition_electrum !== undefined) {
-                const user = player.id;
-                let coins;
-
-                try {
-                    coins = await getActiveCoins(user);
-                } catch (err) {
-                    isDisabled = true;
-                    coins = null;
-                }
-
-                if (!coins || coins.length < opt.condition_electrum) {
-                    isDisabled = true;
-                }
-            }
-
-            processedOptions.push({
-                text: opt.text,
-                target: opt.target_id,
-                color: opt.color,
-                disabled: isDisabled,
-                frustration: opt.frustration_text,
-                shadow: opt.shadow
-            });
-        }
-
-        // --- 11. RENDER BUTTONS ---
-        for (const opt of processedOptions) {
-            createBtn(opt.text, opt.target, opt.color, opt.disabled, opt.frustration, opt.shadow);
-        }
-		// Reposition dialog container after choices load
-		adjustDialogContainer();
+        createBtn(
+            opt.text,
+            opt.target_id,
+            opt.color,
+            opt.disabled === true,
+            opt.frustration_text,
+            opt.shadow
+        );
     }
+
+    // All buttons now exist.
+    // Position the dialog once.
+    requestAnimationFrame(() => {
+        adjustDialogContainer();
+    });
+}
 }
 
 function adjustDialogContainer() {
@@ -494,6 +425,144 @@ function adjustDialogContainer() {
     const choiceHeight = choiceContainer.offsetHeight;
 
     container.style.marginBottom = (choiceHeight - 25) + "px";
+}
+
+async function optionConditionMet(opt) {
+
+    // No condition = always visible
+    if (!opt.condition) {
+        return true;
+    }
+
+    const c = opt.condition;
+
+    // --- TRAIT ---
+    if (c.type === "trait") {
+        if (Array.isArray(c.value)) {
+            return c.value.some(t => partyHasTrait(t));
+        }
+
+        return partyHasTrait(c.value);
+    }
+
+    // --- TRAIT NOT ---
+    if (c.type === "trait_not") {
+        return !partyHasTrait(c.value);
+    }
+
+    // --- ALIGNMENT ---
+    if (c.type === "alignment") {
+        return members.some(m => m.alignment === c.value);
+    }
+
+    // --- ALIGNMENT NOT ---
+    if (c.type === "alignment_not") {
+        return !members.some(m => m.alignment === c.value);
+    }
+
+    // --- RACE ---
+    if (c.type === "race") {
+        const races =
+            player?.missions?.current_mission?.summary?.races || [];
+
+        return races.includes(c.value);
+    }
+
+    // --- DIRECT MISSION VALUE ---
+    // Example:
+    // player.missions.dwood_1 === 5
+    if (c.type === "mission_value") {
+
+        const actual =
+            player?.missions?.[c.mission] ?? 0;
+
+        if (c.operator === "==") return actual === c.value;
+        if (c.operator === "!=") return actual !== c.value;
+        if (c.operator === ">")  return actual > c.value;
+        if (c.operator === ">=") return actual >= c.value;
+        if (c.operator === "<")  return actual < c.value;
+        if (c.operator === "<=") return actual <= c.value;
+
+        return false;
+    }
+
+    // --- NESTED MISSION KEY ---
+    // Example:
+    // player.missions.green_2keys.shrine === 3
+    if (c.type === "mission_key") {
+
+        const keys =
+            player?.missions?.[c.mission] || {};
+
+        const actual =
+            keys[c.key] ?? 0;
+
+        if (c.operator === "==") return actual === c.value;
+        if (c.operator === "!=") return actual !== c.value;
+        if (c.operator === ">")  return actual > c.value;
+        if (c.operator === ">=") return actual >= c.value;
+        if (c.operator === "<")  return actual < c.value;
+        if (c.operator === "<=") return actual <= c.value;
+
+        return false;
+    }
+
+    // --- SILVER ---
+    if (c.type === "silver") {
+
+        const silver =
+            player?.missions?.current_mission?.satchel?.silver ?? 0;
+
+        return silver >= c.value;
+    }
+
+    // --- COUNTERFEIT ELECTRUM ---
+    if (c.type === "counterfeit_electrum") {
+
+        const counterfeit =
+            player?.treasury?.counterfeit_electrum ?? 0;
+
+        return counterfeit >= c.value;
+    }
+
+    // --- ELECTRUM ---
+    if (c.type === "electrum") {
+
+        try {
+
+            const coins = await getActiveCoins(player.id);
+
+            return coins && coins.length >= c.value;
+
+        } catch (err) {
+
+            console.error("Failed to get active coins:", err);
+
+            return false;
+        }
+    }
+
+    console.warn("Unknown option condition:", c);
+
+    return false;
+}
+
+async function getAvailableOptions(options) {
+
+    const availableOptions = [];
+
+    for (const opt of options || []) {
+
+        // Conditions control visibility.
+        // DO NOT filter out disabled options.
+        if (!(await optionConditionMet(opt))) {
+            continue;
+        }
+
+        availableOptions.push(opt);
+    }
+
+    return availableOptions;
 }
 
 function resolveNextTarget(scene, player) {
@@ -598,54 +667,75 @@ function renderMissionOptions(mission) {
 
 let frustrationTimeout; // Keep track of the timer globally
 
-function createBtn(text, targetId, color = null, isDisabled = false, frustrationText = "", shadow = null) {
+function createBtn(
+    text,
+    targetId,
+    color = null,
+    isDisabled = false,
+    frustrationText = "",
+    shadow = null
+) {
+
     const btn = document.createElement('button');
+
     btn.className = 'm-btn';
     btn.innerText = text;
-    
+
     if (color) {
         btn.style.color = color;
         btn.style.borderColor = color;
-        btn.style.boxShadow = `inset 0 0 5px ${color}44`; 
+        btn.style.boxShadow = `inset 0 0 5px ${color}44`;
     }
 
     if (shadow) {
         btn.style.textShadow = shadow;
     }
 
-	btn.onclick = () => {
-		if (isDisabled && frustrationText) {
+    btn.onclick = () => {
 
-			let display = document.getElementById('m-frustration-display');
+        if (isDisabled && frustrationText) {
 
-			// If missing, create it inside #m-viewport
-			if (!display) {
-				display = document.createElement('div');
-				display.id = 'm-frustration-display';
-				display.className = 'm-frustration-display';
+            // Find the currently visible dialog window
+            const dialogs =
+                document.querySelectorAll('#m-dialog-container .m-glass-panel');
 
-				const viewport = document.getElementById('m-viewport');
-				viewport.appendChild(display);
-			}
+            if (!dialogs.length) {
+                console.warn("No dialog window found for frustration text.");
+                return;
+            }
 
-			clearTimeout(frustrationTimeout);
-			display.innerText = frustrationText;
+            // Use the last dialog window
+            const dialog =
+                dialogs[dialogs.length - 1];
 
-			frustrationTimeout = setTimeout(() => {
-				display.innerText = "";
-			}, 3000);
+            const display =
+                dialog.querySelector('.m-frustration-display');
 
-			return;
-		}
+            if (!display) {
+                console.warn("Frustration display not found.");
+                return;
+            }
 
-		renderScene(targetId);
-	};
+            clearTimeout(frustrationTimeout);
 
+            display.innerText = frustrationText;
+            display.style.display = 'block';
 
-    
-    document.getElementById('m-choices-container').appendChild(btn);
+            frustrationTimeout = setTimeout(() => {
+                display.innerText = "";
+                display.style.display = 'none';
+            }, 3000);
+
+            return;
+        }
+
+        renderScene(targetId);
+    };
+
+    document
+        .getElementById('m-choices-container')
+        .appendChild(btn);
 }
-
 // Add this helper function to show the text briefly
 function showTemporaryMessage(text) {
     const container = document.getElementById('m-dialog-container');
@@ -747,6 +837,7 @@ function addCounterfeitElectrum(number) {
 	player.treasury.counterfeit_electrum ??= 0;
 
 	player.treasury.counterfeit_electrum += amount;
+	console.log(player.treasury.counterfeit_electrum, number)
 	return;
 }
 

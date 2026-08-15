@@ -95,6 +95,58 @@
     "options": []
   },
   {
+    "id": "Counterfeit_Electrum1",
+    "speaker": "Bragain",
+    "portrait": "/assets/patrons/dwarven_miner.png",
+    "side": "right",
+    "dialog": "Hey look Hoggy, the Guild Master have found the lore book the previous thieves' guild have left here.",
+    "interaction_type": "next",
+    "target_id": "cfe2"
+  },
+  {
+    "id": "cfe2",
+    "speaker": "Hogperson",
+    "portrait": "/assets/patrons/hogperson.png",
+    "side": "left",
+    "dialog": "Oh, it's a BOOK!.",
+    "interaction_type": "next",
+    "target_id": "cfe3"
+  },
+  {
+    "id": "cfe3",
+    "speaker": "Guild Master",
+    "portrait": "/assets/guild/guild_master.png",
+    "side": "left",
+    "dialog": "What do you mean thieves' guild? This place is licenced to be an adventurer's guild besides just a tavern.",
+    "interaction_type": "next",
+    "target_id": "cfe4"
+  },
+  {
+    "id": "cfe4",
+    "speaker": "Bragain",
+    "portrait": "/assets/patrons/dwarven_miner.png",
+    "side": "right",
+    "dialog": "Aye, it sure is. Came by cheaply too eh. But the previous owners left some evidence behind, see that coin between the pages?",
+    "interaction_type": "next",
+    "target_id": "cfe5"
+  },
+  {
+    "id": "cfe5",
+    "speaker": "Guild Master",
+    "portrait": "/assets/guild/guild_master.png",
+    "side": "left",
+    "dialog": "Hey look at that you're right, there's a single Electrum coin left behind here.",
+    "interaction_type": "next",
+    "target_id": "cfe6"
+  },
+  {
+    "id": "cfe6",
+    "speaker": "Introduction",
+    "dialog": "While silver makes the common trade-coin Electrum coins are the more valueable premium coins. You can buy as many coins as you like to support the dev and the server, meanwhile you have this one coin to spend as you like. It's counterfeit tho, so get rid of it to avoid it getting stolen.",
+    "interaction_type": "next",
+    "target_id": "patronend"
+  },
+  {
     "id": "Amyssa2",
     "dialog": "We agree.",
     "speaker": ["Amyssa", "Guild Master"],
@@ -142,7 +194,7 @@
   },
   {
     "id": "Hogperson1",
-    "speaker": "Bragain",
+    "speaker": "Hogperson",
     "portrait": "/assets/patrons/hogperson.png",
     "side": "right",
     "dialog": "I'm having a good time at the ol' Inn.",
@@ -1408,7 +1460,8 @@
       "condition": "party_member",
       "value": "Bragain",
       "target_id": "green2_102bgn"
-    }]
+    }
+	]
   },
   {
     "id": "green2_103",
@@ -1487,7 +1540,7 @@
     "speaker": "Amyssa",
     "portrait": "/assets/patrons/amyssa_l.png",
     "side": "left",
-    "dialog": "You all may really be COMMONERS, ugh\nbut your cause is NOBLE",
+    "dialog": "You all may really be COMMONERS, ugh\nbut your cause is a NOBLE one.",
     "interaction_type": "next",
     "target_id": "green2_112"
   },
@@ -1496,7 +1549,7 @@
     "speaker": "Amyssa",
     "portrait": "/assets/patrons/amyssa_l.png",
     "side": "left",
-    "dialog": "Please allow me to join your cause, it would bring me honor to serve alongside you.",
+    "dialog": "Please allow me to join your party, it would bring me honor to serve alongside you.",
     "interaction_type": "next",
     "target_id": "green2_113"
   },
@@ -1516,7 +1569,6 @@
       {
         "text": "Accept Amyssa.",
         "target_id": "green2_114a",
-        "disabled": false,
         "color": "#FFD700"
       }
     ]
@@ -1808,7 +1860,10 @@
       {
         "text": "Have a Dwarf inspect the stones of the shrine.",
         "target_id": "greenshrine1_103",
-		"condition_race": "Dwarven",
+		"condition": {
+			"type": "race",
+			"value": "Dwarven"
+		  },
         "color": "#FFD700"
       },
       {
@@ -2378,8 +2433,13 @@
         "text": "Tell Hogmother about the shrine you've passed through on your way here.",
         "target_id": "greenshrine1_201",
         "color": "#FFD700",
-		"condition_key_green2": "shrine",
-		"condition_key_green2_value": 1
+		  "condition": {
+			"type": "mission_key",
+			"mission": "green_2keys",
+			"key": "shrine",
+			"operator": "==",
+			"value": 1
+			}
 
       }
     ]
@@ -2499,13 +2559,19 @@
         "text": "[Counterfeit Electrum coin] Obtain ingredients for scribing a Remove Petrification scroll.",
         "target_id": "greenshrine1_211b",
         "color": "#FFD700",
-		"condition_counterfeit_electrum": 1
+		"condition": {
+			"type": "counterfeit_electrum",
+			"value": 1
+	    }
       },
       {
         "text": "[Electrum coin] Obtain ingredients for scribing a Remove Petrification scroll.",
         "target_id": "greenshrine1_211a",
         "color": "#FFD700",
-		"condition_electrum": 1
+		  "condition": {
+			"type": "electrum",
+			"value": 1
+		  }
       },
 		{
 		  "text": "[250 Silver coins] Obtain ingredients for scribing a Remove Petrification scroll.",
@@ -3952,14 +4018,24 @@
         "target_id": "dwoodplat1_105"
       },
       {
-        "text": "The Trollkin",
-        "target_id": "dwoodplat1_102",
-		"condition_key_dwood1_value": 2
-      },
+		  "text": "The Trollkin",
+		  "target_id": "dwoodplat1_102",
+		  "condition": {
+			"type": "mission_value",
+			"mission": "dwood_1",
+			"operator": ">=",
+			"value": 2
+		  }
+		},
       {
         "text": "The Ugress",
         "target_id": "dwoodplat1_106",
-		"condition_key_dwood_fort2_value": 1
+		"condition": {
+		"type": "mission_value",
+		"mission": "dwood_fort2",
+		"operator": "==",
+		"value": 1
+	    }
       },
       {
         "text": "That is all Master Awotruce.",
