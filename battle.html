@@ -126,6 +126,50 @@ const STRDEX_TABLE = {
 
 const firstPCIndex = units.findIndex(u => u.type === "pc");
 
+function debugBattleFrame() {
+    const c = document.getElementById('battle-container');
+    const f = document.getElementById('battle-frame');
+
+    const cr = c?.getBoundingClientRect();
+    const fr = f?.getBoundingClientRect();
+
+    const message = `
+battle-container:
+display = ${c ? getComputedStyle(c).display : 'NOT FOUND'}
+position = ${c ? getComputedStyle(c).position : 'NOT FOUND'}
+width = ${cr?.width}
+height = ${cr?.height}
+left = ${cr?.left}
+top = ${cr?.top}
+
+battle-frame:
+display = ${f ? getComputedStyle(f).display : 'NOT FOUND'}
+width = ${fr?.width}
+height = ${fr?.height}
+left = ${fr?.left}
+top = ${fr?.top}
+src = ${f?.src}
+    `;
+
+    console.log(message);
+
+    // Also put the information visibly on the phone
+    const debug = document.createElement('pre');
+    debug.style.cssText = `
+        position: fixed;
+        z-index: 999999;
+        top: 0;
+        left: 0;
+        background: yellow;
+        color: black;
+        font-size: 12px;
+        padding: 10px;
+        white-space: pre-wrap;
+    `;
+    debug.textContent = message;
+    document.body.appendChild(debug);
+}
+
 function findUnitAt(cx, cy) {
     return units.find(u => {
 			if (u.size === "H") {
