@@ -711,6 +711,7 @@ ${`
 	<button id="saveBtn">Save Changes</button>
 	<div id="saveStatus" style="margin-top: 6px; color: white; font-weight: bold;"></div>
 	<div>Contact the developer on <a href="https://discord.gg/euWseSRKmQ" target="_blank" rel="noopener noreferrer">Discord</a></div>
+	<button id="jstest">Launch function test for devs</button>
 	`,
 
 	shop: `
@@ -1407,7 +1408,9 @@ main.innerHTML = typeof pages[page] === "function"
         setTimeout(() => status.textContent = "", 2000);
     });
 
-
+	document.getElementById("jstest").addEventListener("click", function () {
+		launchBattle("tutor_armogre");
+	});
   }
 
   if (page === "mail") {

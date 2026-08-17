@@ -114,7 +114,7 @@ html, body {
     padding-top: 10px;
     gap: 10px;
     border-radius: 8px 0 0 8px;
-    z-index: 40; /* floats above everything */
+    z-index: 40;
   }
 
   .right-menu-mini {
@@ -130,6 +130,7 @@ html, body {
     padding-top: 10px;
     gap: 10px;
     border-radius: 8px 0 0 8px;
+    z-index: 40;
   }
 
   .menu-item {

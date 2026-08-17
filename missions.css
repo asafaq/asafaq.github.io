@@ -23,7 +23,7 @@
     background-color: rgba(0, 0, 0, 0.4); 
 	outline: 3px solid red !important;
     /* Ensures this layer sits on top of your map */
-    z-index: 23; 
+    z-index: 41; 
 }
 #m-dialog-container {
     position: absolute;
