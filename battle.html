@@ -2164,24 +2164,50 @@ function findNearestPC(monster) {
 
 function moveMonsterToward(u, target) {
 
-    let dist = Math.max(Math.abs(u.x - target.x), Math.abs(u.y - target.y));
+    // Compute monster center (for movement direction)
+    const size = u.size === "H" ? 3 : u.size === "L" ? 2 : 1;
+
+    function getCenter(u) {
+        return {
+            x: u.x + (size - 1) / 2,
+            y: u.y + (size - 1) / 2
+        };
+    }
+
+    function getDist(u, target) {
+        const uSquares = getSquares(u);
+        const tSquares = getSquares(target);
+
+        let best = Infinity;
+
+        for (const a of uSquares) {
+            for (const b of tSquares) {
+                const dx = Math.abs(a.x - b.x);
+                const dy = Math.abs(a.y - b.y);
+                best = Math.min(best, Math.max(dx, dy));
+            }
+        }
+        return best;
+    }
+
+    let dist = getDist(u, target);
 
     if (dist > 1) {
 
         for (let step = 0; step < u.speed; step++) {
 
-            const dx = Math.sign(target.x - u.x);
-            const dy = Math.sign(target.y - u.y);
+            const center = getCenter(u);
 
-            const occupied = getOccupiedSquares();
+            const dx = Math.sign(target.x - center.x);
+            const dy = Math.sign(target.y - center.y);
 
-            const absDx = Math.abs(target.x - u.x);
-            const absDy = Math.abs(target.y - u.y);
+            const absDx = Math.abs(target.x - center.x);
+            const absDy = Math.abs(target.y - center.y);
 
             let moved = false;
 
             function tryMove(nx, ny) {
-                if (!occupied[nx]?.[ny]) {
+                if (canPlace(u, nx, ny)) {
                     u.x = nx;
                     u.y = ny;
                     return true;
@@ -2207,11 +2233,22 @@ function moveMonsterToward(u, target) {
 
             if (!moved) break;
 
-            dist = Math.max(Math.abs(u.x - target.x), Math.abs(u.y - target.y));
+            dist = getDist(u, target);
             if (dist <= 1) break;
         }
     }
 }
+
+function canPlace(u, nx, ny) {
+    const squares = getSquares({ ...u, x: nx, y: ny });
+    const occupied = getOccupiedSquares();
+
+    for (const s of squares) {
+        if (occupied[s.x]?.[s.y]) return false;
+    }
+    return true;
+}
+
 
 function isTileFree(x, y) {
     // Stay inside the 10×10 grid
