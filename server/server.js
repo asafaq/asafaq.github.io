@@ -39,6 +39,11 @@ app.listen(PORT, () => {
 
 app.use(express.json());
 
+// ⭐ ADD THIS
+app.get("/status", (req, res) => {
+  res.json({ online: true });
+});
+
 const coinsRoutes = require('./src/routes/coins');
 app.use('/coins', coinsRoutes);
 

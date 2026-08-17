@@ -60,6 +60,57 @@ validateCoin(coin) {
   if (!uuidRegex.test(coin.id))
     throw new Error("Invalid UUID format");
 
+  const firstTx = coin.transactionHistory[0];
+  if (!firstTx)
+    throw new Error("Invalid coin: missing first transaction");
+
+  // First transaction must be MINT
+  if (firstTx.type !== "MINT")
+    throw new Error("Invalid coin: first transaction must be MINT");
+
+  // First transaction timestamp must match coin.timestamp
+  if (firstTx.timestamp < coin.timestamp)
+    throw new Error("Invalid coin: timestamp mismatch between coin and first transaction");
+
+const MAX_TIMESTAMP_DRIFT = 50; // ms
+
+if (firstTx.timestamp < coin.timestamp)
+  throw new Error("Invalid coin: first transaction timestamp is earlier than coin timestamp");
+
+if (firstTx.timestamp - coin.timestamp > MAX_TIMESTAMP_DRIFT)
+  throw new Error(
+    `Invalid coin: first transaction timestamp drift too large (${firstTx.timestamp - coin.timestamp}ms)`
+  );
+
+const lastTx = coin.transactionHistory[coin.transactionHistory.length - 1];
+
+if (coin.currentOwner !== lastTx.to)
+  throw new Error("Invalid coin: currentOwner does not match last transaction");
+
+if (coin.timestamp <= 0)
+  throw new Error("Invalid coin: timestamp must be positive");
+
+for (const tx of coin.transactionHistory) {
+  if (tx.timestamp <= 0)
+    throw new Error("Invalid coin: transaction timestamp must be positive");
+}
+
+const validTypes = ["MINT", "TRANSFER", "SPEND"];
+
+for (const tx of coin.transactionHistory) {
+  if (!validTypes.includes(tx.type))
+    throw new Error(`Invalid coin: unknown transaction type ${tx.type}`);
+}
+
+//duplicate transactions
+const seen = new Set();
+for (const tx of coin.transactionHistory) {
+  const key = `${tx.type}-${tx.timestamp}-${tx.from}-${tx.to}`;
+  if (seen.has(key))
+    throw new Error("Invalid coin: duplicate transaction detected");
+  seen.add(key);
+}
+
   // Structure checks
   if (typeof coin.spent !== "boolean")
     throw new Error("Invalid coin: spent flag missing");

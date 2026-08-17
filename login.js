@@ -1,6 +1,6 @@
 // Toggle: true = show login screen, false = skip login entirely
 const ENABLE_LOGIN = true;		//always set them up equal values
-const ENABLE_PRELOAD = true;	//always set them up equal values
+const ENABLE_PRELOAD = false;	//always set them up equal values
 let preloadedAssets = null;
 let preloadPromise = null;
 
@@ -64,8 +64,8 @@ const assetUrls = [
   "/assets/patrons/hogperson_s.png",
   "/assets/patrons/lurch.png",
   "/assets/patrons/lurch_s.png",
-  "/assets/patrons/tonica_S.png",
-  "/assets/patrons/tonica_L.png",
+  "/assets/patrons/tonica_s.png",
+  "/assets/patrons/tonica_l.png",
   "/assets/patrons/scroll.png"
 ];
 

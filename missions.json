@@ -177,7 +177,9 @@
     "speaker": "Tonica",
     "portrait": "/assets/patrons/tonica_L.png",
     "side": "right",
-    "dialog": "Trees are by far the most valuable and rare crop in the universe. More valuable than gold. What do you mean? There are trees everywhere. A tree provides other living things nourishments, housing, kindling in the winter, it is life preserving. Gold is but a matter of trade for the greedy. There's also gold everywhere, the stars sparkling out in the sky are filled with gold, but not even one tree. If the trees go scarce, no amount of gold will prove sufficient.",
+    "dialog": "Trees are by far the most valuable and rare crop in the universe. More valuable than gold. What do you mean? There are trees everywhere. A tree provides other living things nourishments, housing, kindling in the winter, it is life preserving.",
+	"dialog2": "Gold is but a coin of trade for the greedy. There's also gold everywhere, the stars sparkling out in the sky are filled with gold, but not even one tree. If the trees go scarce, no amount of gold will prove sufficient.",
+	"dialog3": "I will return to my duty overlooking the pasture soon.",
     "interaction_type": "next",
     "target_id": "patronend",
     "options": []

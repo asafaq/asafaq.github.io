@@ -1,1 +1,77 @@
-[]
+[
+  {
+    "id": "050fc6e1-eb10-4373-a663-34ee5f32e131",
+    "timestamp": 1784966486477,
+    "createdBy": "2",
+    "currentOwner": "2",
+    "spent": false,
+    "transactionHistory": [
+      {
+        "type": "MINT",
+        "from": null,
+        "to": "2",
+        "timestamp": 1784966486477
+      }
+    ]
+  },
+  {
+    "id": "d967b269-1b0a-450d-96c3-acabf0ed424d",
+    "timestamp": 1784973784228,
+    "createdBy": "3",
+    "currentOwner": "3",
+    "spent": false,
+    "transactionHistory": [
+      {
+        "type": "MINT",
+        "from": null,
+        "to": "3",
+        "timestamp": 1784973784228
+      }
+    ]
+  },
+  {
+    "id": "45252213-4344-4b2a-ba3f-d11c98bc601b",
+    "timestamp": 1784999779609,
+    "createdBy": "3",
+    "currentOwner": "3",
+    "spent": false,
+    "transactionHistory": [
+      {
+        "type": "MINT",
+        "from": null,
+        "to": "3",
+        "timestamp": 1784999779609
+      }
+    ]
+  },
+  {
+    "id": "e35f40df-8949-4c25-86d2-1e4eba3496f5",
+    "timestamp": 1785007520011,
+    "createdBy": "3",
+    "currentOwner": "3",
+    "spent": false,
+    "transactionHistory": [
+      {
+        "type": "MINT",
+        "from": null,
+        "to": "3",
+        "timestamp": 1785007520011
+      }
+    ]
+  },
+  {
+    "id": "14c398c6-b024-461c-808f-ca9b127520e5",
+    "timestamp": 1786620560185,
+    "createdBy": "1",
+    "currentOwner": "1",
+    "spent": false,
+    "transactionHistory": [
+      {
+        "type": "MINT",
+        "from": null,
+        "to": "1",
+        "timestamp": 1786620560185
+      }
+    ]
+  }
+]

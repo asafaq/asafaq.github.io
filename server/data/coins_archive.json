@@ -1077,5 +1077,93 @@
         "note": "Store purchase"
       }
     ]
+  },
+  {
+    "id": "eead8ef8-43a4-49f3-a97f-7885c060b436",
+    "timestamp": 1784869896181,
+    "createdBy": "1",
+    "currentOwner": null,
+    "spent": true,
+    "transactionHistory": [
+      {
+        "type": "MINT",
+        "from": null,
+        "to": "1",
+        "timestamp": 1784869896181
+      },
+      {
+        "type": "SPEND",
+        "from": "1",
+        "to": null,
+        "timestamp": 1785384558811,
+        "note": "Obtain ingredients for scribing a Remove Petrification scroll"
+      }
+    ]
+  },
+  {
+    "id": "3b12dc62-5558-4866-b834-e4f153aa5513",
+    "timestamp": 1785208745979,
+    "createdBy": "1",
+    "currentOwner": null,
+    "spent": true,
+    "transactionHistory": [
+      {
+        "type": "MINT",
+        "from": null,
+        "to": "1",
+        "timestamp": 1785208745979
+      },
+      {
+        "type": "SPEND",
+        "from": "1",
+        "to": null,
+        "timestamp": 1785385045801,
+        "note": "Obtain ingredients for scribing a Remove Petrification scroll"
+      }
+    ]
+  },
+  {
+    "id": "a518700b-a446-4a3a-99e7-de52c088a5a2",
+    "timestamp": 1786162930954,
+    "createdBy": "1",
+    "currentOwner": null,
+    "spent": true,
+    "transactionHistory": [
+      {
+        "type": "MINT",
+        "from": null,
+        "to": "1",
+        "timestamp": 1786162930954
+      },
+      {
+        "type": "SPEND",
+        "from": "1",
+        "to": null,
+        "timestamp": 1786357536992,
+        "note": "Hiring Amyssa"
+      }
+    ]
+  },
+  {
+    "id": "f511f7a0-bfea-45f2-af33-f995654c9407",
+    "timestamp": 1786445248371,
+    "createdBy": "1",
+    "currentOwner": null,
+    "spent": true,
+    "transactionHistory": [
+      {
+        "type": "MINT",
+        "from": null,
+        "to": "1",
+        "timestamp": 1786445248371
+      },
+      {
+        "type": "SPEND",
+        "from": "1",
+        "to": null,
+        "timestamp": 1786529800396,
+        "note": "Hiring Aasibelle"
+      }
+    ]
   }
 ]
