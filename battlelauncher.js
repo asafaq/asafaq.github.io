@@ -37,6 +37,9 @@ window.addEventListener("message", async (event) => {
 					
 					if (pc.skills) {
 						patron.skills = pc.skills;
+					}					
+					if (pc.statuseffect) {
+						patron.statuseffect = pc.statuseffect;
 					}
 
                     if (typeof patron.Exp === 'undefined') patron.Exp = 0;
@@ -477,7 +480,8 @@ function createDefaultPatronState(advId) {
         currentHP: MaxHP,
         Level: level,
         Exp: initialExp, 
-        expClassKey,		 
+        expClassKey,
+		
     };
 }
 
@@ -527,7 +531,7 @@ let BATTLE_DATA = null;
 
 async function loadBattleData() {
     if (!BATTLE_DATA) {
-        const res = await fetch("battle.json");
+        const res = await fetch("battle.JSON");
         BATTLE_DATA = await res.json();
     }
     return BATTLE_DATA;
@@ -616,7 +620,7 @@ async function launchBattle(encounterKey) {
 			skills: hydrated.skills || {},
 			traits: hydrated.traits || [],
 			inventory: hydrated.inventory || [],
-
+			statuseffect: hydrated.statuseffect || {},
 			ac: hydrated.AC,
 			x: coords.x,
 			y: coords.y,
@@ -721,13 +725,13 @@ function battleOverlay() {
         overlay.innerHTML = `
             <iframe id="battle-frame"
                 src="battle.html"
-                transform-origin: center center;
                 style="position: fixed; 
+                transform-origin: center center;
 				border:none;
-				max-width: none !important;
-				max-height: none !important;
-				min-width: 100% !important;
-				min-height: 100% !important;
+				top: 0;
+				left: 0;
+				width: 100vw;
+				height: 100vh;
 				">
             </iframe>
         `;
