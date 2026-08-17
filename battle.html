@@ -377,9 +377,9 @@ async function init() {
 
     try {
         // 1. Direct fetch bypassing any file hierarchy. 
-        // Replace 'battle.json' with your actual relative path (e.g., 'data/battle.json')
-        const response = await fetch('battle.json'); 
-        if (!response.ok) throw new Error("Could not fetch battle.json");
+        // Replace 'battle.JSON' with your actual relative path (e.g., 'data/battle.JSON')
+        const response = await fetch('battle.JSON'); 
+        if (!response.ok) throw new Error("Could not fetch battle.JSON");
         const battleConfig = await response.json();
 
         // 2. Identify the active key (Fallback to missionId since encounterKey was undefined)
