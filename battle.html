@@ -1159,14 +1159,23 @@ function monsterMoraleCheck(Unit = "all", Mod = 0) {
 }
 
 function isInRange(attacker, target, range) {
-    const dx = Math.abs(attacker.x - target.x);
-    const dy = Math.abs(attacker.y - target.y);
-    const dist = Math.max(dx, dy); // grid distance
+    const attackerSquares = getSquares(attacker);
+    const targetSquares = getSquares(target);
 
-    return dist <= range;
+    for (const a of attackerSquares) {
+        for (const b of targetSquares) {
+
+            const dx = Math.abs(a.x - b.x);
+            const dy = Math.abs(a.y - b.y);
+
+            if (Math.max(dx, dy) <= range) {
+                return true;
+            }
+        }
+    }
+
+    return false;
 }
-
-
 // High‑level class groups
 const ROLE_TYPES = {
     Rogue: ["Deputy", "Arcane Trickster", "Thief", "Miner"],
@@ -2045,66 +2054,109 @@ function endTurn() {
 
 function monsterAI() {
     const u = units[initiativeOrder[turnIndex].index];
+
     if (!u || u.hp <= 0) return endTurn();
 
-    // ⭐ If stunned, skip their turn
     if (u.stunned) {
         Bus.emit('LOG', `${u.name} is stunned and loses their turn! 🤣`);
-        //u.stunned = false;
         return endTurn();
     }
 
-    // Monsters always start with an action
     u.hasAction = true;
 
     const target = findNearestPC(u);
     if (!target) return endTurn();
-	
-    // ⭐ NEW: Monster dialog (does NOT consume turn)
+
     if (u.dialog && !u._dialogPlayed) {
-        u._dialogPlayed = true;   // mark as used
-            // Call the parent's function from inside the iframe
-		if (parent && typeof parent.renderScene === 'function') {
-			parent.renderScene(u.dialog, "battle").catch(err => console.error(err));
-		} else {
-			console.warn("renderScene() not found in parent window");
-		}
+        u._dialogPlayed = true;
+
+        if (parent && typeof parent.renderScene === 'function') {
+            parent.renderScene(u.dialog, "battle")
+                .catch(err => console.error(err));
+        }
     }
-    moveMonsterToward(u, target);
 
-	if (u.hasAction) {
-		const actions = getMonsterActionList(u);
+	const actions = getMonsterActionList(u);
 
-		for (const act of actions) {
-
-			const range = act.range || 1;
-
-			// If not in range → move until in range or speed runs out
-			while (!isInRange(u, target, range) && u.remainingSpeed > 0) {
-				moveMonsterToward(u, target);
-			}
-
-			// If in range → attack
-			if (isInRange(u, target, range)) {
-				handleAttack(u, target, act);
-			} else {
-				Bus.emit('LOG', `${u.name} cannot reach ${target.name} for ${act.name}.`);
-			}
-
-			if (target.hp <= 0) break;
-		}
+	if (actions.length > 0) {
+		moveMonsterToAttackPosition(
+			u,
+			target,
+			actions
+		);
 	}
+    /*
+     * Move toward the best position from which at least one
+     * of the monster's attacks can reach the target.
+     */
 
+    /*
+     * Attack with all available actions that can currently
+     * reach the target.
+     */
+    if (u.hasAction) {
 
+        for (const act of actions) {
+            const range = act.range || 1;
+
+            if (isInRange(u, target, range)) {
+                handleAttack(u, target, act);
+            } else {
+                Bus.emit(
+                    'LOG',
+                    `${u.name} cannot reach ${target.name} for ${act.name}.`
+                );
+            }
+
+            if (target.hp <= 0) break;
+        }
+    }
 
     update();
+
     setTimeout(() => {
         hideDMScreen();
         endTurn();
     }, 600);
 }
 
+function getAttackTiles(target) {
+    const tiles = [];
+    const tSquares = getSquares(target);
+
+    // Expand bounding box by 1 tile in all directions
+    const minX = Math.min(...tSquares.map(s => s.x)) - 1;
+    const maxX = Math.max(...tSquares.map(s => s.x)) + 1;
+    const minY = Math.min(...tSquares.map(s => s.y)) - 1;
+    const maxY = Math.max(...tSquares.map(s => s.y)) + 1;
+
+    for (let x = minX; x <= maxX; x++) {
+        for (let y = minY; y <= maxY; y++) {
+
+            // Skip tiles inside the target's body
+            if (tSquares.some(s => s.x === x && s.y === y)) continue;
+
+            tiles.push({ x, y });
+        }
+    }
+
+    return tiles;
+}
+
 function getSquares(u) {
+    if (u.size === "H") {
+        return [
+            {x: u.x,     y: u.y},
+            {x: u.x + 1, y: u.y},
+            {x: u.x + 2, y: u.y},
+            {x: u.x,     y: u.y + 1},
+            {x: u.x + 1, y: u.y + 1},
+            {x: u.x + 2, y: u.y + 1},
+            {x: u.x,     y: u.y + 2},
+            {x: u.x + 1, y: u.y + 2},
+            {x: u.x + 2, y: u.y + 2}
+        ];
+    }
     if (u.size === "L") {
         return [
             {x: u.x,     y: u.y},
@@ -2161,94 +2213,711 @@ function findNearestPC(monster) {
     return nearest;
 }
 
+function findPathToTarget(u, target) {
+    const start = { x: u.x, y: u.y };
 
-function moveMonsterToward(u, target) {
+    const queue = [start];
+    const visited = new Set();
+    const cameFrom = new Map();
 
-    // Compute monster center (for movement direction)
-    const size = u.size === "H" ? 3 : u.size === "L" ? 2 : 1;
+    const key = (x, y) => `${x},${y}`;
 
-    function getCenter(u) {
-        return {
-            x: u.x + (size - 1) / 2,
-            y: u.y + (size - 1) / 2
-        };
-    }
+    visited.add(key(start.x, start.y));
 
-    function getDist(u, target) {
-        const uSquares = getSquares(u);
-        const tSquares = getSquares(target);
+    while (queue.length > 0) {
+        const current = queue.shift();
 
-        let best = Infinity;
-
-        for (const a of uSquares) {
-            for (const b of tSquares) {
-                const dx = Math.abs(a.x - b.x);
-                const dy = Math.abs(a.y - b.y);
-                best = Math.min(best, Math.max(dx, dy));
-            }
+        if (isMovementTargetReached(u, current, target)) {
+            return reconstructPath(current, cameFrom);
         }
-        return best;
-    }
 
-    let dist = getDist(u, target);
+        for (const next of getMovementNeighbors(current)) {
+            const k = key(next.x, next.y);
 
-    if (dist > 1) {
+            if (visited.has(k)) continue;
 
-        for (let step = 0; step < u.speed; step++) {
+            // Temporarily test the monster at this location.
+            if (!canPlace(u, next.x, next.y)) continue;
 
-            const center = getCenter(u);
-
-            const dx = Math.sign(target.x - center.x);
-            const dy = Math.sign(target.y - center.y);
-
-            const absDx = Math.abs(target.x - center.x);
-            const absDy = Math.abs(target.y - center.y);
-
-            let moved = false;
-
-            function tryMove(nx, ny) {
-                if (canPlace(u, nx, ny)) {
-                    u.x = nx;
-                    u.y = ny;
-                    return true;
-                }
-                return false;
-            }
-
-            if (absDy > absDx) {
-                moved ||= tryMove(u.x, u.y + dy);
-                moved ||= tryMove(u.x + dx, u.y);
-                moved ||= tryMove(u.x + dx, u.y + dy);
-            }
-            else if (absDx > absDy) {
-                moved ||= tryMove(u.x + dx, u.y);
-                moved ||= tryMove(u.x, u.y + dy);
-                moved ||= tryMove(u.x + dx, u.y + dy);
-            }
-            else {
-                moved ||= tryMove(u.x + dx, u.y + dy);
-                moved ||= tryMove(u.x + dx, u.y);
-                moved ||= tryMove(u.x, u.y + dy);
-            }
-
-            if (!moved) break;
-
-            dist = getDist(u, target);
-            if (dist <= 1) break;
+            visited.add(k);
+            cameFrom.set(k, current);
+            queue.push(next);
         }
     }
+
+    return null;
 }
 
-function canPlace(u, nx, ny) {
-    const squares = getSquares({ ...u, x: nx, y: ny });
-    const occupied = getOccupiedSquares();
+function getMovementNeighbors(pos) {
+    return [
+        { x: pos.x + 1, y: pos.y },
+        { x: pos.x - 1, y: pos.y },
+        { x: pos.x,     y: pos.y + 1 },
+        { x: pos.x,     y: pos.y - 1 },
 
-    for (const s of squares) {
-        if (occupied[s.x]?.[s.y]) return false;
+        // Keep these if diagonal movement is allowed.
+        { x: pos.x + 1, y: pos.y + 1 },
+        { x: pos.x - 1, y: pos.y - 1 },
+        { x: pos.x + 1, y: pos.y - 1 },
+        { x: pos.x - 1, y: pos.y + 1 }
+    ].filter(p =>
+        p.x >= 0 && p.x <= 9 &&
+        p.y >= 0 && p.y <= 9
+    );
+}
+
+function reconstructPath(current, cameFrom) {
+    const path = [
+        {
+            x: current.x,
+            y: current.y
+        }
+    ];
+
+    let key = `${current.x},${current.y}`;
+
+    while (cameFrom.has(key)) {
+        current = cameFrom.get(key);
+
+        path.unshift({
+            x: current.x,
+            y: current.y
+        });
+
+        key = `${current.x},${current.y}`;
     }
+
+    return path;
+}
+function isMovementTargetReached(u, position, target) {
+    const simulated = {
+        ...u,
+        x: position.x,
+        y: position.y
+    };
+
+    return isInRange(simulated, target, 1);
+}
+function canPlace(u, nx, ny) {
+    const proposed = {
+        ...u,
+        x: nx,
+        y: ny
+    };
+
+    const squares = getSquares(proposed);
+
+    // Grid boundaries
+    for (const s of squares) {
+        if (
+            s.x < 0 ||
+            s.x >= 10 ||
+            s.y < 0 ||
+            s.y >= 10
+        ) {
+            return false;
+        }
+    }
+
+    // Static obstacles
+    for (const s of squares) {
+        if (
+            staticObstacles.some(o =>
+                o.x === s.x &&
+                o.y === s.y
+            )
+        ) {
+            return false;
+        }
+    }
+
+    // Other living units
+    for (const other of units) {
+        if (other === u) continue;
+        if (other.hp <= 0) continue;
+
+        const otherSquares = getSquares(other);
+
+        for (const a of squares) {
+            for (const b of otherSquares) {
+                if (
+                    a.x === b.x &&
+                    a.y === b.y
+                ) {
+                    return false;
+                }
+            }
+        }
+    }
+
     return true;
 }
 
+function findPathAStar(u, destination) {
+    const start = {
+        x: u.x,
+        y: u.y
+    };
+
+    const goal = {
+        x: destination.x,
+        y: destination.y
+    };
+
+    if (start.x === goal.x && start.y === goal.y) {
+        return [start];
+    }
+
+    const open = [];
+    const closed = new Set();
+
+    const cameFrom = new Map();
+    const gScore = new Map();
+    const fScore = new Map();
+
+    const key = (x, y) => `${x},${y}`;
+
+    const startKey = key(start.x, start.y);
+
+    gScore.set(startKey, 0);
+    fScore.set(
+        startKey,
+        heuristic(start, goal)
+    );
+
+    open.push({
+        x: start.x,
+        y: start.y
+    });
+
+    while (open.length > 0) {
+
+        // Get node with lowest fScore
+        open.sort((a, b) => {
+            return (
+                (fScore.get(key(a.x, a.y)) ?? Infinity) -
+                (fScore.get(key(b.x, b.y)) ?? Infinity)
+            );
+        });
+
+        const current = open.shift();
+        const currentKey = key(current.x, current.y);
+
+        if (
+            current.x === goal.x &&
+            current.y === goal.y
+        ) {
+            return reconstructAStarPath(
+                current,
+                cameFrom
+            );
+        }
+
+        closed.add(currentKey);
+
+        for (const neighbor of getPathNeighbors(u, current)) {
+
+            const neighborKey = key(
+                neighbor.x,
+                neighbor.y
+            );
+
+            if (closed.has(neighborKey)) {
+                continue;
+            }
+
+            const movementCost =
+                neighbor.x !== current.x &&
+                neighbor.y !== current.y
+                    ? 1.41421356237
+                    : 1;
+
+            const currentG =
+                gScore.get(currentKey) ?? Infinity;
+
+            const tentativeG =
+                currentG + movementCost;
+
+            const oldG =
+                gScore.get(neighborKey) ?? Infinity;
+
+            if (tentativeG >= oldG) {
+                continue;
+            }
+
+            cameFrom.set(
+                neighborKey,
+                current
+            );
+
+            gScore.set(
+                neighborKey,
+                tentativeG
+            );
+
+            fScore.set(
+                neighborKey,
+                tentativeG +
+                heuristic(neighbor, goal)
+            );
+
+            if (
+                !open.some(n =>
+                    n.x === neighbor.x &&
+                    n.y === neighbor.y
+                )
+            ) {
+                open.push(neighbor);
+            }
+        }
+    }
+
+    return null;
+}
+
+function heuristic(a, b) {
+    return Math.max(
+        Math.abs(a.x - b.x),
+        Math.abs(a.y - b.y)
+    );
+}
+
+function getPathNeighbors(monster, current) {
+    const directions = [
+        { dx:  1, dy:  0 },
+        { dx: -1, dy:  0 },
+        { dx:  0, dy:  1 },
+        { dx:  0, dy: -1 },
+
+        { dx:  1, dy:  1 },
+        { dx: -1, dy: -1 },
+        { dx:  1, dy: -1 },
+        { dx: -1, dy:  1 }
+    ];
+
+    const result = [];
+
+    for (const dir of directions) {
+
+        const nx = current.x + dir.dx;
+        const ny = current.y + dir.dy;
+
+        if (!canPlace(monster, nx, ny)) {
+            continue;
+        }
+
+        // Don't cut diagonally through corners.
+        if (dir.dx !== 0 && dir.dy !== 0) {
+
+            if (
+                !canPlace(
+                    monster,
+                    current.x + dir.dx,
+                    current.y
+                )
+            ) {
+                continue;
+            }
+
+            if (
+                !canPlace(
+                    monster,
+                    current.x,
+                    current.y + dir.dy
+                )
+            ) {
+                continue;
+            }
+        }
+
+        result.push({
+            x: nx,
+            y: ny
+        });
+    }
+
+    return result;
+}
+function reconstructAStarPath(current, cameFrom) {
+
+    const path = [current];
+
+    while (true) {
+
+        const previous =
+            cameFrom.get(
+                `${current.x},${current.y}`
+            );
+
+        if (!previous) {
+            break;
+        }
+
+        path.unshift(previous);
+        current = previous;
+    }
+
+    return path;
+}
+
+function findBestAttackPath(monster, target, actions) {
+
+    const attackRanges = actions.map(
+        act => act.range || 1
+    );
+
+    const maxRange = Math.max(
+        ...attackRanges,
+        1
+    );
+
+    const attackTiles =
+        getAttackTilesForRange(
+            target,
+            maxRange
+        );
+
+    let best = null;
+
+    for (const tile of attackTiles) {
+
+        // The monster cannot stand inside another body.
+        if (!canPlace(monster, tile.x, tile.y)) {
+            continue;
+        }
+
+        const path =
+            findPathAStar(
+                monster,
+                tile
+            );
+
+        if (!path) {
+            continue;
+        }
+
+        const distance = path.length - 1;
+
+        if (
+            !best ||
+            distance < best.distance
+        ) {
+            best = {
+                tile,
+                path,
+                distance
+            };
+        }
+    }
+
+    return best;
+}
+
+function getAttackTilesForRange(target, range) {
+
+    const targetSquares = getSquares(target);
+
+    const tiles = [];
+    const seen = new Set();
+
+    const minX =
+        Math.min(...targetSquares.map(s => s.x))
+        - range;
+
+    const maxX =
+        Math.max(...targetSquares.map(s => s.x))
+        + range;
+
+    const minY =
+        Math.min(...targetSquares.map(s => s.y))
+        - range;
+
+    const maxY =
+        Math.max(...targetSquares.map(s => s.y))
+        + range;
+
+    for (
+        let x = minX;
+        x <= maxX;
+        x++
+    ) {
+        for (
+            let y = minY;
+            y <= maxY;
+            y++
+        ) {
+
+            if (
+                x < 0 ||
+                x >= 10 ||
+                y < 0 ||
+                y >= 10
+            ) {
+                continue;
+            }
+
+            const key = `${x},${y}`;
+
+            if (seen.has(key)) {
+                continue;
+            }
+
+            // Monster may not stand inside target's body.
+            if (
+                targetSquares.some(s =>
+                    s.x === x &&
+                    s.y === y
+                )
+            ) {
+                continue;
+            }
+
+            /*
+             * Check whether a 1x1 point at this position
+             * is within range of the target body.
+             */
+            let inRange = false;
+
+            for (const targetSquare of targetSquares) {
+
+                const dx =
+                    Math.abs(x - targetSquare.x);
+
+                const dy =
+                    Math.abs(y - targetSquare.y);
+
+                if (
+                    Math.max(dx, dy) <= range
+                ) {
+                    inRange = true;
+                    break;
+                }
+            }
+
+            if (!inRange) {
+                continue;
+            }
+
+            seen.add(key);
+
+            tiles.push({
+                x,
+                y
+            });
+        }
+    }
+
+    return tiles;
+}
+
+function moveMonsterToAttackPosition(monster, target, actions) {
+    const maxRange = Math.max(
+        ...actions.map(a => a.range || 1),
+        1
+    );
+
+    const path = findPathToAttackPosition(
+        monster,
+        target,
+        maxRange
+    );
+
+    if (!path || path.length <= 1) {
+        return false;
+    }
+
+    const movement =
+        Number.isFinite(monster.remainingSpeed)
+            ? monster.remainingSpeed
+            : monster.speed || 0;
+
+    const steps = Math.min(
+        movement,
+        path.length - 1
+    );
+
+    for (let i = 1; i <= steps; i++) {
+        const step = path[i];
+
+        if (!canPlace(monster, step.x, step.y)) {
+            break;
+        }
+
+        monster.x = step.x;
+        monster.y = step.y;
+
+        if (Number.isFinite(monster.remainingSpeed)) {
+            monster.remainingSpeed--;
+        }
+    }
+
+    return steps > 0;
+}
+
+function findPathToAttackPosition(monster, target, range) {
+    const start = {
+        x: monster.x,
+        y: monster.y
+    };
+
+    const key = (x, y) => `${x},${y}`;
+
+    const open = [{
+        x: start.x,
+        y: start.y,
+        g: 0,
+        f: 0
+    }];
+
+    const cameFrom = new Map();
+    const gScore = new Map();
+
+    gScore.set(key(start.x, start.y), 0);
+
+    while (open.length > 0) {
+
+        // Lowest estimated total cost
+        open.sort((a, b) => a.f - b.f);
+
+        const current = open.shift();
+
+        /*
+         * We don't need to reach a pre-selected attack tile.
+         * The first reachable tile that is in attack range wins.
+         */
+        const simulated = {
+            ...monster,
+            x: current.x,
+            y: current.y
+        };
+
+        if (
+            isInRange(
+                simulated,
+                target,
+                range
+            )
+        ) {
+            return reconstructPath(
+                current,
+                cameFrom
+            );
+        }
+
+        for (const next of getPathNeighbors(
+            monster,
+            current
+        )) {
+
+            const nextKey = key(
+                next.x,
+                next.y
+            );
+
+            const newG = current.g + (
+                next.x !== current.x &&
+                next.y !== current.y
+                    ? 1.414
+                    : 1
+            );
+
+            const oldG =
+                gScore.get(nextKey) ?? Infinity;
+
+            if (newG >= oldG) {
+                continue;
+            }
+
+            cameFrom.set(
+                nextKey,
+                {
+                    x: current.x,
+                    y: current.y
+                }
+            );
+
+            gScore.set(
+                nextKey,
+                newG
+            );
+
+            const h =
+                distanceToTarget(
+                    next,
+                    target
+                );
+
+            open.push({
+                x: next.x,
+                y: next.y,
+                g: newG,
+                f: newG + h
+            });
+        }
+    }
+
+    return null;
+}
+
+function distanceToTarget(pos, target) {
+    const targetSquares = getSquares(target);
+
+    let best = Infinity;
+
+    for (const t of targetSquares) {
+        const dx = Math.abs(pos.x - t.x);
+        const dy = Math.abs(pos.y - t.y);
+
+        best = Math.min(
+            best,
+            Math.max(dx, dy)
+        );
+    }
+
+    return best;
+}
+
+function moveAlongPath(u, path) {
+
+    if (!path || path.length <= 1) {
+        return false;
+    }
+
+    const available =
+        u.remainingSpeed ?? u.speed ?? 0;
+
+    const steps =
+        Math.min(
+            available,
+            path.length - 1
+        );
+
+    let moved = false;
+
+    for (let i = 1; i <= steps; i++) {
+
+        const step = path[i];
+
+        /*
+         * The board could have changed since A*
+         * calculated the path.
+         */
+        if (!canPlace(u, step.x, step.y)) {
+            break;
+        }
+
+        u.x = step.x;
+        u.y = step.y;
+
+        if (u.remainingSpeed != null) {
+            u.remainingSpeed--;
+        }
+
+        moved = true;
+    }
+
+    return moved;
+}
 
 function isTileFree(x, y) {
     // Stay inside the 10×10 grid
