@@ -681,17 +681,17 @@ const missionNodes = {
 				}
 };
 
-function missionController(nodeId) {
+async function missionController(nodeId) {
     const current = player.missions.current_mission;
     const missionId = current.id;
-
+	await storage.savePlayer(player);
     console.log("Mission Controller:", missionId, "Node:", nodeId);
 	if (nodeId === "green_2_shrine") {
 		const shrineKey = player.missions.green_2keys?.shrine || 0;
 
 		if (shrineKey === 1) return openMissionNode("greenshrine_1");
 		if (shrineKey === 2) return openMissionNode("greenshrine_2");
-}
+	}
 
     // 1. Dark Woods / node-based missions
     if (missionNodes[nodeId]) {
@@ -765,6 +765,7 @@ function matchesCondition(condition, value) {
 }
 
 function handleNodeEntry(nodeId, player, missionId) {
+  console.log("running handleNodeEntry");
   const rules = missionRules[nodeId];
   if (!rules) return;
 
@@ -1047,7 +1048,7 @@ async function openMissionNode(nodeId) {
     // Store selected node for engagement
     selectedNode = node;
     // Only green_2 uses the encounter database for now
-	if (   nodeId === "green_2" && [2, 3, 5, 6, 7 ,8].includes(player.missions.green_2)
+	if (   nodeId === "green_2" && [2, 3, 5, 6 ,8].includes(player.missions.green_2)
 		) {
 	const encounter = pickEncounter("green_2");
 	

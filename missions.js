@@ -988,6 +988,11 @@ async function handleMissionEnd(sceneId) {
             Journal.addEntry("You've decided to travel to the Township Tavern and meet up with Hogmother.");
             loadPage("missions");
         },
+        "green2_704end": async () => {
+            player.missions.green_2 = 8;
+            Journal.addEntry("Bragain have met an Apparation in his imagination.");
+            loadPage("green_2");
+        },
         "green2_*101end": async () => {
             //player.missions.green_2 = 1;
             //Journal.addEntry("You've decided to travel to the Township Tavern and meet up with Hogmother.");

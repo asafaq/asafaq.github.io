@@ -1924,7 +1924,7 @@ function runMission(missionId) {
 function getStartSceneId(c_mission) {
     if (typeof c_mission !== "string") {
         console.warn("Invalid mission ID:", c_mission);
-        return "green1_101"; // fallback
+        return ""; // fallback
     }
 
     // Split mission ID: "green_2" → ["green", "2"]

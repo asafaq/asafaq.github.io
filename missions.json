@@ -1441,22 +1441,13 @@
     "target_id": "green2_102"
   },
   {
-    "id": "green2_102bgn",
-    "speaker": "Bragain",
-    "portrait": "/assets/patrons/dwarven_miner.png",
-    "side": "left",
-    "dialog": "Argh, outdoors again. What I wouldn't give to be deep underground in my workshop surrounded by my clan again.",
-    "interaction_type": "next",
-    "target_id": "green2_103"
-  },
-  {
     "id": "green2_102",
     "speaker": "Narrator",
     "portrait": "",
     "side": "left",
     "dialog": "The long winding road by the mountain and the more-mountains is your path, straight up ahead.",
     "interaction_type": "next",
-    "target_id": "green2_102bgn",
+    "target_id": "green2_103",
 	"branches": [
     {
       "condition": "party_member",
@@ -1464,6 +1455,15 @@
       "target_id": "green2_102bgn"
     }
 	]
+  },
+  {
+    "id": "green2_102bgn",
+    "speaker": "Bragain",
+    "portrait": "/assets/patrons/dwarven_miner.png",
+    "side": "left",
+    "dialog": "Argh, outdoors again. What I wouldn't give to be deep underground in my workshop surrounded by my clan again.",
+    "interaction_type": "next",
+    "target_id": "green2_103"
   },
   {
     "id": "green2_103",
@@ -1914,6 +1914,60 @@
     "target_id": "END"
   },
   {
+    "id": "green2_701",
+    "speaker": "Apparation",
+    "portrait": "/assets/missions/apparation.png",
+    "side": "left",
+    "dialog": "Halt Bragain!",
+    "speaker2": "Bragain",
+    "portrait2": "/assets/patrons/dwarven_miner.png",
+    "side2": "right",
+    "dialog2": "Eh...... ?!",
+    "interaction_type": "next",
+    "target_id": "green2_702"
+  },
+  {
+    "id": "green2_702",
+    "speaker": "Apparation",
+    "portrait": "/assets/missions/apparation.png",
+    "side": "left",
+    "dialog": "Stand fast Bargain of the subterranean miners!",
+	"dialog2": "Why are you wasting your time with those ragged wanderers who get nowhere and accumulate nothing?!",
+	"dialog3": "Come join me in the depths, surrounded by treasures we’ll be richer than all of them!",
+    "interaction_type": "next",
+    "target_id": "green2_703"
+  },
+  {
+    "id": "green2_703",
+    "speaker": "Bragain",
+    "portrait": "/assets/patrons/dwarven_miner.png",
+    "side": "right",
+    "dialog": "What? … but where?!",
+    "speaker2": "Apparation",
+    "portrait2": "/assets/missions/apparation.png",
+    "side2": "left",
+    "dialog2": "You’ll know where… find the vein and follow it through deep in the earth… I’m not far under the ground.",
+    "interaction_type": "next",
+    "target_id": "green2_704"
+  },
+  {
+    "id": "green2_704",
+    "speaker1": "Narrator",
+    "side": "left",
+    "dialog": "The apparition vanishes.",
+    "speaker2": "Bragain",
+    "portrait2": "/assets/patrons/dwarven_miner.png",
+    "side2": "right",
+    "dialog2": "What was that?! That was some wild fey spirit, ugh and I wasn’t even drinking anything.",
+    "interaction_type": "next",
+    "target_id": "green2_704end"
+  },
+  {
+    "id": "green2_704end",
+    "interaction_type": "next",
+    "target_id": "END"
+  },
+  {
     "id": "green2_901",
     "speaker": "Narrator",
     "portrait": "",
@@ -2279,10 +2333,6 @@
   },
   {
     "id": "green2_940a_end",
-    "speaker": "Narrator",
-    "portrait": "",
-    "side": "left",
-    "dialog": "The party has decided to leave the alley and abandon the dealing with the Goblin. They will head out immidatley towards the forest.",
     "interaction_type": "next",
     "target_id": "END"
   },
