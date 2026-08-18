@@ -1313,13 +1313,11 @@
     "options": [
       {
         "text": "Begin Tutorial.",
-        "target_id": "tutor1_101",
-        "condition": null
+        "target_id": "tutor1_101"
       },
       {
         "text": "Go back.",
-        "target_id": "tutor1_000end",
-        "condition": null
+        "target_id": "tutor1_000end"
       }
     ]
   },
@@ -3743,6 +3741,62 @@
   },
   {
     "id": "dwood1_201",
+    "speaker": "Narrator",
+    "dialog": "Approching the shrine, you can see the location from where you are. There's a large beast on fours right in the entrence of it.",
+	"dialog2": "Spying on the beast, it seems to stay put. If you want the shrine, you'll have to confront it.",
+    "interaction_type": "select",
+	"options": [
+	  {
+		"text": "[Speak with Animals] Approach the beast with friendly familiay words.",
+        "target_id": "dwood1_20101",
+        "color": "#FFD700",
+		"condition_trait": "Speak with Animals"
+      },
+	  {
+		"text": "Approach the beast with apprehension.",
+        "target_id": "dwood1_20103"
+      }
+	  {
+		"text": "Retreat.",
+        "disabled": true,
+		"frustration_text": "There's no other way I'm afraid."
+      },
+	  ]
+  },
+  {
+    "id": "dwood1_20101",
+    "speaker": "Tonica",
+    "portrait": "/assets/patrons/tonica_L.png",
+    "side": "left",
+    "dialog": "I'll reason with the beast.",
+    "dialog2": "Owlbear, guardian of the woods, warden of the shrine, grant us passage on the sacred earth marked here.",
+    "interaction_type": "next",
+    "target_id": "dwood1_20102"
+  },
+  {
+    "id": "dwood1_20102",
+    "speaker": "Owlbear",
+    "portrait": "/assets/monsters/owlbear.png",
+    "side": "right",
+    "dialog": "Whispers, whispers, whispers, constant whispers, a gloomy shadow called me to assault everything in the shrine.",
+    "dialog2": "My lady, carry on I shall not harm thee, but do not linger. The woods are cursed.",
+    "interaction_type": "next",
+    "target_id": "dwood1_202o"
+  },
+  {
+    "id": "dwood1_20103",
+    "speaker": "Narrator",
+    "dialog": "The party approaches the beast, as it's pacing towards you with hostile intent. Prepare to battle.",
+    "interaction_type": "next",
+    "target_id": "dwood1_20103end"
+  },
+  {
+    "id": "dwood1_20103end",
+    "interaction_type": "next",
+    "target_id": "END"
+  },
+  {
+    "id": "dwood1_202o",
     "speaker": "Hogmother",
     "portrait": "/assets/patrons/hogmother.png",
     "side": "left",

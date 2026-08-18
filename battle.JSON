@@ -146,6 +146,19 @@
         }
       ]
     },
+    "temple_owl": {
+      "name": "temple_owl",
+      "map": "forest_temple2",
+      "monsters": [
+        {
+          "id": "owlbear",
+          "count": 1,
+          "spawns": [
+            { "x": 6, "y": 7 }
+          ]
+        }
+      ]
+    },
 
 	"forest_mix1": {
 	  "name": "Forest Ambush",
@@ -799,10 +812,8 @@
 		"freeActions": {
 			"dialogueChance": 35,
 			"dialogue": [
-				"Get lost!",
-				"You'll regret that!",
-				"Come on then!",
-				"Kill them all!"
+				"hhhhhuuuuuuugggggggghhhhhhh",
+				"Hoooooooooooo Hoooooooooo"
 		]}
     },
     "armored_ogre": {

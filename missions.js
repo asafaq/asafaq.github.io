@@ -1221,6 +1221,10 @@ async function handleMissionEnd(sceneId) {
             player.patrons.adv_Trollkin.status = "rival";
             loadPage("mission_dwood_1");
         },
+        "dwood1_20103end": async () => {
+			await launchBattle("temple_owl");
+			await runMission("dwood1_202o");
+        },
 		
         "dwood1_219end": async () => {
             player.missions.dwood_1 = 3;
