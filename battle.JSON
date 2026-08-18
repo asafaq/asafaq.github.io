@@ -128,7 +128,7 @@
 
     "tutor_armogre": {
       "name": "armored_ogre",
-      "map": "green_2",
+      "map": "forest_temple2",
       "monsters": [
         {
           "id": "armored_ogre",
@@ -625,6 +625,14 @@
 			"damageDie": 4,
 			"damageBonus": 1	}
 			],
+		"freeActions": {
+			"dialogue": [
+				"Get lost!",
+				"You'll regret that!",
+				"Come on then!",
+				"Kill them all!"
+		]},
+    
 	  "silver": 8
     },
 
@@ -747,7 +755,7 @@
 			"damageBonus": 1	},
 			{
 			"name": "Bite",
-			"type": "slashing",
+			"type": "piercing",
 			"#": 1,
 			"hitMod": 3,
 			"range": 1,
@@ -787,7 +795,15 @@
 			"damageDie": 8,
 			"range": 1,
 			"damageBonus": 1	}
-			]
+			],
+		"freeActions": {
+			"dialogueChance": 35,
+			"dialogue": [
+				"Get lost!",
+				"You'll regret that!",
+				"Come on then!",
+				"Kill them all!"
+		]}
     },
     "armored_ogre": {
       "name": "Armored Ogre",
@@ -814,7 +830,15 @@
 			"damageDie": 7,
 			"damageBonus": 5	}
 			],
-	  "silver": 180
+	  "silver": 180,
+		"freeActions": {
+			"dialogue": [
+				"Get lost!",
+				"You'll regret that!",
+				"Come on then!",
+				"Kill them all!"
+			]
+		}
     },
     "cambion": {
       "name": "Cambion",
@@ -840,8 +864,14 @@
 			"damageDie": 12,
 			"damageBonus": 10	}
 			]
-    }
-  },
+    },
+		"freeActions": {
+		"dialogueChance": 50,
+		"dialogue": [
+			"Pathetic!",
+			"Die"
+		]}
+},
 
 
 
@@ -910,6 +940,32 @@
       "obstacles": [
         { "line": [0, 0, 0, 9] }
       ]
+    },
+
+    "fort_sewers2": {
+      "url": "/assets/battlemaps/fortress3.png",
+      "obstacles": [
+        { "line": [0, 0, 0, 2] },
+		{ "line": [0, 8, 0, 9] } 
+		]
+		},
+
+    "fortress1": {
+      "url": "/assets/battlemaps/fortress.png",
+      "obstacles": [
+        { "line": [0, 0, 0, 1] },
+		{ "line": [0, 6, 0, 7] },
+        { "line": [9, 0, 9, 1] },
+		{ "line": [9, 6, 9, 7] },
+		{ "line": [0, 9, 9, 9] } 
+		]
+    },
+
+    "fortress2": {
+      "url": "/assets/battlemaps/fortress2.png",
+      "obstacles": [
+		]
     }
+	
   }
 }

@@ -2053,6 +2053,7 @@ function endTurn() {
 }
 
 function monsterAI() {
+
     const u = units[initiativeOrder[turnIndex].index];
 
     if (!u || u.hp <= 0) return endTurn();
@@ -2064,17 +2065,13 @@ function monsterAI() {
 
     u.hasAction = true;
 
+    // FREE ACTION — does not consume action or delay the AI
+    runFreeAction(u);
+	
     const target = findNearestPC(u);
     if (!target) return endTurn();
 
-    if (u.dialog && !u._dialogPlayed) {
-        u._dialogPlayed = true;
 
-        if (parent && typeof parent.renderScene === 'function') {
-            parent.renderScene(u.dialog, "battle")
-                .catch(err => console.error(err));
-        }
-    }
 
 	const actions = getMonsterActionList(u);
 
@@ -2120,6 +2117,94 @@ function monsterAI() {
     }, 600);
 }
 
+/* =========================================================
+ * MONSTER FREE ACTION DIALOGUE
+ * ========================================================= */
+
+const monsterFreeDialogue = {
+    messages: [],
+    nextId: 1,
+    duration: 3000
+};
+
+
+function getMonsterDialogueContainer() {
+    let container = document.getElementById("monster-free-dialogue-container");
+
+    if (!container) {
+        container = document.createElement("div");
+        container.id = "monster-free-dialogue-container";
+
+        document.body.appendChild(container);
+    }
+
+    return container;
+}
+
+
+function runFreeAction(monster) {
+    if (!monster || monster.hp <= 0) return;
+
+    const freeActions = monster.freeActions;
+
+    if (!freeActions?.dialogue?.length) return;
+
+    const chance = freeActions.dialogueChance ?? 100;
+
+    // Roll 0-99
+    if (Math.random() * 100 >= chance) {
+        return;
+    }
+
+    const text =
+        freeActions.dialogue[
+            Math.floor(Math.random() * freeActions.dialogue.length)
+        ];
+
+    showMonsterDialogue(monster, text);
+}
+
+
+function showMonsterDialogue(monster, text) {
+    const id = monsterFreeDialogue.nextId++;
+
+    const container = getMonsterDialogueContainer();
+
+    const el = document.createElement("div");
+
+    el.className = "monster-free-dialogue";
+    el.dataset.dialogueId = id;
+
+    el.textContent = `${monster.name}: "${text}"`;
+
+    container.appendChild(el);
+
+    monsterFreeDialogue.messages.push({
+        id,
+        el
+    });
+
+	const duration = 3000 + (text.length * 40);
+
+	setTimeout(() => {
+		removeMonsterDialogue(id);
+	}, duration);
+}
+
+
+function removeMonsterDialogue(id) {
+    const index = monsterFreeDialogue.messages.findIndex(
+        message => message.id === id
+    );
+
+    if (index === -1) return;
+
+    const message = monsterFreeDialogue.messages[index];
+
+    message.el.remove();
+
+    monsterFreeDialogue.messages.splice(index, 1);
+}
 function getAttackTiles(target) {
     const tiles = [];
     const tSquares = getSquares(target);
