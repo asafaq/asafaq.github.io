@@ -214,6 +214,198 @@ function createDialogWindow(dlg, index = 0) {
     return div;
 }
 
+const PORTRAITS = {
+    Narrator: {
+		default: null,
+		Boulder: "/assets/missions/boulder.png",
+		Coins: "/assets/missions/mission_event_coins_s.png"
+	},
+	Introduction: null,
+	Tutorial: null,
+	Traveler: null,
+	
+	Bragain: {
+		default: "/assets/patrons/dwarven_miner.png"
+	},
+	
+	"Guild Master": {
+		default: "/assets/guild/guild_master.png"
+	},
+	
+	Hogperson: {
+		default: "/assets/patrons/hogperson.png"
+	},
+	
+	Claudio: {
+        default: "/assets/patrons/claudio.png",
+        Disguised: "/assets/missions/claudio_disguise_l.png",
+        Disguised2: "/assets/missions/claudio_disguise2_l.png",
+        Amyssa: "/assets/patrons/amyssa_l.png"
+	},
+	
+    Amyssa: {
+        default: "/assets/patrons/amyssa_l.png",
+        Disguised: "/assets/missions/amyssa_disguise_l.png"
+    },
+
+    Hogmother: {
+        default: "/assets/patrons/hogmother.png"
+    },
+
+    Hogfather: {
+        default: "/assets/patrons/hogfather.png"
+    },
+
+    Tonica: {
+        default: "/assets/patrons/tonica_L.png"
+    },
+
+    Owlbear: {
+        default: "/assets/monsters/owlbear.png"
+    },
+
+    Claudio: {
+        default: "/assets/patrons/claudio.png",
+        Disguised: "/assets/missions/claudio_disguise_l.png",
+        Disguised2: "/assets/missions/claudio_disguise2_l.png",
+        Amyssa: "/assets/patrons/amyssa_l.png"
+    },
+	
+	Tonica: {
+        default: "/assets/patrons/tonica_L.png"
+    },
+	
+	Crusher: {
+        default: "/assets/patrons/crusher_l.png"
+    },
+	
+	Marlnus: {
+        default: "/assets/patrons/marlnus_l.png"
+    },
+	
+	Lurch: {
+        default: "/assets/patrons/lurch.png"
+    },
+	
+	Awotruce: {
+        default: "/assets/patrons/direwolf.png",
+		delayeddeath: "/assets/missions/awetruce_delayeddeath.png"
+    },
+	
+	Finnick: {
+        default: "/assets/patrons/halfling_L.png"
+    },
+	
+	Trollkin: {
+        default: "/assets/patrons/trollkin_l.png",
+		vanish: "/assets/patrons/trollkin_l_vanish.png"
+    },
+	
+	Wormtail: {
+        default: "/assets/patrons/wormtail_l.png"
+    },
+	
+	Koboldog: {
+        default: "/assets/missions/koboldog.png"
+    },
+	
+	Apparation: {
+        default: "/assets/missions/apparation.png"
+    },
+	
+	Ugress : {
+        default: "/assets/missions/Ugress_l.png",
+		possesed: "/assets/missions/Ugress_possesed_l.png"
+    }
+};
+
+
+function resolvePortrait(speaker, portraitSpec = null) {
+
+    // -----------------------------------------
+    // LEGACY DUAL-DIALOG
+    // -----------------------------------------
+    if (Array.isArray(speaker)) {
+
+        if (!portraitSpec) {
+            console.warn(
+                `Dual-dialog has speakers but no portraits:`,
+                speaker
+            );
+            return null;
+        }
+
+        return Array.isArray(portraitSpec)
+            ? portraitSpec
+            : [portraitSpec];
+    }
+
+
+    // -----------------------------------------
+    // NO SPEAKER
+    // -----------------------------------------
+    if (!speaker) {
+        return null;
+    }
+
+
+    // -----------------------------------------
+    // EXPLICIT PORTRAIT
+    // -----------------------------------------
+    //
+    // IMPORTANT:
+    // The portrait character does NOT have to
+    // match the speaker.
+    //
+    // Narrator + ["Claudio", "default"]
+    // is completely valid.
+    //
+    if (Array.isArray(portraitSpec)) {
+
+        const portraitSpeaker = portraitSpec[0];
+        const variant = portraitSpec[1];
+
+        const portraitCharacter = PORTRAITS[portraitSpeaker];
+
+        if (!portraitCharacter) {
+            console.warn(
+                `No portrait definition found for portrait character: "${portraitSpeaker}"`
+            );
+            return null;
+        }
+
+        const portraitPath = portraitCharacter[variant];
+
+        if (!portraitPath) {
+            console.warn(
+                `No portrait variant "${variant}" found for "${portraitSpeaker}"`
+            );
+            return null;
+        }
+
+        return [portraitPath];
+    }
+
+
+    // -----------------------------------------
+    // DEFAULT SPEAKER PORTRAIT
+    // -----------------------------------------
+    const character = PORTRAITS[speaker];
+
+    if (!character) {
+        console.warn(
+            `No portrait definition found for speaker: "${speaker}"`
+        );
+        return null;
+    }
+
+    if (!character.default) {
+        return null;
+    }
+
+    return [character.default];
+}
+
 async function renderScene(sceneId) {
 
     if (isTyping) return;
@@ -254,73 +446,123 @@ async function renderScene(sceneId) {
     container.innerHTML = "";
 	choiceContainer.innerHTML = '';
 
-	// --- 6. NORMALIZE DIALOGS INTO AN ARRAY ---
-	let dialogs = [];
+// --- 6. NORMALIZE DIALOGS INTO AN ARRAY ---
 
-	if (scene.dialogs && Array.isArray(scene.dialogs)) {
-		// New format: dialogs: []
-		dialogs = scene.dialogs;
-	} else {
-		// Old format: dialog, dialog2, dialog3, dialog4...
-		let index = 1;
+let dialogs = [];
 
-		while (true) {
-			const key = index === 1 ? "dialog" : `dialog${index}`;
-			if (!scene[key]) break; // stop when no more dialogs
+if (scene.dialogs && Array.isArray(scene.dialogs)) {
 
-				dialogs.push({
-					text: scene[key],
-					speaker: scene[`speaker${index}`] || scene.speaker || null,
+    // New format: dialogs: []
+    dialogs = scene.dialogs.map(d => {
 
-					// ⭐ Portrait normalization (Step 2)
-					portrait: (() => {
-						const raw = index === 1
-							? scene.portrait
-							: scene[`portrait${index}`];
+        const speaker = d.speaker || scene.speaker || null;
 
-						if (!raw) return null;
-						return Array.isArray(raw) ? raw : [raw];
-					})(),
+        return {
+            text: d.text || "",
+            speaker: speaker,
+            portrait: resolvePortrait(speaker, d.portrait),
+            side: d.side
+                ? (Array.isArray(d.side) ? d.side : [d.side])
+                : ["left"]
+        };
+    });
 
-					side: (() => {
-						const raw = index === 1
-							? scene.side
-							: scene[`side${index}`];
+} else {
 
-						if (!raw) return ["left"]; // default
-						return Array.isArray(raw) ? raw : [raw];
-					})()
-				});
+    // Old format:
+    // dialog, dialog2, dialog3, dialog4...
+
+    let index = 1;
+
+    while (true) {
+
+        const dialogKey = index === 1
+            ? "dialog"
+            : `dialog${index}`;
+
+        if (!scene[dialogKey]) break;
+
+        const speaker = index === 1
+            ? scene.speaker
+            : scene[`speaker${index}`] || scene.speaker;
+
+        const rawPortrait = index === 1
+            ? scene.portrait
+            : scene[`portrait${index}`];
+
+        const rawSide = index === 1
+            ? scene.side
+            : scene[`side${index}`] || scene.side;
+
+        dialogs.push({
+            text: scene[dialogKey],
+            speaker: speaker || null,
+
+            // Resolve portrait independently for THIS dialog.
+            portrait: resolvePortrait(
+                speaker,
+                rawPortrait
+            ),
+
+            side: rawSide
+                ? (Array.isArray(rawSide) ? rawSide : [rawSide])
+                : ["left"]
+        });
+
+        index++;
+    }
+}
 
 
-			index++;
-		}
-	}
-	dialogs.forEach(d => {
-		if (!d.speaker) d.speaker = scene.speaker;
-	});
-	const allSameSpeaker = dialogs.every(d => d.speaker === dialogs[0].speaker);
+// --- FALLBACK SPEAKER ---
 
-	let dialogGroups = [];
+dialogs.forEach(d => {
+    if (!d.speaker) {
+        d.speaker = scene.speaker || null;
+    }
+});
 
-	if (allSameSpeaker) {
-		dialogGroups.push({
-			speaker: dialogs[0].speaker,
-			portrait: dialogs[0].portrait,
-			side: dialogs[0].side,
-			texts: dialogs.map(d => d.text)
-		});
-	} else {
-		// Each dialog gets its own window
-		dialogs.forEach(d => {
-			dialogGroups.push({
-				speaker: d.speaker,
-				portrait: d.portrait,
-				side: d.side,
-				texts: [d.text]
-			});
-		});
-	}
+
+// --- 7. GROUP DIALOGS ---
+
+const allSameSpeaker =
+    dialogs.length > 0 &&
+    dialogs.every(d => d.speaker === dialogs[0].speaker);
+
+let dialogGroups = [];
+
+if (allSameSpeaker) {
+
+    // Same speaker:
+    // combine text into one dialog window.
+    //
+    // Since the speaker is the same, using the first portrait
+    // is correct.
+
+    dialogGroups.push({
+        speaker: dialogs[0].speaker,
+        portrait: dialogs[0].portrait,
+        side: dialogs[0].side,
+        texts: dialogs.map(d => d.text)
+    });
+
+} else {
+
+    // Different speakers:
+    // each dialog gets its OWN window and therefore
+    // its OWN portrait.
+
+    dialogs.forEach(d => {
+
+        dialogGroups.push({
+            speaker: d.speaker,
+            portrait: d.portrait,
+            side: d.side,
+            texts: [d.text]
+        });
+
+    });
+}
 	// --- 7. CREATE DIALOG WINDOWS AND TYPEWRITER LOGIC ---
 
 	// Helper: type a single string into an element with per-character delay

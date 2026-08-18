@@ -1,93 +1,7 @@
 [
   {
-    "id": "scene_001",
-    "speaker": "Commander Vex",
-    "portrait": "https://placeholder.com",
-    "side": "left",
-    "dialog": "The perimeter has been breached. We need a decision, and we need it now.",
-    "interaction_type": "selection",
-    "options": [
-      {
-        "text": "Analyze the breach data.",
-        "target_id": "scene_002_data",
-        "condition": null
-      },
-      {
-        "text": "[SPECIAL] Use Admin Protocols",
-        "target_id": "scene_admin_win",
-        "condition": {
-          "idb_key": "hacker_rank",
-          "value": "gold",
-          "color": "#FFD700"
-        }
-      }
-    ]
-  },
-  {
-    "id": "scene_002_data",
-    "speaker": "AI Core",
-    "portrait": "https://placeholder.com",
-    "side": "right",
-    "dialog": "Scanning... the virus is origin-masked. Recommend immediate isolation.",
-    "interaction_type": "next",
-    "target_id": "scene_001",
-    "options": []
-  },
-  {
-    "id": "scene_admin_win",
-    "speaker": "Commander Vex",
-    "portrait": "https://placeholder.com",
-    "side": "left",
-    "dialog": "Impressive. Those admin codes saved us hours. The threat is neutralized.",
-    "interaction_type": "next",
-    "target_id": "scene_001",
-    "options": []
-  },
-  {
-  "id": "scene_admin_win_multi",
-  "speaker": "Commander Vex",
-  "portrait": "https://placeholder.com",
-  "side": "left",
-
-  "dialog": "Impressive..",
-  "dialog2": "But we have much more to do.",
-  "dialog3": "Prepare your squad.",
-
-  "interaction_type": "next",
-  "target_id": "scene_001",
-  "options": []
-  },
-  {
-  "id": "scene_admin_win_multi2",
-  "dialogs": [
-    {
-      "speaker": "Commander Vex - FULL MULTIDIALOG",
-      "portrait": "https://placeholder.com",
-      "side": "left",
-      "text": "Impressive.."
-    },
-    {
-      "speaker": "Lieutenant Mara",
-      "portrait": "https://placeholder.com/mara.png",
-      "side": "right",
-      "text": "The squad is ready, Commander."
-    },
-    {
-      "speaker": "Commander Vex",
-      "portrait": "https://placeholder.com",
-      "side": "left",
-      "text": "Good. We move at dawn."
-    }
-  ],
-  "interaction_type": "next",
-  "target_id": "scene_001",
-  "options": []
-  },
-
-  {
     "id": "Bragain1",
     "speaker": "Bragain",
-    "portrait": "/assets/patrons/dwarven_miner.png",
     "side": "right",
     "dialog": "Hello laddy, it's sure is nice to be back to safe grounds. Although, my ol' pick is eager to be hammering on precious veins. I wish I could find some around here.",
     "interaction_type": "next",
@@ -97,7 +11,6 @@
   {
     "id": "Counterfeit_Electrum1",
     "speaker": "Bragain",
-    "portrait": "/assets/patrons/dwarven_miner.png",
     "side": "right",
     "dialog": "Hey look Hoggy, the Guild Master have found the lore book the previous thieves' guild have left here.",
     "interaction_type": "next",
@@ -106,7 +19,6 @@
   {
     "id": "cfe2",
     "speaker": "Hogperson",
-    "portrait": "/assets/patrons/hogperson.png",
     "side": "left",
     "dialog": "Oh, it's a BOOK!.",
     "interaction_type": "next",
@@ -115,7 +27,6 @@
   {
     "id": "cfe3",
     "speaker": "Guild Master",
-    "portrait": "/assets/guild/guild_master.png",
     "side": "left",
     "dialog": "What do you mean thieves' guild? This place is licenced to be an adventurer's guild besides just a tavern.",
     "interaction_type": "next",
@@ -124,7 +35,6 @@
   {
     "id": "cfe4",
     "speaker": "Bragain",
-    "portrait": "/assets/patrons/dwarven_miner.png",
     "side": "right",
     "dialog": "Aye, it sure is. Came by cheaply too eh. But the previous owners left some evidence behind, see that coin between the pages?",
     "interaction_type": "next",
@@ -133,7 +43,6 @@
   {
     "id": "cfe5",
     "speaker": "Guild Master",
-    "portrait": "/assets/guild/guild_master.png",
     "side": "left",
     "dialog": "Hey look at that you're right, there's a single Electrum coin left behind here.",
     "interaction_type": "next",
@@ -147,27 +56,33 @@
     "target_id": "patronend"
   },
   {
-    "id": "Amyssa2",
+    "id": "Amyssa1",
     "dialog": "We agree.",
-    "speaker": ["Amyssa", "Guild Master"],
-    "portrait": ["/assets/patrons/amyssa_l.png", "/assets/guild/guild_master.png"],
-    "side": ["right", "left"],
+    "speaker": [
+      "Amyssa",
+      "Guild Master"
+    ],
+    "portrait": [
+      "/assets/patrons/amyssa_l.png",
+      "/assets/guild/guild_master.png"
+    ],
+    "side": [
+      "right",
+      "left"
+    ],
     "interaction_type": "next",
     "target_id": "patronend"
   },
   {
-    "id": "Amyssa1",
+    "id": "Amyssa2",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_l.png",
     "side": "right",
     "dialog": ".......................",
-	"speaker2": "Guild Master",
+    "speaker2": "Guild Master",
     "side2": "left",
-    "portrait2": "/assets/guild/guild_master.png",
     "dialog2": "......................",
-	"speaker3": "Amyssa",
+    "speaker3": "Amyssa",
     "dialog3": "I'm busy...\n\n<scribbles>",
-    "portrait3": "/assets/patrons/amyssa_l.png",
     "side3": "right",
     "interaction_type": "next",
     "target_id": "patronend"
@@ -175,11 +90,10 @@
   {
     "id": "Tonica1",
     "speaker": "Tonica",
-    "portrait": "/assets/patrons/tonica_L.png",
     "side": "right",
     "dialog": "Trees are by far the most valuable and rare crop in the universe. More valuable than gold. What do you mean? There are trees everywhere. A tree provides other living things nourishments, housing, kindling in the winter, it is life preserving.",
-	"dialog2": "Gold is but a coin of trade for the greedy. There's also gold everywhere, the stars sparkling out in the sky are filled with gold, but not even one tree. If the trees go scarce, no amount of gold will prove sufficient.",
-	"dialog3": "I will return to my duty overlooking the pasture soon.",
+    "dialog2": "Gold is but a coin of trade for the greedy. There's also gold everywhere, the stars sparkling out in the sky are filled with gold, but not even one tree. If the trees go scarce, no amount of gold will prove sufficient.",
+    "dialog3": "I will return to my duty overlooking the pasture soon.",
     "interaction_type": "next",
     "target_id": "patronend",
     "options": []
@@ -187,7 +101,6 @@
   {
     "id": "Tonica2",
     "speaker": "Tonica",
-    "portrait": "/assets/patrons/tonica_L.png",
     "side": "right",
     "dialog": "Pardon me Innkepper, my duty is with the woods. I must fulfill my oath and remain the steward.",
     "interaction_type": "next",
@@ -197,7 +110,6 @@
   {
     "id": "Hogperson1",
     "speaker": "Hogperson",
-    "portrait": "/assets/patrons/hogperson.png",
     "side": "right",
     "dialog": "I'm having a good time at the ol' Inn.",
     "interaction_type": "next",
@@ -206,8 +118,7 @@
   },
   {
     "id": "Marlnus1",
-    "speaker": "Bragain",
-    "portrait": "/assets/patrons/marlnus_l.png",
+    "speaker": "Marlnus",
     "side": "right",
     "dialog": "Greetings young Master. I'm happy to offer my Chauffeur services and my cart for your party.",
     "interaction_type": "next",
@@ -217,7 +128,6 @@
   {
     "id": "Crusher1",
     "speaker": "Guild Master",
-    "portrait": "/assets/guild/guild_master.png",
     "side": "left",
     "dialog": ".......",
     "interaction_type": "next",
@@ -227,7 +137,6 @@
   {
     "id": "crusher2",
     "speaker": "Crusher",
-    "portrait": "/assets/patrons/crusher_l.png",
     "side": "right",
     "dialog": "..........................\n..........................\n\nWhadayawant ..... ?",
     "interaction_type": "next",
@@ -237,7 +146,6 @@
   {
     "id": "crusher3",
     "speaker": "Guild Master",
-    "portrait": "/assets/guild/guild_master.png",
     "side": "left",
     "dialog": "....... What would you say you do here?",
     "interaction_type": "next",
@@ -247,7 +155,6 @@
   {
     "id": "crusher4",
     "speaker": "Crusher",
-    "portrait": "/assets/patrons/crusher_l.png",
     "side": "right",
     "dialog": "Monitoring the situation.",
     "interaction_type": "next",
@@ -260,7 +167,7 @@
   },
   {
     "id": "tutor1_101",
-    "speaker": "Tutorial Narrator",
+    "speaker": "Tutorial",
     "dialog": "Welcome to the game! As an aspiring entrepreneur looking to start a business in this part of the world, you’ve spent your life savings to become the proud owner of the land deed to this quaint tavern.",
     "interaction_type": "next",
     "target_id": "tutor1_101a",
@@ -268,8 +175,7 @@
   },
   {
     "id": "tutor1_101a",
-    "speaker": "Tutorial Narrator",
-    "portrait": "",
+    "speaker": "Tutorial",
     "side": "left",
     "dialog": "Located on a countryside road, it is far enough from the township to host travelers and close enough to attract local patrons.",
     "interaction_type": "next",
@@ -278,8 +184,7 @@
   },
   {
     "id": "tutor1_102",
-    "speaker": "Tutorial Narrator",
-    "portrait": "",
+    "speaker": "Tutorial",
     "side": "left",
     "dialog": "You've recently come in contact with the lands governor, and applied to participate in establishing a safer environment for your business,",
     "interaction_type": "next",
@@ -288,8 +193,7 @@
   },
   {
     "id": "tutor1_103",
-    "speaker": "Tutorial Narrator",
-    "portrait": "",
+    "speaker": "Tutorial",
     "side": "left",
     "dialog": "You have been offered partnership! You've signed a contract allowing you to host a guild of adventurers right here in your tavern.",
     "interaction_type": "next",
@@ -298,8 +202,7 @@
   },
   {
     "id": "tutor1_104",
-    "speaker": "Tutorial Narrator",
-    "portrait": "",
+    "speaker": "Tutorial",
     "side": "left",
     "dialog": "This wonderful business enterprise will surely increase your revenue and your popularity among adventurers greatly! *Wink*",
     "interaction_type": "next",
@@ -308,8 +211,7 @@
   },
   {
     "id": "tutor1_105",
-    "speaker": "Tutorial Narrator",
-    "portrait": "",
+    "speaker": "Tutorial",
     "side": "left",
     "dialog": "You've already recruited three local patrons and they've signed up a contract with you, and have been staying at the tavern for QUITE some time now . . .",
     "interaction_type": "next",
@@ -319,7 +221,6 @@
   {
     "id": "tutor1_106",
     "speaker": "Guild Master",
-    "portrait": "/assets/guild/guild_master.png",
     "side": "left",
     "dialog": "NOT THIS AGAIN  ...\n\nWHEN ARE YOU TWO FAT DRUNK BLOBS\nARE EVER GOING TO MAKE ME A PROFIT ???.",
     "interaction_type": "next",
@@ -329,7 +230,6 @@
   {
     "id": "tutor1_107",
     "speaker": "Guild Master",
-    "portrait": "/assets/guild/guild_master.png",
     "side": "left",
     "dialog": "WHAT AM I FEEDING AND HOUSING YOU LOT FOR ???\n\nGO AND GET AT IT ALREADY MAKE ME SOME COIN !!!",
     "interaction_type": "next",
@@ -339,7 +239,6 @@
   {
     "id": "tutor1_108",
     "speaker": "Guild Master",
-    "portrait": "/assets/guild/guild_master.png",
     "side": "left",
     "dialog": "AND TRY FIND THAT WORTHLESS BARD,\n\nCLAUDIO WAS SUPPOSED TO BE BACK HERE BY NOW !!!",
     "interaction_type": "next",
@@ -349,7 +248,6 @@
   {
     "id": "tutor1_109",
     "speaker": "Guild Master",
-    "portrait": "/assets/guild/guild_master.png",
     "side": "left",
     "dialog": "BUT DON'T GO OFF GETTING YOURSELF KILLED !!!\n\nYOU'RE NOT EVEN INSURED YET ...",
     "interaction_type": "next",
@@ -358,8 +256,7 @@
   },
   {
     "id": "tutor1_110",
-    "speaker": "Tutorial Narrator",
-    "portrait": "",
+    "speaker": "Tutorial",
     "side": "left",
     "dialog": "Your first adventure is on it's way!\n\n Head over to the missions page, select Hogperson and Bragain (When implemented), select a mission 'Green Fields : Tutorial' and head off!",
     "interaction_type": "next",
@@ -369,7 +266,6 @@
   {
     "id": "green1_101",
     "speaker": "Hogperson",
-    "portrait": "/assets/patrons/hogperson.png",
     "side": "left",
     "dialog": "Well we've done it now eh 'raggo..?",
     "interaction_type": "next",
@@ -379,7 +275,6 @@
   {
     "id": "green1_002",
     "speaker": "Bragain",
-    "portrait": "/assets/patrons/dwarven_miner.png",
     "side": "right",
     "dialog": "Ehhh, that won't be much of a fuss, \nI reckon we can go dig up that pot we've been saving for later.",
     "interaction_type": "next",
@@ -389,7 +284,6 @@
   {
     "id": "green1_003",
     "speaker": "Hogperson",
-    "portrait": "/assets/patrons/hogperson.png",
     "side": "left",
     "dialog": "WHAT POT?! \nBrag, have you been holding up on me again?",
     "interaction_type": "next",
@@ -399,7 +293,6 @@
   {
     "id": "green1_004",
     "speaker": "Bragain",
-    "portrait": "/assets/patrons/dwarven_miner.png",
     "side": "right",
     "dialog": "Noooo I would never! \nDon't you remember we've talked about this.",
     "interaction_type": "next",
@@ -409,7 +302,6 @@
   {
     "id": "green1_005",
     "speaker": "Hogperson",
-    "portrait": "/assets/patrons/hogperson.png",
     "side": "left",
     "dialog": "Talked???",
     "interaction_type": "next",
@@ -419,7 +311,6 @@
   {
     "id": "green1_006",
     "speaker": "Bragain",
-    "portrait": "/assets/patrons/dwarven_miner.png",
     "side": "right",
     "dialog": "Yeah we've said we can't just let the boss have all the spoils, or he'll dump us to the curve again for sure.",
     "interaction_type": "next",
@@ -429,7 +320,6 @@
   {
     "id": "green1_007",
     "speaker": "Hogperson",
-    "portrait": "/assets/patrons/hogperson.png",
     "side": "left",
     "dialog": "...........\n?!\n\nWhen have WE ever FOUND anything?!",
     "interaction_type": "next",
@@ -439,7 +329,6 @@
   {
     "id": "green1_008",
     "speaker": "Bragain",
-    "portrait": "/assets/patrons/dwarven_miner.png",
     "side": "right",
     "dialog": "Well, just leave it to me then,\nlet's go find our pot o' gold, bring it to the chief,\nAnd we'll be Ok for a while ...",
     "interaction_type": "next",
@@ -449,7 +338,6 @@
   {
     "id": "green1_008END",
     "speaker": "Bragain",
-    "portrait": "/assets/patrons/dwarven_miner.png",
     "side": "right",
     "dialog": "Well, just leave it to me then,\nlet's go find our pot o' gold, bring it to the chief,\nAnd we'll be Ok for a while ...",
     "interaction_type": "next",
@@ -459,7 +347,6 @@
   {
     "id": "green1_201",
     "speaker": "",
-    "portrait": "",
     "side": "right",
     "dialog": "Heading out, on the green path besides the mountain, landslide have toppled a large boulder right in the middle of the road. There's no way around this now.",
     "interaction_type": "next",
@@ -469,7 +356,6 @@
   {
     "id": "green1_011",
     "speaker": "Hogperson",
-    "portrait": "/assets/patrons/hogperson.png",
     "side": "left",
     "dialog": "Oh look, the road is blocked,",
     "interaction_type": "next",
@@ -479,7 +365,6 @@
   {
     "id": "green1_012",
     "speaker": "Hogperson",
-    "portrait": "/assets/patrons/hogperson.png",
     "side": "left",
     "dialog": "Can't catch a break can we Brag?",
     "interaction_type": "next",
@@ -489,7 +374,6 @@
   {
     "id": "green1_013",
     "speaker": "Bragain",
-    "portrait": "/assets/patrons/dwarven_miner.png",
     "side": "right",
     "dialog": "We'll see about that!",
     "interaction_type": "next",
@@ -499,7 +383,7 @@
   {
     "id": "green1_014",
     "speaker": "Narrator",
-    "portrait": "/assets/missions/boulder.png",
+    "portrait": ["Narrator", "Boulder"],
     "side": "right",
     "dialog": "A LARGE SOLID ROCK IS BLOCKING THE ROAD",
     "interaction_type": "selection",
@@ -527,7 +411,6 @@
   {
     "id": "green1_015",
     "speaker": "Bragain",
-    "portrait": "/assets/patrons/dwarven_miner.png",
     "side": "right",
     "dialog": "That's a large Rock, but it has many weak spots.",
     "interaction_type": "next",
@@ -537,7 +420,6 @@
   {
     "id": "green1_016",
     "speaker": "Bragain",
-    "portrait": "/assets/patrons/dwarven_miner.png",
     "side": "right",
     "dialog": "** Swings the Iron Pick with might and bangs the rocks several times.**",
     "interaction_type": "next",
@@ -547,7 +429,6 @@
   {
     "id": "green1_017",
     "speaker": "Bragain",
-    "portrait": "/assets/patrons/dwarven_miner.png",
     "side": "right",
     "dialog": "** The deliberate hits on surface cause massive fractures across the rock.**",
     "interaction_type": "next",
@@ -557,7 +438,6 @@
   {
     "id": "green1_018",
     "speaker": "Bragain",
-    "portrait": "/assets/patrons/dwarven_miner.png",
     "side": "right",
     "dialog": "** The Rock collapses to bits and clears the path.**",
     "interaction_type": "next",
@@ -567,7 +447,6 @@
   {
     "id": "green1_019",
     "speaker": "Bragain",
-    "portrait": "/assets/patrons/dwarven_miner.png",
     "side": "right",
     "dialog": "Hahahaha. Success!\n\nLet's head on out.\n\nBragain gains 50 Exp.",
     "interaction_type": "next",
@@ -577,7 +456,6 @@
   {
     "id": "green1_019END",
     "speaker": "Bragain",
-    "portrait": "/assets/patrons/dwarven_miner.png",
     "side": "right",
     "dialog": "Hahahaha. Success!\n\n Let's head on out.",
     "interaction_type": "next",
@@ -587,7 +465,6 @@
   {
     "id": "green1_301",
     "speaker": "Narrator",
-    "portrait": "",
     "side": "right",
     "dialog": "Carrying on the green path besides the mountain, a sad traveller is sitting by the side of the road, feeling sorry for himself.",
     "interaction_type": "selection",
@@ -615,7 +492,6 @@
   {
     "id": "green1_022",
     "speaker": "Hogperson",
-    "portrait": "/assets/patrons/hogperson.png",
     "side": "left",
     "dialog": "Hey there my good lad! That's no day to be weeping! Come on, get on your feet and tell ol' Hoggy what's ailing you.",
     "interaction_type": "next",
@@ -625,7 +501,6 @@
   {
     "id": "green1_023",
     "speaker": "Traveler",
-    "portrait": "",
     "side": "right",
     "dialog": "The Traveller lets loose of what's ailing him, he was traveling with a companion just like you. He was the only friend who could make me laugh - but his friend has fallen captured by a dangerous group up ahead. They're camping on the cross road up ahead.",
     "interaction_type": "next",
@@ -635,7 +510,6 @@
   {
     "id": "green1_024",
     "speaker": "Narrator",
-    "portrait": "",
     "side": "right",
     "dialog": "With this new found information, you consider it may be valueable to you, you carry on your way towards danger, and the captured traveler.",
     "interaction_type": "next",
@@ -645,7 +519,6 @@
   {
     "id": "green1_025",
     "speaker": "Narrator",
-    "portrait": "",
     "side": "right",
     "dialog": "Hogperson may not be the smartest guy, nor *A* smart guy, \nnor being able to appear smart if his life was depending on it, \nbut he's got a big heart! And that counts.\n\nHogperson gains 50 Exp.",
     "interaction_type": "next",
@@ -655,7 +528,6 @@
   {
     "id": "green1_025END",
     "speaker": "Narrator",
-    "portrait": "",
     "side": "right",
     "dialog": "",
     "interaction_type": "next",
@@ -665,7 +537,6 @@
   {
     "id": "green1_401",
     "speaker": "Narrator",
-    "portrait": "",
     "side": "right",
     "dialog": "Arriving at the cross. A few Koboldogs with large teeth and pointed tails are holding some sort of toll on passing their road.",
     "interaction_type": "next",
@@ -675,7 +546,6 @@
   {
     "id": "green1_027",
     "speaker": "Koboldog",
-    "portrait": "/assets/missions/koboldog.png",
     "side": "right",
     "dialog": "*bark* Oi bone-heads, this is our territory! *bark* ",
     "interaction_type": "next",
@@ -685,7 +555,6 @@
   {
     "id": "green1_028",
     "speaker": "Koboldog",
-    "portrait": "/assets/missions/koboldog.png",
     "side": "right",
     "dialog": "*bark* We've been marking it all day! *bark*\n*bark* Smell it! SMELL IT !!! *bark*",
     "interaction_type": "next",
@@ -695,7 +564,6 @@
   {
     "id": "green1_029",
     "speaker": "Narrator",
-    "portrait": "",
     "side": "right",
     "dialog": "** The smell in this place tells no lies, this IS THEIR TERRITORY **",
     "interaction_type": "next",
@@ -705,7 +573,6 @@
   {
     "id": "green1_030",
     "speaker": "Koboldog",
-    "portrait": "/assets/missions/koboldog.png",
     "side": "right",
     "dialog": "Pay our toll of 100 Silver Coins or enter a cage behind us! *bark*",
     "interaction_type": "selection",
@@ -714,7 +581,7 @@
         "text": "Promise to pay them 100 Silvcrs.",
         "target_id": "STAY",
         "disabled": true,
-		"condition_trait": "Liar",
+        "condition_trait": "Liar",
         "frustration_text": "Ugh, if you could only say that with a straight face."
       },
       {
@@ -734,7 +601,6 @@
   {
     "id": "green1_031",
     "speaker": "Hogperson",
-    "portrait": "/assets/patrons/hogperson.png",
     "side": "left",
     "dialog": "Hey! You boys like sticks right!!\nHow do you like them stick!!\n** BRANDISH Large Club **",
     "interaction_type": "next",
@@ -744,7 +610,6 @@
   {
     "id": "green1_032",
     "speaker": "Narrator",
-    "portrait": "",
     "side": "right",
     "dialog": "The koboldog's eyes widen at the sight the [Large Club]",
     "interaction_type": "next",
@@ -754,7 +619,6 @@
   {
     "id": "green1_033",
     "speaker": "Koboldog",
-    "portrait": "/assets/missions/koboldog.png",
     "side": "right",
     "dialog": "Ahh, wielder of the magnificent large stick!",
     "interaction_type": "next",
@@ -764,7 +628,6 @@
   {
     "id": "green1_034",
     "speaker": "Narrator",
-    "portrait": "",
     "side": "right",
     "dialog": "The Kobolds quiver and lower their tails, their noses, their ears, and their dominant barks turned into submissive yelps.",
     "interaction_type": "next",
@@ -774,7 +637,6 @@
   {
     "id": "green1_035",
     "speaker": "Koboldog",
-    "portrait": "/assets/missions/koboldog.png",
     "side": "right",
     "dialog": "This road is yours now, o' master of the stick! *whimper* *whimper* *whimper* ",
     "interaction_type": "next",
@@ -784,7 +646,6 @@
   {
     "id": "green1_036",
     "speaker": "Narrator",
-    "portrait": "",
     "side": "right",
     "dialog": "You move towards the cages, just like the traveller tipped you about. There is a person inside! Upon closer inspection . . . ",
     "interaction_type": "next",
@@ -794,7 +655,7 @@
   {
     "id": "green1_037",
     "speaker": "Narrator",
-    "portrait": "/assets/patrons/Claudio.png",
+    "portrait": ["Claudio", "default"],
     "side": "right",
     "dialog": "IT'S CLAUDIO !!",
     "interaction_type": "next",
@@ -804,7 +665,6 @@
   {
     "id": "green1_038",
     "speaker": "Narrator",
-    "portrait": "",
     "side": "right",
     "dialog": "You let Claudio out of the cage, catch up on what's been going on lately.\n\nThe Party gains 150 EXP.",
     "interaction_type": "next",
@@ -814,7 +674,6 @@
   {
     "id": "green1_039",
     "speaker": "Narrator",
-    "portrait": "",
     "side": "right",
     "dialog": "You're all glad to have regrouped once again, and decide not to split up again,\n\nthen you carry on ahead on your way towards the Pot of Gold Bragain stashed for himself.",
     "interaction_type": "next",
@@ -824,7 +683,6 @@
   {
     "id": "green1_039a",
     "speaker": "Bragain",
-    "portrait": "/assets/patrons/dwarven_miner.png",
     "side": "left",
     "dialog": "** I'VE SAVED IT FOR AN EMERGENCY !! **",
     "interaction_type": "next",
@@ -834,7 +692,6 @@
   {
     "id": "green1_040",
     "speaker": "Narrator",
-    "portrait": "",
     "side": "right",
     "dialog": "SURE BRAG.....\n\n*SURE*",
     "interaction_type": "next",
@@ -844,7 +701,7 @@
   {
     "id": "green1_041",
     "speaker": "INTRODUCTION",
-    "portrait": "/assets/patrons/Claudio.png",
+    "portrait": ["Claudio", "default"],
     "side": "right",
     "dialog": "Claudio is a lover, not a fighter, while he can participate in combat, his proficiencies lie in his performal talents.",
     "interaction_type": "next",
@@ -854,7 +711,6 @@
   {
     "id": "green1_042",
     "speaker": "PARTY TRAIT: TROUBLE MAKERS",
-    "portrait": "",
     "side": "right",
     "dialog": "While your party has a Barbarian, a Rogue, and a Bard, you gain the [TROUBLE MAKERS] trait, gaining better chances to succeed at work-arounds and made-up strategies in Encounters, rather than taking the forward approach or plain fighting.",
     "interaction_type": "next",
@@ -864,7 +720,6 @@
   {
     "id": "green1_043",
     "speaker": "Bragain",
-    "portrait": "/assets/patrons/dwarven_miner.png",
     "side": "left",
     "dialog": "Eh?! But I'm not a Rogue, I'm a Miner!",
     "interaction_type": "next",
@@ -874,7 +729,7 @@
   {
     "id": "green1_044",
     "speaker": "Claudio",
-    "portrait": "/assets/patrons/Claudio.png",
+    "portrait": ["Claudio", "default"],
     "side": "right",
     "dialog": "I thought it was just your day job?",
     "interaction_type": "next",
@@ -884,7 +739,6 @@
   {
     "id": "green1_045",
     "speaker": "Bragain",
-    "portrait": "/assets/patrons/dwarven_miner.png",
     "side": "left",
     "dialog": "It *IS* my job-job!",
     "interaction_type": "next",
@@ -894,7 +748,6 @@
   {
     "id": "green1_046",
     "speaker": "Hogperson",
-    "portrait": "/assets/patrons/hogperson.png",
     "side": "right",
     "dialog": "So what, aren't you still stealing from Rocks.",
     "interaction_type": "next",
@@ -904,7 +757,6 @@
   {
     "id": "green1_047",
     "speaker": "Bragain",
-    "portrait": "/assets/patrons/dwarven_miner.png",
     "side": "left",
     "dialog": "Hey, that's called *GEOLOGY*.",
     "interaction_type": "next",
@@ -914,7 +766,6 @@
   {
     "id": "green1_048",
     "speaker": "Narrator",
-    "portrait": "",
     "side": "right",
     "dialog": "SURE BRAG.....\n\n*SURE*",
     "interaction_type": "next",
@@ -924,7 +775,6 @@
   {
     "id": "green1_048END",
     "speaker": "Narrator",
-    "portrait": "",
     "side": "right",
     "dialog": "SURE BRAG.....\n\n*SURE*",
     "interaction_type": "next",
@@ -934,7 +784,6 @@
   {
     "id": "green1_501",
     "speaker": "Narrator",
-    "portrait": "",
     "side": "right",
     "dialog": "Carrying on onwards, on the road towards the Pot of Gold.",
     "interaction_type": "next",
@@ -944,7 +793,6 @@
   {
     "id": "green1_502",
     "speaker": "Narrator",
-    "portrait": "",
     "side": "right",
     "dialog": "The bushes rustle at your path, they are aggressivly drawing out branches in a menacing, it's time for your introduction to the battle system.\n\nIn the standard Virtual Tabletop Battle Grid, use Move / Attack / Magic against the Animated Bushes to clain your victory.",
     "interaction_type": "selection",
@@ -955,7 +803,7 @@
         "disabled": false,
         "color": "#FFD700"
       },
-	  {
+      {
         "text": "Skip tutorial battle.",
         "target_id": "green1_502endskip"
       }
@@ -964,7 +812,6 @@
   {
     "id": "green1_502end",
     "speaker": "Narrator",
-    "portrait": "",
     "side": "right",
     "dialog": "The bushes rustle at your path, they are aggressivly drawing out branches in a menacing, it's time for your introduction to the battle system.\n\nIn the standard Virtual Tabletop Battle Grid, use Move / Attack / Magic against the Animated Bushes to clain your victory.",
     "interaction_type": "next",
@@ -974,7 +821,6 @@
   {
     "id": "green1_502endskip",
     "speaker": "Narrator",
-    "portrait": "",
     "side": "right",
     "dialog": "The bushes rustle at your path, they are aggressivly drawing out branches in a menacing, it's time for your introduction to the battle system.\n\nIn the standard Virtual Tabletop Battle Grid, use Move / Attack / Magic against the Animated Bushes to clain your victory.",
     "interaction_type": "next",
@@ -984,7 +830,6 @@
   {
     "id": "green1_601",
     "speaker": "Narrator",
-    "portrait": "",
     "side": "right",
     "dialog": "Carrying on onwards, on the road towards the Pot of Gold.",
     "interaction_type": "next",
@@ -994,7 +839,6 @@
   {
     "id": "green1_048a",
     "speaker": "Narrator",
-    "portrait": "",
     "side": "right",
     "dialog": "Near a tree\nBy the river\nThere's a hole\nIn the ground.",
     "interaction_type": "next",
@@ -1004,7 +848,7 @@
   {
     "id": "green1_049",
     "speaker": "Narrator",
-    "portrait": "/assets/missions/mission_event_coins_s.png",
+    "portrait": ["Narrator", "Coins"],
     "side": "right",
     "dialog": "AND THERE'S\nTA-DA! \nYour Pot of Gold!",
     "interaction_type": "selection",
@@ -1026,7 +870,6 @@
   {
     "id": "green1_050",
     "speaker": "Guild Master",
-    "portrait": "/assets/guild/guild_master.png",
     "side": "left",
     "dialog": "HEY BRAGAIN, CHECK MORE OF THAT HOLE WILL YOU.",
     "interaction_type": "next",
@@ -1036,7 +879,6 @@
   {
     "id": "green1_051",
     "speaker": "Bragain",
-    "portrait": "/assets/patrons/dwarven_miner.png",
     "side": "right",
     "dialog": "Naa, that's some sketchy founding here.\nThat's enough of this hole for us.",
     "interaction_type": "next",
@@ -1046,7 +888,6 @@
   {
     "id": "green1_052",
     "speaker": "Guild Master",
-    "portrait": "/assets/guild/guild_master.png",
     "side": "left",
     "dialog": "WHAT ?!\nI DEMAND THE INSPECTION OF THE HOLE FOR MORE TREASURE !!",
     "interaction_type": "next",
@@ -1056,7 +897,6 @@
   {
     "id": "green1_053",
     "speaker": "Bragain",
-    "portrait": "/assets/patrons/dwarven_miner.png",
     "side": "right",
     "dialog": "Ehhhhh, mind yer lip innkeeper!\nI've said this path is not safe.",
     "interaction_type": "next",
@@ -1066,7 +906,6 @@
   {
     "id": "green1_054",
     "speaker": "Guild Master",
-    "portrait": "/assets/guild/guild_master.png",
     "side": "left",
     "dialog": "** INNKEEPER ** !? \nI AM THE GUILD MASTER !!\nTHE LORD OF THIS MANOR !!\nI CONTROL EVERYTHING !!",
     "interaction_type": "next",
@@ -1076,7 +915,6 @@
   {
     "id": "green1_055",
     "speaker": "Bragain",
-    "portrait": "/assets/patrons/dwarven_miner.png",
     "side": "right",
     "dialog": "It's just a wee basement laddy,\nan' ya payments cover the goose's arse...\nThere's no 'insurance' that'll make me go in there!",
     "interaction_type": "next",
@@ -1086,7 +924,6 @@
   {
     "id": "green1_056",
     "speaker": "Guild Master",
-    "portrait": "/assets/guild/guild_master.png",
     "side": "left",
     "dialog": "*pouts*\n\nFINE THEN! HUMPF !!\n\nHead on back to the Guild.",
     "interaction_type": "next",
@@ -1096,7 +933,6 @@
   {
     "id": "green1_056END",
     "speaker": "Guild Master",
-    "portrait": "/assets/guild/guild_master.png",
     "side": "left",
     "dialog": "*pouts*\n\nFINE THEN! HUMPF !!\n\nHead on back to the Guild.",
     "interaction_type": "next",
@@ -1106,7 +942,6 @@
   {
     "id": "tutor2_101",
     "speaker": "Guild Master",
-    "portrait": "/assets/guild/guild_master.png",
     "side": "left",
     "dialog": "AH! You're finally back!\nAnd you've brought Claudio! Splendide!\n\nI'm very happy to see you all!",
     "interaction_type": "next",
@@ -1116,7 +951,6 @@
   {
     "id": "tutor2_102",
     "speaker": "Guild Master",
-    "portrait": "/assets/guild/guild_master.png",
     "side": "left",
     "dialog": "AND there's a pot full of silver coins! Marvelous!\nWe're finally starting to look like a Guild!",
     "interaction_type": "next",
@@ -1125,8 +959,7 @@
   },
   {
     "id": "tutor2_103",
-    "speaker": "Tutorial Narrator",
-    "portrait": "",
+    "speaker": "Tutorial",
     "side": "left",
     "dialog": "The next step in the tutorial will be, to spend some coin!\n\nHead on upstairs back to the Tavern, there's a single patron there, she's an adventurer, click her and hire her!",
     "interaction_type": "next",
@@ -1135,8 +968,7 @@
   },
   {
     "id": "tutor2_104",
-    "speaker": "Tutorial Narrator",
-    "portrait": "",
+    "speaker": "Tutorial",
     "side": "left",
     "dialog": "Go to the Tavern and Pick up on Amyssa the Elf for 25 silver coins.\n\nAmyssa is a Swordmage level 2, a capable warrior adept in fighting and spellcraft.",
     "interaction_type": "next",
@@ -1146,7 +978,6 @@
   {
     "id": "tutor2_105",
     "speaker": "Guild Master",
-    "portrait": "/assets/guild/guild_master.png",
     "side": "left",
     "dialog": "AH!! a new contract to the guild.\nFINALLY A REAL WARRIOR ADVENTURER!!\n\nNOW THIS PARTY WILL ACTUALLY GET SOMEWHERE!!",
     "interaction_type": "next",
@@ -1155,8 +986,7 @@
   },
   {
     "id": "tutor2_106",
-    "speaker": "Tutorial Narrator",
-    "portrait": "",
+    "speaker": "Tutorial",
     "side": "left",
     "dialog": "Add Amyssa to the party, with the rest of the guys.",
     "interaction_type": "next",
@@ -1166,7 +996,6 @@
   {
     "id": "tutor2_107",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_l.png",
     "side": "right",
     "dialog": "** EXCUUUUUUUUUUUUUSE ME **",
     "interaction_type": "next",
@@ -1176,7 +1005,6 @@
   {
     "id": "tutor2_108",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_l.png",
     "side": "right",
     "dialog": "I'm NOT joining THOSE peasants\n\nI am a NOBLE!",
     "interaction_type": "next",
@@ -1186,7 +1014,6 @@
   {
     "id": "tutor2_109",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_l.png",
     "side": "right",
     "dialog": "I won't risk MY precious hide for just any riff-raff!",
     "interaction_type": "next",
@@ -1196,7 +1023,6 @@
   {
     "id": "tutor2_110",
     "speaker": "Guild Master",
-    "portrait": "/assets/guild/guild_master.png",
     "side": "left",
     "dialog": "BUT I'VE JUST HIRED YOU FOR YOUR SERVICES !!",
     "interaction_type": "next",
@@ -1206,7 +1032,6 @@
   {
     "id": "tutor2_111",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_l.png",
     "side": "right",
     "dialog": "You'll just have to provide me with a party of my own class!",
     "interaction_type": "next",
@@ -1216,7 +1041,6 @@
   {
     "id": "tutor2_112a",
     "speaker": "INTRODUCTION",
-    "portrait": "",
     "side": "right",
     "dialog": "Amyssa has the trait [SNOB]\n\nWhile normally your commoners and nobles can party together, alas Amyssa is just too uppity for that!",
     "interaction_type": "next",
@@ -1226,7 +1050,6 @@
   {
     "id": "tutor2_112",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_l.png",
     "side": "right",
     "dialog": "Meanwhile, I'll be chilling here, if you don't mind!\n\nInnkeeper!!! MORE ALE!!",
     "interaction_type": "next",
@@ -1236,7 +1059,6 @@
   {
     "id": "tutor2_113",
     "speaker": "Guild Master",
-    "portrait": "/assets/guild/guild_master.png",
     "side": "left",
     "dialog": "** INNKEEPER ** !?\n** I AM THE . . . **\n** WAHHHHHHH **\nT___T",
     "interaction_type": "next",
@@ -1246,7 +1068,7 @@
   {
     "id": "tutor2_114",
     "speaker": "INTRODUCTION",
-    "portrait": "/assets/patrons/amyssa_l.png",
+    "portrait": ["Amyssa", "default"],
     "side": "right",
     "dialog": "Amyssa is also a [SCRIBE]. While idling, other than just chilling in the guild",
     "interaction_type": "next",
@@ -1256,7 +1078,7 @@
   {
     "id": "tutor2_115",
     "speaker": "Narrator",
-    "portrait": "/assets/patrons/amyssa_l.png",
+    "portrait": ["Amyssa", "default"],
     "side": "right",
     "dialog": "she will scribe spell scrolls once in a while, that Bragain and Claudio can read and cast spells with,",
     "interaction_type": "next",
@@ -1266,7 +1088,7 @@
   {
     "id": "tutor2_116",
     "speaker": "Narrator",
-    "portrait": "/assets/patrons/amyssa_l.png",
+    "portrait": ["Amyssa", "default"],
     "side": "right",
     "dialog": "but not Hogperson because he's a big dummy.",
     "interaction_type": "next",
@@ -1276,7 +1098,6 @@
   {
     "id": "tutor2_117",
     "speaker": "Narrator",
-    "portrait": "/assets/guild/scroll.png",
     "side": "right",
     "dialog": "Amyssa has added 2 new spell scrolls to the Guild Stash, you may now click the stash and supply your adventurers with the new items (When implemented..), however you like.",
     "interaction_type": "next",
@@ -1286,7 +1107,6 @@
   {
     "id": "tutor2_118",
     "speaker": "Narrator",
-    "portrait": "",
     "side": "Left",
     "dialog": "END OF Tutorial\n\nThanks you for playing this far!\nThe letter is in the mail so make sure to read it!\nMore info can be read in the Tome of Lore (When implemented..)",
     "interaction_type": "next",
@@ -1296,7 +1116,6 @@
   {
     "id": "tutor2_118END",
     "speaker": "Narrator",
-    "portrait": "",
     "side": "Left",
     "dialog": "",
     "interaction_type": "next",
@@ -1305,8 +1124,7 @@
   },
   {
     "id": "tutor1_000",
-    "speaker": "Tutorial Narrator",
-    "portrait": "",
+    "speaker": "Tutorial",
     "side": "Left",
     "dialog": "Are you ready to start the Tutorial? This is going to take about 5-6 minutes of dialog, but there will be many points to stop in between while the progress autosaves.",
     "interaction_type": "selection",
@@ -1324,7 +1142,6 @@
   {
     "id": "tutor1_000end",
     "speaker": "Narrator",
-    "portrait": "",
     "side": "Left",
     "dialog": "",
     "interaction_type": "next",
@@ -1333,7 +1150,6 @@
   {
     "id": "tutor2_119",
     "speaker": "Guild Master",
-    "portrait": "/assets/guild/guild_master.png",
     "side": "left",
     "dialog": "Oooooooooooh!!\n\nI've almost forgot!",
     "interaction_type": "next",
@@ -1342,7 +1158,6 @@
   {
     "id": "tutor2_120",
     "speaker": "Guild Master",
-    "portrait": "/assets/guild/guild_master.png",
     "side": "left",
     "dialog": "A mail peagon have brought this letter while you were away.\nThis letter is adressed to you Hogperson.",
     "interaction_type": "next",
@@ -1351,7 +1166,6 @@
   {
     "id": "tutor2_121",
     "speaker": "Hogperson",
-    "portrait": "/assets/patrons/hogperson.png",
     "side": "right",
     "dialog": "To me..?\n\nWell let's see...",
     "interaction_type": "next",
@@ -1360,7 +1174,6 @@
   {
     "id": "green2_001",
     "speaker": "Hogperson",
-    "portrait": "/assets/patrons/hogperson.png",
     "side": "left",
     "dialog": "Oooooh, Dad's gone? I wonder for how long. I hope he's alright.",
     "interaction_type": "next",
@@ -1369,7 +1182,6 @@
   {
     "id": "green2_002",
     "speaker": "Bragain",
-    "portrait": "/assets/patrons/dwarven_miner.png",
     "side": "right",
     "dialog": "Your dad's a big guy, I doubt any trouble will come to him.",
     "interaction_type": "next",
@@ -1378,7 +1190,6 @@
   {
     "id": "green2_003",
     "speaker": "Hogperson",
-    "portrait": "/assets/patrons/hogperson.png",
     "side": "left",
     "dialog": "That's true, but my mother must be worried, I have to help her.",
     "interaction_type": "next",
@@ -1387,7 +1198,6 @@
   {
     "id": "green2_004",
     "speaker": "Guild Master",
-    "portrait": "/assets/guild/guild_master.png",
     "side": "left",
     "dialog": "Well since business have seem to be quiet down here.",
     "interaction_type": "next",
@@ -1396,7 +1206,6 @@
   {
     "id": "green2_005",
     "speaker": "Guild Master",
-    "portrait": "/assets/guild/guild_master.png",
     "side": "left",
     "dialog": "How about you three will get on that case, I want you to head on East towards the township nearby, wouldn't be more than a day's walk.",
     "interaction_type": "next",
@@ -1405,7 +1214,6 @@
   {
     "id": "green2_006",
     "speaker": "Guild Master",
-    "portrait": "/assets/guild/guild_master.png",
     "side": "left",
     "dialog": "There's a Tavern there just like this one, that's where you'll find Hogmother. You can assess the situation better once we know more.",
     "interaction_type": "next",
@@ -1414,7 +1222,6 @@
   {
     "id": "green2_007",
     "speaker": "Guild Master",
-    "portrait": "/assets/guild/guild_master.png",
     "side": "left",
     "dialog": "There should be business proposals and contacts to make there, so keep me posted.",
     "interaction_type": "next",
@@ -1423,7 +1230,6 @@
   {
     "id": "green2_008end",
     "speaker": "Guild Master",
-    "portrait": "/assets/guild/guild_master.png",
     "side": "left",
     "dialog": "There should be",
     "interaction_type": "next",
@@ -1432,7 +1238,6 @@
   {
     "id": "green2_101",
     "speaker": "Narrator",
-    "portrait": "",
     "side": "left",
     "dialog": "Well well, not a moment's rest.",
     "interaction_type": "next",
@@ -1441,23 +1246,21 @@
   {
     "id": "green2_102",
     "speaker": "Narrator",
-    "portrait": "",
     "side": "left",
     "dialog": "The long winding road by the mountain and the more-mountains is your path, straight up ahead.",
     "interaction_type": "next",
     "target_id": "green2_103",
-	"branches": [
-    {
-      "condition": "party_member",
-      "value": "Bragain",
-      "target_id": "green2_102bgn"
-    }
-	]
+    "branches": [
+      {
+        "condition": "party_member",
+        "value": "Bragain",
+        "target_id": "green2_102bgn"
+      }
+    ]
   },
   {
     "id": "green2_102bgn",
     "speaker": "Bragain",
-    "portrait": "/assets/patrons/dwarven_miner.png",
     "side": "left",
     "dialog": "Argh, outdoors again. What I wouldn't give to be deep underground in my workshop surrounded by my clan again.",
     "interaction_type": "next",
@@ -1466,7 +1269,6 @@
   {
     "id": "green2_103",
     "speaker": "Narrator",
-    "portrait": "",
     "side": "left",
     "dialog": "That looks like some track! Hope it'll be safe...",
     "interaction_type": "next",
@@ -1475,7 +1277,6 @@
   {
     "id": "green2_104",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_l.png",
     "side": "left",
     "dialog": "Wait up.",
     "interaction_type": "next",
@@ -1484,7 +1285,6 @@
   {
     "id": "green2_105",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_l.png",
     "side": "left",
     "dialog": "You guys, hey wait!",
     "interaction_type": "next",
@@ -1493,7 +1293,6 @@
   {
     "id": "green2_106",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_l.png",
     "side": "left",
     "dialog": "Are you going to make me run???",
     "interaction_type": "next",
@@ -1502,7 +1301,6 @@
   {
     "id": "green2_107",
     "speaker": "Narrator",
-    "portrait": "",
     "side": "right",
     "dialog": "It seems that Amyssa have took off from the Tavern on her own, and have followed in your footsteps...",
     "interaction_type": "next",
@@ -1511,7 +1309,6 @@
   {
     "id": "green2_108",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_l.png",
     "side": "left",
     "dialog": "I was thinking about this and I've came here because my conscious just doesn't allow me to relax back at the Tavern",
     "interaction_type": "next",
@@ -1520,7 +1317,6 @@
   {
     "id": "green2_109",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_l.png",
     "side": "left",
     "dialog": "It doesn't feel right at all!",
     "interaction_type": "next",
@@ -1529,7 +1325,6 @@
   {
     "id": "green2_110",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_l.png",
     "side": "left",
     "dialog": "I'm sorry about my behavior.\nI ask for your forgiveness.",
     "interaction_type": "next",
@@ -1538,7 +1333,6 @@
   {
     "id": "green2_111",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_l.png",
     "side": "left",
     "dialog": "You all may really be COMMONERS, ugh\nbut your cause is a NOBLE one.",
     "interaction_type": "next",
@@ -1547,7 +1341,6 @@
   {
     "id": "green2_112",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_l.png",
     "side": "left",
     "dialog": "Please allow me to join your party, it would bring me honor to serve alongside you.",
     "interaction_type": "next",
@@ -1556,7 +1349,6 @@
   {
     "id": "green2_113",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_l.png",
     "side": "left",
     "dialog": "If you'll allow me, I will put all my might and magic into finding your father, Hogperson.",
     "interaction_type": "selection",
@@ -1576,7 +1368,6 @@
   {
     "id": "green2_114a",
     "speaker": "Hogperson",
-    "portrait": "/assets/patrons/hogperson.png",
     "side": "right",
     "dialog": "Oh, there's nothing to feel sorry about, young lass. You are most welcome in our midst! I'm sure mother would love meeting you.",
     "interaction_type": "next",
@@ -1585,7 +1376,6 @@
   {
     "id": "green2_115",
     "speaker": "Bragain",
-    "portrait": "/assets/patrons/dwarven_miner.png",
     "side": "right",
     "dialog": "You've shown your true colors Missa Myssa, hehehe.",
     "interaction_type": "next",
@@ -1594,7 +1384,7 @@
   {
     "id": "green2_116",
     "speaker": "Claudio",
-    "portrait": "/assets/patrons/Claudio.png",
+    "portrait": ["Claudio", "default"],
     "side": "right",
     "dialog": "Oh it's a pleasure to host a lady of stature such as yourself! Mi' lady, I, Claudio, am delighted to have you! Aaaand, I find your scrolls the labor of an artist.",
     "interaction_type": "next",
@@ -1604,7 +1394,6 @@
   {
     "id": "green2_117",
     "speaker": "Narrator",
-    "portrait": "",
     "side": "left",
     "dialog": "With your new member, the road carries on.",
     "interaction_type": "next",
@@ -1613,7 +1402,6 @@
   {
     "id": "green2_117end",
     "speaker": "DEVELOPER NOTES",
-    "portrait": "",
     "side": "left",
     "dialog": "",
     "interaction_type": "next",
@@ -1622,7 +1410,6 @@
   {
     "id": "green2*1_101",
     "speaker": "Narrator",
-    "portrait": "",
     "side": "left",
     "dialog": "While walking the unpaved road you notice a few silver coins scattered on the ground. How fortunate. You pick them up and carry on your way.",
     "interaction_type": "next",
@@ -1631,7 +1418,6 @@
   {
     "id": "green2_*101end",
     "speaker": "Narrator",
-    "portrait": "",
     "side": "left",
     "dialog": ".",
     "interaction_type": "next",
@@ -1640,12 +1426,11 @@
   {
     "id": "green2*1_201",
     "speaker": "Narrator",
-    "portrait": "",
     "side": "left",
     "dialog": "You encounter a Red Deer grazing nearby. It's a large male with a full build of antlers, seems rather dangerous. It is grazing and neutral towards your arrival.",
     "interaction_type": "next",
     "target_id": "",
-	"options": [
+    "options": [
       {
         "text": "Leave and allow the beast to graze peacefully.",
         "target_id": "green2*1_201end",
@@ -1662,7 +1447,6 @@
   {
     "id": "green2*1_201end",
     "speaker": "Narrator",
-    "portrait": "",
     "side": "left",
     "dialog": ".",
     "interaction_type": "next",
@@ -1671,7 +1455,6 @@
   {
     "id": "green2*1_202end",
     "speaker": "Narrator",
-    "portrait": "",
     "side": "left",
     "dialog": ".",
     "interaction_type": "next",
@@ -1680,12 +1463,11 @@
   {
     "id": "green2*1_2101",
     "speaker": "Narrator",
-    "portrait": "",
     "side": "left",
     "dialog": "You cross paths with a Dwarven fellow, he seems like a migrant away from his mountain home.",
     "interaction_type": "next",
     "target_id": "",
-	"options": [
+    "options": [
       {
         "text": "Engage with him in words.",
         "target_id": "green2*1_2102",
@@ -1701,25 +1483,24 @@
   {
     "id": "green2*1_2102",
     "speaker": "Narrator",
-    "portrait": "",
     "side": "left",
     "dialog": "The Dwarven Migrant seems apprehensive to deal with strangers. He says he's carrying nothing but raw gemstones that aren't worth much more than a few coins. He is hoping to find a location when he could practice his Gem Cutting art.",
     "interaction_type": "next",
     "target_id": "",
-	"options": [
+    "options": [
       {
         "text": "[Appraisal] Discuss the gem business.",
         "target_id": "green2*1_2103",
         "disabled": false,
         "color": "#FFD700",
-		"condition_trait": "Appraisal"
+        "condition_trait": "Appraisal"
       },
       {
         "text": "[Pickpocket] Attempt to slip a gem off the migrant.",
         "target_id": "green2*1_2104",
         "disabled": false,
         "color": "#800080",
-		"condition_trait": "Pickpocket"
+        "condition_trait": "Pickpocket"
       },
       {
         "text": "Carry on your way.",
@@ -1731,7 +1512,6 @@
   {
     "id": "green2*1_2103",
     "speaker": "Narrator",
-    "portrait": "",
     "side": "right",
     "dialog": "Your Appraisal adept strikes a conversation about the gem market with the Dwarf.",
     "interaction_type": "next",
@@ -1741,7 +1521,6 @@
   {
     "id": "green2*1_2107*",
     "speaker": "Narrator",
-    "portrait": "",
     "side": "right",
     "dialog": "The dwarf migrant's eye widen at your knowledge. He says it's rather dangerous for him to wander alone and he've been dodging robbers left and right. He'd rather if you hold on to this gem. He hands you a speciality cut gem he've been hiding. It would be much safer with you.\n\nYou both part ways and carry on your journey.",
     "interaction_type": "next",
@@ -1751,7 +1530,6 @@
   {
     "id": "green2*1_2107",
     "speaker": "Narrator",
-    "portrait": "",
     "side": "right",
     "dialog": "The dwarf migrant appreciates your banter. He rewards you with a rough gem from his sack.\n\nYou both part ways and carry on your journey.",
     "interaction_type": "next",
@@ -1761,7 +1539,6 @@
   {
     "id": "green2*1_2103end",
     "speaker": "Narrator",
-    "portrait": "",
     "side": "left",
     "dialog": ".",
     "interaction_type": "next",
@@ -1770,7 +1547,6 @@
   {
     "id": "green2*1_2107end",
     "speaker": "Narrator",
-    "portrait": "",
     "side": "left",
     "dialog": ".",
     "interaction_type": "next",
@@ -1785,7 +1561,6 @@
   {
     "id": "green2_401",
     "speaker": "Narrator",
-    "portrait": "",
     "side": "left",
     "dialog": "The party passes through the Green Road, leading towards town. There are markings on the road, where it is forking to the south, signaling a shrine is locate there. Would you be interested to visit the shrine?",
     "interaction_type": "next",
@@ -1794,11 +1569,10 @@
   {
     "id": "green2_402",
     "speaker": "Hogperson",
-    "portrait": "/assets/patrons/hogperson.png",
     "side": "left",
     "dialog": "Mother would be interested to visit the shrine for sure. Maybe she've passed through there too? Or we just might bump into her on our way there? I hope nothing bad happened and she didn't get stuck there.",
-	"interaction_type": "selection",
-	"options": [
+    "interaction_type": "selection",
+    "options": [
       {
         "text": "Detour, head towards the shrine.",
         "target_id": "green2_403",
@@ -1815,7 +1589,6 @@
   {
     "id": "green2_403",
     "speaker": "Narrator",
-    "portrait": "",
     "side": "left",
     "dialog": "The party will go to visit the shrine.",
     "interaction_type": "next",
@@ -1824,7 +1597,6 @@
   {
     "id": "green2*5",
     "speaker": "Narrator",
-    "portrait": "",
     "side": "left",
     "dialog": "The party will carry on the Green Road, leading towards town.",
     "interaction_type": "next",
@@ -1843,7 +1615,6 @@
   {
     "id": "greenshrine1_101",
     "speaker": "Narrator",
-    "portrait": "",
     "side": "left",
     "dialog": "Heading out towards the shrine, the party paces through the unmarked path. It's a nice sunny day in the green pastured lands outside town. Your party's mood is upbeat, the shrine is visable from this point and it would take a short while to reach it.",
     "interaction_type": "next",
@@ -1852,18 +1623,17 @@
   {
     "id": "greenshrine1_102",
     "speaker": "Hogperson",
-    "portrait": "/assets/patrons/hogperson.png",
     "side": "right",
     "dialog": "That's it. Here we are. Wish mother was here, she knows all about shrines. It looks rather tidy and clean, maybe she was here recently.",
     "interaction_type": "selection",
-		"options": [
+    "options": [
       {
         "text": "Have a Dwarf inspect the stones of the shrine.",
         "target_id": "greenshrine1_103",
-		"condition": {
-			"type": "race",
-			"value": "Dwarven"
-		  },
+        "condition": {
+          "type": "race",
+          "value": "Dwarven"
+        },
         "color": "#FFD700"
       },
       {
@@ -1875,7 +1645,6 @@
   {
     "id": "greenshrine1_103",
     "speaker": "Bragain",
-    "portrait": "/assets/patrons/dwarven_miner.png",
     "side": "left",
     "dialog": "Right! Rocks are my specialty. The place has been built by a mason, but it seems it was built hastily, the cuts on the stone are rather inaccurate and a bit shoddy. Perhaps they were more interested in marking this specific location rather than building a shrine of splendor. The green growth around the place seems to respect the sanctity of the place and not cover it. Not much for that statue over there, it's all covered with vines and ferns.",
     "interaction_type": "next",
@@ -1884,7 +1653,7 @@
   {
     "id": "greenshrine1_104",
     "speaker": "Claudio",
-    "portrait": "/assets/patrons/Claudio.png",
+    "portrait": ["Claudio", "default"],
     "side": "right",
     "dialog": "Why would that be, Bragain?",
     "interaction_type": "next",
@@ -1893,7 +1662,6 @@
   {
     "id": "greenshrine1_105",
     "speaker": "Bragain",
-    "portrait": "/assets/patrons/dwarven_miner.png",
     "side": "left",
     "dialog": "Beats me, I'm no herbalist. They do look rather different than the rest of the greenery around. The statue stone is far different than the shrine stones, and there are no chistle markings on it, it must have been an entirely different mason to have sculpted it.",
     "interaction_type": "next",
@@ -1914,11 +1682,9 @@
   {
     "id": "green2_701",
     "speaker": "Apparation",
-    "portrait": "/assets/missions/apparation.png",
     "side": "left",
     "dialog": "Halt Bragain!",
     "speaker2": "Bragain",
-    "portrait2": "/assets/patrons/dwarven_miner.png",
     "side2": "right",
     "dialog2": "Eh...... ?!",
     "interaction_type": "next",
@@ -1927,22 +1693,19 @@
   {
     "id": "green2_702",
     "speaker": "Apparation",
-    "portrait": "/assets/missions/apparation.png",
     "side": "left",
     "dialog": "Stand fast Bargain of the subterranean miners!",
-	"dialog2": "Why are you wasting your time with those ragged wanderers who get nowhere and accumulate nothing?!",
-	"dialog3": "Come join me in the depths, surrounded by treasures we’ll be richer than all of them!",
+    "dialog2": "Why are you wasting your time with those ragged wanderers who get nowhere and accumulate nothing?!",
+    "dialog3": "Come join me in the depths, surrounded by treasures we’ll be richer than all of them!",
     "interaction_type": "next",
     "target_id": "green2_703"
   },
   {
     "id": "green2_703",
     "speaker": "Bragain",
-    "portrait": "/assets/patrons/dwarven_miner.png",
     "side": "right",
     "dialog": "What? … but where?!",
     "speaker2": "Apparation",
-    "portrait2": "/assets/missions/apparation.png",
     "side2": "left",
     "dialog2": "You’ll know where… find the vein and follow it through deep in the earth… I’m not far under the ground.",
     "interaction_type": "next",
@@ -1954,7 +1717,6 @@
     "side": "left",
     "dialog": "The apparition vanishes.",
     "speaker2": "Bragain",
-    "portrait2": "/assets/patrons/dwarven_miner.png",
     "side2": "right",
     "dialog2": "What was that?! That was some wild fey spirit, ugh and I wasn’t even drinking anything.",
     "interaction_type": "next",
@@ -1968,7 +1730,6 @@
   {
     "id": "green2_901",
     "speaker": "Narrator",
-    "portrait": "",
     "side": "left",
     "dialog": "The party has reached the Township Tavern.\nThe place is bustling, travellers and entertainment fill the air with they pressence.",
     "interaction_type": "next",
@@ -1977,7 +1738,6 @@
   {
     "id": "green2_902",
     "speaker": "Narrator",
-    "portrait": "",
     "side": "left",
     "dialog": "There's Hogmother right there! Sitting at her table!",
     "interaction_type": "next",
@@ -1986,7 +1746,6 @@
   {
     "id": "green2_903",
     "speaker": "Hogperson",
-    "portrait": "/assets/patrons/hogperson.png",
     "side": "left",
     "dialog": "MOTHER!!!",
     "interaction_type": "next",
@@ -1995,7 +1754,6 @@
   {
     "id": "green2_904",
     "speaker": "Hogmother",
-    "portrait": "/assets/patrons/hogmother.png",
     "side": "right",
     "dialog": "HOGGY!!!",
     "interaction_type": "next",
@@ -2004,7 +1762,6 @@
   {
     "id": "green2_905",
     "speaker": "Narrator",
-    "portrait": "",
     "side": "left",
     "dialog": "The mother and son greet each other with a warm hug and kisses, and a quick word about the letter.",
     "interaction_type": "next",
@@ -2013,7 +1770,6 @@
   {
     "id": "green2_906",
     "speaker": "Hogmother",
-    "portrait": "/assets/patrons/hogmother.png",
     "side": "right",
     "dialog": "Well Hoggy what a wonderful surprise, I did not expect to see you here!",
     "interaction_type": "next",
@@ -2022,7 +1778,6 @@
   {
     "id": "green2_907",
     "speaker": "Hogperson",
-    "portrait": "/assets/patrons/hogperson.png",
     "side": "left",
     "dialog": "Well mother, if dad's away nothing is too important to keep me from seeing to it.",
     "interaction_type": "next",
@@ -2031,7 +1786,6 @@
   {
     "id": "green2_908",
     "speaker": "Hogmother",
-    "portrait": "/assets/patrons/hogmother.png",
     "side": "right",
     "dialog": "Oh that's just splendide! And you've brought some friends along, what a pleasure to meet you all! Let me fill you in on what's been happening.",
     "interaction_type": "next",
@@ -2040,7 +1794,6 @@
   {
     "id": "green2_909",
     "speaker": "Hogmother",
-    "portrait": "/assets/patrons/hogmother.png",
     "side": "right",
     "dialog": "It appears there's quite some unrest at town right now as a dangerous group have been taking up territory up north across the river, and folks have begone missing!",
     "interaction_type": "next",
@@ -2049,7 +1802,6 @@
   {
     "id": "green2_910",
     "speaker": "Hogmother",
-    "portrait": "/assets/patrons/hogmother.png",
     "side": "right",
     "dialog": "I still don't quite know what's the offical authorities policy regarding that, word is they might have voluntarily went there to join with them.",
     "interaction_type": "next",
@@ -2058,7 +1810,6 @@
   {
     "id": "green2_911",
     "speaker": "Hogmother",
-    "portrait": "/assets/patrons/hogmother.png",
     "side": "right",
     "dialog": "I certainly have no intention of sitting here waiting for anyone. I'm going right in there and find Hogfather!",
     "interaction_type": "next",
@@ -2067,7 +1818,6 @@
   {
     "id": "green2_912",
     "speaker": "Hogperson",
-    "portrait": "/assets/patrons/hogperson.png",
     "side": "left",
     "dialog": "Right ma'. And I'm coming with you.",
     "interaction_type": "next",
@@ -2076,7 +1826,6 @@
   {
     "id": "green2_913",
     "speaker": "Bragain",
-    "portrait": "/assets/patrons/dwarven_miner.png",
     "side": "right",
     "dialog": "Aye, that seems like a mission to me. I'll be by your side madam.",
     "interaction_type": "next",
@@ -2085,7 +1834,7 @@
   {
     "id": "green2_914",
     "speaker": "Claudio",
-    "portrait": "/assets/patrons/Claudio.png",
+    "portrait": ["Claudio", "default"],
     "side": "right",
     "dialog": "Oh it would be a opportunity I will not miss out on, you will have every ability in my satchel at your disposal madam Hogmother.",
     "interaction_type": "next",
@@ -2095,7 +1844,6 @@
   {
     "id": "green2_915",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_l.png",
     "side": "right",
     "dialog": "And you will have my bow!\n\nI mean, I don't have a bow, but, I am coming too!",
     "interaction_type": "next",
@@ -2104,7 +1852,6 @@
   {
     "id": "green2_916",
     "speaker": "Hogmother",
-    "portrait": "/assets/patrons/hogmother.png",
     "side": "left",
     "dialog": "Oh my! That's such a fortunate turn of events! I did NOT expect such a wonderful party! Hoggy, I've raised you so well! I am so proud of you!",
     "interaction_type": "next",
@@ -2112,8 +1859,8 @@
   },
   {
     "id": "green2_917",
-    "speaker": "Create",
-    "portrait": "/assets/patrons/lurch.png",
+    "speaker": "Creature",
+    "portrait": ["Lurch", "default"],
     "side": "right",
     "dialog": "Pardon me . . . . . ",
     "interaction_type": "next",
@@ -2122,7 +1869,6 @@
   {
     "id": "green2_918",
     "speaker": "Hogmother",
-    "portrait": "/assets/patrons/hogmother.png",
     "side": "left",
     "dialog": "Oh! Excuse me, yes?",
     "interaction_type": "next",
@@ -2130,8 +1876,8 @@
   },
   {
     "id": "green2_919",
-    "speaker": "Create",
-    "portrait": "/assets/patrons/lurch.png",
+    "speaker": "Creature",
+    "portrait": ["Lurch", "default"],
     "side": "right",
     "dialog": "It would be wise to not draw any further attention, would you join me out in the alley for further discussion?",
     "interaction_type": "next",
@@ -2140,7 +1886,6 @@
   {
     "id": "green2_920",
     "speaker": "Narrator",
-    "portrait": "",
     "side": "left",
     "dialog": "What was that?!\n\nThat creature just popped out of nowhere.\n\nHe is now leaving through a side entrence amist the commotion of the tavern, rather unnoticed.",
     "interaction_type": "next",
@@ -2149,7 +1894,6 @@
   {
     "id": "green2_921",
     "speaker": "Narrator",
-    "portrait": "",
     "side": "left",
     "dialog": "The party throws surprised looks at each other, trying to process what just happened.",
     "interaction_type": "next",
@@ -2158,7 +1902,6 @@
   {
     "id": "green2_922",
     "speaker": "Narrator",
-    "portrait": "",
     "side": "left",
     "dialog": "Hogmother is the first to stand up and follow the creature, the urgency of the case walks before her, and the party follows her outside.",
     "interaction_type": "next",
@@ -2166,8 +1909,8 @@
   },
   {
     "id": "green2_923",
-    "speaker": "Create",
-    "portrait": "/assets/patrons/lurch.png",
+    "speaker": "Creature",
+    "portrait": ["Lurch", "default"],
     "side": "right",
     "dialog": "Ahem . . . . .\n\nExcuse me for not introducing myself, but I've been eavesdropping on your conversation and couldn't participate in public.",
     "interaction_type": "next",
@@ -2176,7 +1919,6 @@
   {
     "id": "green2_924",
     "speaker": "Lurch",
-    "portrait": "/assets/patrons/lurch.png",
     "side": "right",
     "dialog": "The name is Lurch, expert Reconnaissancer. My services might be of interest to you, if you're willing to listen to me.",
     "interaction_type": "next",
@@ -2185,7 +1927,6 @@
   {
     "id": "green2_925",
     "speaker": "Hogmother",
-    "portrait": "/assets/patrons/hogmother.png",
     "side": "left",
     "dialog": "Well this is very sudden, but, Master Lurch, we are in a predicament and are willing to hear you out.",
     "interaction_type": "next",
@@ -2194,7 +1935,6 @@
   {
     "id": "green2_926",
     "speaker": "Lurch",
-    "portrait": "/assets/patrons/lurch.png",
     "side": "right",
     "dialog": "The group out in the woods are no strangers to me. Although I do not affiliate with them, I can walk in and out of their territory with no problem.",
     "interaction_type": "next",
@@ -2203,7 +1943,6 @@
   {
     "id": "green2_927",
     "speaker": "Lurch",
-    "portrait": "/assets/patrons/lurch.png",
     "side": "right",
     "dialog": "And since you haven't attempted to hide your plans to simply waltz in there, I do not believe you are going to make it. Not without a lot of help.",
     "interaction_type": "next",
@@ -2212,7 +1951,6 @@
   {
     "id": "green2_928",
     "speaker": "Hogmother",
-    "portrait": "/assets/patrons/hogmother.png",
     "side": "left",
     "dialog": "Well, whether we do or we don't, *I* am going to find Hogfather. And I'm willing to hear your offer for help!",
     "interaction_type": "next",
@@ -2221,7 +1959,6 @@
   {
     "id": "green2_929",
     "speaker": "Lurch",
-    "portrait": "/assets/patrons/lurch.png",
     "side": "right",
     "dialog": "I see, the presentation of my offer will have to remain mostly in secret, for my own safety, but I will provide you with support from behind the lines, with anything that might tackle you on your way.",
     "interaction_type": "next",
@@ -2230,7 +1967,6 @@
   {
     "id": "green2_930",
     "speaker": "Lurch",
-    "portrait": "/assets/patrons/lurch.png",
     "side": "right",
     "dialog": "For my service I will request 200 silver coins.",
     "interaction_type": "next",
@@ -2239,7 +1975,6 @@
   {
     "id": "green2_932",
     "speaker": "Bragain",
-    "portrait": "/assets/patrons/dwarven_miner.png",
     "side": "left",
     "dialog": "Bah! I don't like this. That's a steep amount with nothing to show for? Your goblin-folk are all tricks and mayhem! This is a robbery!",
     "interaction_type": "next",
@@ -2248,7 +1983,6 @@
   {
     "id": "green2_933",
     "speaker": "Hogmother",
-    "portrait": "/assets/patrons/hogmother.png",
     "side": "right",
     "dialog": "That's enough Master Dwarf.",
     "interaction_type": "next",
@@ -2257,7 +1991,6 @@
   {
     "id": "green2_934",
     "speaker": "Bragain",
-    "portrait": "/assets/patrons/dwarven_miner.png",
     "side": "left",
     "dialog": "What?! How do you know he will not alert the enemy for our approach! I do not trust this Goblin for one bit!",
     "interaction_type": "next",
@@ -2266,7 +1999,6 @@
   {
     "id": "green2_935",
     "speaker": "Lurch",
-    "portrait": "/assets/patrons/lurch.png",
     "side": "right",
     "dialog": "well then, the offer falls off the table! This villain can't be dealt with, he'll signal the enemy of the plan and have *me* hanged, just like that!",
     "interaction_type": "next",
@@ -2275,7 +2007,6 @@
   {
     "id": "green2_936",
     "speaker": "Bragain",
-    "portrait": "/assets/patrons/dwarven_miner.png",
     "side": "right",
     "dialog": "There's nothing I'd like to do more, goblinoid!",
     "interaction_type": "next",
@@ -2284,7 +2015,6 @@
   {
     "id": "green2_937",
     "speaker": "Hogmother",
-    "portrait": "/assets/patrons/hogmother.png",
     "side": "right",
     "dialog": "There'll be none of that! Not while Hogfather is in distress and not ever!",
     "interaction_type": "next",
@@ -2293,7 +2023,6 @@
   {
     "id": "green2_938",
     "speaker": "Hogmother",
-    "portrait": "/assets/patrons/hogmother.png",
     "side": "right",
     "dialog": "We are not traitors!!!",
     "interaction_type": "next",
@@ -2302,7 +2031,6 @@
   {
     "id": "green2_939",
     "speaker": "Narrator",
-    "portrait": "",
     "side": "left",
     "dialog": "It seems this meeting is about to come to an early end... would you?",
     "interaction_type": "selection",
@@ -2323,7 +2051,6 @@
   {
     "id": "green2_940a",
     "speaker": "Narrator",
-    "portrait": "",
     "side": "left",
     "dialog": "The party has decided to leave the alley and abandon the dealing with the Goblin. They will head out immidatley towards the forest.",
     "interaction_type": "next",
@@ -2337,7 +2064,6 @@
   {
     "id": "green2_940b",
     "speaker": "Hogmother",
-    "portrait": "/assets/patrons/hogmother.png",
     "side": "left",
     "dialog": "I will cover that payment Master Lurch, and once Hogfather is safe I'll see to a bonus as well.",
     "interaction_type": "next",
@@ -2346,7 +2072,6 @@
   {
     "id": "green2_941b",
     "speaker": "Bragain",
-    "portrait": "/assets/patrons/dwarven_miner.png",
     "side": "right",
     "dialog": "I don't like this, but lives are on the line. I accept this offer and I'll cover in for your payment too, Lurch, as a token of good will.",
     "interaction_type": "next",
@@ -2355,7 +2080,6 @@
   {
     "id": "green2_942b",
     "speaker": "Lurch",
-    "portrait": "/assets/patrons/lurch.png",
     "side": "left",
     "dialog": "That settles it then. I shall leave immediately through the tunnels. From this moment forth, we have never met, and I will contact you in secret.",
     "interaction_type": "next",
@@ -2364,7 +2088,6 @@
   {
     "id": "green2_943b",
     "speaker": "Narrator",
-    "portrait": "",
     "side": "left",
     "dialog": "That's it then. The deal has signed with handshakes and coin. I hope you know what you're doing dealing with Goblins!",
     "interaction_type": "next",
@@ -2373,7 +2096,7 @@
   {
     "id": "green2_944b",
     "speaker": "INTRODUCTION",
-    "portrait": "/assets/patrons/lurch.png",
+    "portrait": ["Lurch", "default"],
     "side": "right",
     "dialog": "Lurch is a Spy, his speciality is espionage in hostile locations without raising suspicion. While his monsterous image may be vile, he's not the worst you can come across.",
     "interaction_type": "next",
@@ -2382,7 +2105,6 @@
   {
     "id": "green2_945b",
     "speaker": "Narrator",
-    "portrait": "",
     "side": "left",
     "dialog": "The party will head out immidatley towards the forest now.",
     "interaction_type": "next",
@@ -2391,7 +2113,6 @@
   {
     "id": "green2_945b_end",
     "speaker": "Narrator",
-    "portrait": "",
     "side": "left",
     "dialog": "The party has left towards the forest.",
     "interaction_type": "next",
@@ -2400,7 +2121,6 @@
   {
     "id": "green3_101",
     "speaker": "Bragain",
-    "portrait": "/assets/patrons/dwarven_miner.png",
     "side": "left",
     "dialog": "I still have a bad feeling about this.",
     "interaction_type": "next",
@@ -2409,7 +2129,6 @@
   {
     "id": "green3_101a",
     "speaker": "Bragain",
-    "portrait": "/assets/patrons/dwarven_miner.png",
     "side": "left",
     "dialog": "Oh dear Hommond, may the glory of your hammer protect us. I hope we're not waltzing straight to our doom AND our bankrupcy.",
     "interaction_type": "next",
@@ -2418,7 +2137,6 @@
   {
     "id": "green3_102",
     "speaker": "Bragain",
-    "portrait": "/assets/patrons/dwarven_miner.png",
     "side": "left",
     "dialog": "NEVER trust a Goblin. That's what my folks always say",
     "interaction_type": "next",
@@ -2427,7 +2145,6 @@
   {
     "id": "green3_103",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_l.png",
     "side": "right",
     "dialog": "Or an elf",
     "interaction_type": "next",
@@ -2436,7 +2153,6 @@
   {
     "id": "green3_104",
     "speaker": "Bragain",
-    "portrait": "/assets/patrons/dwarven_miner.png",
     "side": "left",
     "dialog": "OR AN ELF!",
     "interaction_type": "next",
@@ -2445,7 +2161,6 @@
   {
     "id": "green3_105",
     "speaker": "Bragain",
-    "portrait": "/assets/patrons/dwarven_miner.png",
     "side": "left",
     "dialog": "Oh I mean, not ALL elves, not always",
     "interaction_type": "next",
@@ -2454,7 +2169,6 @@
   {
     "id": "green3_106",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_l.png",
     "side": "right",
     "dialog": "............\n\nThat's alright. You're not the only one having second thoughts.",
     "interaction_type": "next",
@@ -2463,7 +2177,6 @@
   {
     "id": "green3_107",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_l.png",
     "side": "right",
     "dialog": "But lives are on the line here. There are greater matters ahead and it's no time to be picky.",
     "interaction_type": "next",
@@ -2483,21 +2196,19 @@
         "text": "Tell Hogmother about the shrine you've passed through on your way here.",
         "target_id": "greenshrine1_201",
         "color": "#FFD700",
-		  "condition": {
-			"type": "mission_key",
-			"mission": "green_2keys",
-			"key": "shrine",
-			"operator": "==",
-			"value": 1
-			}
-
+        "condition": {
+          "type": "mission_key",
+          "mission": "green_2keys",
+          "key": "shrine",
+          "operator": "==",
+          "value": 1
+        }
       }
     ]
   },
   {
     "id": "greenshrine1_201",
     "speaker": "Hogperson",
-    "portrait": "/assets/patrons/hogperson.png",
     "side": "left",
     "dialog": "Pardon me mother, on our way here we've passed through a shrine located next to the path, have you seen it by any chance?",
     "interaction_type": "next",
@@ -2506,7 +2217,6 @@
   {
     "id": "greenshrine1_202",
     "speaker": "Hogmother",
-    "portrait": "/assets/patrons/hogmother.png",
     "side": "right",
     "dialog": "A shrine not far from the path, to the south?",
     "interaction_type": "next",
@@ -2515,7 +2225,6 @@
   {
     "id": "greenshrine1_203",
     "speaker": "Hogperson",
-    "portrait": "/assets/patrons/hogperson.png",
     "side": "left",
     "dialog": "Yes that.",
     "interaction_type": "next",
@@ -2524,7 +2233,6 @@
   {
     "id": "greenshrine1_204",
     "speaker": "Hogmother",
-    "portrait": "/assets/patrons/hogmother.png",
     "side": "right",
     "dialog": "Yes I have. Spent a bit of time there praying for advice on what to do. While waiting I cleaned and tidied up the place, but didn't get any answers I'm afraid, so I carried on.",
     "interaction_type": "next",
@@ -2533,7 +2241,6 @@
   {
     "id": "greenshrine1_205",
     "speaker": "Bragain",
-    "portrait": "/assets/patrons/dwarven_miner.png",
     "side": "left",
     "dialog": "You've missed the statue then have ya'?",
     "interaction_type": "next",
@@ -2542,7 +2249,6 @@
   {
     "id": "greenshrine1_206",
     "speaker": "Hogmother",
-    "portrait": "/assets/patrons/hogmother.png",
     "side": "right",
     "dialog": "Statue? Pardon me, I don't remember a statue.",
     "interaction_type": "next",
@@ -2551,7 +2257,6 @@
   {
     "id": "greenshrine1_207",
     "speaker": "Bragain",
-    "portrait": "/assets/patrons/dwarven_miner.png",
     "side": "left",
     "dialog": "I thought it was odd! There was a statue right on view near the shrine, it was covered in ferns. If you've stayed at the shrine it would be impossible to miss it!",
     "interaction_type": "next",
@@ -2560,7 +2265,6 @@
   {
     "id": "greenshrine1_208",
     "speaker": "Bragain",
-    "portrait": "/assets/patrons/dwarven_miner.png",
     "side": "left",
     "dialog": "That's because it is no statue, there were no chistle marks on it at all! Must be some gargoyle, or a pertified person. Couldn't be a gargoyle, it didn't look like a monsterous winged creature. There's someone trapped in that statue, it must be.",
     "interaction_type": "next",
@@ -2569,7 +2273,6 @@
   {
     "id": "greenshrine1_209",
     "speaker": "Hogmother",
-    "portrait": "/assets/patrons/hogmother.png",
     "side": "right",
     "dialog": "Oh dear, that poor unlucky sod. First Hogfather than this. We can't just let it go, let us inspect that statue further.",
     "interaction_type": "next",
@@ -2588,15 +2291,14 @@
       {
         "text": "[Scribe] Obtain a Remove Petrification scroll.",
         "color": "#FFD700",
-		"condition_trait": "Scribe",
-		"target_id": "greenshrine1_210a"
+        "condition_trait": "Scribe",
+        "target_id": "greenshrine1_210a"
       }
     ]
   },
   {
     "id": "greenshrine1_210a",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_l.png",
     "side": "left",
     "dialog": "Pardon me, I am able to scribe a Remove Petrification scroll while we're in town, but the ingredients cost is hefty. I can't cover it all by myself.",
     "interaction_type": "selection",
@@ -2609,32 +2311,32 @@
         "text": "[Counterfeit Electrum coin] Obtain ingredients for scribing a Remove Petrification scroll.",
         "target_id": "greenshrine1_211b",
         "color": "#FFD700",
-		"condition": {
-			"type": "counterfeit_electrum",
-			"value": 1
-	    }
+        "condition": {
+          "type": "counterfeit_electrum",
+          "value": 1
+        }
       },
       {
         "text": "[Electrum coin] Obtain ingredients for scribing a Remove Petrification scroll.",
         "target_id": "greenshrine1_211a",
         "color": "#FFD700",
-		  "condition": {
-			"type": "electrum",
-			"value": 1
-		  }
+        "condition": {
+          "type": "electrum",
+          "value": 1
+        }
       },
-		{
-		  "text": "[250 Silver coins] Obtain ingredients for scribing a Remove Petrification scroll.",
-		  "condition_silver_required": 250,
-		  "target_id": "greenshrine1_211c",
-		  "frustration_text": "You can't afford it"
-		}
+      {
+        "text": "[250 Silver coins] Obtain ingredients for scribing a Remove Petrification scroll.",
+        "condition_silver_required": 250,
+        "target_id": "greenshrine1_211c",
+        "frustration_text": "You can't afford it"
+      }
     ]
   },
   {
     "id": "greenshrine1_211a",
     "speaker": "Narrator",
-    "dialog": "The party have stayed at the inn for a little long, paying for the scribing ingredients, allowing Amyssa to scribe the desired scroll.",
+    "dialog": "The party have decided to stay at the inn for a little long, paying for the scribing ingredients, allowing Amyssa to scribe the desired remove petrification scroll.",
     "interaction_type": "next",
     "target_id": "greenshrine1_211aend"
   },
@@ -2694,7 +2396,6 @@
   {
     "id": "greenshrine2_102",
     "speaker": "Hogmother",
-    "portrait": "/assets/patrons/hogmother.png",
     "side": "left",
     "dialog": "Ah yes. There it is, this statue is new to me, among the rest of oddities that have been popping up recently, they must all be connected. Forgive me ferns, allow me to reveal the sculpture to the light. Master dwarf, are you sure this isn't a sculptured art?",
     "interaction_type": "next",
@@ -2703,7 +2404,6 @@
   {
     "id": "greenshrine2_103",
     "speaker": "Bragain",
-    "portrait": "/assets/patrons/dwarven_miner.png",
     "side": "right",
     "dialog": "Aye, this rock has not been touched by a chistle or a pick. There's unnatural shape to the stone.",
     "interaction_type": "next",
@@ -2712,7 +2412,6 @@
   {
     "id": "greenshrine2_104",
     "speaker": "Hogmother",
-    "portrait": "/assets/patrons/hogmother.png",
     "side": "left",
     "dialog": "Well then, let us pray, diety of the shrine, allow me a humble servent to take part in restorting the balance of nature in your midst. Living things do not belong in stone. Please provide us the aid to free the captured being, and bestow breath within them once again.",
     "interaction_type": "next",
@@ -2737,17 +2436,16 @@
   {
     "id": "greenshrine2_107",
     "speaker": "Colorful Figure",
-    "portrait": "/assets/patrons/tonica_L.png",
+    "portrait": ["Tonica", "default"],
     "side": "right",
     "dialog": "Uuugggggggggggghhhhhhhhhhhh\n\nFantastic, I've been trapped in stone for some time now, I owe your clever party a debt. Allow me to introduce myself!",
-	"dialog2": "I am Tonica of the woodland realm, taken an Oath of the Ancients, I was set to be a defender of the woods and taken stewardship oh this piece of green land. Alas, vile creatures have gotten a hold on me with this curse of stone.",
+    "dialog2": "I am Tonica of the woodland realm, taken an Oath of the Ancients, I was set to be a defender of the woods and taken stewardship oh this piece of green land. Alas, vile creatures have gotten a hold on me with this curse of stone.",
     "interaction_type": "next",
     "target_id": "greenshrine2_108"
   },
   {
     "id": "greenshrine2_108",
     "speaker": "Hogmother",
-    "portrait": "/assets/patrons/hogmother.png",
     "side": "left",
     "dialog": "M'lady Tonica! What an honor and a relief to see you are alright after all this time in stone. I am Hogmother and our party is set to investigate several oddities happening around, your curse namely one of them. My husband has gone missing and we're on our way to investigate the trail of his footsteps, tho we do not know what has yet come to pass.",
     "interaction_type": "next",
@@ -2756,7 +2454,6 @@
   {
     "id": "greenshrine2_109",
     "speaker": "Tonica",
-    "portrait": "/assets/patrons/tonica_L.png",
     "side": "right",
     "dialog": "I've slumbered for too long, if there's distress in the land I will see to it.\n\nAllow me to join forces with you, I will make a valueable ally.",
     "interaction_type": "selection",
@@ -2776,7 +2473,6 @@
   {
     "id": "greenshrine2_110",
     "speaker": "Hogmother",
-    "portrait": "/assets/patrons/hogmother.png",
     "side": "left",
     "dialog": "We would like nothing more M'lady Tonica!",
     "interaction_type": "next",
@@ -2785,7 +2481,7 @@
   {
     "id": "greenshrine2_110a",
     "speaker": "INTRODUCTION",
-    "portrait": "/assets/patrons/tonica_L.png",
+    "portrait": ["Tonica", "default"],
     "side": "right",
     "dialog": "Lady Tonica is a Green Knight.\n\nShe has taken an Oath to protect nature and wilderness. She's a well rounded fighter and can cure allies of poison, or smite her foes.",
     "interaction_type": "next",
@@ -2799,7 +2495,6 @@
   {
     "id": "green3_201",
     "speaker": "Narrator",
-    "portrait": "",
     "side": "left",
     "dialog": "The party has reached the forest entrence.",
     "interaction_type": "next",
@@ -2808,7 +2503,6 @@
   {
     "id": "green3_202",
     "speaker": "Narrator",
-    "portrait": "",
     "side": "left",
     "dialog": "The looks of the trees barks and the grass growing around doesn't fill you with much assurace, this forest looks sick.",
     "interaction_type": "next",
@@ -2817,7 +2511,6 @@
   {
     "id": "green3_203",
     "speaker": "Narrator",
-    "portrait": "",
     "dialog": "The path leads from the entrence quickly to a crossroads with a risen rocky platform overlook.",
     "side": "left",
     "interaction_type": "next",
@@ -2826,7 +2519,6 @@
   {
     "id": "green3_203",
     "speaker": "Narrator",
-    "portrait": "",
     "dialog": "As the party makes its way carefully onwards, a menacing face appears from above the platform.",
     "side": "left",
     "interaction_type": "next",
@@ -2835,7 +2527,7 @@
   {
     "id": "green3_204",
     "speaker": "Narrator",
-    "portrait": "/assets/patrons/direwolf.png",
+    "portrait": ["Awotruce", "default"],
     "dialog": "Looking down upon you and letting off a roaring growl, a large face of a dire-wolf presents his canines and beaming yellow eyes.",
     "side": "right",
     "interaction_type": "next",
@@ -2844,7 +2536,7 @@
   {
     "id": "green3_205",
     "speaker": "Dark Figure",
-    "portrait": "/assets/patrons/direwolf.png",
+    "portrait": ["Awotruce", "default"],
     "dialog": "More intruders passing through my woods, have you come here for your doom as well?",
     "side": "right",
     "interaction_type": "next",
@@ -2853,7 +2545,7 @@
   {
     "id": "green3_206",
     "speaker": "Dark Figure",
-    "portrait": "/assets/patrons/direwolf.png",
+    "portrait": ["Awotruce", "default"],
     "dialog": "Or have you come to serve me a meal? Answer me strangers...",
     "side": "right",
     "interaction_type": "next",
@@ -2862,7 +2554,6 @@
   {
     "id": "green3_207",
     "speaker": "Narrator",
-    "portrait": "",
     "dialog": "The menacing figure demands an answer.",
     "side": "left",
     "interaction_type": "selection",
@@ -2884,7 +2575,6 @@
   {
     "id": "green3_208a",
     "speaker": "Hogmother",
-    "portrait": "/assets/patrons/hogmother.png",
     "side": "left",
     "dialog": "We haven't come here to intrude, not to find doom nor to serve a meal, Master Wolf.",
     "interaction_type": "next",
@@ -2893,7 +2583,6 @@
   {
     "id": "green3_209",
     "speaker": "Hogmother",
-    "portrait": "/assets/patrons/hogmother.png",
     "side": "left",
     "dialog": "We're on a mission of urgency to find my husband who may has gone missing around this area, and having no other way we've come to pass through here.",
     "interaction_type": "next",
@@ -2902,7 +2591,6 @@
   {
     "id": "green3_210",
     "speaker": "Hogmother",
-    "portrait": "/assets/patrons/hogmother.png",
     "side": "left",
     "dialog": "We merely request to keep passing through.",
     "interaction_type": "next",
@@ -2911,7 +2599,7 @@
   {
     "id": "green3_211",
     "speaker": "Dark Figure",
-    "portrait": "/assets/patrons/direwolf.png",
+    "portrait": ["Awotruce", "default"],
     "dialog": "I decide what passes through here. I am Awotruce. I've been the guardian of those woods since anyone alive can remember.",
     "side": "right",
     "interaction_type": "next",
@@ -2920,7 +2608,6 @@
   {
     "id": "green3_212",
     "speaker": "Awotruce",
-    "portrait": "/assets/patrons/direwolf.png",
     "dialog": "There have been dark gatherings here preforming rituals desecrating the peace of nature in my woods of late. Have you any inclusion this that?",
     "side": "right",
     "interaction_type": "next",
@@ -2929,7 +2616,6 @@
   {
     "id": "green3_213",
     "speaker": "Hogmother",
-    "portrait": "/assets/patrons/hogmother.png",
     "side": "left",
     "dialog": "None. Master Awetruce, this is news to us.",
     "interaction_type": "next",
@@ -2938,7 +2624,6 @@
   {
     "id": "green3_214",
     "speaker": "Awotruce",
-    "portrait": "/assets/patrons/direwolf.png",
     "dialog": "Well then, say I allow you passage through my woods, what are you planning to do when you get to the dark-folk who settled on the holy grounds of the woods?",
     "side": "right",
     "interaction_type": "next",
@@ -2947,7 +2632,6 @@
   {
     "id": "green3_214a",
     "speaker": "Hogmother",
-    "portrait": "/assets/patrons/hogmother.png",
     "side": "left",
     "dialog": "We haven't got a plan, all I want is to find my husband and be off.",
     "interaction_type": "next",
@@ -2956,7 +2640,6 @@
   {
     "id": "green3_215",
     "speaker": "Awotruce",
-    "portrait": "/assets/patrons/direwolf.png",
     "dialog": "Then your plan is certain death, wanderers. Only the lost find their way to my woods and you truely are lost.",
     "side": "right",
     "interaction_type": "next",
@@ -2965,7 +2648,6 @@
   {
     "id": "green3_216",
     "speaker": "Awotruce",
-    "portrait": "/assets/patrons/direwolf.png",
     "dialog": "There's a cult of dark beings barricading themselves up ahead, and they have been bringing in more people with them. I cannot breach their pointy spears in my form. I don't see how you can do any better.",
     "side": "right",
     "interaction_type": "next",
@@ -2974,7 +2656,6 @@
   {
     "id": "green3_217",
     "speaker": "Hogmother",
-    "portrait": "/assets/patrons/hogmother.png",
     "side": "left",
     "dialog": "Better or worse my way is through those barricades, and I will find Hogfather.",
     "interaction_type": "next",
@@ -2983,7 +2664,6 @@
   {
     "id": "green3_218",
     "speaker": "Awotruce",
-    "portrait": "/assets/patrons/direwolf.png",
     "dialog": "It's been an eternity or so since I've seen such determination.\n\nFine, I will allow you passage, and I will watch you closely.",
     "side": "right",
     "interaction_type": "next",
@@ -2992,7 +2672,6 @@
   {
     "id": "green3_219",
     "speaker": "Awotruce",
-    "portrait": "/assets/patrons/direwolf.png",
     "dialog": "If you really do happen to breach their borders, leave their leader to me. I have an unsettled debt with that mongrel.",
     "side": "right",
     "interaction_type": "next",
@@ -3001,7 +2680,6 @@
   {
     "id": "green3_220",
     "speaker": "Awotruce",
-    "portrait": "/assets/patrons/direwolf.png",
     "dialog": "I will crunch that foul monstrosity's head in my jaws even if it's the last thing I'll do.",
     "side": "right",
     "interaction_type": "next",
@@ -3010,7 +2688,6 @@
   {
     "id": "green3_221",
     "speaker": "Hogmother",
-    "portrait": "/assets/patrons/hogmother.png",
     "side": "left",
     "dialog": "We humbley accept your guidance, Master Awotruce.",
     "interaction_type": "next",
@@ -3019,7 +2696,6 @@
   {
     "id": "green3_221a",
     "speaker": "Awotruce",
-    "portrait": "/assets/patrons/direwolf.png",
     "dialog": "I will certainly love that little halfling snack too, but I'll refrain for now, the Hunger only sharpens my wits.",
     "side": "right",
     "interaction_type": "next",
@@ -3028,7 +2704,6 @@
   {
     "id": "green3_221b",
     "speaker": "Guild Master",
-    "portrait": "/assets/guild/guild_master.png",
     "side": "left",
     "dialog": "** What halfling ?! **",
     "interaction_type": "next",
@@ -3036,18 +2711,36 @@
   },
   {
     "id": "green3_222",
-    "speaker": ["Hogmother", "Hogperson"],
-    "portrait": ["/assets/patrons/hogmother.png", "/assets/patrons/hogperson.png"],
-    "side": ["left", "right"],
+    "speaker": [
+      "Hogmother",
+      "Hogperson"
+    ],
+    "portrait": [
+      "/assets/patrons/hogmother.png",
+      "/assets/patrons/hogperson.png"
+    ],
+    "side": [
+      "left",
+      "right"
+    ],
     "dialog": "???",
     "interaction_type": "next",
     "target_id": "green3_223"
   },
   {
     "id": "green3_223",
-    "speaker": ["Bragain", "Claudio"],
-    "portrait": ["/assets/patrons/dwarven_miner.png", "/assets/patrons/Claudio.png"],
-    "side": ["left", "right"],
+    "speaker": [
+      "Bragain",
+      "Claudio"
+    ],
+    "portrait": [
+      "/assets/patrons/dwarven_miner.png",
+      "/assets/patrons/claudio.png"
+    ],
+    "side": [
+      "left",
+      "right"
+    ],
     "dialog": "???",
     "interaction_type": "next",
     "target_id": "green3_224"
@@ -3055,7 +2748,6 @@
   {
     "id": "green3_224",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_l.png",
     "side": "right",
     "dialog": "???",
     "interaction_type": "next",
@@ -3064,7 +2756,6 @@
   {
     "id": "green3_227",
     "speaker": "Narrator",
-    "portrait": "",
     "dialog": "The party members are all appearing puzzled exchanging looks around and at each other, trying to see if they've missed something.",
     "side": "right",
     "interaction_type": "next",
@@ -3073,7 +2764,6 @@
   {
     "id": "green3_228",
     "speaker": "Narrator",
-    "portrait": "",
     "dialog": "But Awotruce's nostrails suck in the air, with an expression of a salivating hungry wolf.",
     "side": "right",
     "interaction_type": "next",
@@ -3082,7 +2772,6 @@
   {
     "id": "green3_229",
     "speaker": "Awotruce",
-    "portrait": "/assets/patrons/direwolf.png",
     "dialog": "Come out and show yourself halfling, or I'll get down there and catch you myself.",
     "side": "right",
     "interaction_type": "next",
@@ -3091,7 +2780,6 @@
   {
     "id": "green3_230",
     "speaker": "Narrator",
-    "portrait": "",
     "dialog": "A small figure appears from the nearby overgrowth.\n\nIt does appear like a halfling.",
     "side": "right",
     "interaction_type": "next",
@@ -3100,7 +2788,7 @@
   {
     "id": "green3_230a",
     "speaker": "Halfling",
-    "portrait": "/assets/patrons/halfling_L.png",
+    "portrait": ["Finnick", "default"],
     "dialog": "I do beg your pardon to be sneaking around like that, but this place is far from safe, I'm sure you'll understand.",
     "side": "left",
     "interaction_type": "next",
@@ -3109,7 +2797,6 @@
   {
     "id": "green3_231",
     "speaker": "Narrator",
-    "portrait": "",
     "dialog": "This little guy must have been following alongside you...\n\nWho knows for how long.",
     "side": "right",
     "interaction_type": "next",
@@ -3118,7 +2805,7 @@
   {
     "id": "green3_232",
     "speaker": "Halfling",
-    "portrait": "/assets/patrons/halfling_L.png",
+    "portrait": ["Finnick", "default"],
     "dialog": "Allow me to introduce myself, I'm Finnick the Young. I'm a humble scout from the farmers settlement nearby.",
     "side": "left",
     "interaction_type": "next",
@@ -3127,7 +2814,6 @@
   {
     "id": "green3_232a",
     "speaker": "Finnick",
-    "portrait": "/assets/patrons/halfling_L.png",
     "dialog": "I hope you don't think me an intruder, but it's been hard not to notice your business in the Tavern and follow you here.",
     "side": "left",
     "interaction_type": "next",
@@ -3136,7 +2822,6 @@
   {
     "id": "green3_232b",
     "speaker": "Awotruce",
-    "portrait": "/assets/patrons/direwolf.png",
     "dialog": "Well there's no harm done yet. I was thinking you were with THEM, but as it turns out, you're just another intruder passing through my woods.",
     "side": "right",
     "interaction_type": "next",
@@ -3145,7 +2830,6 @@
   {
     "id": "green3_233",
     "speaker": "Awotruce",
-    "portrait": "/assets/patrons/direwolf.png",
     "dialog": "State your business before me, least I'll devour you whole.",
     "side": "right",
     "interaction_type": "next",
@@ -3154,7 +2838,6 @@
   {
     "id": "green3_234",
     "speaker": "Finnick",
-    "portrait": "/assets/patrons/halfling_L.png",
     "dialog": "*Gulp* Hopefully it won't come to this. I've been sent to this forest by my people. Our fields bloomed and flourished under the rule of goddess Narlia.",
     "side": "left",
     "interaction_type": "next",
@@ -3163,7 +2846,6 @@
   {
     "id": "green3_235",
     "speaker": "Finnick",
-    "portrait": "/assets/patrons/halfling_L.png",
     "dialog": "But alas, the crops grow stale now, and decay hurts the earth and the earthworms and butterflies and the bees.",
     "side": "left",
     "interaction_type": "next",
@@ -3172,7 +2854,6 @@
   {
     "id": "green3_236",
     "speaker": "Finnick",
-    "portrait": "/assets/patrons/halfling_L.png",
     "dialog": "Even the water don't seem so fresh anymore.",
     "side": "left",
     "interaction_type": "next",
@@ -3181,7 +2862,6 @@
   {
     "id": "green3_237",
     "speaker": "Finnick",
-    "portrait": "/assets/patrons/halfling_L.png",
     "dialog": "I've been appointed by the council elders to investigate this matter and report back. Their prime suspicion is the temple of the goddess at the edge of the forest have been overrun by vile forces.",
     "side": "left",
     "interaction_type": "next",
@@ -3190,7 +2870,6 @@
   {
     "id": "green3_238",
     "speaker": "Finnick",
-    "portrait": "/assets/patrons/halfling_L.png",
     "dialog": "We'll have to leave these lands unless it changes...",
     "side": "left",
     "interaction_type": "next",
@@ -3199,7 +2878,6 @@
   {
     "id": "green3_239",
     "speaker": "Hogmother",
-    "portrait": "/assets/patrons/hogmother.png",
     "side": "right",
     "dialog": "We're searching for missing people, namely my husband. Would you have any knowledge about that?",
     "interaction_type": "next",
@@ -3208,7 +2886,6 @@
   {
     "id": "green3_240",
     "speaker": "Finnick",
-    "portrait": "/assets/patrons/halfling_L.png",
     "dialog": "I'm afraid not my lady, but it would be safe to assume the cases are linked.",
     "side": "left",
     "interaction_type": "next",
@@ -3217,7 +2894,6 @@
   {
     "id": "green3_241",
     "speaker": "Hogmother",
-    "portrait": "/assets/patrons/hogmother.png",
     "side": "right",
     "dialog": "Yes it would. Master Awotruce, we would like to accept Master Finnick under our wing, and away from your jaws if that's acceptable with you.",
     "interaction_type": "next",
@@ -3226,7 +2902,6 @@
   {
     "id": "green3_242",
     "speaker": "Narrator",
-    "portrait": "",
     "dialog": "The direwolf nods.",
     "side": "right",
     "interaction_type": "next",
@@ -3235,7 +2910,6 @@
   {
     "id": "green3_243",
     "speaker": "Hogmother",
-    "portrait": "/assets/patrons/hogmother.png",
     "side": "left",
     "dialog": "We humbly accept your benevolence, Master Awotruce. It would seem our lead is the Temple. Let us be on our way.",
     "interaction_type": "next",
@@ -3244,7 +2918,6 @@
   {
     "id": "green3_243END",
     "speaker": "Hogmother",
-    "portrait": "/assets/patrons/hogmother.png",
     "side": "left",
     "dialog": "We humbly accept your benevolence, Master Awotruce. It would seem our lead is the Temple.",
     "interaction_type": "next",
@@ -3253,7 +2926,6 @@
   {
     "id": "dwood1_101",
     "speaker": "Hogmother",
-    "portrait": "/assets/patrons/hogmother.png",
     "side": "left",
     "dialog": "Those woods sure look bad........\nOh Hogfather where did you get yourself into...",
     "interaction_type": "next",
@@ -3262,7 +2934,6 @@
   {
     "id": "dwood1_102",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_l.png",
     "side": "right",
     "dialog": "Excuse me, Madam Hogmother",
     "interaction_type": "selection",
@@ -3283,7 +2954,6 @@
   {
     "id": "dwood1_103",
     "speaker": "Hogmother",
-    "portrait": "/assets/patrons/hogmother.png",
     "side": "left",
     "dialog": "Yes dear? Is something wrong?",
     "interaction_type": "next",
@@ -3292,7 +2962,6 @@
   {
     "id": "dwood1_104",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_l.png",
     "side": "right",
     "dialog": "I'm curious, since you're a Shaman, what is it like, seeing the spirits world?",
     "interaction_type": "next",
@@ -3301,7 +2970,6 @@
   {
     "id": "dwood1_105",
     "speaker": "Hogmother",
-    "portrait": "/assets/patrons/hogmother.png",
     "side": "left",
     "dialog": "Well here in the material plane you can either have a big object or shatter it, where for spirits they wouldn't see much difference.",
     "interaction_type": "next",
@@ -3310,7 +2978,6 @@
   {
     "id": "dwood1_106",
     "speaker": "Hogmother",
-    "portrait": "/assets/patrons/hogmother.png",
     "side": "left",
     "dialog": "Things that are whole or completely warped and broken are still just receptacle for spirits, and its integrity doesn't matter to them.",
     "interaction_type": "next",
@@ -3319,7 +2986,6 @@
   {
     "id": "dwood1_107",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_l.png",
     "side": "right",
     "dialog": "And the sights, and scenery, are they not different?",
     "interaction_type": "next",
@@ -3328,7 +2994,6 @@
   {
     "id": "dwood1_108",
     "speaker": "Hogmother",
-    "portrait": "/assets/patrons/hogmother.png",
     "side": "left",
     "dialog": "Oh it's a lot like this world, except the roads aren't as straight as they are here, they are winding and twisting, and they go forth and back at the same time.",
     "interaction_type": "next",
@@ -3337,7 +3002,6 @@
   {
     "id": "dwood1_109",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_l.png",
     "side": "right",
     "dialog": "Oh, how is that?",
     "interaction_type": "next",
@@ -3346,7 +3010,6 @@
   {
     "id": "dwood1_110",
     "speaker": "Hogmother",
-    "portrait": "/assets/patrons/hogmother.png",
     "side": "left",
     "dialog": "Because the living think they're making their own path when it's been set by destiny long before them.",
     "interaction_type": "next",
@@ -3355,7 +3018,6 @@
   {
     "id": "dwood1_111",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_l.png",
     "side": "right",
     "dialog": "Oh, but what if they don't go in their path?",
     "interaction_type": "next",
@@ -3364,7 +3026,6 @@
   {
     "id": "dwood1_112",
     "speaker": "Hogmother",
-    "portrait": "/assets/patrons/hogmother.png",
     "side": "left",
     "dialog": "Oh, you'd shouldn't talk about that, better just find your destiny and pursue it.",
     "interaction_type": "next",
@@ -3373,7 +3034,6 @@
   {
     "id": "dwood1_113",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_l.png",
     "side": "right",
     "dialog": "But what if they're wrong?",
     "interaction_type": "next",
@@ -3382,7 +3042,6 @@
   {
     "id": "dwood1_114",
     "speaker": "Hogmother",
-    "portrait": "/assets/patrons/hogmother.png",
     "side": "left",
     "dialog": "They can't be, all the ways will lead them there, it's just a matter, of how many accidents and how much suffering they're willing to endure before adjusting their path.",
     "interaction_type": "next",
@@ -3391,7 +3050,6 @@
   {
     "id": "dwood1_115",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_l.png",
     "side": "right",
     "dialog": "And what if they die before they reach it?",
     "interaction_type": "next",
@@ -3400,7 +3058,6 @@
   {
     "id": "dwood1_116",
     "speaker": "Hogmother",
-    "portrait": "/assets/patrons/hogmother.png",
     "side": "left",
     "dialog": "Oh, that's just one step in the journey for the spirit, they keep going until their destiny is reached.",
     "interaction_type": "next",
@@ -3409,7 +3066,6 @@
   {
     "id": "dwood1_117",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_l.png",
     "side": "right",
     "dialog": "And what happens then? Do they finally die too?",
     "interaction_type": "next",
@@ -3418,7 +3074,6 @@
   {
     "id": "dwood1_118",
     "speaker": "Hogmother",
-    "portrait": "/assets/patrons/hogmother.png",
     "side": "left",
     "dialog": "That I do not know.",
     "interaction_type": "next",
@@ -3427,7 +3082,6 @@
   {
     "id": "dwood1_150",
     "speaker": "Hogmother",
-    "portrait": "/assets/patrons/hogmother.png",
     "side": "left",
     "dialog": "There's seems to be a clearing up ahead.",
     "interaction_type": "next",
@@ -3436,7 +3090,6 @@
   {
     "id": "dwood1_151",
     "speaker": "Hogmother",
-    "portrait": "/assets/patrons/hogmother.png",
     "side": "left",
     "dialog": "This must be the forest glade.",
     "interaction_type": "next",
@@ -3445,7 +3098,6 @@
   {
     "id": "dwood1_152",
     "speaker": "Narrator",
-    "portrait": "",
     "dialog": "The party reaches a central risen location in the woods, they can  overlook the different paths from here",
     "side": "right",
     "interaction_type": "next",
@@ -3454,7 +3106,6 @@
   {
     "id": "dwood1_153",
     "speaker": "Narrator",
-    "portrait": "",
     "dialog": "While resting and recuperating from the journey, a figure shows up to the party.",
     "side": "right",
     "interaction_type": "next",
@@ -3463,7 +3114,6 @@
   {
     "id": "dwood1_154",
     "speaker": "Trollkin",
-    "portrait": "/assets/patrons/trollkin_l.png",
     "dialog": "Hello, visitors to the Dark Woods!\n\nI am Trollkin the Trollkin\n\nNice Trollkin to you! Haaaaaaaa hehehehe.",
     "side": "left",
     "interaction_type": "next",
@@ -3472,7 +3122,6 @@
   {
     "id": "dwood1_155",
     "speaker": "Trollkin",
-    "portrait": "/assets/patrons/trollkin_l.png",
     "dialog": "I am da King of this place, and my palace is right by there near the swamp. I am looking for a queen to come live with me.",
     "side": "left",
     "interaction_type": "next",
@@ -3481,7 +3130,6 @@
   {
     "id": "dwood1_156",
     "speaker": "Trollkin",
-    "portrait": "/assets/patrons/trollkin_l.png",
     "dialog": "I couldn't help but listening to your conversation about the spirits world. My ancestors comes from a long line of spiritual folks",
     "side": "left",
     "interaction_type": "next",
@@ -3490,7 +3138,6 @@
   {
     "id": "dwood1_157",
     "speaker": "Trollkin",
-    "portrait": "/assets/patrons/trollkin_l.png",
     "dialog": "I want you to come be my queen, lady Amyssa.",
     "side": "left",
     "interaction_type": "next",
@@ -3499,7 +3146,6 @@
   {
     "id": "dwood1_158",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_l.png",
     "side": "right",
     "dialog": "What?! . . . . How do you know my name?! . . . . \nHow did you eavesdropped on our conversation?",
     "interaction_type": "next",
@@ -3508,7 +3154,6 @@
   {
     "id": "dwood1_159",
     "speaker": "Trollkin",
-    "portrait": "/assets/patrons/trollkin_l.png",
     "dialog": "This is my kingdom your highness, you are just a visitor here. For now!",
     "side": "left",
     "interaction_type": "next",
@@ -3517,7 +3162,6 @@
   {
     "id": "dwood1_160",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_l.png",
     "side": "right",
     "dialog": "You trollkin truly are vile. Don't you dare come near me",
     "interaction_type": "next",
@@ -3526,7 +3170,6 @@
   {
     "id": "dwood1_161",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_l.png",
     "side": "right",
     "dialog": "I would burn you with my fire darts before you can even spell 'hello'",
     "interaction_type": "next",
@@ -3535,7 +3178,6 @@
   {
     "id": "dwood1_162",
     "speaker": "Trollkin",
-    "portrait": "/assets/patrons/trollkin_l.png",
     "dialog": "You don't know any fire spells",
     "side": "left",
     "interaction_type": "next",
@@ -3544,7 +3186,6 @@
   {
     "id": "dwood1_163",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_l.png",
     "side": "right",
     "dialog": "WHAT?! ............",
     "interaction_type": "next",
@@ -3553,7 +3194,6 @@
   {
     "id": "dwood1_164",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_l.png",
     "side": "right",
     "dialog": "How would you know what are the spells I master?",
     "interaction_type": "next",
@@ -3562,7 +3202,6 @@
   {
     "id": "dwood1_165",
     "speaker": "Trollkin",
-    "portrait": "/assets/patrons/trollkin_l.png",
     "dialog": "Because I have your spellbook.",
     "side": "left",
     "interaction_type": "next",
@@ -3571,7 +3210,6 @@
   {
     "id": "dwood1_165a",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_l.png",
     "side": "right",
     "dialog": "WHHAAAAATTTT?!!!!!! ......................",
     "interaction_type": "next",
@@ -3580,7 +3218,6 @@
   {
     "id": "dwood1_165b",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_l.png",
     "side": "right",
     "dialog": "It's true my spellbook has gone missing!",
     "interaction_type": "next",
@@ -3589,7 +3226,6 @@
   {
     "id": "dwood1_166",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_l.png",
     "side": "right",
     "dialog": "You monster! You've pickpocket me! Bring it back this instance!",
     "interaction_type": "next",
@@ -3598,7 +3234,6 @@
   {
     "id": "dwood1_167",
     "speaker": "Trollkin",
-    "portrait": "/assets/patrons/trollkin_l.png",
     "dialog": "Oh... so now you'll have dealings with me?",
     "side": "left",
     "interaction_type": "next",
@@ -3607,7 +3242,6 @@
   {
     "id": "dwood1_168",
     "speaker": "Trollkin",
-    "portrait": "/assets/patrons/trollkin_l.png",
     "dialog": "Well... you know what I want!! Come to my hut by the swamp later...",
     "side": "left",
     "interaction_type": "next",
@@ -3616,7 +3250,7 @@
   {
     "id": "dwood1_169",
     "speaker": "Trollkin",
-    "portrait": "/assets/patrons/trollkin_l_vanish.png",
+    "portrait": ["Trollkin", "vanish"],
     "dialog": "HEH.. HEH.. HEH.. HEH.. \n\n*the trollkin is turning transparent...*",
     "side": "left",
     "interaction_type": "next",
@@ -3625,7 +3259,7 @@
   {
     "id": "dwood1_170",
     "speaker": "Trollkin",
-    "portrait": "/assets/patrons/trollkin_l_vanish.png",
+    "portrait": ["Trollkin", "vanish"],
     "dialog": "'SEE' YA!!! \n\nHAAAAAAAAAAAA hahahahaha",
     "side": "left",
     "interaction_type": "next",
@@ -3634,7 +3268,6 @@
   {
     "id": "dwood1_170b",
     "speaker": "Narrator",
-    "portrait": "",
     "dialog": "The Trollkin vanishes from sight...",
     "side": "right",
     "interaction_type": "next",
@@ -3643,7 +3276,6 @@
   {
     "id": "dwood1_171",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_l.png",
     "side": "right",
     "dialog": "NO TROLL!! I WILL BURN YOUR ENTIRE FOREST DOWN!! DO YOU HEAR ME !!!!!",
     "interaction_type": "next",
@@ -3652,7 +3284,6 @@
   {
     "id": "dwood1_172",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_l.png",
     "side": "right",
     "dialog": "I WILL HAVE YOUR SWAMP DREDGED DRY AND YOUR SKIN FLAYED ALIVE !!!!",
     "interaction_type": "next",
@@ -3661,7 +3292,6 @@
   {
     "id": "dwood1_173",
     "speaker": "Narrator",
-    "portrait": "",
     "dialog": "Amyssa's voice is thoundering through the woods, but there's no answer...",
     "side": "right",
     "interaction_type": "next",
@@ -3670,7 +3300,6 @@
   {
     "id": "dwood1_174",
     "speaker": "Bragain",
-    "portrait": "/assets/patrons/dwarven_miner.png",
     "side": "left",
     "dialog": "Oh, remind me to never piss you off Amyssa.",
     "interaction_type": "next",
@@ -3679,7 +3308,6 @@
   {
     "id": "dwood1_175",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_l.png",
     "dialog": "Shut up. How did I ever get involved with this villain.\n\nNow my spellbook is gone and I'm so far from home...",
     "side": "right",
     "interaction_type": "next",
@@ -3688,7 +3316,6 @@
   {
     "id": "dwood1_176",
     "speaker": "Hogmother",
-    "portrait": "/assets/patrons/hogmother.png",
     "side": "left",
     "dialog": "There there my girl. This forest is home to the goddess Narlia.",
     "interaction_type": "next",
@@ -3697,7 +3324,6 @@
   {
     "id": "dwood1_177",
     "speaker": "Hogmother",
-    "portrait": "/assets/patrons/hogmother.png",
     "side": "left",
     "dialog": "She will never have such crimes committed freely on her blessed grounds.",
     "interaction_type": "next",
@@ -3706,7 +3332,6 @@
   {
     "id": "dwood1_178",
     "speaker": "Hogmother",
-    "portrait": "/assets/patrons/hogmother.png",
     "side": "left",
     "dialog": "Come, let us go to the shrine, we'll pray to her and await answers.",
     "interaction_type": "next",
@@ -3715,7 +3340,6 @@
   {
     "id": "dwood1_179",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_l.png",
     "side": "right",
     "dialog": "But it's the opposite way from where Hogfather is?",
     "interaction_type": "next",
@@ -3724,7 +3348,6 @@
   {
     "id": "dwood1_180",
     "speaker": "Hogmother",
-    "portrait": "/assets/patrons/hogmother.png",
     "side": "left",
     "dialog": "Hogfather would have none of that if he knew. It's alright child. We won't find Hogfather but that's where we'll find some peace.",
     "interaction_type": "next",
@@ -3733,7 +3356,6 @@
   {
     "id": "dwood1_181end",
     "speaker": "Hogmother",
-    "portrait": "/assets/patrons/hogmother.png",
     "side": "left",
     "dialog": ".",
     "interaction_type": "next",
@@ -3743,30 +3365,29 @@
     "id": "dwood1_201",
     "speaker": "Narrator",
     "dialog": "Approching the shrine, you can see the location from where you are. There's a large beast on fours right in the entrence of it.",
-	"dialog2": "Spying on the beast, it seems to stay put. If you want the shrine, you'll have to confront it.",
+    "dialog2": "Spying on the beast, it seems to stay put. If you want the shrine, you'll have to confront it.",
     "interaction_type": "select",
-	"options": [
-	  {
-		"text": "[Speak with Animals] Approach the beast with friendly familiay words.",
+    "options": [
+      {
+        "text": "[Speak with Animals] Approach the beast with friendly familiay words.",
         "target_id": "dwood1_20101",
         "color": "#FFD700",
-		"condition_trait": "Speak with Animals"
+        "condition_trait": "Speak with Animals"
       },
-	  {
-		"text": "Approach the beast with apprehension.",
+      {
+        "text": "Approach the beast with apprehension.",
         "target_id": "dwood1_20103"
-      }
-	  {
-		"text": "Retreat.",
-        "disabled": true,
-		"frustration_text": "There's no other way I'm afraid."
       },
-	  ]
+      {
+        "text": "Retreat.",
+        "disabled": true,
+        "frustration_text": "There's no other way I'm afraid."
+      }
+    ]
   },
   {
     "id": "dwood1_20101",
     "speaker": "Tonica",
-    "portrait": "/assets/patrons/tonica_L.png",
     "side": "left",
     "dialog": "I'll reason with the beast.",
     "dialog2": "Owlbear, guardian of the woods, warden of the shrine, grant us passage on the sacred earth marked here.",
@@ -3776,7 +3397,6 @@
   {
     "id": "dwood1_20102",
     "speaker": "Owlbear",
-    "portrait": "/assets/monsters/owlbear.png",
     "side": "right",
     "dialog": "Whispers, whispers, whispers, constant whispers, a gloomy shadow called me to assault everything in the shrine.",
     "dialog2": "My lady, carry on I shall not harm thee, but do not linger. The woods are cursed.",
@@ -3798,7 +3418,6 @@
   {
     "id": "dwood1_202o",
     "speaker": "Hogmother",
-    "portrait": "/assets/patrons/hogmother.png",
     "side": "left",
     "dialog": "There's the shrine. Let's clean it up a bit. I wish I had more to offer as tribute to the goddess.",
     "interaction_type": "next",
@@ -3807,7 +3426,6 @@
   {
     "id": "dwood1_202",
     "speaker": "Narrator",
-    "portrait": "",
     "dialog": "The stone shrine is open on all ways. In the center, a risen stone platform marks a spot of sanctity. It is believed that ancient times a divine influnce has poured into the material place through here, and the connection has never severed.",
     "side": "left",
     "interaction_type": "selection",
@@ -3823,14 +3441,13 @@
         "frustration_text": "You wouldn't be able to do that while Hogmother is in the party.",
         "disabled": true,
         "color": "#4800FF",
-		"shadow": "0 0 5px rgba(255,255,0,1)"
+        "shadow": "0 0 5px rgba(255,255,0,1)"
       }
     ]
   },
   {
     "id": "dwood1_203",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_l.png",
     "side": "left",
     "dialog": "Oh goddess Narlia, how did I get involved in a mess like this. I want to go home.",
     "interaction_type": "next",
@@ -3839,7 +3456,6 @@
   {
     "id": "dwood1_204",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_l.png",
     "dialog": "This spellbook cost me a fortune and it's a lot of time to make and write.",
     "side": "left",
     "interaction_type": "next",
@@ -3848,7 +3464,6 @@
   {
     "id": "dwood1_205",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_l.png",
     "dialog": "I'll have to quit the adventure if I am to write a new one, and to cover the costs it's going to take a long time as well.",
     "side": "left",
     "interaction_type": "next",
@@ -3857,7 +3472,6 @@
   {
     "id": "dwood1_206",
     "speaker": "Hogmother",
-    "portrait": "/assets/patrons/hogmother.png",
     "side": "right",
     "dialog": "We'll go and attempt to reason with the Trollkin first. We'll see if he can be persuaded.",
     "interaction_type": "next",
@@ -3866,7 +3480,6 @@
   {
     "id": "dwood1_207",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_l.png",
     "dialog": "I really doubt a type like his can be. Maybe I'll just offer myself to him and get it over with quickly.",
     "side": "left",
     "interaction_type": "next",
@@ -3875,7 +3488,6 @@
   {
     "id": "dwood1_208",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_l.png",
     "dialog": "I really doubt a type like his can be. Maybe I'll just offer myself to him and get it over with quickly.",
     "side": "left",
     "interaction_type": "selection",
@@ -3897,7 +3509,6 @@
   {
     "id": "dwood1_209",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_l.png",
     "dialog": "I can't believe that beast is waiting there waiting for me to be offered to him.\n\nHow will I ever get out of this predicament.",
     "side": "left",
     "interaction_type": "next",
@@ -3906,7 +3517,6 @@
   {
     "id": "dwood1_210",
     "speaker": "Claudio",
-    "portrait": "/assets/patrons/Claudio.png",
     "side": "right",
     "dialog": "We can exchange our outfits and I'll seduce the Trollkin.",
     "interaction_type": "next",
@@ -3915,7 +3525,6 @@
   {
     "id": "dwood1_211",
     "speaker": "Claudio",
-    "portrait": "/assets/patrons/Claudio.png",
     "side": "right",
     "dialog": "I'll put on the performence of my life, while you figure out where the spellbook is kept.",
     "interaction_type": "next",
@@ -3924,7 +3533,6 @@
   {
     "id": "dwood1_212",
     "speaker": "Claudio",
-    "portrait": "/assets/patrons/Claudio.png",
     "side": "right",
     "dialog": "Bragain you could steal the spellbook back.",
     "interaction_type": "next",
@@ -3934,7 +3542,6 @@
   {
     "id": "dwood1_213",
     "speaker": "Bragain",
-    "portrait": "/assets/patrons/dwarven_miner.png",
     "side": "left",
     "dialog": "That's a plan to make, but alas I'm not that kind of rogue. There's hardly any stealth in me, and my thieving is underclassed.",
     "interaction_type": "next",
@@ -3943,7 +3550,6 @@
   {
     "id": "dwood1_214",
     "speaker": "Finnick",
-    "portrait": "/assets/patrons/halfling_L.png",
     "dialog": "I will do it.",
     "side": "right",
     "interaction_type": "next",
@@ -3952,7 +3558,6 @@
   {
     "id": "dwood1_215",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_l.png",
     "dialog": "WHAT?! ........",
     "side": "left",
     "interaction_type": "next",
@@ -3961,7 +3566,6 @@
   {
     "id": "dwood1_216",
     "speaker": "Finnick",
-    "portrait": "/assets/patrons/halfling_L.png",
     "dialog": "I'm hard to notice, and sneaky as it's possible to be.",
     "side": "right",
     "interaction_type": "next",
@@ -3970,7 +3574,6 @@
   {
     "id": "dwood1_217",
     "speaker": "Finnick",
-    "portrait": "/assets/patrons/halfling_L.png",
     "dialog": "If you can buy me the time and keep the fiend busy, I'll slip in and look for the Spellbook in their possesion.",
     "side": "right",
     "interaction_type": "next",
@@ -3979,7 +3582,6 @@
   {
     "id": "dwood1_218",
     "speaker": "Hogmother",
-    "portrait": "/assets/patrons/hogmother.png",
     "side": "left",
     "dialog": "May Narlia watch over us. This is going to be very dangerous. This Trollkin is a fierce enemy. Prepare well, my dear friends.",
     "interaction_type": "next",
@@ -3988,7 +3590,6 @@
   {
     "id": "dwood1_219",
     "speaker": "Narrator",
-    "portrait": "",
     "dialog": "The party will settle for preparations and prayer.",
     "side": "right",
     "interaction_type": "next",
@@ -3997,7 +3598,6 @@
   {
     "id": "dwood1_219end",
     "speaker": "Narrator",
-    "portrait": "",
     "dialog": "...",
     "side": "right",
     "interaction_type": "next",
@@ -4006,7 +3606,7 @@
   {
     "id": "dwood1_301",
     "speaker": "Claudio",
-    "portrait": "/assets/missions/claudio_disguise_l.png",
+    "portrait": ["Claudio", "Disguised"],
     "dialog": "Well... Whadaya think?",
     "side": "left",
     "interaction_type": "next",
@@ -4015,7 +3615,6 @@
   {
     "id": "dwood1_302",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_l.png",
     "dialog": "By the goddess!!!\n\nYou look amazing Claudio!",
     "side": "right",
     "interaction_type": "next",
@@ -4024,7 +3623,6 @@
   {
     "id": "dwood1_303",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_l.png",
     "dialog": "What a way to steal the show.",
     "side": "right",
     "interaction_type": "next",
@@ -4033,7 +3631,7 @@
   {
     "id": "dwood1_304",
     "speaker": "Claudio",
-    "portrait": "/assets/missions/claudio_disguise_l.png",
+    "portrait": ["Claudio", "Disguised"],
     "dialog": "Hehehe, I was born for the stage, and for my crowd. Let us pray this works.",
     "side": "left",
     "interaction_type": "next",
@@ -4042,7 +3640,6 @@
   {
     "id": "dwood1_304a",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_l.png",
     "dialog": "Are you sure you're ready to go through with this plan Finnick? This is going to be very dangerous.",
     "side": "right",
     "interaction_type": "next",
@@ -4051,7 +3648,6 @@
   {
     "id": "dwood1_304b",
     "speaker": "Amyssa",
-    "portrait": "/assets/patrons/amyssa_l.png",
     "dialog": "I'm so sorry I'm putting you all through this risk, for a minor thing like a Spellbook. Ugh, I hate it!",
     "side": "right",
     "interaction_type": "next",
@@ -4060,7 +3656,6 @@
   {
     "id": "dwood1_305",
     "speaker": "Finnick",
-    "portrait": "/assets/patrons/halfling_L.png",
     "dialog": "I would gladly stay in my garden if it was possible. I was appointed by our elders, they warned me there will be times like this.",
     "side": "left",
     "interaction_type": "next",
@@ -4069,7 +3664,6 @@
   {
     "id": "dwood1_306",
     "speaker": "Finnick",
-    "portrait": "/assets/patrons/halfling_L.png",
     "dialog": "If we won't find a way to challenge them directly, it'll spread to every home and every family. It's not just you Amyssa.",
     "side": "left",
     "interaction_type": "next",
@@ -4078,7 +3672,6 @@
   {
     "id": "dwood1_307",
     "speaker": "Finnick",
-    "portrait": "/assets/patrons/halfling_L.png",
     "dialog": "If we give this villain any ground, the darkness will only spread, it'll never stop taking.",
     "side": "left",
     "interaction_type": "next",
@@ -4087,7 +3680,6 @@
   {
     "id": "dwood1_308",
     "speaker": "Hogmother",
-    "portrait": "/assets/patrons/hogmother.png",
     "side": "left",
     "dialog": "Let us swear an oath, upon this altar. If anything goes wrong, we'll never abandon Finnick, or Claudio, or Amyssa.",
     "interaction_type": "next",
@@ -4096,7 +3688,6 @@
   {
     "id": "dwood1_310",
     "speaker": "Narrator",
-    "portrait": "",
     "dialog": "The party finishes their planning and heads out towards that dreaded swamp.",
     "side": "right",
     "interaction_type": "next",
@@ -4105,7 +3696,6 @@
   {
     "id": "dwood1_310end",
     "speaker": "Narrator",
-    "portrait": "",
     "dialog": "...",
     "side": "right",
     "interaction_type": "next",
@@ -4114,7 +3704,6 @@
   {
     "id": "dwoodplat1_101",
     "speaker": "Hogmother",
-    "portrait": "/assets/patrons/hogmother.png",
     "side": "left",
     "dialog": "Excuse us Master Awotruce. We've returned seeking council.",
     "interaction_type": "selection",
@@ -4124,24 +3713,24 @@
         "target_id": "dwoodplat1_105"
       },
       {
-		  "text": "The Trollkin",
-		  "target_id": "dwoodplat1_102",
-		  "condition": {
-			"type": "mission_value",
-			"mission": "dwood_1",
-			"operator": ">=",
-			"value": 2
-		  }
-		},
+        "text": "The Trollkin",
+        "target_id": "dwoodplat1_102",
+        "condition": {
+          "type": "mission_value",
+          "mission": "dwood_1",
+          "operator": ">=",
+          "value": 2
+        }
+      },
       {
         "text": "The Ugress",
         "target_id": "dwoodplat1_106",
-		"condition": {
-		"type": "mission_value",
-		"mission": "dwood_fort2",
-		"operator": "==",
-		"value": 1
-	    }
+        "condition": {
+          "type": "mission_value",
+          "mission": "dwood_fort2",
+          "operator": "==",
+          "value": 1
+        }
       },
       {
         "text": "That is all Master Awotruce.",
@@ -4152,7 +3741,6 @@
   {
     "id": "dwoodplat1_102",
     "speaker": "Awotruce",
-    "portrait": "/assets/patrons/direwolf.png",
     "dialog": "This trollkin is a vile aberration upon my woods. Do not mistaken him for a mere court Jester, He is a dangerous spellcaster and not to be taken lightly.",
     "side": "right",
     "interaction_type": "next",
@@ -4161,7 +3749,6 @@
   {
     "id": "dwoodplat1_102a",
     "speaker": "Awotruce",
-    "portrait": "/assets/patrons/direwolf.png",
     "dialog": "I would gladly maul his throat, but he rarely leaves his swamp, and it's very difficult to track him on ground.",
     "side": "right",
     "interaction_type": "next",
@@ -4170,7 +3757,6 @@
   {
     "id": "dwoodplat1_103",
     "speaker": "Awotruce",
-    "portrait": "/assets/patrons/direwolf.png",
     "dialog": "I will not set foot on the swamp, it's too difficult for me to move on.",
     "side": "right",
     "interaction_type": "next",
@@ -4179,7 +3765,6 @@
   {
     "id": "dwoodplat1_104",
     "speaker": "Awotruce",
-    "portrait": "/assets/patrons/direwolf.png",
     "dialog": "That foe is beyond either of us.",
     "side": "right",
     "interaction_type": "next",
@@ -4189,7 +3774,6 @@
   {
     "id": "dwoodplat1_104end",
     "speaker": "Awotruce",
-    "portrait": "/assets/patrons/direwolf.png",
     "dialog": "",
     "side": "right",
     "interaction_type": "next",
@@ -4198,7 +3782,6 @@
   {
     "id": "dwoodplat1_105end",
     "speaker": "Awotruce",
-    "portrait": "/assets/patrons/direwolf.png",
     "dialog": "",
     "side": "right",
     "interaction_type": "next",
@@ -4207,7 +3790,6 @@
   {
     "id": "dwoodplat1_105",
     "speaker": "Awotruce",
-    "portrait": "/assets/patrons/direwolf.png",
     "dialog": "I smelt him. The forest says he's harmless.",
     "side": "right",
     "interaction_type": "next",
@@ -4216,7 +3798,6 @@
   {
     "id": "dwoodplat1_106",
     "speaker": "Awotruce",
-    "portrait": "/assets/patrons/direwolf.png",
     "dialog": "Ah, so it is the Ugress... Cleverly, she never entered my woods, she doesn't leave the fortress and stay behind the walls.",
     "side": "right",
     "interaction_type": "next",
@@ -4225,7 +3806,6 @@
   {
     "id": "dwoodplat1_107",
     "speaker": "Awotruce",
-    "portrait": "/assets/patrons/direwolf.png",
     "dialog": "It would bring me great honor to tear her to shreds and maul her beyond recognition.",
     "side": "right",
     "interaction_type": "next",
@@ -4234,7 +3814,6 @@
   {
     "id": "dwoodplat1_108",
     "speaker": "Awotruce",
-    "portrait": "/assets/patrons/direwolf.png",
     "dialog": "If you can make way through the barricades and her armed troops, I will end her on the spot.",
     "side": "right",
     "interaction_type": "next",
@@ -4243,7 +3822,6 @@
   {
     "id": "dwoodswamp1_101",
     "speaker": "Narrator",
-    "portrait": "",
     "dialog": "The party anxiously makes its way to the swamp. Moving slowly and surely, looking for signs of an invisible stalker in their midst...",
     "side": "right",
     "interaction_type": "next",
@@ -4252,7 +3830,7 @@
   {
     "id": "dwoodswamp1_102",
     "speaker": "Claudio",
-    "portrait": "/assets/missions/claudio_disguise_l.png",
+    "portrait": ["Claudio", "Disguised"],
     "dialog": "Okey-Dokey, it's showtime! Oh goddess please watch over me!",
     "side": "left",
     "interaction_type": "next",
@@ -4261,7 +3839,7 @@
   {
     "id": "dwoodswamp1_103",
     "speaker": "Claudio",
-    "portrait": "/assets/missions/claudio_disguise_l.png",
+    "portrait": ["Claudio", "Disguised"],
     "dialog": "I am absolutely stage-terrified! I've never had such a hostile crowd! And such a dangerous stage!",
     "side": "left",
     "interaction_type": "next",
@@ -4270,7 +3848,7 @@
   {
     "id": "dwoodswamp1_104",
     "speaker": "Claudio",
-    "portrait": "/assets/patrons/amyssa_l.png",
+    "portrait": ["Claudio", "Amyssa"],
     "dialog": "I WILL GO FORTH",
     "side": "left",
     "interaction_type": "next",
@@ -4279,7 +3857,7 @@
   {
     "id": "dwoodswamp1_105",
     "speaker": "Amyssa",
-    "portrait": "/assets/missions/amyssa_disguise_l.png ",
+    "portrait": ["Amyssa", "Disguised"],
     "dialog": "Alright, we'll ambush the creature back here, Finnick will lurk and head for the back when the fiend is occupied.",
     "side": "right",
     "interaction_type": "next",
@@ -4288,7 +3866,6 @@
   {
     "id": "dwoodswamp1_105a",
     "speaker": "Hogmother",
-    "portrait": "/assets/patrons/hogmother.png",
     "dialog": "If anything goes sour, we'll all jump and overwhelm the fiend. All for one and one for all.",
     "side": "left",
     "interaction_type": "next",
@@ -4297,7 +3874,7 @@
   {
     "id": "dwoodswamp1_106",
     "speaker": "Amyssa",
-    "portrait": "/assets/missions/amyssa_disguise_l.png ",
+    "portrait": ["Amyssa", "Disguised"],
     "dialog": "Wow Claudio, that's some *REAL* good disguise!",
     "side": "right",
     "interaction_type": "next",
@@ -4306,7 +3883,7 @@
   {
     "id": "dwoodswamp1_107",
     "speaker": "Claudio",
-    "portrait": "/assets/patrons/amyssa_l.png",
+    "portrait": ["Claudio", "Amyssa"],
     "dialog": "YOOO HOOO !!\n\nTrollkin..........\nWhere arrrrrreeeeee youuuuu.......",
     "side": "left",
     "interaction_type": "next",
@@ -4315,7 +3892,6 @@
   {
     "id": "dwoodswamp1_108",
     "speaker": "Narrator",
-    "portrait": "",
     "dialog": "The long narrow figure from the swamp makes his way weaving like snake over the risen logs buried into the swamp.",
     "side": "right",
     "interaction_type": "next",
@@ -4324,7 +3900,6 @@
   {
     "id": "dwoodswamp1_109",
     "speaker": "Narrator",
-    "portrait": "",
     "dialog": "Right as he goes on shore, the halfling sneaks right behind him silent and unnoticed, and walks through the swamp in a careful motion.",
     "side": "right",
     "interaction_type": "next",
@@ -4333,7 +3908,6 @@
   {
     "id": "dwoodswamp1_110",
     "speaker": "Trollkin",
-    "portrait": "/assets/patrons/trollkin_l.png",
     "dialog": "HAAAAAAAAAAAA I knew you'd come see me, my pet!",
     "side": "right",
     "interaction_type": "next",
@@ -4342,7 +3916,6 @@
   {
     "id": "dwoodswamp1_111",
     "speaker": "Trollkin",
-    "portrait": "/assets/patrons/trollkin_l.png",
     "dialog": "None can resist the mojo of Trollkin!\n\nCome let me show you around your new kingdom.",
     "side": "right",
     "interaction_type": "next",
@@ -4351,7 +3924,7 @@
   {
     "id": "dwoodswamp1_112",
     "speaker": "Claudio",
-    "portrait": "/assets/patrons/amyssa_l.png",
+    "portrait": ["Claudio", "Amyssa"],
     "dialog": "Oh you devil you!! I'm not that kind of girl! You'll have put some more effort into me first!",
     "side": "left",
     "interaction_type": "next",
@@ -4360,7 +3933,7 @@
   {
     "id": "dwoodswamp1_113",
     "speaker": "Claudio",
-    "portrait": "/assets/patrons/amyssa_l.png",
+    "portrait": ["Claudio", "Amyssa"],
     "dialog": "*Does some tempting flirting and runs off*",
     "side": "left",
     "interaction_type": "next",
@@ -4369,7 +3942,6 @@
   {
     "id": "dwoodswamp1_114",
     "speaker": "Trollkin",
-    "portrait": "/assets/patrons/trollkin_l.png",
     "dialog": "HO HO HO HO HO HO HO\n\nHAAAAAAAAAA HAHAHAHA......",
     "side": "right",
     "interaction_type": "next",
@@ -4378,7 +3950,6 @@
   {
     "id": "dwoodswamp1_115",
     "speaker": "Trollkin",
-    "portrait": "/assets/patrons/trollkin_l.png",
     "dialog": "YEESSSS!!!!!\n\nI'm gonna get you like a lion prouncing over a gazelle.. Don't you run from me!",
     "side": "right",
     "interaction_type": "next",
@@ -4387,7 +3958,6 @@
   {
     "id": "dwoodswamp1_116",
     "speaker": "Narrator",
-    "portrait": "",
     "dialog": "The fiend plays the game of chase with Claudio who keeps his distance while giggling and pretending to play along...",
     "side": "right",
     "interaction_type": "next",
@@ -4396,7 +3966,6 @@
   {
     "id": "dwoodswamp1_117",
     "speaker": "Narrator",
-    "portrait": "",
     "dialog": "It is not too long before a signal sparks from the swamp.",
     "side": "right",
     "interaction_type": "next",
@@ -4405,7 +3974,6 @@
   {
     "id": "dwoodswamp1_118",
     "speaker": "Narrator",
-    "portrait": "",
     "dialog": "From here it seems like smoke, and a fire has started deeper into the swamp.",
     "side": "right",
     "interaction_type": "next",
@@ -4414,7 +3982,6 @@
   {
     "id": "dwoodswamp1_119",
     "speaker": "Trollkin",
-    "portrait": "/assets/patrons/trollkin_l.png",
     "dialog": "Ooooooooh..... what is that???\n\nDid I forget the kettle on?",
     "side": "right",
     "interaction_type": "next",
@@ -4423,7 +3990,6 @@
   {
     "id": "dwoodswamp1_120",
     "speaker": "Narrator",
-    "portrait": "",
     "dialog": "As the fiend is retreating back to his hut, the halfling appears and has returned.",
     "side": "right",
     "interaction_type": "next",
@@ -4432,7 +3998,6 @@
   {
     "id": "dwoodswamp1_121",
     "speaker": "Finnick",
-    "portrait": "/assets/patrons/halfling_L.png",
     "dialog": "I have it.\n\nIt was right there laying in his hut. I sparked his nasty straw to mask our exit.",
     "side": "left",
     "interaction_type": "next",
@@ -4441,7 +4006,6 @@
   {
     "id": "dwoodswamp1_122",
     "speaker": "Hogmother",
-    "portrait": "/assets/patrons/hogmother.png",
     "dialog": "Brilliant work Finnick. Let us retreat, quickly.",
     "side": "right",
     "interaction_type": "next",
@@ -4450,7 +4014,6 @@
   {
     "id": "dwoodswamp1_123",
     "speaker": "Narrator",
-    "portrait": "",
     "dialog": "The party rallies with Claudio and hurries away from the swamp...",
     "side": "right",
     "interaction_type": "next",
@@ -4459,7 +4022,7 @@
   {
     "id": "dwoodswamp1_124",
     "speaker": "Claudio",
-    "portrait": "/assets/missions/claudio_disguise2_l.png",
+    "portrait": ["Claudio", "Disguised2"],
     "dialog": "Well... how did I do?",
     "side": "left",
     "interaction_type": "next",
@@ -4468,7 +4031,7 @@
   {
     "id": "dwoodswamp1_125",
     "speaker": "Amyssa",
-    "portrait": "/assets/missions/amyssa_disguise_l.png ",
+    "portrait": ["Amyssa", "Disguised"],
     "dialog": "Oh you've been fantastic!!! And Finnick went and got the Spellbook back, and distracted the Trollkin!",
     "side": "right",
     "interaction_type": "next",
@@ -4477,7 +4040,6 @@
   {
     "id": "dwoodswamp1_126",
     "speaker": "Hogmother",
-    "portrait": "/assets/patrons/hogmother.png",
     "dialog": "You've been wonderful Claudio, your preformance would please the goddess greatly. Now quick, let's head to the fortress before the Trollkin comes looking for us.",
     "side": "right",
     "interaction_type": "next",
@@ -4486,7 +4048,6 @@
   {
     "id": "dwoodswamp1_127end",
     "speaker": "Hogmother",
-    "portrait": "/assets/patrons/hogmother.png",
     "dialog": ".",
     "side": "right",
     "interaction_type": "next",
@@ -4495,7 +4056,6 @@
   {
     "id": "dwoodglade_101",
     "speaker": "Hogmother",
-    "portrait": "/assets/patrons/hogmother.png",
     "dialog": "Those woods are full with unrest. We're so close now, only those walls stand between me and Hogfather. I wish I didn't have to bring you all through this, but here we are.",
     "side": "right",
     "interaction_type": "next",
@@ -4504,7 +4064,6 @@
   {
     "id": "dwoodglade_102",
     "speaker": "Hogmother",
-    "portrait": "/assets/patrons/hogmother.png",
     "dialog": "This should be a good place to signal to our contact.",
     "side": "right",
     "interaction_type": "next",
@@ -4513,7 +4072,6 @@
   {
     "id": "dwoodglade_103",
     "speaker": "Hogmother",
-    "portrait": "/assets/patrons/hogmother.png",
     "dialog": "This should be a good place to signal to our contact.",
     "side": "right",
     "interaction_type": "next",
@@ -4522,7 +4080,6 @@
   {
     "id": "dwoodglade_103a",
     "speaker": "Narrator",
-    "portrait": "",
     "dialog": "The Glade in the center of the woods would be the best place for a meetup... it is known to all the inhabitants.",
     "side": "right",
     "interaction_type": "next",
@@ -4531,7 +4088,6 @@
   {
     "id": "dwoodglade_104",
     "speaker": "Narrator",
-    "portrait": "",
     "dialog": "Like fate, coincidence or plan... the contact does appear in the glade.",
     "side": "right",
     "interaction_type": "next",
@@ -4540,7 +4096,6 @@
   {
     "id": "dwoodglade_105",
     "speaker": "Lurch",
-    "portrait": "/assets/patrons/lurch.png",
     "side": "left",
     "dialog": "It is I Lurch, I bring you news from within the fortress as agreed upon.",
     "interaction_type": "next",
@@ -4549,7 +4104,6 @@
   {
     "id": "dwoodglade_106",
     "speaker": "Lurch",
-    "portrait": "/assets/patrons/lurch.png",
     "side": "left",
     "dialog": "The Ugress Warlock has taken hold of this area, she has gone completely power mad.\nHer motives are kept hidden, but the fiends surrounding her tell no lies.",
     "interaction_type": "next",
@@ -4558,7 +4112,6 @@
   {
     "id": "dwoodglade_106a",
     "speaker": "Lurch",
-    "portrait": "/assets/patrons/lurch.png",
     "side": "left",
     "dialog": "They have began a full military scale industry to outfit their troops.\nThere are normal folks amongst them brought to provide sustenance.",
     "interaction_type": "next",
@@ -4567,7 +4120,6 @@
   {
     "id": "dwoodglade_107",
     "speaker": "Lurch",
-    "portrait": "/assets/patrons/lurch.png",
     "side": "left",
     "dialog": "It appear they came by their free will, or perhaps forced by the Ugress Geas.\nI will avoid the Ugress if I were you. There is a service tunnel leading downstream towards the Swamp.",
     "interaction_type": "next",
@@ -4576,7 +4128,6 @@
   {
     "id": "dwoodglade_108",
     "speaker": "Lurch",
-    "portrait": "/assets/patrons/lurch.png",
     "side": "left",
     "dialog": "It would be be wise to enter through there, slip in, get your friend and leave. but you would have to be avoiding the Trollkin which dwells nearby.",
     "interaction_type": "next",
@@ -4585,7 +4136,6 @@
   {
     "id": "dwoodglade_109",
     "speaker": "Lurch",
-    "portrait": "/assets/patrons/lurch.png",
     "side": "left",
     "dialog": "Oh, and before you ask, I've met him. I'll have nothing to do with him.",
     "interaction_type": "next",
@@ -4594,7 +4144,6 @@
   {
     "id": "dwoodglade_110",
     "speaker": "Lurch",
-    "portrait": "/assets/patrons/lurch.png",
     "side": "left",
     "dialog": "I'll be awaiting your signal and lead you inside, in secret. You will have to make a diversion at the opposite side of the sewers.",
     "interaction_type": "next",
@@ -4603,7 +4152,6 @@
   {
     "id": "dwoodglade_111",
     "speaker": "Lurch",
-    "portrait": "/assets/patrons/lurch.png",
     "side": "left",
     "dialog": "I'll do my best to prepare Hogfather for departure.",
     "interaction_type": "next",
@@ -4612,7 +4160,6 @@
   {
     "id": "dwoodglade_110end",
     "speaker": "Lurch",
-    "portrait": "/assets/patrons/lurch.png",
     "side": "left",
     "dialog": ".",
     "interaction_type": "next",
@@ -4621,7 +4168,6 @@
   {
     "id": "dwoodfort1_201",
     "speaker": "Narrator",
-    "portrait": "",
     "side": "left",
     "dialog": "The fort entrence is blocked, and you don't carry the what's required to scale it, or breach it.",
     "interaction_type": "next",
@@ -4630,7 +4176,6 @@
   {
     "id": "dwoodfort1_201end",
     "speaker": "Narrator",
-    "portrait": "",
     "side": "left",
     "dialog": "The fort entrence is blocked, and you don't carry the what's required to scale it, or breach it.",
     "interaction_type": "next",
@@ -4639,7 +4184,6 @@
   {
     "id": "dwoodfort2_101",
     "speaker": "Narrator",
-    "portrait": "",
     "side": "left",
     "dialog": "That's it, the sewers outfall the Spy has told you about. It's large and wide, but sloped, dark, and would be a maze you'd rather not get lost in.",
     "interaction_type": "next",
@@ -4648,7 +4192,6 @@
   {
     "id": "dwoodfort2_102",
     "speaker": "Narrator",
-    "portrait": "",
     "side": "left",
     "dialog": "It's best to signal your Spy by creating a diversion elsewhere, like you've planned.",
     "interaction_type": "next",
@@ -4662,7 +4205,6 @@
   {
     "id": "dwoodfort1_301",
     "speaker": "Narrator",
-    "portrait": "",
     "side": "left",
     "dialog": "You gather a a large brushpile from the many dead plants around, near a clearing, and set it on fire. This will be a beacon for all to see.",
     "interaction_type": "next",
@@ -4671,16 +4213,14 @@
   {
     "id": "dwoodfort1_301end",
     "speaker": "Narrator",
-    "portrait": "You gather a a large brushpile from the many dead plants around, near a clearing, and set it on fire. This will be a beacon for all to see.",
     "side": "left",
-    "dialog": " it.",
+    "dialog": "You gather a a large brushpile from the many dead plants around, near a clearing, and set it on fire. This will be a beacon for all to see it.",
     "interaction_type": "next",
     "target_id": "END"
   },
   {
     "id": "dwoodfort2_201",
     "speaker": "Narrator",
-    "portrait": "",
     "side": "left",
     "dialog": "While remaining in the growth to the side of the fortress, you sit and wait for the next move.",
     "interaction_type": "next",
@@ -4689,7 +4229,6 @@
   {
     "id": "dwoodfort2_202",
     "speaker": "Narrator",
-    "portrait": "",
     "side": "left",
     "dialog": "Keeping a close eye at the watch tower above, the guard's gaze is fixed on the fire.\n\nOut of the sewer's entrence, as planned, the Spy emergences.",
     "interaction_type": "next",
@@ -4698,7 +4237,6 @@
   {
     "id": "dwoodfort2_203",
     "speaker": "Lurch",
-    "portrait": "/assets/patrons/lurch.png",
     "side": "left",
     "dialog": "Ah, you made it.",
     "interaction_type": "next",
@@ -4707,7 +4245,6 @@
   {
     "id": "dwoodfort2_204",
     "speaker": "Lurch",
-    "portrait": "/assets/patrons/lurch.png",
     "side": "left",
     "dialog": "Let's move in, the guards aren't around.",
     "interaction_type": "next",
@@ -4716,7 +4253,6 @@
   {
     "id": "dwoodfort2_205",
     "speaker": "Lurch",
-    "portrait": "/assets/patrons/lurch.png",
     "side": "left",
     "dialog": "I got you here, but I can't get you through, there's a new ruler in those sewers. You'll have to deal with him by yourself. He doesn't grant passage to just anyone.",
     "interaction_type": "next",
@@ -4725,7 +4261,6 @@
   {
     "id": "dwoodfort2_206",
     "speaker": "Hogmother",
-    "portrait": "/assets/patrons/hogmother.png",
     "side": "right",
     "dialog": "Wouldn't that be the Ugress?",
     "interaction_type": "next",
@@ -4734,7 +4269,6 @@
   {
     "id": "dwoodfort2_207",
     "speaker": "Lurch",
-    "portrait": "/assets/patrons/lurch.png",
     "side": "left",
     "dialog": "No, he seems to have migrated here before her arrival.",
     "interaction_type": "next",
@@ -4743,7 +4277,6 @@
   {
     "id": "dwoodfort2_208",
     "speaker": "Hogmother",
-    "portrait": "/assets/patrons/hogmother.png",
     "side": "right",
     "dialog": "I will see him.",
     "interaction_type": "next",
@@ -4752,7 +4285,6 @@
   {
     "id": "dwoodfort2_208a",
     "speaker": "Narrator",
-    "portrait": "",
     "side": "right",
     "dialog": "The sewers seem ancient, but well constructed. They have preceded the makeshift fort by a lot.",
     "interaction_type": "next",
@@ -4761,7 +4293,6 @@
   {
     "id": "dwoodfort2_208b",
     "speaker": "Narrator",
-    "portrait": "",
     "side": "right",
     "dialog": "Awaiting near the wall, you see two figures...",
     "interaction_type": "next",
@@ -4770,7 +4301,6 @@
   {
     "id": "dwoodfort2_209",
     "speaker": "Lurch",
-    "portrait": "/assets/patrons/lurch.png",
     "side": "left",
     "dialog": "The sorcerer is that way, and your people await beyond his domain.",
     "interaction_type": "next",
@@ -4779,7 +4309,6 @@
   {
     "id": "dwoodfort2_210",
     "speaker": "Narrator",
-    "portrait": "",
     "side": "right",
     "dialog": "Eyes glint red in the dark. It looks like a huge rat looking down through a large sewer pipe.",
     "interaction_type": "next",
@@ -4788,7 +4317,7 @@
   {
     "id": "dwoodfort2_210a",
     "speaker": "Mysterious Rat",
-    "portrait": "/assets/patrons/wormtail_l.png",
+    "portrait": ["Wormtail", "default"],
     "side": "left",
     "dialog": "More intruders to the woods.\nYou have come by the lair of Wormtail.\nWhat's your business here?",
     "interaction_type": "next",
@@ -4797,7 +4326,6 @@
   {
     "id": "dwoodfort2_210b",
     "speaker": "Hogmother",
-    "portrait": "/assets/patrons/hogmother.png",
     "side": "right",
     "dialog": "Greetings master Wormtail, we're merely passing by into the fort, and back or again.",
     "interaction_type": "next",
@@ -4806,7 +4334,6 @@
   {
     "id": "dwoodfort2_211",
     "speaker": "Wormtail",
-    "portrait": "/assets/patrons/wormtail_l.png",
     "side": "left",
     "dialog": "None merely are passing by through here, do they?\n\nHmm, and not through the main entrance…\n\nWhy would that be?",
     "interaction_type": "next",
@@ -4815,7 +4342,6 @@
   {
     "id": "dwoodfort2_212",
     "speaker": "Hogmother",
-    "portrait": "/assets/patrons/hogmother.png",
     "side": "right",
     "dialog": "We aren't aligned with the Ugress. We're here to rescue my husband from this place.",
     "interaction_type": "next",
@@ -4824,7 +4350,6 @@
   {
     "id": "dwoodfort2_213",
     "speaker": "Wormtail",
-    "portrait": "/assets/patrons/wormtail_l.png",
     "side": "left",
     "dialog": "Not yet... The Ugress can be, very persuasive.\n\nAnd I don't think you can stand up to her.\n\nYou're all going to fall for her spell, or die. If I let you go through my sewers, there's no coming back for you.",
     "interaction_type": "next",
@@ -4833,7 +4358,6 @@
   {
     "id": "dwoodfort2_214",
     "speaker": "Hogmother",
-    "portrait": "/assets/patrons/hogmother.png",
     "side": "right",
     "dialog": "The Forest rejects the influence of the Ugress in its midst. Master Awetruce aligned with us, he will face the Ugress.",
     "interaction_type": "next",
@@ -4842,7 +4366,6 @@
   {
     "id": "dwoodfort2_215",
     "speaker": "Wormtail",
-    "portrait": "/assets/patrons/wormtail_l.png",
     "side": "left",
     "dialog": "She has armed troops everywhere, who is going to take on them?",
     "interaction_type": "next",
@@ -4851,7 +4374,6 @@
   {
     "id": "dwoodfort2_216",
     "speaker": "Hogmother",
-    "portrait": "/assets/patrons/hogmother.png",
     "side": "right",
     "dialog": "We'll go right now while the gate is open and the guards are outside, we'll allow Awetruce in and straight to her\n\nIf he succeeds, the spell will break.",
     "interaction_type": "next",
@@ -4860,7 +4382,6 @@
   {
     "id": "dwoodfort2_217",
     "speaker": "Wormtail",
-    "portrait": "/assets/patrons/wormtail_l.png",
     "side": "left",
     "dialog": "This plan just might work. I harbor much hatred for this Ugress for taking up on my territory, I will take you to her. Hurry.",
     "interaction_type": "next",
@@ -4869,7 +4390,6 @@
   {
     "id": "dwoodfort2_218",
     "speaker": "Narrator",
-    "portrait": "",
     "side": "right",
     "dialog": "In a feat of skill the wererat in his huge rat form zips through the sewers with tremendous agiliy. To your relief he is leading you forward.\n\nThe Maze of the sewers may appear daunting, but it's not much more than straight pipes going in a steady upwards slop, and connected logically.\n\nQuickly, the giant rat reaches the final sewer cover, wide enough for all of you to fit in one by one. He looks up to the surface and inspects the inner grounds of the fort.",
     "interaction_type": "next",
@@ -4878,7 +4398,6 @@
   {
     "id": "dwoodfort2_219",
     "speaker": "Wormtail",
-    "portrait": "/assets/patrons/wormtail_l.png",
     "side": "left",
     "dialog": "The Ugress will be in her main Den, her henchmen will be mostly in their huts, I will sneak by and seal their doors by my magic. You make your own way to the gate, and confront her directly.",
     "interaction_type": "next",
@@ -4887,7 +4406,6 @@
   {
     "id": "dwoodfort2_220",
     "speaker": "Narrator",
-    "portrait": "",
     "side": "right",
     "dialog": "The party exits the sewers, while the Wererat skittishly hopping between makeship huts, casting his magics. To your great fortune you see the central yard is mostly empty, and the main gate remains open.",
     "interaction_type": "next",
@@ -4896,7 +4414,6 @@
   {
     "id": "dwoodfort2_221",
     "speaker": "Hogmother",
-    "portrait": "/assets/patrons/hogmother.png",
     "side": "right",
     "dialog": "Awetruce must be outside, all this commotion can't go unnoticed by the forest. I will see to him.",
     "interaction_type": "next",
@@ -4905,7 +4422,6 @@
   {
     "id": "dwoodfort2_222",
     "speaker": "Narrator",
-    "portrait": "",
     "side": "right",
     "dialog": "Out the gate, in the bushes, sure enough the menacing face of the Direwolf and his piercing red glowing eyes are staring back at you.\n\nIt is the time to spring the trap. Face the Ugress directly in her Den.",
     "interaction_type": "next",
@@ -4914,7 +4430,6 @@
   {
     "id": "dwoodfort2_223",
     "speaker": "Narrator",
-    "portrait": "",
     "side": "right",
     "dialog": "The guards stationed at the Den are demanding of disposal.",
     "interaction_type": "next",
@@ -4923,7 +4438,6 @@
   {
     "id": "dwoodfort2_223end",
     "speaker": "Narrator",
-    "portrait": "",
     "side": "right",
     "dialog": "The guards stationed at the Den are demanding of disposal.",
     "interaction_type": "next",
@@ -4932,7 +4446,6 @@
   {
     "id": "dwoodfort3_101",
     "speaker": "Narrator",
-    "portrait": "",
     "side": "right",
     "dialog": "Upon defeating the guards stationed at the Den, you are now ready to face your final adversary. The large wooden door of the main Den opens, It's the hidious Ugress herself, in a most flared mood, more than her usual unpleasant self.",
     "interaction_type": "next",
@@ -4941,7 +4454,6 @@
   {
     "id": "dwoodfort3_102",
     "speaker": "Ugress",
-    "portrait": "/assets/missions/Ugress_l.png",
     "side": "left",
     "dialog": "WHAT IS THE MEANING OF THIS?! GUARDS! AT MY COMMAND AT ONCE!",
     "interaction_type": "next",
@@ -4950,7 +4462,6 @@
   {
     "id": "dwoodfort3_103",
     "speaker": "Hogmother",
-    "portrait": "/assets/patrons/hogmother.png",
     "side": "right",
     "dialog": "There are no guards, Ugress. You will face us now. I urge you to release the innocent folks you've charmed with your Geas, let them go this instance!",
     "interaction_type": "next",
@@ -4959,7 +4470,6 @@
   {
     "id": "dwoodfort3_104",
     "speaker": "Ugress",
-    "portrait": "/assets/missions/Ugress_l.png",
     "side": "left",
     "dialog": "HOW DARE YOU! SMALL BARBARIAN, AT MY HOME?!\n\n(beings chanting spell incantations)\n\nPOWERS OF MIGHT,\nSPELLS OF ENCHANTING,\nDELIVER THIS PEST,\nINTO MY WEBLING.........................",
     "interaction_type": "next",
@@ -4968,7 +4478,6 @@
   {
     "id": "dwoodfort3_105",
     "speaker": "Hogmother",
-    "portrait": "/assets/patrons/hogmother.png",
     "side": "right",
     "dialog": "MASTER AWETRUCE NOW !!!",
     "interaction_type": "next",
@@ -4977,7 +4486,6 @@
   {
     "id": "dwoodfort3_106",
     "speaker": "Awotruce",
-    "portrait": "/assets/patrons/direwolf.png",
     "dialog": "AAAAAAAAAWWWWWWWWOOOOOOOOOO.....",
     "side": "right",
     "interaction_type": "next",
@@ -4986,7 +4494,6 @@
   {
     "id": "dwoodfort3_107",
     "speaker": "Narrator",
-    "portrait": "",
     "side": "right",
     "dialog": "The Direwolf bolts past you faster than lightning, in direct collision towards the Ugress.",
     "interaction_type": "next",
@@ -4995,7 +4502,6 @@
   {
     "id": "dwoodfort3_108",
     "speaker": "Ugress",
-    "portrait": "/assets/missions/Ugress_l.png",
     "side": "left",
     "dialog": "PATRON OF FIENDS,\nTHE FOREST AWOKE,\nDAMN THIS WOLF,\nCRUSH HIM TO PULP",
     "interaction_type": "next",
@@ -5004,7 +4510,6 @@
   {
     "id": "dwoodfort3_109",
     "speaker": "Narrator",
-    "portrait": "",
     "side": "right",
     "dialog": "The Direwolf leaps on the Ugress. Right as she releases a bolt of vile energy in a green blast to his chest, and blows the wolf away.\n\nAwetruce have been struck down, and lays to the side in a lifeless heap.",
     "interaction_type": "next",
@@ -5013,7 +4518,6 @@
   {
     "id": "dwoodfort3_110",
     "speaker": "Ugress",
-    "portrait": "/assets/missions/Ugress_l.png",
     "side": "left",
     "dialog": "YOU HAVE SUCH NERVE TO BE FACING ME YOU UNDERLINGS, I WILL RULE THIS LAND AND YOU WILL ALL OBEY MY COMMANDS!",
     "interaction_type": "next",
@@ -5022,7 +4526,6 @@
   {
     "id": "dwoodfort3_111",
     "speaker": "Narrator",
-    "portrait": "",
     "side": "right",
     "dialog": "The Ugress is a fearsome warlock, but she've forgotten, Direwolfs don't just die in one fell swoop ..................\n\nEVEN A DEAD WOLF'S HEAD CAN STILL BITE",
     "interaction_type": "next",
@@ -5031,7 +4534,7 @@
   {
     "id": "dwoodfort3_112",
     "speaker": "Awotruce",
-    "portrait": "/assets/missions/awetruce_delayeddeath.png",
+    "portrait": ["Awotruce", "delayeddeath"],
     "dialog": "AAAAAAAAAWWWWWWWWOOOOOOOOOO.....",
     "side": "right",
     "interaction_type": "next",
@@ -5040,7 +4543,6 @@
   {
     "id": "dwoodfort3_113",
     "speaker": "Ugress",
-    "portrait": "/assets/missions/Ugress_l.png",
     "side": "left",
     "dialog": "WHA.. WHA.. WHAAAAT!! . . . . . . . . .",
     "interaction_type": "next",
@@ -5049,7 +4551,7 @@
   {
     "id": "dwoodfort3_113a",
     "speaker": "A DIFFERENT, DEEPER VOICE",
-    "portrait": "/assets/missions/Ugress_possesed_l.png",
+    "portrait": ["Ugress", "possesed"],
     "side": "left",
     "dialog": "INSIGNIFICENT WOLF . . . \n\nTHIS NATURE NODE IS MINE ! ! !",
     "interaction_type": "next",
@@ -5090,7 +4592,6 @@
   {
     "id": "dwoodfort3_118",
     "speaker": "Hogmother",
-    "portrait": "/assets/patrons/hogmother.png",
     "side": "left",
     "dialog": "Hogfather!",
     "interaction_type": "next",
@@ -5099,7 +4600,6 @@
   {
     "id": "dwoodfort3_119",
     "speaker": "Hogfather",
-    "portrait": "/assets/patrons/hogfather.png",
     "side": "right",
     "dialog": "Hogmother! You've came for me......................",
     "interaction_type": "next",
@@ -5108,7 +4608,6 @@
   {
     "id": "dwoodfort3_120",
     "speaker": "Narrator",
-    "portrait": "",
     "side": "right",
     "dialog": "The Hogcouple is united once again. Not much words could be exchanged at that moment. The party agreed to take Awetruce the shrine of Narlia, and also the Ugress head as offering to altar, thinking it would please the godess seeing the blight has lifted from her forest.\n\nOne of the captured folk, Marlnus have befriended Hogfather and have joined up with you. Marl is an old adventurer, now a carriagefarer. He offers his services as aid, and his carriage to help the party's logistics planning.",
     "interaction_type": "next",
@@ -5117,7 +4616,6 @@
   {
     "id": "dwoodfort3_121",
     "speaker": "Narrator",
-    "portrait": "",
     "side": "right",
     "dialog": "Arriving at the shrine, the forest appears lively more than ever. The flowers are at full bloom, bird singing sounds everywhere. Bright light reflects of the shrines cold white stones. You lay Awetruce to slomber, and the Ugress' head on top of the altar.",
     "interaction_type": "next",
@@ -5126,7 +4624,6 @@
   {
     "id": "dwoodfort3_122",
     "speaker": "Hogmother",
-    "portrait": "/assets/patrons/hogmother.png",
     "side": "left",
     "dialog": "I pray this offering pleases you godess, though it was heavy and sudden on all of us, only one had to pay the ultimate price. We will leave your forest now, fare thee well benelovent one.",
     "interaction_type": "next",
@@ -5135,7 +4632,6 @@
   {
     "id": "dwoodfort3_123",
     "speaker": "Narrator",
-    "portrait": "",
     "side": "right",
     "dialog": "In this final note, the party with the company of Marlnus heads back to the Inn, Finnik to his village, Wormtail to his sewers, and Awetruce to his final rest.",
     "interaction_type": "next",
@@ -5144,7 +4640,6 @@
   {
     "id": "dwoodfort3_124",
     "speaker": "Developer",
-    "portrait": "",
     "side": "right",
     "dialog": "End of current development.",
     "interaction_type": "next",
@@ -5153,11 +4648,9 @@
   {
     "id": "dwoodfort3_124end",
     "speaker": "Hogmother",
-    "portrait": "/assets/patrons/hogmother.png",
     "side": "right",
     "dialog": "End of current development.",
     "interaction_type": "next",
     "target_id": "END"
   }
-
 ]
