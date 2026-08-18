@@ -2013,7 +2013,11 @@ function getAvailableMissions(player) {
 
 async function loadMissionPage() {
     console.log("Loading Mission Page");
+    missionDragListener = e => {
+        console.log("dragstart fired on:", e.target.closest(".patron-slot"));
+    };
 
+    document.addEventListener("dragstart", missionDragListener, true);
     // Ensure mission structure exists
     if (!player.missions) player.missions = {};
     if (!player.missions.current_mission) {
