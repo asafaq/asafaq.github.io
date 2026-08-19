@@ -1422,7 +1422,6 @@ function startSmiteTargeting() {
     Bus.emit('LOG', `${u.name} channels divine power... select an adjacent enemy`);
 }
 
-
 function handleSmiteAttack(attacker, target, dmg) {
 
     // Consume smite resource
@@ -2205,6 +2204,7 @@ function removeMonsterDialogue(id) {
 
     monsterFreeDialogue.messages.splice(index, 1);
 }
+
 function getAttackTiles(target) {
     const tiles = [];
     const tSquares = getSquares(target);
@@ -2374,6 +2374,7 @@ function reconstructPath(current, cameFrom) {
 
     return path;
 }
+
 function isMovementTargetReached(u, position, target) {
     const simulated = {
         ...u,
@@ -2383,6 +2384,7 @@ function isMovementTargetReached(u, position, target) {
 
     return isInRange(simulated, target, 1);
 }
+
 function canPlace(u, nx, ny) {
     const proposed = {
         ...u,
@@ -2623,6 +2625,7 @@ function getPathNeighbors(monster, current) {
 
     return result;
 }
+
 function reconstructAStarPath(current, cameFrom) {
 
     const path = [current];

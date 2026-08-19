@@ -608,7 +608,6 @@ async function launchBattle(encounterKey) {
 			race: hydrated.race,
 			role: hydrated.role,
 			level: hydrated.Level,
-
 			stats: {
 				str: hydrated.strengh_mod,
 				dex: hydrated.Dexterity_mod,

@@ -546,6 +546,7 @@
   {
     "id": "green1_027",
     "speaker": "Koboldog",
+	"portrait": ["Monsters", "Koboldog"],
     "side": "right",
     "dialog": "*bark* Oi bone-heads, this is our territory! *bark* ",
     "interaction_type": "next",
@@ -555,6 +556,7 @@
   {
     "id": "green1_028",
     "speaker": "Koboldog",
+	"portrait": ["Monsters", "Koboldog"],
     "side": "right",
     "dialog": "*bark* We've been marking it all day! *bark*\n*bark* Smell it! SMELL IT !!! *bark*",
     "interaction_type": "next",
@@ -573,6 +575,7 @@
   {
     "id": "green1_030",
     "speaker": "Koboldog",
+	"portrait": ["Monsters", "Koboldog"],
     "side": "right",
     "dialog": "Pay our toll of 100 Silver Coins or enter a cage behind us! *bark*",
     "interaction_type": "selection",
@@ -619,6 +622,7 @@
   {
     "id": "green1_033",
     "speaker": "Koboldog",
+	"portrait": ["Monsters", "Koboldog"],
     "side": "right",
     "dialog": "Ahh, wielder of the magnificent large stick!",
     "interaction_type": "next",
@@ -637,6 +641,7 @@
   {
     "id": "green1_035",
     "speaker": "Koboldog",
+	"portrait": ["Monsters", "Koboldog"],
     "side": "right",
     "dialog": "This road is yours now, o' master of the stick! *whimper* *whimper* *whimper* ",
     "interaction_type": "next",
@@ -729,7 +734,6 @@
   {
     "id": "green1_044",
     "speaker": "Claudio",
-    "portrait": ["Claudio", "default"],
     "side": "right",
     "dialog": "I thought it was just your day job?",
     "interaction_type": "next",
@@ -1384,7 +1388,6 @@
   {
     "id": "green2_116",
     "speaker": "Claudio",
-    "portrait": ["Claudio", "default"],
     "side": "right",
     "dialog": "Oh it's a pleasure to host a lady of stature such as yourself! Mi' lady, I, Claudio, am delighted to have you! Aaaand, I find your scrolls the labor of an artist.",
     "interaction_type": "next",
@@ -1653,7 +1656,6 @@
   {
     "id": "greenshrine1_104",
     "speaker": "Claudio",
-    "portrait": ["Claudio", "default"],
     "side": "right",
     "dialog": "Why would that be, Bragain?",
     "interaction_type": "next",
@@ -1834,7 +1836,6 @@
   {
     "id": "green2_914",
     "speaker": "Claudio",
-    "portrait": ["Claudio", "default"],
     "side": "right",
     "dialog": "Oh it would be a opportunity I will not miss out on, you will have every ability in my satchel at your disposal madam Hogmother.",
     "interaction_type": "next",
@@ -3397,6 +3398,7 @@
   {
     "id": "dwood1_20102",
     "speaker": "Owlbear",
+	"portrait": ["Monsters", "Owlbear"],
     "side": "right",
     "dialog": "Whispers, whispers, whispers, constant whispers, a gloomy shadow called me to assault everything in the shrine.",
     "dialog2": "My lady, carry on I shall not harm thee, but do not linger. The woods are cursed.",
@@ -3657,22 +3659,8 @@
     "id": "dwood1_305",
     "speaker": "Finnick",
     "dialog": "I would gladly stay in my garden if it was possible. I was appointed by our elders, they warned me there will be times like this.",
-    "side": "left",
-    "interaction_type": "next",
-    "target_id": "dwood1_306"
-  },
-  {
-    "id": "dwood1_306",
-    "speaker": "Finnick",
-    "dialog": "If we won't find a way to challenge them directly, it'll spread to every home and every family. It's not just you Amyssa.",
-    "side": "left",
-    "interaction_type": "next",
-    "target_id": "dwood1_307"
-  },
-  {
-    "id": "dwood1_307",
-    "speaker": "Finnick",
-    "dialog": "If we give this villain any ground, the darkness will only spread, it'll never stop taking.",
+    "dialog2": "If we won't find a way to challenge them directly, it'll spread to every home and every family. It's not just you Amyssa.",
+    "dialog3": "If we give this villain any ground, the darkness will only spread, it'll never stop taking.",
     "side": "left",
     "interaction_type": "next",
     "target_id": "dwood1_308"

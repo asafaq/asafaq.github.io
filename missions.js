@@ -235,14 +235,14 @@ const PORTRAITS = {
 	Hogperson: {
 		default: "/assets/patrons/hogperson.png"
 	},
-	
+
 	Claudio: {
         default: "/assets/patrons/claudio.png",
         Disguised: "/assets/missions/claudio_disguise_l.png",
         Disguised2: "/assets/missions/claudio_disguise2_l.png",
         Amyssa: "/assets/patrons/amyssa_l.png"
 	},
-	
+
     Amyssa: {
         default: "/assets/patrons/amyssa_l.png",
         Disguised: "/assets/missions/amyssa_disguise_l.png"
@@ -260,8 +260,10 @@ const PORTRAITS = {
         default: "/assets/patrons/tonica_L.png"
     },
 
-    Owlbear: {
-        default: "/assets/monsters/owlbear.png"
+	Monsters: {
+		default: "",
+        Koboldog: "/assets/missions/koboldog.png",
+        Owlbear: "/assets/monsters/owlbear.png"
     },
 
     Claudio: {
@@ -303,10 +305,6 @@ const PORTRAITS = {
 	
 	Wormtail: {
         default: "/assets/patrons/wormtail_l.png"
-    },
-	
-	Koboldog: {
-        default: "/assets/missions/koboldog.png"
     },
 	
 	Apparation: {
@@ -1232,8 +1230,9 @@ async function handleMissionEnd(sceneId) {
         },
         "green2_704end": async () => {
             player.missions.green_2 = 8;
+			player.patrons.adv_Bragain.vision = 1;
             Journal.addEntry("Bragain have met an Apparation in his imagination.");
-            loadPage("green_2");
+            loadPage("mission_green_2");
         },
         "green2_*101end": async () => {
             //player.missions.green_2 = 1;
@@ -1291,9 +1290,9 @@ async function handleMissionEnd(sceneId) {
 				const roll2 = Math.ceil(Math.random() * 100);
 
 				if (roll2 >= 99) {
-					runMission("green2*1_2107*");   // must be a string
+					startMissionSystem("green2*1_2107*");   // must be a string
 				} else {
-					runMission("green2*1_2107");
+					startMissionSystem("green2*1_2107");
 				}
 			} else {
 				loadPage("mission_green_2");
@@ -1383,6 +1382,9 @@ async function handleMissionEnd(sceneId) {
 			await recruitAdventurer("adv_Tonica");
 			player.patrons.adv_Tonica.location = 3;
 			player.patrons.adv_Tonica.status = "mission";
+			const partyKey = player.missions.current_mission.party;
+			buildPartyTraits(partyKey);
+			buildPartySummary(partyKey);
 			loadPage("mission_green_3");
 		},
 
@@ -1465,7 +1467,7 @@ async function handleMissionEnd(sceneId) {
         },
         "dwood1_20103end": async () => {
 			await launchBattle("temple_owl");
-			await runMission("dwood1_202o");
+			await startMissionSystem("dwood1_202o");
         },
 		
         "dwood1_219end": async () => {
@@ -1620,13 +1622,11 @@ function recruitRandoms() {
 	recruitAdventurer("adv_Desmond");
 	recruitAdventurer("adv_Tinman");
 	recruitAdventurer("adv_Crusher");
-	recruitAdventurer("adv_Wormtail");
 	recruitAdventurer("adv_Aasibelle");
 
 
 	player.patrons.adv_Desmond.status = "applicant";
 	player.patrons.adv_Tinman.status = "applicant";
 	player.patrons.adv_Crusher.status = "applicant";
-	player.patrons.adv_Wormtail.status = "applicant";
 	player.patrons.adv_Aasibelle.status = "applicant";
 }
