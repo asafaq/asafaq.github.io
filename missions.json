@@ -2328,9 +2328,12 @@
       },
       {
         "text": "[250 Silver coins] Obtain ingredients for scribing a Remove Petrification scroll.",
-        "condition_silver_required": 250,
         "target_id": "greenshrine1_211c",
-        "frustration_text": "You can't afford it"
+        "frustration_text": "You can't afford it",
+        "condition": {
+          "type": "silver",
+          "value": 250
+		}
       }
     ]
   },
@@ -2941,7 +2944,7 @@
     "options": [
       {
         "text": "Carry on, ignore Amyssa-Hogmother dialog",
-        "target_id": "dwood1_150",
+        "target_id": "dwood1_130",
         "disabled": false
       },
       {
@@ -3078,7 +3081,62 @@
     "side": "left",
     "dialog": "That I do not know.",
     "interaction_type": "next",
-    "target_id": "dwood1_150"
+    "target_id": "dwood1_130",
+    "options": [
+      {
+        "text": "Carry on, ignore Amyssa-Hogmother dialog",
+        "target_id": "dwood1_130",
+        "disabled": false
+      },
+      {
+        "text": "Watch Hogmother Speak with Amyssa.",
+        "target_id": "dwood1_103",
+        "disabled": false,
+        "color": "#FFD700"
+      }
+    ]
+  },
+  {
+    "id": "dwood1_130",
+    "speaker": "Brigan Lieutenant",
+	"profile": ["Monsters", "Brigan"],
+    "side": "left",
+	"dialog": "You find yourself surrounded by several dark-clad men",
+    "dialog2": "Halt! Intruders to the woods.\nThis is our turf now. You are bound to a world of pain once we bring you to our leader.",
+	"dialog3": "You may come quietly or not, as they say, it's your funeral.",
+    "interaction_type": "options",
+    "options": [
+      {
+        "text": "Submit yourself to the Brigans",
+        "disabled": true,
+		"frustration_text": "You do think it's a way in the fort, but it's one were you're bound and everyone are alert to your presence."
+      },
+      {
+        "text": "Engage to fight.",
+        "target_id": "dwood1_131end"
+      },
+      {
+        "text": "[Masocist] Counter-intimidate the Brigan.",
+        "target_id": "dwood1_132",
+        "color": "#FFD700",
+		"condition": {
+          "type": "trait",
+          "value": "Masocist"        }
+      }
+    ]
+  },
+  {
+    "id": "dwood1_131end",
+    "interaction_type": "next",
+    "target_id": "END"
+  },
+  {
+    "id": "dwood1_132",
+    "speaker": "Hogperson",
+    "side": "right",
+    "dialog": "Oh a whole WORLD of pain, you can't threaten me with a good time.\n\n**Cracks his neck**\n\nLet's stress test your all skulls against my club.",
+    "interaction_type": "next",
+    "target_id": "dwood1_131end"
   },
   {
     "id": "dwood1_150",

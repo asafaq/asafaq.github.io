@@ -263,7 +263,8 @@ const PORTRAITS = {
 	Monsters: {
 		default: "",
         Koboldog: "/assets/missions/koboldog.png",
-        Owlbear: "/assets/monsters/owlbear.png"
+        Owlbear: "/assets/monsters/owlbear.png",
+		Brigan: "/assets/monsters/brigan2.png"
     },
 
     Claudio: {
@@ -753,7 +754,17 @@ async function optionConditionMet(opt) {
         const silver =
             player?.missions?.current_mission?.satchel?.silver ?? 0;
 
-        return silver >= c.value;
+	   if (silver >= c.value) {
+            return true;
+        }
+		
+		// Mark the option itself as disabled
+        opt.disabled = true;
+
+        // Rewrite frustration text with actual silver amount
+        opt.frustration_text = `You can't afford it, you only have ${silver} silver coins on you.`;
+
+        return false;
     }
 
     // --- COUNTERFEIT ELECTRUM ---
@@ -793,9 +804,16 @@ async function getAvailableOptions(options) {
 
     for (const opt of options || []) {
 
-        // Conditions control visibility.
-        // DO NOT filter out disabled options.
-        if (!(await optionConditionMet(opt))) {
+        const ok = await optionConditionMet(opt);
+
+        if (!ok) {
+            // If disabled was set, include it anyway
+            if (opt.disabled) {
+                availableOptions.push(opt);
+                continue;
+            }
+
+            // Other failures → hide option
             continue;
         }
 
@@ -804,6 +822,7 @@ async function getAvailableOptions(options) {
 
     return availableOptions;
 }
+
 
 function resolveNextTarget(scene, player) {
     // If no branching rules exist, return default
@@ -1457,6 +1476,10 @@ async function handleMissionEnd(sceneId) {
         },
 
         // --- DEEPWOOD CONTENT ---
+        "dwood1_131end": async () => {
+            await launchBattle("g2_bandits2");
+			await startMissionSystem("dwood1_150");			
+        },
         "dwood1_181end": async () => {
             player.missions.dwood_1 = 2;
             Journal.addEntry("You've been approched by the vile Trollkin, and Amyssa lost her spellbook.");

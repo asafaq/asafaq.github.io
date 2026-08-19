@@ -301,7 +301,7 @@
 
 	"g2_bandits2": {
 	  "name": "green2_bandits",
-	  "map": "green_2",
+	  "map": "forest_2",
 	  "monsters": [
 		{
 		  "id": "brigan1",
@@ -320,7 +320,7 @@
 		  ]
 		},
 		{
-		  "id": "goblin2",
+		  "id": "goblin5",
 		  "count": 2,
 		  "spawns": [
 			{ "x": 6, "y": 5 },
@@ -568,7 +568,15 @@
 			"hitMod": 0,
 			"damageDie": 4,
 			"damageBonus": 1	}
+			],
+		"freeActions": {
+			"dialogueChance": 15,
+			"dialogue": [
+				"Get lost!",
+				"You'll regret that!",
+				"No you weren't supposed to put up a fight!"
 			]
+		}
     },
 
     "goblin3": {
@@ -671,7 +679,14 @@
 			"damageBonus": 1	}
 			],
 	  "silver": 8,
-	  "dialog": "brigan_1_01"
+		"freeActions": {
+			"dialogueChance": 15,
+			"dialogue": [
+				"Get lost!",
+				"You'll regret that!",
+				"No you weren't supposed to put up a fight!"
+			]
+		}
     },
 
     "brigan2": {
@@ -695,7 +710,15 @@
 			"damageDie": 4,
 			"damageBonus": 1	}
 			],
-	  "silver": 8
+	  "silver": 8,
+		"freeActions": {
+			"dialogueChance": 15,
+			"dialogue": [
+				"Get lost!",
+				"You'll regret that!",
+				"No you weren't supposed to put up a fight!"
+			]
+		}
     },
 
     "zombie1": {
@@ -899,6 +922,9 @@
 
     "green_2": {
       "url": "/assets/battlemaps/green_12.png"
+    },
+    "forest_2": {
+      "url": "/assets/battlemaps/forest2.png"
     },
 
     "forest": {
