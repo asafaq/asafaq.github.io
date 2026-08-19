@@ -3099,7 +3099,7 @@
   {
     "id": "dwood1_130",
     "speaker": "Brigan Lieutenant",
-	"profile": ["Monsters", "Brigan"],
+	"portrait": ["Monsters", "Brigan"],
     "side": "left",
 	"dialog": "You find yourself surrounded by several dark-clad men",
     "dialog2": "Halt! Intruders to the woods.\nThis is our turf now. You are bound to a world of pain once we bring you to our leader.",

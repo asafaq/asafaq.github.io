@@ -324,7 +324,44 @@
 		  "count": 2,
 		  "spawns": [
 			{ "x": 6, "y": 5 },
+			{ "x": 7, "y": 1 }
+		  ]
+		}
+	  ]
+	},
+	"woods_hobgobs": {
+	  "name": "woods_hobgobs",
+	  "map": "forest_2",
+	  "monsters": [
+		{
+		  "id": "hobgob1",
+		  "count": 2,
+		  "spawns": [
+			{ "x": 8, "y": 4 },
+			{ "x": 8, "y": 6 }
+		  ]
+		},
+		{
+		  "id": "hobgob2",
+		  "count": 2,
+		  "spawns": [
+			{ "x": 6, "y": 3 },
 			{ "x": 7, "y": 2 }
+		  ]
+		},
+		{
+		  "id": "hobgob3",
+		  "count": 2,
+		  "spawns": [
+			{ "x": 6, "y": 5 },
+			{ "x": 7, "y": 1 }
+		  ]
+		},
+		{
+		  "id": "hobgob4",
+		  "count": 1,
+		  "spawns": [
+			{ "x": 4, "y": 9 }
 		  ]
 		}
 	  ]
@@ -381,13 +418,14 @@
   "monsters": {
     "animated_bush": {
       "name": "Animated Bush",
-      "type": "plant",
+      "type": "monster",
       "hp": 4,
       "maxHp": 4,
       "speed": 6,
 	  "xp": 8,
       "icon": "/assets/monsters/bush1.png",
       "color": "#e67e22",
+	  "silver": 2,
 	  "morale": 15,
 		"ac": 8,
 		"attack": 3,
@@ -717,6 +755,126 @@
 				"Get lost!",
 				"You'll regret that!",
 				"No you weren't supposed to put up a fight!"
+			]
+		}
+    },
+
+    "hobgob1": {
+      "name": "Hobgoblin Fighter",
+      "type": "monster",
+      "hp": 28,
+      "maxHp": 28,
+      "speed": 5,
+	  "xp": 75,
+      "icon": "/assets/monsters/hobgoblin1.png",
+      "color": "#c0392b",
+	  "morale": 16,
+		"ac": 14,
+		"attack": 1,
+		"actions": [
+			{
+			"name": "Melee Weapon",
+			"type": "slashing",
+			"#": null,
+			"hitMod": 1,
+			"damageDie": 8,
+			"damageBonus": 1	}
+			],
+	  "silver": 28,
+		"freeActions": {
+			"dialogueChance": 15,
+			"dialogue": [
+				"you weren't supposed to put up a fight!"
+			]
+		}
+    },
+
+    "hobgob2": {
+      "name": "Hobgoblin Zerker",
+      "type": "monster",
+      "hp": 18,
+      "maxHp": 18,
+      "speed": 5,
+	  "xp": 95,
+      "icon": "/assets/monsters/hobgoblin2.png",
+      "color": "#c0392b",
+	  "morale": 19,
+		"ac": 15,
+		"attack": 2,
+		"actions": [
+			{
+			"name": "Melee Weapon",
+			"type": "slashing",
+			"#": null,
+			"hitMod": 1,
+			"damageDie": 8,
+			"damageBonus": 1	}
+			],
+	  "silver": 28,
+		"freeActions": {
+			"dialogueChance": 15,
+			"dialogue": [
+				"you weren't supposed to put up a fight!"
+			]
+		}
+    },
+
+    "hobgob3": {
+      "name": "Hobgoblin Brute",
+      "type": "demihuman",
+      "hp": 38,
+      "maxHp": 38,
+      "speed": 5,
+	  "xp": 95,
+      "icon": "/assets/monsters/hobgoblin3.png",
+      "color": "#c0392b",
+	  "morale": 19,
+		"ac": 13,
+		"attack": 1,
+		"actions": [
+			{
+			"name": "Melee Weapon",
+			"type": "slashing",
+			"#": null,
+			"hitMod": 1,
+			"damageDie": 8,
+			"damageBonus": 1	}
+			],
+	  "silver": 28,
+		"freeActions": {
+			"dialogueChance": 15,
+			"dialogue": [
+				"you weren't supposed to put up a fight!"
+			]
+		}
+    },
+
+    "hobgob4": {
+      "name": "Hobgoblin Merc",
+      "type": "demihuman",
+      "hp": 38,
+      "maxHp": 38,
+      "speed": 5,
+	  "xp": 95,
+      "icon": "/assets/monsters/hobgoblin4.png",
+      "color": "#c0392b",
+	  "morale": 19,
+		"ac": 13,
+		"attack": 1,
+		"actions": [
+			{
+			"name": "Melee Weapon",
+			"type": "slashing",
+			"#": null,
+			"hitMod": 1,
+			"damageDie": 8,
+			"damageBonus": 1	}
+			],
+	  "silver": 78,
+		"freeActions": {
+			"dialogueChance": 15,
+			"dialogue": [
+				"We'll settle this."
 			]
 		}
     },

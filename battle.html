@@ -3084,9 +3084,19 @@ function awardFoeDefeat(target) {
         localStorage.setItem('currentBattle', JSON.stringify(savedData));
     }
 
-    // 3. Future tracks (Gold, Faction Reputation, Story Keys) hook directly here:
-    // if (template?.gold) { battleGold += template.gold; }
+    // 3. SILVER LOOT
+    if (template?.silver) {
+        const savedData = JSON.parse(localStorage.getItem('currentBattle')) || {};
 
+        // Create silver pool if missing
+        if (!savedData.silver) savedData.silver = 0;
+
+        savedData.silver += template.silver;
+
+        Bus.emit('LOG', `🪙 Looted ${template.silver} silver from ${target.name}`);
+
+        localStorage.setItem('currentBattle', JSON.stringify(savedData));
+    }
     update();
 }
 
@@ -3139,7 +3149,8 @@ function checkVictory() {
 					type: "BATTLE_COMPLETE",
 					result: [],
 					xp: 0,
-					loot: []
+					loot: [],
+					silver: silver
 				}, "*");
 			}
 		});
@@ -3160,7 +3171,8 @@ function checkVictory() {
 					type: "BATTLE_COMPLETE",
 					result: [],
 					xp: 0,
-					loot: []
+					loot: [],
+					silver: silver
 				}, "*");
 			}
 		});
@@ -3173,6 +3185,7 @@ function checkVictory() {
         const savedData = JSON.parse(localStorage.getItem('currentBattle')) || {};
         const xp = battleXP;
         const loot = savedData.loot || [];
+		const silver = savedData.silver || 0;
 
         const defeated = units
             .filter(u => u.type === 'monster')
@@ -3190,6 +3203,8 @@ function checkVictory() {
             ${xp}<br><br>
             <strong>Spoils:</strong><br>
             ${lootHTML}
+			<strong>Silver Looted:</strong><br>
+			${silver}
         `;
 
         showVictoryWindow(summaryHTML, () => {
@@ -3201,7 +3216,8 @@ function checkVictory() {
                     type: "BATTLE_COMPLETE",
                     result: units.filter(u => u.type === 'pc'),
                     xp: battleXP,
-                    loot: loot
+                    loot: loot,
+					silver: silver
                 }, "*");
             }
         });

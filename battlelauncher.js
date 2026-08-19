@@ -20,9 +20,13 @@ window.addEventListener("message", async (event) => {
     }
 	
     if (event.data.type === "BATTLE_COMPLETE") {
+		console.log(event.data);
         const results = event.data.result;
         const earnedXP = event.data.xp || 0;
         const earnedLoot = event.data.loot || [];
+		// --- Silver handling ---
+		const earnedSilver = event.data.silver || 0;
+		addSilver(earnedSilver, "satchel");
 
         if (results && Array.isArray(results)) {
             const xpPerPC = results.length > 0 ? Math.floor(earnedXP / results.length) : 0;
@@ -78,7 +82,6 @@ window.addEventListener("message", async (event) => {
                 }
             });
         }
-
         // --- Loot handling (unchanged) ---
         if (!player.inventory) player.inventory = [];
         if (earnedLoot && earnedLoot.length > 0) {
