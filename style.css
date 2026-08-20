@@ -1256,3 +1256,15 @@ img:not([src]) {
   color: #e74c3c;              /* strong red text */
   border: 2px solid #e74c3c;   /* red border */
 }
+
+.patron-slot {
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.patron-slot.pointer-dragging {
+    opacity: 0.65;
+    transform: scale(1.05);
+    z-index: 1000;
+}
