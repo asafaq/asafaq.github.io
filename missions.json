@@ -5,8 +5,7 @@
     "side": "right",
     "dialog": "Hello laddy, it's sure is nice to be back to safe grounds. Although, my ol' pick is eager to be hammering on precious veins. I wish I could find some around here.",
     "interaction_type": "next",
-    "target_id": "patronend",
-    "options": []
+    "target_id": "patronend"
   },
   {
     "id": "Counterfeit_Electrum1",
@@ -95,8 +94,7 @@
     "dialog2": "Gold is but a coin of trade for the greedy. There's also gold everywhere, the stars sparkling out in the sky are filled with gold, but not even one tree. If the trees go scarce, no amount of gold will prove sufficient.",
     "dialog3": "I will return to my duty overlooking the pasture soon.",
     "interaction_type": "next",
-    "target_id": "patronend",
-    "options": []
+    "target_id": "patronend"
   },
   {
     "id": "Tonica2",
@@ -104,8 +102,7 @@
     "side": "right",
     "dialog": "Pardon me Innkepper, my duty is with the woods. I must fulfill my oath and remain the steward.",
     "interaction_type": "next",
-    "target_id": "Tonica2",
-    "options": []
+    "target_id": "Tonica2"
   },
   {
     "id": "Hogperson1",
@@ -113,8 +110,7 @@
     "side": "right",
     "dialog": "I'm having a good time at the ol' Inn.",
     "interaction_type": "next",
-    "target_id": "patronend",
-    "options": []
+    "target_id": "patronend"
   },
   {
     "id": "Marlnus1",
@@ -122,8 +118,7 @@
     "side": "right",
     "dialog": "Greetings young Master. I'm happy to offer my Chauffeur services and my cart for your party.",
     "interaction_type": "next",
-    "target_id": "patronend",
-    "options": []
+    "target_id": "patronend"
   },
   {
     "id": "Crusher1",
@@ -131,8 +126,7 @@
     "side": "left",
     "dialog": ".......",
     "interaction_type": "next",
-    "target_id": "crusher2",
-    "options": []
+    "target_id": "crusher2"
   },
   {
     "id": "crusher2",
@@ -140,8 +134,7 @@
     "side": "right",
     "dialog": "..........................\n..........................\n\nWhadayawant ..... ?",
     "interaction_type": "next",
-    "target_id": "crusher3",
-    "options": []
+    "target_id": "crusher3"
   },
   {
     "id": "crusher3",
@@ -149,8 +142,7 @@
     "side": "left",
     "dialog": "....... What would you say you do here?",
     "interaction_type": "next",
-    "target_id": "crusher4",
-    "options": []
+    "target_id": "crusher4"
   },
   {
     "id": "crusher4",
@@ -158,8 +150,7 @@
     "side": "right",
     "dialog": "Monitoring the situation.",
     "interaction_type": "next",
-    "target_id": "patronend",
-    "options": []
+    "target_id": "patronend"
   },
   {
     "id": "patronend",
@@ -170,8 +161,7 @@
     "speaker": "Tutorial",
     "dialog": "Welcome to the game! As an aspiring entrepreneur looking to start a business in this part of the world, you’ve spent your life savings to become the proud owner of the land deed to this quaint tavern.",
     "interaction_type": "next",
-    "target_id": "tutor1_101a",
-    "options": []
+    "target_id": "tutor1_101a"
   },
   {
     "id": "tutor1_101a",
@@ -179,8 +169,7 @@
     "side": "left",
     "dialog": "Located on a countryside road, it is far enough from the township to host travelers and close enough to attract local patrons.",
     "interaction_type": "next",
-    "target_id": "tutor1_102",
-    "options": []
+    "target_id": "tutor1_102"
   },
   {
     "id": "tutor1_102",
@@ -188,8 +177,7 @@
     "side": "left",
     "dialog": "You've recently come in contact with the lands governor, and applied to participate in establishing a safer environment for your business,",
     "interaction_type": "next",
-    "target_id": "tutor1_103",
-    "options": []
+    "target_id": "tutor1_103"
   },
   {
     "id": "tutor1_103",
@@ -197,8 +185,7 @@
     "side": "left",
     "dialog": "You have been offered partnership! You've signed a contract allowing you to host a guild of adventurers right here in your tavern.",
     "interaction_type": "next",
-    "target_id": "tutor1_104",
-    "options": []
+    "target_id": "tutor1_104"
   },
   {
     "id": "tutor1_104",
@@ -206,8 +193,7 @@
     "side": "left",
     "dialog": "This wonderful business enterprise will surely increase your revenue and your popularity among adventurers greatly! *Wink*",
     "interaction_type": "next",
-    "target_id": "tutor1_105",
-    "options": []
+    "target_id": "tutor1_105"
   },
   {
     "id": "tutor1_105",
@@ -215,8 +201,7 @@
     "side": "left",
     "dialog": "You've already recruited three local patrons and they've signed up a contract with you, and have been staying at the tavern for QUITE some time now . . .",
     "interaction_type": "next",
-    "target_id": "tutor1_106",
-    "options": []
+    "target_id": "tutor1_106"
   },
   {
     "id": "tutor1_106",
@@ -224,8 +209,7 @@
     "side": "left",
     "dialog": "NOT THIS AGAIN  ...\n\nWHEN ARE YOU TWO FAT DRUNK BLOBS\nARE EVER GOING TO MAKE ME A PROFIT ???.",
     "interaction_type": "next",
-    "target_id": "tutor1_107",
-    "options": []
+    "target_id": "tutor1_107"
   },
   {
     "id": "tutor1_107",
@@ -233,8 +217,7 @@
     "side": "left",
     "dialog": "WHAT AM I FEEDING AND HOUSING YOU LOT FOR ???\n\nGO AND GET AT IT ALREADY MAKE ME SOME COIN !!!",
     "interaction_type": "next",
-    "target_id": "tutor1_108",
-    "options": []
+    "target_id": "tutor1_108"
   },
   {
     "id": "tutor1_108",
@@ -242,8 +225,7 @@
     "side": "left",
     "dialog": "AND TRY FIND THAT WORTHLESS BARD,\n\nCLAUDIO WAS SUPPOSED TO BE BACK HERE BY NOW !!!",
     "interaction_type": "next",
-    "target_id": "tutor1_109",
-    "options": []
+    "target_id": "tutor1_109"
   },
   {
     "id": "tutor1_109",
@@ -251,8 +233,7 @@
     "side": "left",
     "dialog": "BUT DON'T GO OFF GETTING YOURSELF KILLED !!!\n\nYOU'RE NOT EVEN INSURED YET ...",
     "interaction_type": "next",
-    "target_id": "tutor1_110",
-    "options": []
+    "target_id": "tutor1_110"
   },
   {
     "id": "tutor1_110",
@@ -260,8 +241,7 @@
     "side": "left",
     "dialog": "Your first adventure is on it's way!\n\n Head over to the missions page, select Hogperson and Bragain (When implemented), select a mission 'Green Fields : Tutorial' and head off!",
     "interaction_type": "next",
-    "target_id": "tutor1_110end",
-    "options": []
+    "target_id": "tutor1_110end"
   },
   {
     "id": "tutor1_110end",
@@ -273,8 +253,7 @@
     "side": "left",
     "dialog": "Well we've done it now eh 'raggo..?",
     "interaction_type": "next",
-    "target_id": "green1_002",
-    "options": []
+    "target_id": "green1_002"
   },
   {
     "id": "green1_002",
@@ -282,8 +261,7 @@
     "side": "right",
     "dialog": "Ehhh, that won't be much of a fuss, \nI reckon we can go dig up that pot we've been saving for later.",
     "interaction_type": "next",
-    "target_id": "green1_003",
-    "options": []
+    "target_id": "green1_003"
   },
   {
     "id": "green1_003",
@@ -291,8 +269,7 @@
     "side": "left",
     "dialog": "WHAT POT?! \nBrag, have you been holding up on me again?",
     "interaction_type": "next",
-    "target_id": "green1_004",
-    "options": []
+    "target_id": "green1_004"
   },
   {
     "id": "green1_004",
@@ -300,8 +277,7 @@
     "side": "right",
     "dialog": "Noooo I would never! \nDon't you remember we've talked about this.",
     "interaction_type": "next",
-    "target_id": "green1_005",
-    "options": []
+    "target_id": "green1_005"
   },
   {
     "id": "green1_005",
@@ -309,8 +285,7 @@
     "side": "left",
     "dialog": "Talked???",
     "interaction_type": "next",
-    "target_id": "green1_006",
-    "options": []
+    "target_id": "green1_006"
   },
   {
     "id": "green1_006",
@@ -318,8 +293,7 @@
     "side": "right",
     "dialog": "Yeah we've said we can't just let the boss have all the spoils, or he'll dump us to the curve again for sure.",
     "interaction_type": "next",
-    "target_id": "green1_007",
-    "options": []
+    "target_id": "green1_007"
   },
   {
     "id": "green1_007",
@@ -327,8 +301,7 @@
     "side": "left",
     "dialog": "...........\n?!\n\nWhen have WE ever FOUND anything?!",
     "interaction_type": "next",
-    "target_id": "green1_008",
-    "options": []
+    "target_id": "green1_008"
   },
   {
     "id": "green1_008",
@@ -336,8 +309,7 @@
     "side": "right",
     "dialog": "Well, just leave it to me then,\nlet's go find our pot o' gold, bring it to the chief,\nAnd we'll be Ok for a while ...",
     "interaction_type": "next",
-    "target_id": "green1_008END",
-    "options": []
+    "target_id": "green1_008END"
   },
   {
     "id": "green1_008END",
@@ -349,8 +321,7 @@
     "side": "right",
     "dialog": "Heading out, on the green path besides the mountain, landslide have toppled a large boulder right in the middle of the road. There's no way around this now.",
     "interaction_type": "next",
-    "target_id": "green1_011",
-    "options": []
+    "target_id": "green1_011"
   },
   {
     "id": "green1_011",
@@ -358,8 +329,7 @@
     "side": "left",
     "dialog": "Oh look, the road is blocked,",
     "interaction_type": "next",
-    "target_id": "green1_012",
-    "options": []
+    "target_id": "green1_012"
   },
   {
     "id": "green1_012",
@@ -367,8 +337,7 @@
     "side": "left",
     "dialog": "Can't catch a break can we Brag?",
     "interaction_type": "next",
-    "target_id": "green1_013",
-    "options": []
+    "target_id": "green1_013"
   },
   {
     "id": "green1_013",
@@ -376,8 +345,7 @@
     "side": "right",
     "dialog": "We'll see about that!",
     "interaction_type": "next",
-    "target_id": "green1_014",
-    "options": []
+    "target_id": "green1_014"
   },
   {
     "id": "green1_014",
@@ -413,8 +381,7 @@
     "side": "right",
     "dialog": "That's a large Rock, but it has many weak spots.",
     "interaction_type": "next",
-    "target_id": "green1_016",
-    "options": []
+    "target_id": "green1_016"
   },
   {
     "id": "green1_016",
@@ -422,8 +389,7 @@
     "side": "right",
     "dialog": "** Swings the Iron Pick with might and bangs the rocks several times.**",
     "interaction_type": "next",
-    "target_id": "green1_017",
-    "options": []
+    "target_id": "green1_017"
   },
   {
     "id": "green1_017",
@@ -431,8 +397,7 @@
     "side": "right",
     "dialog": "** The deliberate hits on surface cause massive fractures across the rock.**",
     "interaction_type": "next",
-    "target_id": "green1_018",
-    "options": []
+    "target_id": "green1_018"
   },
   {
     "id": "green1_018",
@@ -440,8 +405,7 @@
     "side": "right",
     "dialog": "** The Rock collapses to bits and clears the path.**",
     "interaction_type": "next",
-    "target_id": "green1_019",
-    "options": []
+    "target_id": "green1_019"
   },
   {
     "id": "green1_019",
@@ -449,8 +413,7 @@
     "side": "right",
     "dialog": "Hahahaha. Success!\n\nLet's head on out.\n\nBragain gains 50 Exp.",
     "interaction_type": "next",
-    "target_id": "green1_019END",
-    "options": []
+    "target_id": "green1_019END"
   },
   {
     "id": "green1_019END",
@@ -489,8 +452,7 @@
     "side": "left",
     "dialog": "Hey there my good lad! That's no day to be weeping! Come on, get on your feet and tell ol' Hoggy what's ailing you.",
     "interaction_type": "next",
-    "target_id": "green1_023",
-    "options": []
+    "target_id": "green1_023"
   },
   {
     "id": "green1_023",
@@ -498,8 +460,7 @@
     "side": "right",
     "dialog": "The Traveller lets loose of what's ailing him, he was traveling with a companion just like you. He was the only friend who could make me laugh - but his friend has fallen captured by a dangerous group up ahead. They're camping on the cross road up ahead.",
     "interaction_type": "next",
-    "target_id": "green1_024",
-    "options": []
+    "target_id": "green1_024"
   },
   {
     "id": "green1_024",
@@ -507,8 +468,7 @@
     "side": "right",
     "dialog": "With this new found information, you consider it may be valueable to you, you carry on your way towards danger, and the captured traveler.",
     "interaction_type": "next",
-    "target_id": "green1_025",
-    "options": []
+    "target_id": "green1_025"
   },
   {
     "id": "green1_025",
@@ -516,8 +476,7 @@
     "side": "right",
     "dialog": "Hogperson may not be the smartest guy, nor *A* smart guy, \nnor being able to appear smart if his life was depending on it, \nbut he's got a big heart! And that counts.\n\nHogperson gains 50 Exp.",
     "interaction_type": "next",
-    "target_id": "green1_025END",
-    "options": []
+    "target_id": "green1_025END"
   },
   {
     "id": "green1_025END",
@@ -529,8 +488,7 @@
     "side": "right",
     "dialog": "Arriving at the cross. A few Koboldogs with large teeth and pointed tails are holding some sort of toll on passing their road.",
     "interaction_type": "next",
-    "target_id": "green1_027",
-    "options": []
+    "target_id": "green1_027"
   },
   {
     "id": "green1_027",
@@ -539,8 +497,7 @@
     "side": "right",
     "dialog": "*bark* Oi bone-heads, this is our territory! *bark* ",
     "interaction_type": "next",
-    "target_id": "green1_028",
-    "options": []
+    "target_id": "green1_028"
   },
   {
     "id": "green1_028",
@@ -549,8 +506,7 @@
     "side": "right",
     "dialog": "*bark* We've been marking it all day! *bark*\n*bark* Smell it! SMELL IT !!! *bark*",
     "interaction_type": "next",
-    "target_id": "green1_029",
-    "options": []
+    "target_id": "green1_029"
   },
   {
     "id": "green1_029",
@@ -558,8 +514,7 @@
     "side": "right",
     "dialog": "** The smell in this place tells no lies, this IS THEIR TERRITORY **",
     "interaction_type": "next",
-    "target_id": "green1_030",
-    "options": []
+    "target_id": "green1_030"
   },
   {
     "id": "green1_030",
@@ -595,8 +550,7 @@
     "side": "left",
     "dialog": "Hey! You boys like sticks right!!\nHow do you like them stick!!\n** BRANDISH Large Club **",
     "interaction_type": "next",
-    "target_id": "green1_032",
-    "options": []
+    "target_id": "green1_032"
   },
   {
     "id": "green1_032",
@@ -604,8 +558,7 @@
     "side": "right",
     "dialog": "The koboldog's eyes widen at the sight the [Large Club]",
     "interaction_type": "next",
-    "target_id": "green1_033",
-    "options": []
+    "target_id": "green1_033"
   },
   {
     "id": "green1_033",
@@ -614,8 +567,7 @@
     "side": "right",
     "dialog": "Ahh, wielder of the magnificent large stick!",
     "interaction_type": "next",
-    "target_id": "green1_034",
-    "options": []
+    "target_id": "green1_034"
   },
   {
     "id": "green1_034",
@@ -623,8 +575,7 @@
     "side": "right",
     "dialog": "The Kobolds quiver and lower their tails, their noses, their ears, and their dominant barks turned into submissive yelps.",
     "interaction_type": "next",
-    "target_id": "green1_035",
-    "options": []
+    "target_id": "green1_035"
   },
   {
     "id": "green1_035",
@@ -633,8 +584,7 @@
     "side": "right",
     "dialog": "This road is yours now, o' master of the stick! *whimper* *whimper* *whimper* ",
     "interaction_type": "next",
-    "target_id": "green1_036",
-    "options": []
+    "target_id": "green1_036"
   },
   {
     "id": "green1_036",
@@ -642,8 +592,7 @@
     "side": "right",
     "dialog": "You move towards the cages, just like the traveller tipped you about. There is a person inside! Upon closer inspection . . . ",
     "interaction_type": "next",
-    "target_id": "green1_037",
-    "options": []
+    "target_id": "green1_037"
   },
   {
     "id": "green1_037",
@@ -652,8 +601,7 @@
     "side": "right",
     "dialog": "IT'S CLAUDIO !!",
     "interaction_type": "next",
-    "target_id": "green1_038",
-    "options": []
+    "target_id": "green1_038"
   },
   {
     "id": "green1_038",
@@ -661,8 +609,7 @@
     "side": "right",
     "dialog": "You let Claudio out of the cage, catch up on what's been going on lately.\n\nThe Party gains 150 EXP.",
     "interaction_type": "next",
-    "target_id": "green1_039",
-    "options": []
+    "target_id": "green1_039"
   },
   {
     "id": "green1_039",
@@ -670,8 +617,7 @@
     "side": "right",
     "dialog": "You're all glad to have regrouped once again, and decide not to split up again,\n\nthen you carry on ahead on your way towards the Pot of Gold Bragain stashed for himself.",
     "interaction_type": "next",
-    "target_id": "green1_039a",
-    "options": []
+    "target_id": "green1_039a"
   },
   {
     "id": "green1_039a",
@@ -679,8 +625,7 @@
     "side": "left",
     "dialog": "** I'VE SAVED IT FOR AN EMERGENCY !! **",
     "interaction_type": "next",
-    "target_id": "green1_040",
-    "options": []
+    "target_id": "green1_040"
   },
   {
     "id": "green1_040",
@@ -688,8 +633,7 @@
     "side": "right",
     "dialog": "SURE BRAG.....\n\n*SURE*",
     "interaction_type": "next",
-    "target_id": "green1_041",
-    "options": []
+    "target_id": "green1_041"
   },
   {
     "id": "green1_041",
@@ -698,8 +642,7 @@
     "side": "right",
     "dialog": "Claudio is a lover, not a fighter, while he can participate in combat, his proficiencies lie in his performal talents.",
     "interaction_type": "next",
-    "target_id": "green1_042",
-    "options": []
+    "target_id": "green1_042"
   },
   {
     "id": "green1_042",
@@ -707,8 +650,7 @@
     "side": "right",
     "dialog": "While your party has a Barbarian, a Rogue, and a Bard, you gain the [TROUBLE MAKERS] trait, gaining better chances to succeed at work-arounds and made-up strategies in Encounters, rather than taking the forward approach or plain fighting.",
     "interaction_type": "next",
-    "target_id": "green1_043",
-    "options": []
+    "target_id": "green1_043"
   },
   {
     "id": "green1_043",
@@ -716,8 +658,7 @@
     "side": "left",
     "dialog": "Eh?! But I'm not a Rogue, I'm a Miner!",
     "interaction_type": "next",
-    "target_id": "green1_044",
-    "options": []
+    "target_id": "green1_044"
   },
   {
     "id": "green1_044",
@@ -725,8 +666,7 @@
     "side": "right",
     "dialog": "I thought it was just your day job?",
     "interaction_type": "next",
-    "target_id": "green1_045",
-    "options": []
+    "target_id": "green1_045"
   },
   {
     "id": "green1_045",
@@ -734,8 +674,7 @@
     "side": "left",
     "dialog": "It *IS* my job-job!",
     "interaction_type": "next",
-    "target_id": "green1_046",
-    "options": []
+    "target_id": "green1_046"
   },
   {
     "id": "green1_046",
@@ -743,8 +682,7 @@
     "side": "right",
     "dialog": "So what, aren't you still stealing from Rocks.",
     "interaction_type": "next",
-    "target_id": "green1_047",
-    "options": []
+    "target_id": "green1_047"
   },
   {
     "id": "green1_047",
@@ -752,8 +690,7 @@
     "side": "left",
     "dialog": "Hey, that's called *GEOLOGY*.",
     "interaction_type": "next",
-    "target_id": "green1_048",
-    "options": []
+    "target_id": "green1_048"
   },
   {
     "id": "green1_048",
@@ -761,8 +698,7 @@
     "side": "right",
     "dialog": "SURE BRAG.....\n\n*SURE*",
     "interaction_type": "next",
-    "target_id": "green1_048END",
-    "options": []
+    "target_id": "green1_048END"
   },
   {
     "id": "green1_048END",
@@ -774,8 +710,7 @@
     "side": "right",
     "dialog": "Carrying on onwards, on the road towards the Pot of Gold.",
     "interaction_type": "next",
-    "target_id": "green1_502",
-    "options": []
+    "target_id": "green1_502"
   },
   {
     "id": "green1_502",
@@ -810,8 +745,7 @@
     "side": "right",
     "dialog": "Carrying on onwards, on the road towards the Pot of Gold.",
     "interaction_type": "next",
-    "target_id": "green1_048a",
-    "options": []
+    "target_id": "green1_048a"
   },
   {
     "id": "green1_048a",
@@ -819,8 +753,7 @@
     "side": "right",
     "dialog": "Near a tree\nBy the river\nThere's a hole\nIn the ground.",
     "interaction_type": "next",
-    "target_id": "green1_049",
-    "options": []
+    "target_id": "green1_049"
   },
   {
     "id": "green1_049",
@@ -850,8 +783,7 @@
     "side": "left",
     "dialog": "HEY BRAGAIN, CHECK MORE OF THAT HOLE WILL YOU.",
     "interaction_type": "next",
-    "target_id": "green1_051",
-    "options": []
+    "target_id": "green1_051"
   },
   {
     "id": "green1_051",
@@ -859,8 +791,7 @@
     "side": "right",
     "dialog": "Naa, that's some sketchy founding here.\nThat's enough of this hole for us.",
     "interaction_type": "next",
-    "target_id": "green1_052",
-    "options": []
+    "target_id": "green1_052"
   },
   {
     "id": "green1_052",
@@ -868,8 +799,7 @@
     "side": "left",
     "dialog": "WHAT ?!\nI DEMAND THE INSPECTION OF THE HOLE FOR MORE TREASURE !!",
     "interaction_type": "next",
-    "target_id": "green1_053",
-    "options": []
+    "target_id": "green1_053"
   },
   {
     "id": "green1_053",
@@ -877,8 +807,7 @@
     "side": "right",
     "dialog": "Ehhhhh, mind yer lip innkeeper!\nI've said this path is not safe.",
     "interaction_type": "next",
-    "target_id": "green1_054",
-    "options": []
+    "target_id": "green1_054"
   },
   {
     "id": "green1_054",
@@ -886,8 +815,7 @@
     "side": "left",
     "dialog": "** INNKEEPER ** !? \nI AM THE GUILD MASTER !!\nTHE LORD OF THIS MANOR !!\nI CONTROL EVERYTHING !!",
     "interaction_type": "next",
-    "target_id": "green1_055",
-    "options": []
+    "target_id": "green1_055"
   },
   {
     "id": "green1_055",
@@ -895,8 +823,7 @@
     "side": "right",
     "dialog": "It's just a wee basement laddy,\nan' ya payments cover the goose's arse...\nThere's no 'insurance' that'll make me go in there!",
     "interaction_type": "next",
-    "target_id": "green1_056",
-    "options": []
+    "target_id": "green1_056"
   },
   {
     "id": "green1_056",
@@ -904,8 +831,7 @@
     "side": "left",
     "dialog": "*pouts*\n\nFINE THEN! HUMPF !!\n\nHead on back to the Guild.",
     "interaction_type": "next",
-    "target_id": "green1_056END",
-    "options": []
+    "target_id": "green1_056END"
   },
   {
     "id": "green1_056END",
@@ -917,8 +843,7 @@
     "side": "left",
     "dialog": "AH! You're finally back!\nAnd you've brought Claudio! Splendide!\n\nI'm very happy to see you all!",
     "interaction_type": "next",
-    "target_id": "tutor2_102",
-    "options": []
+    "target_id": "tutor2_102"
   },
   {
     "id": "tutor2_102",
@@ -926,8 +851,7 @@
     "side": "left",
     "dialog": "AND there's a pot full of silver coins! Marvelous!\nWe're finally starting to look like a Guild!",
     "interaction_type": "next",
-    "target_id": "tutor2_103",
-    "options": []
+    "target_id": "tutor2_103"
   },
   {
     "id": "tutor2_103",
@@ -935,8 +859,7 @@
     "side": "left",
     "dialog": "The next step in the tutorial will be, to spend some coin!\n\nHead on upstairs back to the Tavern, there's a single patron there, she's an adventurer, click her and hire her!",
     "interaction_type": "next",
-    "target_id": "tutor2_104",
-    "options": []
+    "target_id": "tutor2_104"
   },
   {
     "id": "tutor2_104",
@@ -944,8 +867,7 @@
     "side": "left",
     "dialog": "Go to the Tavern and Pick up on Amyssa the Elf for 25 silver coins.\n\nAmyssa is a Swordmage level 2, a capable warrior adept in fighting and spellcraft.",
     "interaction_type": "next",
-    "target_id": "tutor2_105",
-    "options": []
+    "target_id": "tutor2_105"
   },
   {
     "id": "tutor2_105",
@@ -953,8 +875,7 @@
     "side": "left",
     "dialog": "AH!! a new contract to the guild.\nFINALLY A REAL WARRIOR ADVENTURER!!\n\nNOW THIS PARTY WILL ACTUALLY GET SOMEWHERE!!",
     "interaction_type": "next",
-    "target_id": "tutor2_106",
-    "options": []
+    "target_id": "tutor2_106"
   },
   {
     "id": "tutor2_106",
@@ -962,8 +883,7 @@
     "side": "left",
     "dialog": "Add Amyssa to the party, with the rest of the guys.",
     "interaction_type": "next",
-    "target_id": "tutor2_107",
-    "options": []
+    "target_id": "tutor2_107"
   },
   {
     "id": "tutor2_107",
@@ -971,8 +891,7 @@
     "side": "right",
     "dialog": "** EXCUUUUUUUUUUUUUSE ME **",
     "interaction_type": "next",
-    "target_id": "tutor2_108",
-    "options": []
+    "target_id": "tutor2_108"
   },
   {
     "id": "tutor2_108",
@@ -980,8 +899,7 @@
     "side": "right",
     "dialog": "I'm NOT joining THOSE peasants\n\nI am a NOBLE!",
     "interaction_type": "next",
-    "target_id": "tutor2_109",
-    "options": []
+    "target_id": "tutor2_109"
   },
   {
     "id": "tutor2_109",
@@ -989,8 +907,7 @@
     "side": "right",
     "dialog": "I won't risk MY precious hide for just any riff-raff!",
     "interaction_type": "next",
-    "target_id": "tutor2_110",
-    "options": []
+    "target_id": "tutor2_110"
   },
   {
     "id": "tutor2_110",
@@ -998,8 +915,7 @@
     "side": "left",
     "dialog": "BUT I'VE JUST HIRED YOU FOR YOUR SERVICES !!",
     "interaction_type": "next",
-    "target_id": "tutor2_111",
-    "options": []
+    "target_id": "tutor2_111"
   },
   {
     "id": "tutor2_111",
@@ -1007,8 +923,7 @@
     "side": "right",
     "dialog": "You'll just have to provide me with a party of my own class!",
     "interaction_type": "next",
-    "target_id": "tutor2_112a",
-    "options": []
+    "target_id": "tutor2_112a"
   },
   {
     "id": "tutor2_112a",
@@ -1016,8 +931,7 @@
     "side": "right",
     "dialog": "Amyssa has the trait [SNOB]\n\nWhile normally your commoners and nobles can party together, alas Amyssa is just too uppity for that!",
     "interaction_type": "next",
-    "target_id": "tutor2_112",
-    "options": []
+    "target_id": "tutor2_112"
   },
   {
     "id": "tutor2_112",
@@ -1025,8 +939,7 @@
     "side": "right",
     "dialog": "Meanwhile, I'll be chilling here, if you don't mind!\n\nInnkeeper!!! MORE ALE!!",
     "interaction_type": "next",
-    "target_id": "tutor2_113",
-    "options": []
+    "target_id": "tutor2_113"
   },
   {
     "id": "tutor2_113",
@@ -1034,8 +947,7 @@
     "side": "left",
     "dialog": "** INNKEEPER ** !?\n** I AM THE . . . **\n** WAHHHHHHH **\nT___T",
     "interaction_type": "next",
-    "target_id": "tutor2_114",
-    "options": []
+    "target_id": "tutor2_114"
   },
   {
     "id": "tutor2_114",
@@ -1044,8 +956,7 @@
     "side": "right",
     "dialog": "Amyssa is also a [SCRIBE]. While idling, other than just chilling in the guild",
     "interaction_type": "next",
-    "target_id": "tutor2_115",
-    "options": []
+    "target_id": "tutor2_115"
   },
   {
     "id": "tutor2_115",
@@ -1054,8 +965,7 @@
     "side": "right",
     "dialog": "she will scribe spell scrolls once in a while, that Bragain and Claudio can read and cast spells with,",
     "interaction_type": "next",
-    "target_id": "tutor2_116",
-    "options": []
+    "target_id": "tutor2_116"
   },
   {
     "id": "tutor2_116",
@@ -1064,8 +974,7 @@
     "side": "right",
     "dialog": "but not Hogperson because he's a big dummy.",
     "interaction_type": "next",
-    "target_id": "tutor2_117",
-    "options": []
+    "target_id": "tutor2_117"
   },
   {
     "id": "tutor2_117",
@@ -1073,8 +982,7 @@
     "side": "right",
     "dialog": "Amyssa has added 2 new spell scrolls to the Guild Stash, you may now click the stash and supply your adventurers with the new items (When implemented..), however you like.",
     "interaction_type": "next",
-    "target_id": "tutor2_119",
-    "options": []
+    "target_id": "tutor2_119"
   },
   {
     "id": "tutor2_118",
@@ -1082,8 +990,7 @@
     "side": "Left",
     "dialog": "END OF Tutorial\n\nThanks you for playing this far!\nThe letter is in the mail so make sure to read it!\nMore info can be read in the Tome of Lore (When implemented..)",
     "interaction_type": "next",
-    "target_id": "tutor2_118END",
-    "options": []
+    "target_id": "tutor2_118END"
   },
   {
     "id": "tutor2_118END",
@@ -1346,8 +1253,7 @@
     "side": "right",
     "dialog": "Oh it's a pleasure to host a lady of stature such as yourself! Mi' lady, I, Claudio, am delighted to have you! Aaaand, I find your scrolls the labor of an artist.",
     "interaction_type": "next",
-    "target_id": "green2_117",
-    "options": []
+    "target_id": "green2_117"
   },
   {
     "id": "green2_117",
@@ -1457,8 +1363,7 @@
     "side": "right",
     "dialog": "Your Appraisal adept strikes a conversation about the gem market with the Dwarf.",
     "interaction_type": "next",
-    "target_id": "green2*1_2103end",
-    "options": []
+    "target_id": "green2*1_2103end"
   },
   {
     "id": "green2*1_2107*",
@@ -1466,8 +1371,7 @@
     "side": "right",
     "dialog": "The dwarf migrant's eye widen at your knowledge. He says it's rather dangerous for him to wander alone and he've been dodging robbers left and right. He'd rather if you hold on to this gem. He hands you a speciality cut gem he've been hiding. It would be much safer with you.\n\nYou both part ways and carry on your journey.",
     "interaction_type": "next",
-    "target_id": "green2*1_2107*end",
-    "options": []
+    "target_id": "green2*1_2107*end"
   },
   {
     "id": "green2*1_2107",
@@ -1475,8 +1379,7 @@
     "side": "right",
     "dialog": "The dwarf migrant appreciates your banter. He rewards you with a rough gem from his sack.\n\nYou both part ways and carry on your journey.",
     "interaction_type": "next",
-    "target_id": "green2*1_2107end",
-    "options": []
+    "target_id": "green2*1_2107end"
   },
   {
     "id": "green2*1_2103end",
@@ -1764,8 +1667,7 @@
     "side": "right",
     "dialog": "Oh it would be a opportunity I will not miss out on, you will have every ability in my satchel at your disposal madam Hogmother.",
     "interaction_type": "next",
-    "target_id": "green2_915",
-    "options": []
+    "target_id": "green2_915"
   },
   {
     "id": "green2_915",
@@ -3046,7 +2948,23 @@
     "side": "left",
     "dialog": "Oh a whole WORLD of pain, you can't threaten me with a good time.\n\n**Cracks his neck**\n\nHow about we stress test your all skulls against my club while we're at it.",
     "interaction_type": "next",
-    "target_id": "dwood1_131end"
+    "target_id": "dwood1_133"
+  },
+  {
+    "id": "dwood1_133",
+    "speaker": "Narrator",
+    "dialog": "The smirk have cleared off the brigan's face, and they don't seem so dominant anymore...",
+    "interaction_type": "options",
+    "options": [
+      {
+        "text": "Carry on past them.",
+        "target_id": "dwood1_150"
+      },
+      {
+        "text": "Engage to fight.",
+        "target_id": "dwood1_131end"
+      }
+    ]
   },
   {
     "id": "dwood1_150",
@@ -3503,8 +3421,7 @@
     "side": "right",
     "dialog": "Bragain you could steal the spellbook back.",
     "interaction_type": "next",
-    "target_id": "dwood1_213",
-    "options": []
+    "target_id": "dwood1_213"
   },
   {
     "id": "dwood1_213",
@@ -3713,8 +3630,7 @@
     "dialog": "That foe is beyond either of us.",
     "side": "right",
     "interaction_type": "next",
-    "target_id": "dwoodplat1_104end",
-    "options": []
+    "target_id": "dwoodplat1_104end"
   },
   {
     "id": "dwoodplat1_104end",
