@@ -327,6 +327,12 @@ function clearDragOverZones() {
         .forEach(zone => {
             zone.classList.remove("drag-over");
         });
+
+    document
+        .querySelectorAll(".dropzone.patron-drag-target")
+        .forEach(zone => {
+            zone.classList.remove("patron-drag-target");
+        });
 }
 
 
@@ -376,7 +382,11 @@ function handlePatronPointerDown(e) {
     patronDrag.startY = e.clientY;
     patronDrag.currentZone = null;
     patronDrag.moved = false;
-
+	document
+    .querySelectorAll(".dropzone")
+    .forEach(zone => {
+        zone.classList.add("patron-drag-target");
+    });
 
     // Prevent browser scrolling/gestures while interacting
     // with a patron.
@@ -390,6 +400,7 @@ function handlePatronPointerDown(e) {
     } catch (err) {
         // Safe to ignore if pointer capture isn't available.
     }
+
 }
 
 
@@ -420,15 +431,28 @@ function handlePatronPointerMove(e) {
 
     // A small movement is still considered a tap.
     // Once the pointer moves 8px, it becomes a drag.
-    if (
-        !patronDrag.moved &&
-        distance < 8
-    ) {
-        return;
-    }
+	if (!patronDrag.moved && distance < 8) {
+		return;
+	}
 
+	if (!patronDrag.moved) {
 
-    patronDrag.moved = true;
+		patronDrag.moved = true;
+
+		if (patronDrag.slot) {
+			patronDrag.slot.classList.add(
+				"pointer-dragging"
+			);
+		}
+
+		document
+			.querySelectorAll(".dropzone")
+			.forEach(zone => {
+				zone.classList.add(
+					"patron-drag-target"
+				);
+			});
+	}
 
     e.preventDefault();
 
@@ -454,14 +478,6 @@ function handlePatronPointerMove(e) {
         patronDrag.currentZone = null;
     }
 
-
-    // Visual indication.
-    if (patronDrag.slot) {
-
-        patronDrag.slot.classList.add(
-            "pointer-dragging"
-        );
-    }
 }
 
 
@@ -603,88 +619,6 @@ function handlePatronPointerCancel(e) {
 // ============================================================
 // CLICK / TAP SUPPORT
 // ============================================================
-
-function handlePatronClick(e) {
-
-    // Don't interpret a click generated after a completed
-    // pointer drag as a normal tap.
-    //
-    // Browsers can generate click after touch/pointerup.
-    if (e.detail === 0) {
-        return;
-    }
-
-
-    const slot = e.target.closest(".patron-slot");
-
-
-    // --------------------------------------------------------
-    // Tap on patron.
-    // --------------------------------------------------------
-
-    if (slot) {
-
-        const advId = slot.dataset.adv;
-
-        if (!advId) {
-            return;
-        }
-
-
-        if (selectedPatronId === advId) {
-
-            deselectPatron();
-
-        } else {
-
-            selectPatron(advId);
-        }
-
-        return;
-    }
-
-
-    // --------------------------------------------------------
-    // Tap on drop zone with selected patron.
-    // --------------------------------------------------------
-
-    const zone = e.target.closest(".dropzone");
-
-    if (!zone) {
-
-        // Clicking anywhere else clears selection.
-        deselectPatron();
-
-        return;
-    }
-
-
-    if (!selectedPatronId) {
-        return;
-    }
-
-
-    const advId = selectedPatronId;
-
-
-    movePatron(
-        advId,
-        zone
-    ).then(success => {
-
-        if (success) {
-            deselectPatron();
-        }
-
-    }).catch(error => {
-
-        console.error(
-            "Failed to move patron:",
-            error
-        );
-    });
-}
-
 
 // ============================================================
 // ENABLE UNIFIED PATRON INPUT

@@ -594,6 +594,7 @@ img:not([src]) {
 #party-a-patron-inventory,
 #party-a-guide-inventory,
 #party-b-patron-inventory,
+#party-c-patron-inventory,
 #secret-patron-inventory,
 #party-a-butler-inventory {
     display: flex;          /* Use Flexbox */
@@ -612,6 +613,7 @@ img:not([src]) {
 #party-a-patron-inventory { top: 283px; left: 71px; }
 #party-a-guide-inventory { top: 285px; left: 14px; width: 60px; }
 #party-b-patron-inventory { top: 374px; left: 71px; }
+#party-c-patron-inventory { top: 714px; left: 71px; }
 #secret-patron-inventory { top: 714px; left: 4px; }
 #party-a-butler-inventory { top: 283px; left: 400px; width: 60px; }
 
@@ -756,18 +758,6 @@ img:not([src]) {
     pointer-events: none;
     user-drag: none;
     -webkit-user-drag: none;
-}
-
-.patron-slot.selected {
-    outline: 3px solid gold;
-    background: rgba(255, 215, 0, 0.25);
-    transform: scale(1.1);
-    box-shadow: 0 0 15px gold;
-    z-index: 20;
-}
-
-.patron-slot {
-    transition: all 0.2s ease;
 }
 
 
@@ -1257,14 +1247,58 @@ img:not([src]) {
   border: 2px solid #e74c3c;   /* red border */
 }
 
+/* ============================================================
+   PATRON DRAG UX
+   ============================================================ */
+
 .patron-slot {
     touch-action: none;
     user-select: none;
     -webkit-user-select: none;
+    cursor: grab;
+
+    transition:
+        transform 120ms ease,
+        opacity 120ms ease,
+        box-shadow 120ms ease;
 }
 
+
+/* Patron is being picked up / dragged */
+
 .patron-slot.pointer-dragging {
-    opacity: 0.65;
-    transform: scale(1.05);
+    opacity: 0.85;
+    transform: translateY(-8px) scale(1.08);
     z-index: 1000;
+    cursor: grabbing;
+
+    box-shadow:
+        0 8px 18px rgba(0, 0, 0, 0.35),
+        0 0 0 3px rgba(255, 215, 0, 0.45); /* subtle gold outline */
+
+    filter: drop-shadow(0 0 6px rgba(255, 215, 0, 0.6));
+    background-color: rgba(255, 215, 0, 0.15); /* soft tint */
+}
+
+
+
+/* ============================================================
+   DROP ZONE WHILE DRAGGING
+   ============================================================ */
+
+/* All valid drop zones become subtly more obvious. */
+
+.dropzone.patron-drag-target {
+    box-shadow:
+        inset 0 0 0 2px rgba(255, 255, 255, 0.25);
+}
+
+
+/* Zone directly underneath the dragged patron */
+.dropzone.drag-over {
+    transform: scale(1.02);
+
+    box-shadow:
+        inset 0 0 0 3px rgba(255, 215, 0, 0.9),
+        0 0 14px rgba(255, 215, 0, 0.35);
 }

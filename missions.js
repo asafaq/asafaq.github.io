@@ -665,7 +665,7 @@ function adjustDialogContainer() {
     // Example: push dialog container upward so choices are always visible
     const choiceHeight = choiceContainer.offsetHeight;
 
-    container.style.marginBottom = (choiceHeight - 25) + "px";
+    container.style.marginBottom = (choiceHeight - 120) + "px";
 }
 
 async function optionConditionMet(opt) {

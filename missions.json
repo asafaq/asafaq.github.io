@@ -2912,10 +2912,11 @@
   },
   {
     "id": "dwood1_130",
-    "speaker": "Brigan Lieutenant",
-	"portrait": ["Monsters", "Brigan"],
+    "speaker": "Narrator",
+    "speaker2": "Brigan Lieutenant",
+	"portrait2": ["Monsters", "Brigan"],
     "side": "right",
-	"dialog": "You find yourself surrounded by several dark-clad men",
+	"dialog": "You find yourself surrounded by several dark-mail clad men",
     "dialog2": "Halt! Intruders to the woods.\nThis is our turf now. You are bound to a world of pain once we bring you to our leader.",
     "interaction_type": "options",
     "options": [
@@ -2946,7 +2947,7 @@
     "id": "dwood1_132",
     "speaker": "Hogperson",
     "side": "left",
-    "dialog": "Oh a whole WORLD of pain, you can't threaten me with a good time.\n\n**Cracks his neck**\n\nHow about we stress test your all skulls against my club while we're at it.",
+    "dialog": "Oh a whole WORLD of pain?! you can't threaten me with a good time.\n\n**Cracks his neck**\n\nHow about we stress test all your skulls against my club while we're at it.",
     "interaction_type": "next",
     "target_id": "dwood1_133"
   },
