@@ -1,5 +1,8 @@
 {
-  "Rules": {},
+  "Rules": {
+	"Alignment": "The classic Evil-Neutral-Good alignments, with outliers of Chaotic(evil) and Lawful(good) who will not cooperate.\nNotice Chaotic-good are included within Good, and Lawful-evil are within Evil.",
+	"Caste": "Most partons are divided into 5 castes in ascending order. They may only associate with castes of their own and adjacent to their own.\n\nUnderclass - Commoner - Noble - Aristocrat - Royalty.\nThe Trait Snob prevents association with a lower caste.\nThe caste Omni is special and reserved for beings that don't precieve castes.\n\nOutcast means the patron fell 2 castes below what he was. Eg: An Outcast_Noble is formerly known to be a Noble but now is an Underclass.\nPoser means the patron imposes to be 2 castes above what they are. Eg: A Poser_Noble is formerly known to be an Underclass."
+  },
   "Precious Metals": {
     "Copper": "Mostly trades as raw bullions. Used in industry for producing liquid containers, metal coating for finished products, and mixed in tougher alloys.",
     "Silver": "Valueable enough to be minted in coins and traded bearing the king's crest.",
