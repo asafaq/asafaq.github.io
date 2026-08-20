@@ -264,7 +264,7 @@ const PORTRAITS = {
 		default: "",
         Koboldog: "/assets/missions/koboldog.png",
         Owlbear: "/assets/monsters/owlbear.png",
-		Brigan: "/assets/monsters/brigan2.png"
+		Brigan: "/assets/monsters/brigan_thug.png"
     },
 
     Claudio: {

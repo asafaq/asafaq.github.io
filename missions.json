@@ -260,8 +260,12 @@
     "side": "left",
     "dialog": "Your first adventure is on it's way!\n\n Head over to the missions page, select Hogperson and Bragain (When implemented), select a mission 'Green Fields : Tutorial' and head off!",
     "interaction_type": "next",
-    "target_id": "END",
+    "target_id": "tutor1_110end",
     "options": []
+  },
+  {
+    "id": "tutor1_110end",
+	"target_id": "END"
   },
   {
     "id": "green1_101",
@@ -337,12 +341,7 @@
   },
   {
     "id": "green1_008END",
-    "speaker": "Bragain",
-    "side": "right",
-    "dialog": "Well, just leave it to me then,\nlet's go find our pot o' gold, bring it to the chief,\nAnd we'll be Ok for a while ...",
-    "interaction_type": "next",
-    "target_id": "END",
-    "options": []
+    "target_id": "END"
   },
   {
     "id": "green1_201",
@@ -455,12 +454,7 @@
   },
   {
     "id": "green1_019END",
-    "speaker": "Bragain",
-    "side": "right",
-    "dialog": "Hahahaha. Success!\n\n Let's head on out.",
-    "interaction_type": "next",
-    "target_id": "END",
-    "options": []
+    "target_id": "END"
   },
   {
     "id": "green1_301",
@@ -527,12 +521,7 @@
   },
   {
     "id": "green1_025END",
-    "speaker": "Narrator",
-    "side": "right",
-    "dialog": "",
-    "interaction_type": "next",
-    "target_id": "END",
-    "options": []
+    "target_id": "END"
   },
   {
     "id": "green1_401",
@@ -584,7 +573,6 @@
         "text": "Promise to pay them 100 Silvcrs.",
         "target_id": "STAY",
         "disabled": true,
-        "condition_trait": "Liar",
         "frustration_text": "Ugh, if you could only say that with a straight face."
       },
       {
@@ -778,12 +766,7 @@
   },
   {
     "id": "green1_048END",
-    "speaker": "Narrator",
-    "side": "right",
-    "dialog": "SURE BRAG.....\n\n*SURE*",
-    "interaction_type": "next",
-    "target_id": "END",
-    "options": []
+    "target_id": "END"
   },
   {
     "id": "green1_501",
@@ -815,21 +798,11 @@
   },
   {
     "id": "green1_502end",
-    "speaker": "Narrator",
-    "side": "right",
-    "dialog": "The bushes rustle at your path, they are aggressivly drawing out branches in a menacing, it's time for your introduction to the battle system.\n\nIn the standard Virtual Tabletop Battle Grid, use Move / Attack / Magic against the Animated Bushes to clain your victory.",
-    "interaction_type": "next",
-    "target_id": "END",
-    "options": []
+    "target_id": "END"
   },
   {
     "id": "green1_502endskip",
-    "speaker": "Narrator",
-    "side": "right",
-    "dialog": "The bushes rustle at your path, they are aggressivly drawing out branches in a menacing, it's time for your introduction to the battle system.\n\nIn the standard Virtual Tabletop Battle Grid, use Move / Attack / Magic against the Animated Bushes to clain your victory.",
-    "interaction_type": "next",
-    "target_id": "END",
-    "options": []
+    "target_id": "END"
   },
   {
     "id": "green1_601",
@@ -936,12 +909,7 @@
   },
   {
     "id": "green1_056END",
-    "speaker": "Guild Master",
-    "side": "left",
-    "dialog": "*pouts*\n\nFINE THEN! HUMPF !!\n\nHead on back to the Guild.",
-    "interaction_type": "next",
-    "target_id": "END",
-    "options": []
+    "target_id": "END"
   },
   {
     "id": "tutor2_101",
@@ -1119,12 +1087,7 @@
   },
   {
     "id": "tutor2_118END",
-    "speaker": "Narrator",
-    "side": "Left",
-    "dialog": "",
-    "interaction_type": "next",
-    "target_id": "END",
-    "options": []
+    "target_id": "END"
   },
   {
     "id": "tutor1_000",
@@ -1145,10 +1108,6 @@
   },
   {
     "id": "tutor1_000end",
-    "speaker": "Narrator",
-    "side": "Left",
-    "dialog": "",
-    "interaction_type": "next",
     "target_id": "END"
   },
   {
@@ -1233,10 +1192,6 @@
   },
   {
     "id": "green2_008end",
-    "speaker": "Guild Master",
-    "side": "left",
-    "dialog": "There should be",
-    "interaction_type": "next",
     "target_id": "END"
   },
   {
@@ -1404,26 +1359,18 @@
   },
   {
     "id": "green2_117end",
-    "speaker": "DEVELOPER NOTES",
-    "side": "left",
-    "dialog": "",
-    "interaction_type": "next",
     "target_id": "END"
   },
   {
     "id": "green2*1_101",
     "speaker": "Narrator",
     "side": "left",
-    "dialog": "While walking the unpaved road you notice a few silver coins scattered on the ground. How fortunate. You pick them up and carry on your way.",
+    "dialog": "As you're walking the unpaved road you notice a few silver coins scattered on the ground. How fortunate. You pick them up and carry on your way.",
     "interaction_type": "next",
     "target_id": "green2_*101end"
   },
   {
     "id": "green2_*101end",
-    "speaker": "Narrator",
-    "side": "left",
-    "dialog": ".",
-    "interaction_type": "next",
     "target_id": "END"
   },
   {
@@ -1449,18 +1396,10 @@
   },
   {
     "id": "green2*1_201end",
-    "speaker": "Narrator",
-    "side": "left",
-    "dialog": ".",
-    "interaction_type": "next",
     "target_id": "END"
   },
   {
     "id": "green2*1_202end",
-    "speaker": "Narrator",
-    "side": "left",
-    "dialog": ".",
-    "interaction_type": "next",
     "target_id": "END"
   },
   {
@@ -1541,24 +1480,14 @@
   },
   {
     "id": "green2*1_2103end",
-    "speaker": "Narrator",
-    "side": "left",
-    "dialog": ".",
-    "interaction_type": "next",
     "target_id": "END"
   },
   {
     "id": "green2*1_2107end",
-    "speaker": "Narrator",
-    "side": "left",
-    "dialog": ".",
-    "interaction_type": "next",
     "target_id": "END"
   },
   {
     "id": "green2*1_2107*end",
-    "speaker": "Narrator",
-    "interaction_type": "next",
     "target_id": "END"
   },
   {
@@ -1607,12 +1536,10 @@
   },
   {
     "id": "green2*4end",
-    "interaction_type": "next",
     "target_id": "END"
   },
   {
     "id": "green2*5end",
-    "interaction_type": "next",
     "target_id": "END"
   },
   {
@@ -1678,7 +1605,6 @@
   },
   {
     "id": "greenshrine1_106end",
-    "interaction_type": "next",
     "target_id": "END"
   },
   {
@@ -1726,7 +1652,6 @@
   },
   {
     "id": "green2_704end",
-    "interaction_type": "next",
     "target_id": "END"
   },
   {
@@ -2059,7 +1984,6 @@
   },
   {
     "id": "green2_940a_end",
-    "interaction_type": "next",
     "target_id": "END"
   },
   {
@@ -2113,10 +2037,6 @@
   },
   {
     "id": "green2_945b_end",
-    "speaker": "Narrator",
-    "side": "left",
-    "dialog": "The party has left towards the forest.",
-    "interaction_type": "next",
     "target_id": "END"
   },
   {
@@ -2292,7 +2212,9 @@
       {
         "text": "[Scribe] Obtain a Remove Petrification scroll.",
         "color": "#FFD700",
-        "condition_trait": "Scribe",
+        "condition": {
+			"type": "trait",
+			"value": "Scribe" },
         "target_id": "greenshrine1_210a"
       }
     ]
@@ -2360,22 +2282,18 @@
   },
   {
     "id": "greenshrine1_211aend",
-    "interaction_type": "next",
     "target_id": "END"
   },
   {
     "id": "greenshrine1_211bend",
-    "interaction_type": "next",
     "target_id": "END"
   },
   {
     "id": "greenshrine1_211cend",
-    "interaction_type": "next",
     "target_id": "END"
   },
   {
     "id": "greenshrine1_209end",
-    "interaction_type": "next",
     "target_id": "END"
   },
   {
@@ -2387,7 +2305,6 @@
   },
   {
     "id": "greenshrine1_212end",
-    "interaction_type": "next",
     "target_id": "END"
   },
   {
@@ -2493,7 +2410,6 @@
   },
   {
     "id": "greenshrine2_110end",
-    "interaction_type": "next",
     "target_id": "END"
   },
   {
@@ -2921,10 +2837,6 @@
   },
   {
     "id": "green3_243END",
-    "speaker": "Hogmother",
-    "side": "left",
-    "dialog": "We humbly accept your benevolence, Master Awotruce. It would seem our lead is the Temple.",
-    "interaction_type": "next",
     "target_id": "END"
   },
   {
@@ -3100,10 +3012,9 @@
     "id": "dwood1_130",
     "speaker": "Brigan Lieutenant",
 	"portrait": ["Monsters", "Brigan"],
-    "side": "left",
+    "side": "right",
 	"dialog": "You find yourself surrounded by several dark-clad men",
     "dialog2": "Halt! Intruders to the woods.\nThis is our turf now. You are bound to a world of pain once we bring you to our leader.",
-	"dialog3": "You may come quietly or not, as they say, it's your funeral.",
     "interaction_type": "options",
     "options": [
       {
@@ -3127,14 +3038,13 @@
   },
   {
     "id": "dwood1_131end",
-    "interaction_type": "next",
     "target_id": "END"
   },
   {
     "id": "dwood1_132",
     "speaker": "Hogperson",
-    "side": "right",
-    "dialog": "Oh a whole WORLD of pain, you can't threaten me with a good time.\n\n**Cracks his neck**\n\nLet's stress test your all skulls against my club.",
+    "side": "left",
+    "dialog": "Oh a whole WORLD of pain, you can't threaten me with a good time.\n\n**Cracks his neck**\n\nHow about we stress test your all skulls against my club while we're at it.",
     "interaction_type": "next",
     "target_id": "dwood1_131end"
   },
@@ -3414,10 +3324,6 @@
   },
   {
     "id": "dwood1_181end",
-    "speaker": "Hogmother",
-    "side": "left",
-    "dialog": ".",
-    "interaction_type": "next",
     "target_id": "END"
   },
   {
@@ -3431,8 +3337,10 @@
         "text": "[Speak with Animals] Approach the beast with friendly familiay words.",
         "target_id": "dwood1_20101",
         "color": "#FFD700",
-        "condition_trait": "Speak with Animals"
-      },
+        "condition": {
+			"type": "trait",
+			"value": "Speak with Animals" }
+		},
       {
         "text": "Approach the beast with apprehension.",
         "target_id": "dwood1_20103"
@@ -3440,7 +3348,7 @@
       {
         "text": "Retreat.",
         "disabled": true,
-        "frustration_text": "There's no other way I'm afraid."
+        "frustration_text": "There's no other way to go I'm afraid."
       }
     ]
   },
@@ -3472,7 +3380,6 @@
   },
   {
     "id": "dwood1_20103end",
-    "interaction_type": "next",
     "target_id": "END"
   },
   {
@@ -3657,10 +3564,6 @@
   },
   {
     "id": "dwood1_219end",
-    "speaker": "Narrator",
-    "dialog": "...",
-    "side": "right",
-    "interaction_type": "next",
     "target_id": "END"
   },
   {
@@ -3741,10 +3644,6 @@
   },
   {
     "id": "dwood1_310end",
-    "speaker": "Narrator",
-    "dialog": "...",
-    "side": "right",
-    "interaction_type": "next",
     "target_id": "END"
   },
   {
@@ -3819,18 +3718,10 @@
   },
   {
     "id": "dwoodplat1_104end",
-    "speaker": "Awotruce",
-    "dialog": "",
-    "side": "right",
-    "interaction_type": "next",
     "target_id": "END"
   },
   {
     "id": "dwoodplat1_105end",
-    "speaker": "Awotruce",
-    "dialog": "",
-    "side": "right",
-    "interaction_type": "next",
     "target_id": "END"
   },
   {
@@ -4093,10 +3984,6 @@
   },
   {
     "id": "dwoodswamp1_127end",
-    "speaker": "Hogmother",
-    "dialog": ".",
-    "side": "right",
-    "interaction_type": "next",
     "target_id": "END"
   },
   {
@@ -4205,10 +4092,6 @@
   },
   {
     "id": "dwoodglade_110end",
-    "speaker": "Lurch",
-    "side": "left",
-    "dialog": ".",
-    "interaction_type": "next",
     "target_id": "END"
   },
   {
@@ -4221,10 +4104,6 @@
   },
   {
     "id": "dwoodfort1_201end",
-    "speaker": "Narrator",
-    "side": "left",
-    "dialog": "The fort entrence is blocked, and you don't carry the what's required to scale it, or breach it.",
-    "interaction_type": "next",
     "target_id": "END"
   },
   {
@@ -4245,7 +4124,6 @@
   },
   {
     "id": "dwoodfort2_102end",
-    "interaction_type": "next",
     "target_id": "END"
   },
   {
@@ -4258,10 +4136,6 @@
   },
   {
     "id": "dwoodfort1_301end",
-    "speaker": "Narrator",
-    "side": "left",
-    "dialog": "You gather a a large brushpile from the many dead plants around, near a clearing, and set it on fire. This will be a beacon for all to see it.",
-    "interaction_type": "next",
     "target_id": "END"
   },
   {
@@ -4483,10 +4357,6 @@
   },
   {
     "id": "dwoodfort2_223end",
-    "speaker": "Narrator",
-    "side": "right",
-    "dialog": "The guards stationed at the Den are demanding of disposal.",
-    "interaction_type": "next",
     "target_id": "END"
   },
   {
@@ -4693,10 +4563,6 @@
   },
   {
     "id": "dwoodfort3_124end",
-    "speaker": "Hogmother",
-    "side": "right",
-    "dialog": "End of current development.",
-    "interaction_type": "next",
     "target_id": "END"
   }
 ]
