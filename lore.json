@@ -799,7 +799,7 @@
       "left": "250px",
       "location": 0,
       "race": "Ogrillion",
-      "role": "Black Flame Assassin",
+      "role": "Cleric Assassin",
       "hp_die": 8,
       "hp_modifier": 2,
       "strengh_mod": 4,
@@ -827,7 +827,7 @@
 	  "inventory" : [
 		  { "item": "Potion of Invisibility", "qty": 4, "locked": false },
 		  { "item": "Envenum kit", "qty": 1, "locked": true },
-		  { "item": null, "qty": 0, "locked": false },
+		  { "item": "Spiked Gauntlet", "qty": 1, "locked": true },
 		  { "item": null, "qty": 0, "locked": false }
 		],
       "traits": [
@@ -1376,7 +1376,7 @@
     "Green Knight": {
       "desc": "A Paladin sworn to protect nature and wilderness.",
       "Traits": [
-	    "Speak with Animals"
+	    "Speak with Animals", "Ensnaring Strike"
 		]
     },
 	"Master Archer": {

@@ -412,6 +412,11 @@ async function init() {
 			hasAction: true,
 			hasReacted: false,
 			stunned: false,
+			statuseffect: [],
+			statuseffect: {
+				stunned: false,
+				ensnared: false
+			},
 			retreated: false,
 			retreatHp: null,
 			isConcentrating: false,
@@ -436,7 +441,12 @@ async function init() {
             maxSpeed: 6,
             hasAction: true,
             maxHp: m.hp,
-			stunned: false
+			stunned: false,
+			statuseffect: [],
+			statuseffect: {
+				stunned: false,
+				ensnared: false
+			},
         }))
     ];
 
@@ -785,9 +795,10 @@ function update() {
 		if (tempBar && tempBg) {
 			const temp = u.tempHp || 0;
 
-			if (temp <= 0) {
-				tempBar.style.width = "0px";
-				tempBg.style.width = "0px";
+				// Completely hide both bars
+			if (temp <= 0) { 
+				tempBar.style.width = "0px"; 
+				tempBg.style.width = "0px"; 
 			} else {
 				// Same scaling rules as HP bar
 				let barWidth = 48;
@@ -845,14 +856,22 @@ function update() {
     bar.innerHTML = '';
     createBtn(bar, "📍 Move", toggleMove, isMoving ? 'btn-move-active' : '', "move-btn");
 	const hasElvishBow = active.inventory.some(i => i.item === "Elvish Bow");
+
+    if (active.stunned) {
+        Bus.emit('LOG', `${active.name} is stunned and loses their turn! 🤣`);
+		active.stunned = false;
+		active.hasAction = false;
+		active.speed = maxSpeed /2;
+        //return endTurn();
+    }
     if (hasElvishBow) {
-		createBtn(bar, "🏹 Elvish Bow", startRangedTargeting);
+		createBtn(bar, "🏹 Elvish Bow", () => startRangedTargeting("Elvish Bow"));
 	}
     if (active.race === "Barbarian" && active.isRaging && active.rageTurnsActive >= 3) {
         createBtn(bar, "End Rage", handleEndRage);
     }
     if (active.role === "Bard") {
-        createBtn(bar, "🏹 Crossbow", startRangedTargeting);
+        createBtn(bar, "🏹 Crossbow", () => startRangedTargeting("Crossbow"));
     }
     if (active.skills && active.skills.smite > 0) {
         createBtn(bar, "🔆 Divine Smite", startSmiteTargeting, "", "", "Holy");
@@ -975,7 +994,6 @@ function skillBox(theme, x, y, integerNeeded, checkboxNeeded, defaults = {}) {
 
     });
 }
-
 
 function autoWinBattle() {
     // Set all monsters to 0 HP
@@ -1307,17 +1325,15 @@ function hideDMScreen() {
     document.getElementById("dm-screen").style.display = "none";
 }
 
-function startRangedTargeting() {
+function startRangedTargeting(weapon) {
     const u = units[initiativeOrder[turnIndex].index];
     if (!u.hasAction) return;
-
+    const weap = weapon;
     isRangedTargeting = true;
     rangedShooter = u;
 
-    Bus.emit('LOG', `${u.name} aims their crossbow... select a target`);
+    Bus.emit('LOG', `${u.name} aims their ${weap}... select a target`);
 }
-
-
 
 function createBtn(parent, text, func, className = '', id = '', colorPreset = '') {
 	const BTN_COLORS = {
@@ -1427,13 +1443,6 @@ function handleAttack(attacker, target, action = null) {
     const isCrit = roll === 20;
     const isHit = isCrit || (roll !== 1 && totalToHit >= targetAC);
 
-    // --- ATTACK NAME ---
-    const attackName =
-        currentAttackType === "smite" ? "Divine Smite" :
-        action ? action.name : "Attack";
-
-    Bus.emit('LOG', `${attacker.name} uses ${attackName} on ${target.name}! (Roll: ${roll} + ${hitMod})`);
-
     // --- DAMAGE ---
     if (isHit) {
         let dmg = attacker.type === "pc"
@@ -1445,7 +1454,12 @@ function handleAttack(attacker, target, action = null) {
         if (currentAttackType === "smite") {
             dmg = handleSmiteAttack(attacker, target, dmg);
         }
-
+		console.log(`${attacker.name} attacks ${target.name}`)
+		if (attacker.isEnsnaringStrike) {
+			attacker.isEnsnaringStrike = false;
+			target.statuseffect.ensnare = true;
+			Bus.emit('LOG', `⚔️ ${attacker.name} ensnared ${target.name}, they can't move and take continuous damage.`);
+		}
         Bus.emit('LOG', `⚔️ ${attacker.name} hits ${target.name} for ${dmg}!`);
         applyDamage(target, dmg);
 
@@ -1573,7 +1587,6 @@ function npcCastSpell(u) {
 
     update();
 }
-
 
 function handleRage(u) {
 
@@ -1823,7 +1836,12 @@ function handleRangedAttack(attacker, target) {
     const roll = Math.floor(Math.random() * 20) + 1;
     const totalHit = roll + (attacker.hitBonus || 0);
 
-    Bus.emit('LOG', `${attacker.name} fires a crossbow bolt! (Roll: ${roll} + ${attacker.hitBonus || 0})`);
+    Bus.emit('LOG', `${attacker.name} fires a bolt! (Roll: ${roll} + ${attacker.hitBonus || 0})`);
+
+	if (attacker.isEnsnaringStrike) {
+		attacker.isEnsnaringStrike = false;
+		target.statuseffect.ensnare = true;
+		}
 
     if (totalHit >= target.ac) {
         const dmgRoll = Math.floor(Math.random() * 8) + 1; // 1d8
@@ -1904,6 +1922,10 @@ function buildReactionPanel(panelId, pcList) {
             createReactionBtn(actions, "Rage", () => handleRage(pc), pc);
         }
 
+        if (pc.role === "Green Knight" && !pc.usedEnsnaringStrike) {
+            createReactionBtn(actions, "Ensnaring Strike", () => handleEnsnaringStrike(pc), pc);
+		}
+		
         if (isRogue(pc.role) && pc.canHide) {
             createReactionBtn(actions, "Hide", () => {
                 pc.isHiding = true;
@@ -1971,6 +1993,16 @@ function createReactionBtn(parent, text, func, pc) {
     };
 
     parent.appendChild(btn);
+}
+
+function handleEnsnaringStrike(pc) {
+	if (!pc.usedEnsnaringStrike) {
+		pc.usedEnsnaringStrike = true;
+		pc.isEnsnaringStrike = true;
+		Bus.emit('LOG', ` ${pc.name} concentrates ensnaring nature with their next strike.`);
+		
+		update();
+	}
 }
 
 function showReactionTitle() {
@@ -2047,13 +2079,6 @@ function endTurn() {
 
         if (next.hp <= 0) continue;
 
-        if (next.stunned) {
-            Bus.emit('LOG', `${next.name} is stunned and loses their turn! 🤣`);
-            next.stunned = false;
-			next.hadAction = false;
-            continue; // TURN COUNTS
-        }
-
         break; // Found next active unit
     }
 
@@ -2116,9 +2141,28 @@ function monsterAI() {
 
     if (u.stunned) {
         Bus.emit('LOG', `${u.name} is stunned and loses their turn! 🤣`);
+		hideDMScreen();
+		u.stunned = false;
         return endTurn();
     }
 
+
+    if (u.statuseffect.ensnare) {
+		u.speed = 0;
+		let amount = Math.floor(Math.random() * 6) + 1;
+		applyDamage(u, amount);
+		let release = Math.floor(Math.random() * 2) + 1;
+		if (release === 1) {
+			u.statuseffect.ensnare = false;
+			Bus.emit('LOG', `${u.name} has struggled free from the vines.`);
+			u.hasAction = false;
+			setTimeout(() => {
+				hideDMScreen();
+				endTurn();
+				}, 600);
+			return endTurn();
+			}
+	}		
     u.hasAction = true;
 
     // FREE ACTION — does not consume action or delay the AI

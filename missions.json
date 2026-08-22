@@ -4465,7 +4465,6 @@
   {
     "id": "dwoodfort3_123",
     "speaker": "Narrator",
-    "side": "right",
     "dialog": "In this final note, the party with the company of Marlnus heads back to the Inn, Finnik to his village, Wormtail to his sewers, and Awetruce to his final rest.",
     "interaction_type": "next",
     "target_id": "dwoodfort3_124"
@@ -4480,6 +4479,16 @@
   },
   {
     "id": "dwoodfort3_124end",
+    "target_id": "END"
+  },
+  {
+    "id": "dwoodfort4",
+    "speaker": "Narrator",
+    "dialog": "The party has returned to the guild with heavy hearts.",
+    "target_id": "END"
+  },
+  {
+    "id": "dwoodfort4",
     "target_id": "END"
   }
 ]

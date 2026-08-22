@@ -1432,6 +1432,11 @@ const tutorialStates = [
         condition: p => p.green_2 === 0,
         text: "Hold Guild Meeting",
         mission: "green2_001"
+    },
+    {
+        condition: p => p.dwood_fort2 === 4,
+        text: "Hold Guild Meeting",
+        mission: "dwoodfort4"
     }
 ];
 

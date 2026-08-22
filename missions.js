@@ -1401,6 +1401,15 @@ async function handleMissionEnd(sceneId) {
 			await recruitAdventurer("adv_Tonica");
 			player.patrons.adv_Tonica.location = 3;
 			player.patrons.adv_Tonica.status = "mission";
+			player.patrons.adv_Tonica.smite = 10;
+			player.patrons.adv_Tonica.cleric_spells = {};
+
+			player.patrons.adv_Tonica.cleric_spells[1] = 
+				player.patrons.adv_Tonica.cleric_spells[1] || {};
+
+			player.patrons.adv_Tonica.cleric_spells[1]["heroism"] = 1;
+
+
 			const partyKey = player.missions.current_mission.party;
 			buildPartyTraits(partyKey);
 			buildPartySummary(partyKey);
