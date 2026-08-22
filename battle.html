@@ -110,15 +110,6 @@ let staticObstacles = [],
 	 layOnHandsAmount = 0;
 	 layOnHandsCure = false; 
 
-fetch('/battle_dialog.JSON')
-  .then(r => r.json())
-  .then(json => {
-
-      // Share with parent
-      parent.BattleScenes = json;
-
-  });
-
 const STRDEX_TABLE = {
   str: ['warrior', 'fighter', 'barbarian', 'paladin', 'cleric', 'ranger', 'monk', 'shaman', 'swordmage', 'brute', 'squire', 'paladin', 'bouncer', 'fallen paladin', 'clericbot', 'druid', 'warlock'],
   dex: ['thief', 'rogue', 'bard', 'deputy', 'miner', 'arcane trickster', 'green knight']
@@ -680,6 +671,26 @@ async function init() {
 		// Base class
 		t.className = `token`;
 
+		// --- HP ELEMENTS ---
+		const hpText = document.createElement('div');
+		hpText.className = 'hp-text';
+		t.appendChild(hpText);
+
+		const hpBg = document.createElement('div');
+		hpBg.className = 'hp-bar-bg';
+		t.appendChild(hpBg);
+
+		const hpBar = document.createElement('div');
+		hpBar.className = 'hp-bar';
+		t.appendChild(hpBar);
+		// --- TEMP HP BAR ---
+		const tempBg = document.createElement('div');
+		tempBg.className = 'temp-bar-bg';
+		t.appendChild(tempBg);
+
+		const tempBar = document.createElement('div');
+		tempBar.className = 'temp-bar';
+		t.appendChild(tempBar);
 		// Apply size class
 		if (u.size === "L") {
 			t.classList.add("token-large");
@@ -742,6 +753,54 @@ function update() {
             t.style.top = (u.y * 54 + 4) + 'px';
             t.style.opacity = u.isHiding ? "0.5" : "1";
         }
+
+		// --- HP DISPLAY ---
+		const hpText = t.querySelector('.hp-text');
+		const hpBar  = t.querySelector('.hp-bar');
+		const hpBg   = t.querySelector('.hp-bar-bg');
+
+		// OPTION 1: Simple text "12/30"
+		if (hpText) {
+			hpText.innerText = `${u.hp}/${u.maxHp}`;
+		}
+		// Determine bar width based on size
+		let barWidth = 48; // default for normal tokens
+
+		if (u.size === "L") barWidth = 96;     // 2×2
+		if (u.size === "H") barWidth = 144;    // 3×3
+		// OPTION 2: Health bar
+		if (hpBar && hpBg) {
+			const pct = Math.max(0, u.hp / u.maxHp);
+			hpBar.style.width = (pct * barWidth) + "px";
+
+			// Color shift based on percentage
+			if (pct > 0.6) hpBar.style.background = "#00cc00";   // green
+			else if (pct > 0.3) hpBar.style.background = "#cccc00"; // yellow
+			else hpBar.style.background = "#cc0000"; // red
+		}
+		// --- TEMP HP DISPLAY ---
+		const tempBar = t.querySelector('.temp-bar');
+		const tempBg  = t.querySelector('.temp-bar-bg');
+
+		if (tempBar && tempBg) {
+			const temp = u.tempHp || 0;
+
+			if (temp <= 0) {
+				tempBar.style.width = "0px";
+				tempBg.style.width = "0px";
+			} else {
+				// Same scaling rules as HP bar
+				let barWidth = 48;
+				if (u.size === "L") barWidth = 96;
+				if (u.size === "H") barWidth = 144;
+
+				const pct = Math.min(1, temp / u.maxHp);
+
+				tempBg.style.width = barWidth + "px";
+				tempBar.style.width = (pct * barWidth) + "px";
+			}
+		}
+
     });
 
 
@@ -998,7 +1057,6 @@ function runSupportMageScript(u) {
 
     endTurn();
 }
-
 
 function refreshRound() {
 	    // ⭐ FIX 2: Reset actions and speed ONLY for living units
@@ -1486,7 +1544,6 @@ function getMonsterActionList(monster) {
 
     return list;
 }
-
 
 function handleSpell() {
     const u = units[initiativeOrder[turnIndex].index];

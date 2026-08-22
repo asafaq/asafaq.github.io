@@ -626,7 +626,7 @@ img:not([src]) {
 
 .dropzone {
     min-height: 60px; /* matches your 57px patron-slot size */
-    background: rgba(255, 255, 255, 0.08); /* faint white tint */
+    /*background: rgba(255, 255, 255, 0.08);  faint white tint */
     border: 1px dashed rgba(255, 255, 255, 0.2);
     border-radius: 6px;
 }

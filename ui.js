@@ -1161,12 +1161,16 @@ if (page === "mission_dwood_1") {
 
 
 if (page === "book") {
-  hideRightMenu()
+  hideRightMenu();
   fetch("book.json")
     .then(res => res.json())
     .then(book => {
       const container = document.getElementById("lore-sections");
 
+      // ⭐ Insert races as a nested object inside Rules
+      book.Rules.Races = loreData.Races;
+
+      // ⭐ Render book.json sections
       Object.keys(book).forEach(sectionName => {
         const sectionData = book[sectionName];
 
@@ -1177,36 +1181,69 @@ if (page === "book") {
         container.appendChild(sectionTitle);
 
         Object.keys(sectionData).forEach(itemName => {
+          const itemValue = sectionData[itemName];
+
+          // clickable title
           const itemTitle = document.createElement("div");
           itemTitle.textContent = itemName;
           itemTitle.style.cursor = "pointer";
           itemTitle.style.textDecoration = "underline";
           itemTitle.style.margin = "4px 0";
 
+          // hidden content container
           const itemContent = document.createElement("div");
-          itemContent.textContent = sectionData[itemName];
           itemContent.style.display = "none";
           itemContent.style.marginLeft = "15px";
-          itemContent.style.fontSize = "14px";
+          itemContent.style.fontSize = "17px";
 
-          // Toggle display
+          // ⭐ If the item is an object → render sub-items (Races)
+          if (typeof itemValue === "object") {
+            Object.keys(itemValue).forEach(subName => {
+              const sub = itemValue[subName];
+
+              const subTitle = document.createElement("div");
+              subTitle.textContent = subName;
+              subTitle.style.cursor = "pointer";
+              subTitle.style.textDecoration = "underline";
+              subTitle.style.margin = "4px 0";
+
+              const subContent = document.createElement("div");
+              subContent.style.display = "none";
+              subContent.style.marginLeft = "15px";
+              subContent.style.fontSize = "17px";
+
+              // build race text
+              const traits = sub.Traits.join(", ");
+              subContent.textContent = `${sub.desc} Traits: ${traits}`;
+
+              // toggle race open/close
+              subTitle.addEventListener("click", () => {
+                subContent.style.display =
+                  subContent.style.display === "none" ? "block" : "none";
+              });
+
+              itemContent.appendChild(subTitle);
+              itemContent.appendChild(subContent);
+            });
+          } else {
+            // ⭐ Normal text item (Alignment, Caste, etc.)
+            itemContent.textContent = itemValue;
+          }
+
+          // toggle main item (Races, Alignment, Caste)
           itemTitle.addEventListener("click", () => {
             itemContent.style.display =
               itemContent.style.display === "none" ? "block" : "none";
           });
 
-          // ⭐ EASTER EGG: Electrum one-time reward
+          // Electrum Easter Egg
           if (itemName.toLowerCase() === "electrum") {
             itemTitle.addEventListener("click", async () => {
               if (!player.data.electrumRewardGiven) {
                 player.data.electrumRewardGiven = true;
-
-                // Give the player 1 Electrum coin
-				startMissionSystem("Counterfeit_Electrum1")
-                //alert("You discovered a hidden secret! You received 1 Electrum coin.");
-				
+                startMissionSystem("Counterfeit_Electrum1");
                 addCounterfeitElectrum(1);
-				await storage.savePlayer(player);
+                await storage.savePlayer(player);
               }
             });
           }
@@ -1218,7 +1255,71 @@ if (page === "book") {
     });
 }
 
+
+
+
   evaluateNotices()
+}
+
+// ⭐⭐⭐ Helper function — now supports nested objects ⭐⭐⭐
+function injectRaceSection(container, racesObj) {
+  const title = document.createElement("h2");
+  title.textContent = "Races";
+  title.style.fontSize = "18px";
+  title.style.marginTop = "20px";
+  container.appendChild(title);
+
+  Object.keys(racesObj).forEach(raceName => {
+    const race = racesObj[raceName];
+
+    const line = document.createElement("div");
+    line.style.margin = "6px 0";
+    line.style.fontSize = "17px";
+
+    const traitsList = race.Traits.join(", ");
+
+    line.textContent = `${raceName}: ${race.desc} , Traits: ${traitsList}`;
+
+    container.appendChild(line);
+  });
+}
+
+function injectAllRaces(container, racesObj) {
+  const title = document.createElement("h2");
+  title.textContent = "Races";
+  title.style.fontSize = "18px";
+  title.style.marginTop = "20px";
+  container.appendChild(title);
+
+  Object.keys(racesObj).forEach(raceName => {
+    const race = racesObj[raceName];
+
+    // clickable title
+    const itemTitle = document.createElement("div");
+    itemTitle.textContent = raceName;
+    itemTitle.style.cursor = "pointer";
+    itemTitle.style.textDecoration = "underline";
+    itemTitle.style.margin = "4px 0";
+
+    // hidden content
+    const itemContent = document.createElement("div");
+    itemContent.style.display = "none";
+    itemContent.style.marginLeft = "15px";
+    itemContent.style.fontSize = "17px";
+
+    // one-line description + traits
+    const traitsList = race.Traits.join(", ");
+    itemContent.textContent = `${race.desc} , Traits: ${traitsList}`;
+
+    // toggle open/close
+    itemTitle.addEventListener("click", () => {
+      itemContent.style.display =
+        itemContent.style.display === "none" ? "block" : "none";
+    });
+
+    container.appendChild(itemTitle);
+    container.appendChild(itemContent);
+  });
 }
 
 function initContractsPage() {

@@ -676,10 +676,6 @@ function enablePatronDragDrop() {
     // Kept as the click-select / click-drop fallback.
     // --------------------------------------------------------
 
-    document.addEventListener(
-        "click",
-        handlePatronClick
-    );
 }
 
 

@@ -419,6 +419,7 @@
     "animated_bush": {
       "name": "Animated Bush",
       "type": "monster",
+	  "race": "plant",
       "hp": 4,
       "maxHp": 4,
       "speed": 6,
@@ -474,6 +475,7 @@
     "large_centipede": {
       "name": "Large Centipede",
       "type": "monster",
+	  "race": "insect",
       "hp": 12,
       "maxHp": 12,
       "speed": 6,
@@ -520,6 +522,7 @@
     "thief fly": {
       "name": "Thief Fly",
       "type": "monster",
+	  "race": "insect",
       "hp": 7,
       "maxHp": 7,
       "speed": 7,
@@ -542,7 +545,8 @@
 
     "kobolodog1": {
       "name": "Kobolodog",
-      "type": "humanoid",
+      "type": "monster",
+	  "race": "demihuman",
       "hp": 7,
       "maxHp": 7,
       "speed": 7,
@@ -565,7 +569,8 @@
 
     "goblin1": {
       "name": "Goblin Brute",
-      "type": "humanoid",
+      "type": "monster",
+	  "race": "demihuman",
       "hp": 7,
       "maxHp": 7,
       "speed": 7,
@@ -588,7 +593,8 @@
 
     "goblin2": {
       "name": "Goblin Annoyer",
-      "type": "humanoid",
+      "type": "monster",
+	  "race": "demihuman",
       "hp": 9,
       "maxHp": 9,
       "speed": 7,
@@ -619,7 +625,8 @@
 
     "goblin3": {
       "name": "Goblin Pester",
-      "type": "humanoid",
+      "type": "monster",
+	  "race": "demihuman",
       "hp": 5,
       "maxHp": 7,
       "speed": 7,
@@ -642,7 +649,8 @@
 
     "goblin4": {
       "name": "Goblin Savage",
-      "type": "humanoid",
+      "type": "monster",
+	  "race": "demihuman",
       "hp": 11,
       "maxHp": 11,
       "speed": 7,
@@ -665,7 +673,8 @@
 
     "goblin5": {
       "name": "Goblin Captain",
-      "type": "humanoid",
+      "type": "monster",
+	  "race": "demihuman",
       "hp": 14,
       "maxHp": 14,
       "speed": 7,
@@ -697,7 +706,8 @@
 
     "brigan1": {
       "name": "Brigan Darer",
-      "type": "humanoid",
+      "type": "monster",
+	  "race": "demihuman",
       "hp": 10,
       "maxHp": 10,
       "speed": 5,
@@ -730,6 +740,7 @@
     "brigan2": {
       "name": "Brigan Liar",
       "type": "monster",
+	  "race": "demihuman",
       "hp": 14,
       "maxHp": 14,
       "speed": 5,
@@ -762,6 +773,7 @@
     "hobgob1": {
       "name": "Hobgoblin Fighter",
       "type": "monster",
+	  "race": "demihuman",
       "hp": 28,
       "maxHp": 28,
       "speed": 5,
@@ -821,7 +833,8 @@
 
     "hobgob3": {
       "name": "Hobgoblin Brute",
-      "type": "demihuman",
+      "type": "monster",
+	  "race": "demihuman",
       "hp": 38,
       "maxHp": 38,
       "speed": 5,
@@ -851,7 +864,8 @@
 
     "hobgob4": {
       "name": "Hobgoblin Merc",
-      "type": "demihuman",
+      "type": "monster",
+	  "race": "demihuman",
       "hp": 38,
       "maxHp": 38,
       "speed": 5,
@@ -881,7 +895,8 @@
 
     "zombie1": {
       "name": "Rotting Zombie",
-      "type": "undead",
+	  "type": "monster",
+	  "race": "undead",
       "hp": 34,
       "maxHp": 34,
       "speed": 5,
@@ -926,7 +941,8 @@
     },
     "reddeer": {
       "name": "Red Deer",
-      "type": "beast",
+	  "type": "monster",
+	  "race": "beast",
       "hp": 40,
       "maxHp": 40,
       "speed": 9,
@@ -959,7 +975,8 @@
     },
     "owlbear": {
       "name": "Owl Bear",
-      "type": "beast",
+	  "type": "monster",
+	  "race": "beast",
       "hp": 59,
       "maxHp": 59,
       "speed": 7,

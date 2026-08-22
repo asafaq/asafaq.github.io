@@ -257,7 +257,7 @@ const PORTRAITS = {
     },
 
     Tonica: {
-        default: "/assets/patrons/tonica_L.png"
+        default: "/assets/patrons/tonica_l.png"
     },
 
 	Monsters: {
@@ -275,7 +275,7 @@ const PORTRAITS = {
     },
 	
 	Tonica: {
-        default: "/assets/patrons/tonica_L.png"
+        default: "/assets/patrons/tonica_l.png"
     },
 	
 	Crusher: {

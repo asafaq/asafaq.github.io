@@ -2930,12 +2930,12 @@
         "target_id": "dwood1_131end"
       },
       {
-        "text": "[Masocist] Counter-intimidate the Brigan.",
+        "text": "[Masochist] Counter-intimidate the Brigan.",
         "target_id": "dwood1_132",
         "color": "#FFD700",
 		"condition": {
           "type": "trait",
-          "value": "Masocist"        }
+          "value": "Masochist"        }
       }
     ]
   },

@@ -579,3 +579,66 @@
         transform: scale(1);
     }
 }
+
+.hp-text {
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    font-size: 12px;
+    font-weight: bold;
+    color: white;
+    text-shadow: 1px 1px 2px black;
+    pointer-events: none;
+	
+    z-index: 4;
+}
+
+.hp-bar-bg {
+    position: absolute;
+    bottom: -4px;
+    left: -1px;
+    height: 5px;
+    background: #550000;
+    border: 1px solid black;
+    border-radius: 3px;
+    opacity: 0.8;
+    pointer-events: none;
+}
+
+.hp-bar {
+    position: absolute;
+    bottom: -4px;
+    left: -1px;
+    height: 5px;
+    background: #00cc00;
+    border-radius: 3px;
+    opacity: 0.9;
+    pointer-events: none;
+}
+
+/* Temp HP background */
+.temp-bar-bg {
+    position: absolute;
+    bottom: -1px;   /* sits above the green bar */
+    left: -1px;
+    height: 5px;
+    background: #003366; /* dark blue */
+    border: 1px solid black;
+    border-radius: 3px;
+    opacity: 0.8;
+    pointer-events: none;
+}
+
+/* Temp HP foreground */
+.temp-bar {
+    position: absolute;
+    bottom: -1px;
+    left: -1px;
+    height: 5px;
+    background: #3399ff; /* bright blue */
+    border-radius: 3px;
+    opacity: 0.9;
+    pointer-events: none;
+}
