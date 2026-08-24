@@ -226,7 +226,6 @@
             <File name="README.md" />
             <File name="serv.bat" />
             <File name="style.css" />
-            <File name="styles.css" />
             <File name="tsconfig.json" />
             <File name="tutor.js" />
             <File name="ui.js" />
@@ -234,4 +233,5 @@
             <File name="workspace" />
         </Folder>
     </Project>
+    <Project name="Project Name" />
 </NotepadPlus>

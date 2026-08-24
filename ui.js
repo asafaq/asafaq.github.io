@@ -181,7 +181,7 @@ function getVisiblePatrons() {
 
 	const patronKeys = Object.keys(player.patrons);
 
-	const allowed = ["idle", "applicant", "mission", "secret", "rival", "dead", "NPC"];
+	const allowed = ["idle", "applicant", "mission", "secret", "rival", "dead", "NPC", "pet"];
 
 	const filteredIds = patronKeys.filter(id => {
 		return allowed.includes(player.patrons[id].status);
@@ -248,7 +248,13 @@ const pages = {
 		<div id="patron-container"></div>
 		</div>
 		  `,
-		// this patrons will open 2 default patrons, but in the future needs to be able to read from DB which partons are inhouse to display.
+	bakery: `
+	  <div id="bakery-container">
+        <img id="contract_parchment" src="/assets/guild/bakery.png" />
+		<p style="margin: 40px; color: black;"></p>
+		<div id="patron-container"></div>
+		</div>
+	`,
     contracts: `
 	  <div id="charsheet-container">
 		<div id="charsheet"></div>
@@ -978,37 +984,59 @@ main.innerHTML = typeof pages[page] === "function"
 
 	  initPatronClicks();
 	  displayRightMenu();
+
+	// Now safely check player:
+	if (player?.locations?.bakery) {
+		const menu = document.createElement('div');
+		menu.className = "bakery-sign";
+		menu.onclick = () => loadPage('bakery');
+		menu.innerHTML = `
+			<img src="assets/guild/bakery_sign.png" class="icon">
+		`;
+		document.getElementById('tavern-container').appendChild(menu);
+	}
+	  
 	}
 
+  if (page === "bakery") {
+	  
+  patronList = getVisiblePatrons().map(p => getHydratedAdventurer(p.id))
+	  const container = document.getElementById("patron-container");
+	  // RESET ALL SEATS BEFORE PLACING ANYONE
+	  bakerySlots.forEach(slot => slot.occupied = false);
+	  container.innerHTML = patronList
+		.filter(p => p.location === 11)
+		.map(patron => {
+		  const slot = findBestBakerySlot(patron);
 
-  // if (page === "tavern") {
-    // patronList = getVisiblePatrons();
-	// console.log(patronList);
-	// const container = document.getElementById("patron-container");
+		  return `
+			<div class="patron-wrapper"
+				 style="position:absolute; top:${slot.y}px; left:${slot.x}px;">
+			  <img src="${patron.icon}" class="item-icon">
+			  <div class="hover-zone"
+				   data-id="${patron.id}"
+				   data-large="${patron.large || patron.icon}">
+			  </div>
+			  <div class="tooltip"></div>
+			</div>
+		  `;
+		})
+		.join('');
 
-	// container.innerHTML = patronList
-	  // .filter(patron => patron.location === 2)
-	  // .map(patron => {
-		// const large = patron.large || "/assets/patrons/default.png";
+	  initPatronClicks();
+	  displayRightMenu();
 
-		// return `
-		  // <div class="patron-wrapper" 
-			   // style="position: absolute; top: ${patron.top}; left: ${patron.left};">
-			// <img src="${patron.icon}" class="item-icon">
-			// <div class="hover-zone"
-				 // data-id="${patron.id}"
-				 // data-large="${patron.large || patron.icon || 'assets/patrons/default.png'}">
-			// </div>
-			// <div class="tooltip"></div>
-		  // </div>
-		// `;
-	  // })
-	  // .join('');
-
-		// initPatronClicks();
-		// displayRightMenu();
-  // }
- 
+	  
+		const menu = document.createElement('div');
+		menu.className = "return-sign";
+		menu.onclick = () => loadPage('tavern');
+		menu.innerHTML = `
+			<img src="assets/guild/tavern_sign.png" class="icon">
+		`;
+		document.getElementById('bakery-container').appendChild(menu);
+	  
+  }
+	  
   if (page === "contracts") {
 	initContractsPage();
 	}
@@ -2393,7 +2421,6 @@ function getAllTraitsBundle(adv) {
         secretTraits: allSecretTraits(adv)
     };
 }
-
 
 function renderCharSheet(adv) {
     const sheet = document.getElementById("charsheet");

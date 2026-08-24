@@ -377,6 +377,13 @@ const tavernSlots = [
   { id: "corner2", x: 400, y: 370, priority: 1, type: "quiet", occupied: false },
 ];
 
+const bakerySlots = [
+  { id: "counter1", x: 280, y: 250, priority: 1, type: "counter", occupied: false },
+  { id: "counter2", x: 80, y: 320, priority: 1, type: "counter", occupied: false },
+  { id: "counter3", x: 300, y: 170, priority: 1, type: "counter", occupied: false },
+  { id: "door", x: 240, y: 460, priority: 2, type: "door", occupied: false }
+];
+
 // ---------------------------------------------
 // SCORING LOGIC
 // ---------------------------------------------
@@ -417,11 +424,11 @@ function scoreSlotForPatron(slot, patron) {
 // SLOT SELECTION
 // ---------------------------------------------
 
-function findBestGuildSlot(patron) {
+function findBestSlotGeneric(patron, slots, fallback) {
   let best = null;
   let bestScore = -Infinity;
 
-  for (const slot of guildSlots) {
+  for (const slot of slots) {
     if (slot.occupied) continue;
 
     const score = scoreSlotForPatron(slot, patron);
@@ -436,29 +443,30 @@ function findBestGuildSlot(patron) {
     return best;
   }
 
-  return { x: patron.left, y: patron.top };
+  return fallback;
 }
 
 
+function findBestGuildSlot(patron) {
+  return findBestSlotGeneric(
+    patron,
+    guildSlots,
+    { x: patron.left, y: patron.top }
+  );
+}
+
 function findBestSlot(patron) {
-  let best = null;
-  let bestScore = -Infinity;
+  return findBestSlotGeneric(
+    patron,
+    tavernSlots,
+    { x: 0, y: 0 }
+  );
+}
 
-  for (const slot of tavernSlots) {
-    if (slot.occupied) continue;
-
-    const score = scoreSlotForPatron(slot, patron);
-    if (score > bestScore) {
-      bestScore = score;
-      best = slot;
-    }
-  }
-
-  if (best) {
-    best.occupied = true;
-    return best;
-  }
-
-  // fallback if all seats are taken
-  return { x: 0, y: 0 };
+function findBestBakerySlot(patron) {
+  return findBestSlotGeneric(
+    patron,
+    bakerySlots,
+    { x: 0, y: 0 }
+  );
 }

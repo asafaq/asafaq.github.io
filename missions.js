@@ -1587,6 +1587,17 @@ async function handleMissionEnd(sceneId) {
 			});
 		},
 
+        "dwoodfort4end": async () => {
+            player.patrons.adv_Hogfather.location = 11;
+            player.patrons.adv_Hogmother.location = 11;
+			recruitAdventurer("adv_Hogwarts");
+            player.patrons.adv_Hogwarts.location = 11;
+            player.patrons.adv_Hogwarts.status = "nocontract";
+			player.locations = {};
+			player.locations.bakery = true;
+			
+		},
+			
         "dwoodfort3_124end": async () => {
             Journal.addEntry("You've faced the Ugress, killing her.");
             Journal.addEntry("Awetruce has died, fighting the Ugress.");
