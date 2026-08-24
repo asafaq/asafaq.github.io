@@ -4484,11 +4484,21 @@
   {
     "id": "dwoodfort4",
     "speaker": "Narrator",
-    "dialog": "The party has returned to the guild with heavy hearts.",
-    "target_id": "END"
+    "dialog": "The party has returned to the guild with heavy hearts. The Ugress have been defeated, her head presented to the godess Narlia, yet no one feels any safer. The power that has possesed her is still looming over the woods.",
+    "speaker2": "Hogmother",
+	"dialog2": "I wish I could say I had answers, or that answers were coming, but I can't. I will return with Hogfather to our bakery. All of you are welcome to visit and have a batch of my potions whenever you swing by.",
+    "speaker3": "Hogfather",
+    "side3": "right",
+	"dialog3": "And I am forever in your debt. It's been a pleasure meeting you and a priviledge to have your adventuring guild in this area. My bakery is always open for you.",
+    "interaction_type": "next",
+    "target_id": "dwoodfort4end"
   },
   {
-    "id": "dwoodfort4",
+    "id": "dwoodfort402",
+    "speaker": "Narrator"
+  },
+  {
+    "id": "dwoodfort4end",
     "target_id": "END"
   }
 ]

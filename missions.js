@@ -611,7 +611,16 @@ for (let i = 0; i < dialogGroups.length; i++) {
     } else {
         await typewriteMultiple(texts, target, { charDelay: 15, betweenDelay: 250 });
     }
+    // 🔥 NEW: wait for user to press OK before continuing
+    // 🔥 Only show OK button if:
+    // - this is a multi-dialog scene
+    // - this is NOT the last dialog window
+    const isMulti = dialogGroups.length > 1;
+    const isLast = i === dialogGroups.length - 1;
 
+    if (isMulti && !isLast) {
+        await waitForOk(win);
+    }
     // 4. After finishing this window, the next one will appear
 }
 
@@ -872,6 +881,22 @@ function resolveNextTarget(scene, player) {
     // Fallback
     return scene.target_id;
 }
+
+function waitForOk(win) {
+    return new Promise(resolve => {
+        const btn = document.createElement("button");
+        btn.textContent = "OK";
+        btn.classList.add("dialog-ok-btn");
+
+        btn.addEventListener("click", () => {
+            btn.remove();     // remove button after click
+            resolve();        // continue to next dialog
+        });
+
+        win.appendChild(btn);
+    });
+}
+
 
 function typewriteMultiple(texts, elementId, callback) {
     let i = 0;

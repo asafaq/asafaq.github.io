@@ -2454,7 +2454,9 @@ function renderCharSheet(adv) {
                         ${show(adv.currentHP) && show(adv.MaxHP)
                               ? `<li><strong>HP:</strong> ${adv.currentHP} / ${adv.MaxHP}</li>`
                               : ""}
-                        ${show(adv.size)        ? `<li><strong>Size:</strong> ${adv.size}</li>` : ""}
+                        ${adv.size && adv.size !== "Medium"
+							? `<li><strong>Size:</strong> ${adv.size}</li>` 
+							: ""}
                         ${show(adv.Exp)        ? `<li><strong>Exp:</strong> ${adv.Exp}</li>` : ""}
 						${(() => {
 							const hydrated = getHydratedAdventurer(adv.id);

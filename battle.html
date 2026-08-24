@@ -1443,6 +1443,13 @@ function handleAttack(attacker, target, action = null) {
     const isCrit = roll === 20;
     const isHit = isCrit || (roll !== 1 && totalToHit >= targetAC);
 
+    // --- ATTACK NAME ---
+    const attackName =
+        currentAttackType === "smite" ? "Divine Smite" :
+        action ? action.name : "Attack";
+
+    Bus.emit('LOG', `${attacker.name} uses ${attackName} on ${target.name}! (Roll: ${roll} + ${hitMod})`);
+
     // --- DAMAGE ---
     if (isHit) {
         let dmg = attacker.type === "pc"
@@ -1508,10 +1515,10 @@ function handleSmiteAttack(attacker, target, dmg) {
     Bus.emit('LOG', `🔆 Divine Smite! Radiant damage: ${radiant1 + radiant2}`);
 
     // Bonus vs undead or fiends
-    if (target.type === "undead" || target.type === "fiend") {
+    if (target.race === "undead" || target.race === "fiend") {
         let radiant3 = Math.floor(Math.random() * 8) + 1;
         dmg += radiant3;
-        Bus.emit('LOG', `💥 Extra radiant vs ${target.type}: ${radiant3}`);
+        Bus.emit('LOG', `💥 Extra radiant vs ${target.race}: ${radiant3}`);
     }
 
     return dmg;

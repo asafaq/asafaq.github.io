@@ -172,3 +172,28 @@
     background: rgba(0, 242, 255, 0.2);
     border-color: var(--m-neon-blue);
 }
+
+.dialog-ok-btn {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+
+    padding: 6px 14px;
+    background: #4a90e2;
+    color: white;
+    border: none;
+    border-radius: 6px;
+
+    font-size: 14px;
+    cursor: pointer;
+
+    transition: background 0.2s ease, transform 0.1s ease;
+}
+
+.dialog-ok-btn:hover {
+    background: #357ABD;
+}
+
+.dialog-ok-btn:active {
+    transform: scale(0.96);
+}
