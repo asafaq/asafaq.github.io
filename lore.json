@@ -363,6 +363,7 @@
       "large": "assets/patrons/desmond_l.png",
       "top": "270px",
       "left": "280px",
+	  "dialog": 1,
       "location": 2,
 	  "lounge": {
 		  "preferredType": "bar",

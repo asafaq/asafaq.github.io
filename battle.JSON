@@ -134,7 +134,7 @@
           "id": "armored_ogre",
           "count": 1,
           "spawns": [
-            { "x": 7, "y": 5 }
+            { "x": 5, "y": 4 }
           ]
         },
         {

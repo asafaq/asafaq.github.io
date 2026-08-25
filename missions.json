@@ -153,6 +153,78 @@
     "target_id": "patronend"
   },
   {
+    "id": "Desmond1",
+    "speaker": "Desmond",
+    "side": "left",
+    "dialog": "Hail guild master. What a fortunate turn of events to find lodgings in this area. I will have inquiries to hold in this area.",
+    "interaction_type": "selection",
+	"options": [
+          {
+		  "condition": {
+			  "type": "locations",
+			  "location": "bakery",
+			  "operator": "==",
+			  "value": false },
+          "text": "What would those inquiries be, Sir Desmond?",
+		  "target_id": "desmond2"
+        },
+        { "condition": {
+			  "type": "locations",
+			  "location": "bakery",
+			  "operator": "==",
+			  "value": true },
+          "text": "What would those inquiries be, Sir Desmond?",
+		  "target_id": "desmond3"
+        },
+		{
+          "text": "Pardon me Sir Desmond, why is your title Fallen Paladin?",
+		  "target_id": "desmond4"
+		}
+		]
+  },
+  {
+    "id": "desmond2",
+    "speaker": "Desmond",
+    "side": "left",
+    "dialog": "I'm afraid I'm unable to discuss as of now, there's a veil of fog keeping something sinister hidden, and I must find a way to locate it.",
+    "interaction_type": "next",
+    "target_id": "patronend"
+  },
+  {
+    "id": "desmond3",
+    "speaker": "Desmond",
+    "side": "left",
+    "dialog": "It's been difficult to locate but I have a lead on an abberation causing an interference with life and death, somewhere underground in this region. It will be difficult to track, it might even be hiding in the Underdark as far as we know.",
+	"dialog2": "Even though, it has to be done. I can't provide any more information.",
+    "interaction_type": "next",
+    "target_id": "desmondend"
+  },
+  {
+    "id": "desmond4",
+    "speaker": "Desmond",
+    "side": "left",
+    "dialog": "My title has been revoked due to insubordiation to my superiors. My orders were mostly to stand around town in polished armor, an ornated horse and boast to passerbys about my standing with the king.",
+	"dialog2": "While the kingdom's providence does descend from heavens through her knights, and serving the king is a divine mission, I couldn't bear the idleness of a city guard anymore.",
+	"dialog3": "There are more important matters for the kingdom to take to its attention.",
+    "interaction_type": "next",
+    "target_id": "desmond5"
+  },
+  {
+    "id": "desmond5",
+    "speaker": "Guild Master",
+    "side": "right",
+    "dialog": "How will you have authority without official title?",
+    "speaker2": "Desmond",
+    "side2": "left",
+	"dialog2": "The light did not forsaken me. I am a tool channeling holy retribution and I intend to make good judgement on that. The loss of my fellow men's partnership may not necessarily be a hindrance.",
+    "interaction_type": "next",
+    "target_id": "patronend"
+  },
+  {
+    "id": "desmondend",
+    "target_id": "END"
+  },
+  {
     "id": "patronend",
     "target_id": "END"
   },

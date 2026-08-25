@@ -315,6 +315,10 @@ const PORTRAITS = {
 	Ugress : {
         default: "/assets/missions/Ugress_l.png",
 		possesed: "/assets/missions/Ugress_possesed_l.png"
+    },
+	
+	Desmond : {
+        default: "assets/patrons/desmond_l.png"
     }
 };
 
@@ -756,6 +760,16 @@ async function optionConditionMet(opt) {
 
         return false;
     }
+
+	if (c.type === "locations") {
+
+		const actual = player?.locations?.[c.location];
+
+		if (c.operator === "==") return actual === c.value;
+		if (c.operator === "!=") return actual !== c.value;
+
+		return false;
+	}
 
     // --- SILVER ---
     if (c.type === "silver") {
