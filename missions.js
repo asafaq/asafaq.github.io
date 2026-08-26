@@ -1609,6 +1609,7 @@ async function handleMissionEnd(sceneId) {
             player.patrons.adv_Hogwarts.status = "nocontract";
 			player.locations = {};
 			player.locations.bakery = true;
+			player.missions.dwood_fort2 = 5;
 			
 		},
 			
@@ -1678,7 +1679,7 @@ function endMission() {
         "party_C": 5
     }[partyKey];
 	setPartyStatus(partyKey, "idle")
-
+	depositSatchel();
     // Remove dynamic location from all patrons in this party
     if (locationValue !== undefined) {
         for (const [id, patron] of Object.entries(player.patrons)) {
@@ -1698,6 +1699,84 @@ function endMission() {
     player.missions.current_mission.id = "";
     player.missions.current_mission.party = "";
 }
+
+function depositSatchel() {
+  console.log("=== STARTING DEPOSIT SATCHEL ===");
+  
+  if (typeof player === 'undefined') {
+    console.error("❌ ERROR: Global 'player' variable is completely undefined!");
+    return;
+  }
+
+  const satchel = player?.missions?.current_mission?.satchel;
+  if (!satchel) {
+    console.warn("⚠️ WARNING: satchel object not found.");
+    return;
+  }
+
+  // --- PART A: CURRENCIES ---
+  if (!player.treasury) player.treasury = { silver: 0, counterfeit_electrum: 0 };
+
+  const currencies = ['silver', 'counterfeit_electrum'];
+  currencies.forEach(currency => {
+    const amount = satchel[currency];
+    if (amount && amount > 0) {
+      const oldTreasury = player.treasury[currency] || 0;
+      player.treasury[currency] = oldTreasury + amount;
+      delete satchel[currency]; // Use delete since items are raw properties
+      console.log(`✅ MOVED CURRENCY: Treasury ${currency} -> ${player.treasury[currency]}`);
+    }
+  });
+
+  // --- PART B: PHYSICAL ITEMS ---
+  const stash = player?.data?.stash;
+  if (!Array.isArray(stash)) {
+    console.warn("⚠️ WARNING: player.data.stash is not a valid array.");
+    return;
+  }
+
+  // Extract all remaining keys left in the satchel (these are your items)
+  const remainingKeys = Object.keys(satchel);
+
+  remainingKeys.forEach(itemName => {
+    const itemQty = satchel[itemName];
+    
+    // Skip empty values or hidden engine properties
+    if (itemQty <= 0 || itemName === '[[Prototype]]') return;
+
+    console.log(`🔍 Processing item: ${itemName} (Qty: ${itemQty})`);
+
+    // Step 1: Look for an unlocked slot already holding this item type
+    let targetSlot = stash.find(slot => slot.item?.name === itemName && !slot.locked);
+
+    if (targetSlot) {
+      console.log(`🎯 Found MATCHING slot for ${itemName}.`);
+      targetSlot.qty += itemQty;
+      delete satchel[itemName]; // Clear from satchel
+    } else {
+      // Step 2: Look for the first unlocked, empty slot
+      targetSlot = stash.find(slot => (slot.item === null || slot.qty === 0) && !slot.locked);
+      
+      if (targetSlot) {
+        console.log(`🔲 Found EMPTY slot for ${itemName}.`);
+        targetSlot.item = { name: itemName }; // Build the item sub-object structure
+        targetSlot.qty = itemQty;
+        delete satchel[itemName]; // Clear from satchel
+      } else {
+        console.error(`❌ NO ROOM: Stash is full! Cannot deposit ${itemName}.`);
+      }
+    }
+  });
+
+  console.log("🗃️ Final Player Object State:", JSON.parse(JSON.stringify(player)));
+  console.log("=== ENDING DEPOSIT SATCHEL ===");
+  
+  // --- DATABASE PERSISTENCE ---
+  // If your game logs show success now but it STILL won't save on refresh, 
+  // you must call your save function right here. Example:
+  // if (typeof saveGame === 'function') saveGame();
+}
+
 
 function recruitRandoms() {
 

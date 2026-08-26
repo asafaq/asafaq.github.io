@@ -1594,12 +1594,13 @@
 		"name": "Large Club",
 		"icon": "/assets/inventory/apple.png",
 		"type": "weapon",
-		"dmg": 4
+		"dmg": 8
 	  },
 	  "Apple": {
 		"name": "Apple",
 		"icon": "/assets/inventory/apple.png",
 		"type": "food",
+		"stack": 10,
 		"heal": 2
 	  },
 	  "Carriage": {
@@ -1641,6 +1642,12 @@
 		"name": "Camp",
 		"icon": "/assets/inventory/apple.png",
 		"desc": "decription"
+	  },
+	  "Camp": {
+		"name": "Scroll of Magic Missile",
+		"icon": "/assets/inventory/apple.png",
+		"desc": "decription",
+		"stack": 10
 	  }
   }
 

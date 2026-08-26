@@ -1137,7 +1137,8 @@ main.innerHTML = typeof pages[page] === "function"
     });
 
 	document.getElementById("jstest").addEventListener("click", function () {
-		launchBattle("tutor_armogre");
+		//launchBattle("tutor_armogre");
+		depositSatchel();
 	});
   }
 

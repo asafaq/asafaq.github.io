@@ -1,51 +1,89 @@
 
 //inventory section
 function renderGuildStash() {
-  if (!player?.data?.stash || player.data.stash.length === 0) {
-  player.data.stash = Array.from({ length: 12 }, () => ({
-    item: null,
-    qty: 0,
-    locked: false
-  }));
-}
-  const stashGrid = document.querySelector("#guild-stash .stash-grid");
-
-  stashGrid.innerHTML = player.data.stash
-    .map((slot, index) => {
-      const icon = slot.item ? getItemIcon(slot.item) : "assets/guild/inventory_empty.png";
-      const qty = slot.qty > 1 ? `<div class="qty">${slot.qty}</div>` : "";
-      const lock = slot.locked ? `<div class="lock-overlay"></div>` : "";
-
-      return `
-        <div class="stash-slot" data-slot="${index}">
-          <img src="${icon}" class="item-icon">
-          ${qty}
-          ${lock}
-        </div>
-      `;
-    })
-    .join("");
-}
-
-function assignStashItemToAdventurer(stashIndex, adv) {
-  const slot = player.data.stash[stashIndex];
-  if (!slot.item) return false;
-
-  for (let i = 0; i < adv.loreData.inventory.length; i++) {
-    const invSlot = adv.loreData.inventory[i];
-
-    if (!invSlot.locked && invSlot.item === null) {
-      invSlot.item = slot.item;
-      invSlot.qty = slot.qty;
-
-      slot.item = null;
-      slot.qty = 0;
-
-      return true;
+    if (!player?.missions?.current_mission?.active) {
+        depositSatchel();
     }
-  }
 
-  return false;
+    if (!player?.data?.stash || player.data.stash.length === 0) {
+        player.data.stash = Array.from({ length: 12 }, () => ({
+            item: null,
+            qty: 0,
+            locked: false
+        }));
+    }
+
+    const stashGrid = document.querySelector("#guild-stash .stash-grid");
+    if (!stashGrid) return;
+
+    stashGrid.innerHTML = player.data.stash.map((slot, index) => {
+        const hasItem = slot.item !== null;
+        const itemData = hasItem ? loreData.inventory[slot.item] : null;
+
+        const icon = hasItem
+            ? (itemData?.icon || FALLBACK_ITEM_ICON)
+            : "assets/guild/inventory_empty.png";
+
+        const qtyHTML = slot.qty > 1
+            ? `<div class="qty">${slot.qty}</div>`
+            : "";
+
+        const lockHTML = slot.locked
+            ? `<div class="lock-overlay"></div>`
+            : "";
+
+        return `
+            <div class="stash-slot" data-slot="${index}">
+                <img src="${icon}" class="item-icon">
+                ${qtyHTML}
+                ${lockHTML}
+            </div>
+
+        `;
+    }).join("");
+}
+
+function renderTreasuryLine() {
+    const treasury = [];
+
+    const silver = Number(player?.treasury?.silver || 0);
+    const electrum = Number(player?.treasury?.counterfeit_electrum || 0);
+
+    if (silver > 0) {
+        treasury.push(`${silver} silver`);
+    }
+
+    if (electrum > 0) {
+        treasury.push(`${electrum} electrum`);
+    }
+
+    return treasury.length > 0
+        ? `Treasury: ${treasury.join(", ")}`
+        : "Treasury:";
+}
+
+function assignStashItemToAdventurer(stashIndex, advId) {
+    const stashSlot = player.data.stash[stashIndex];
+    if (!stashSlot.item) return false;
+
+    const adv = player.patrons[advId];
+    const inv = adv.inventory;
+
+    for (let i = 0; i < inv.length; i++) {
+        const slot = inv[i];
+
+        if (!slot.locked && slot.item === null) {
+            slot.item = stashSlot.item;
+            slot.qty = stashSlot.qty;
+
+            stashSlot.item = null;
+            stashSlot.qty = 0;
+
+            return true;
+        }
+    }
+
+    return false;
 }
 
 function initStashRightClicks() {
@@ -94,25 +132,23 @@ function initStashChestClick() {
   chest.addEventListener("click", () => {
     console.log("Chest clicked — toggling stash");
     grid.classList.toggle("hidden");
+	treasury = renderTreasuryLine();
+	pushStatus(treasury, 8000);
   });
 }
 
 //satchel section
 
 function renderGuildSatchelPage() {
-	
     const overlay = document.getElementById("overlay");
     overlay.innerHTML = templates.satchel_guild;
     overlay.classList.remove("hidden");
 
     initSatchel("guild");
 
-    // stash only exists in guild mode
-    //renderGuildStash();
-    // initStashChestClick();
-    // initStashRightClicks();
-}
+    const satchelGrid = overlay.querySelector(".satchel-grid");
 
+}
 function renderMissionSatchelPage() {
     const overlay = document.getElementById("overlay");
     overlay.innerHTML = templates.satchel_mission;
@@ -169,26 +205,33 @@ function renderSatchelGrid(grid, adventurers) {
             const isLocked = slot.locked;
             const hasItem = slot.item !== null;
 
-            if (isLocked) {
-                slotsHTML += `
-                    <div class="slot locked" data-slot="${i}">
-                        <div class="lock-icon"></div>
-                    </div>
-                `;
-            } 
-            else if (hasItem) {
-                const icon = loreData.inventory[slot.item]?.icon || FALLBACK_ITEM_ICON;
-                slotsHTML += `
-                    <div class="slot" data-slot="${i}">
-                        <img src="${icon}" class="item-icon" data-slot="${i}">
-                    </div>
-                `;
-            } 
-            else {
-                slotsHTML += `
-                    <div class="slot empty" data-slot="${i}"></div>
-                `;
-            }
+			if (slot.item !== null) {
+				// ITEM SLOT
+				const icon = loreData.inventory[slot.item]?.icon || FALLBACK_ITEM_ICON;
+				console.log("DRAWING ICON:", icon, "FOR ITEM:", slot.item);
+
+				slotsHTML += `
+					<div class="slot" data-slot="${i}">
+						<img src="${icon}" class="item-icon" data-slot="${i}">
+						${slot.locked ? `<div class="lock-icon"></div>` : ""}
+					</div>
+				`;
+			}
+			else if (slot.locked) {
+				// LOCKED EMPTY SLOT
+				slotsHTML += `
+					<div class="slot locked" data-slot="${i}">
+						<div class="lock-icon"></div>
+					</div>
+				`;
+			}
+			else {
+				// EMPTY SLOT
+				slotsHTML += `
+					<div class="slot empty" data-slot="${i}"></div>
+				`;
+			}
+
         });
 
         return `
@@ -284,7 +327,7 @@ function addItemToContainer(container, itemId, quantity = 1) {
 //B. Displaying Item Properties (The Tooltip/Info Logic) Since your inventory only stores the id, you need a helper to fetch the full data from your database for the UI.
 
 function getItemData(itemId) {
-  return itemDatabase[itemId] || null;
+  return loreData.inventory[itemId] || null;
 }
 
 function showItemDetails(itemId) {
@@ -304,21 +347,77 @@ function showItemDetails(itemId) {
 
 
 //Updated Move Logic (The "Refactored" Way)
-function transferItem(sourceInventory, index, targetInventory) {
-  const slot = sourceInventory[index];
-  if (!slot.item) return false;
+// moveItem(player.data.stash, stashIndex, player.patrons[advId].inventory);
+// moveItem(player.patrons[advId].inventory, slotIndex, player.data.stash);
+// moveItem(player.patrons[srcId].inventory, slotIndex, player.patrons[targetId].inventory);
+// moveItem(player.data.satchel, satchelIndex, player.patrons[advId].inventory);
 
-  const success = addItemToContainer(targetInventory, slot.item, slot.qty);
-  
-  if (success) {
-    // Clear the source slot
+
+function moveItem(sourceInv, sourceIndex, targetInv) {
+    const slot = sourceInv[sourceIndex];
+
+    // 1. Must have an item
+    if (!slot.item) {
+        pushStatus("No item in source slot");
+        return false;
+    }
+
+    // 2. Slot itself may be locked
+    if (slot.locked) {
+        pushStatus("This item is locked");
+        return false;
+    }
+
+    const itemId = slot.item;
+    const itemData = loreData.inventory[itemId];
+
+    // 3. If item is stackable, try stacking first
+    if (itemData.stack) {
+        const maxStack = itemData.stack;
+
+        // Find an existing stack
+        const existingStack = targetInv.find(s =>
+            !s.locked &&
+            s.item === itemId &&
+            s.qty < maxStack
+        );
+
+        if (existingStack) {
+            const spaceLeft = maxStack - existingStack.qty;
+
+            if (slot.qty <= spaceLeft) {
+                // All items fit
+                existingStack.qty += slot.qty;
+                slot.item = null;
+                slot.qty = 0;
+                return true;
+            } else {
+                // Partial stack fill
+                existingStack.qty = maxStack;
+                slot.qty -= spaceLeft;
+                // Continue to place remaining items in empty slot
+            }
+        }
+    }
+
+    // 4. Find first empty unlocked slot
+    const emptySlot = targetInv.find(s => !s.locked && s.item === null);
+
+    if (!emptySlot) {
+        pushStatus("No space in target inventory");
+        return false;
+    }
+
+    // 5. Move item (remaining qty if partial stack happened)
+    emptySlot.item = slot.item;
+    emptySlot.qty = slot.qty;
+
+    // 6. Clear source
     slot.item = null;
     slot.qty = 0;
-    return true;
-  }
-  return false;
-}
 
+    return true;
+}
 
 //1. The "Find Best Slot" Logic
 //This function cycles through the array and finds the first available spot. It respects your locked property.
@@ -350,7 +449,7 @@ function addItemToInventory(inventoryArray, itemID, amount = 1) {
 
 function updateUIItemDetails(itemID) {
   const detailsContainer = document.querySelector("#item-details");
-  const itemData = itemDatabase[itemID]; // Looking up the key in your DB
+  const itemData = loreData.inventory[itemID]; // Looking up the key in your DB
 
   if (!itemData) {
     detailsContainer.innerHTML = "Select an item to see details.";
