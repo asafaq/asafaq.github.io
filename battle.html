@@ -693,10 +693,12 @@ async function init() {
 		const hpBar = document.createElement('div');
 		hpBar.className = 'hp-bar';
 		t.appendChild(hpBar);
-		// --- TEMP HP BAR ---
+		// --- TEMP HP BAR --- condition-if disabled due to running only after init()
+		// if (u.tempHp && u.tempHp > 0) {
 		const tempBg = document.createElement('div');
 		tempBg.className = 'temp-bar-bg';
 		t.appendChild(tempBg);
+
 
 		const tempBar = document.createElement('div');
 		tempBar.className = 'temp-bar';
