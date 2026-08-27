@@ -978,6 +978,7 @@ img:not([src]) {
 	position: absolute;
 	top: 200px; 
 	left: 80px;
+	z-index: 43;
 }
 
 .stash-grid {

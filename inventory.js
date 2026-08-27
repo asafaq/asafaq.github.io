@@ -117,6 +117,7 @@ function initStashRightClicks() {
 function initStashChestClick() {
   const chest = document.getElementById("stash-chest-icon");
   const grid = document.querySelector("#guild-stash .stash-grid");
+  const overlay = document.getElementById("overlay");
 
   console.log("Chest element:", chest);
   console.log("Grid element:", grid);
@@ -130,16 +131,36 @@ function initStashChestClick() {
     return;
   }
 
+  if (!overlay) {
+    console.warn("Overlay NOT FOUND in DOM");
+    return;
+  }
+
+  // Clicking the chest toggles stash + overlay
   chest.addEventListener("click", () => {
     console.log("Chest clicked — toggling stash");
     grid.classList.toggle("hidden");
-	
-	initInventoryTooltips();
-	treasury = renderTreasuryLine();
-	pushStatus(treasury, 8000);
+
+    if (!grid.classList.contains("hidden")) {
+      // Stash is visible → show overlay
+      overlay.classList.remove("hidden");
+    } else {
+      // Stash is hidden → hide overlay
+      overlay.classList.add("hidden");
+    }
+
+    initInventoryTooltips();
+    treasury = renderTreasuryLine();
+    pushStatus(treasury, 8000);
+  });
+
+  // Clicking the overlay closes BOTH stash and overlay
+  overlay.addEventListener("click", () => {
+    overlay.classList.add("hidden");
+    grid.classList.add("hidden");
   });
 }
-
+//    document.body.appendChild(overlay);
 //satchel section
 
 function renderGuildSatchelPage() {

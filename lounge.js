@@ -310,13 +310,13 @@ function getTraitReferral(hydrated) {
   const traitDB = loreData.passive.traitReferrals;
 
   const matches = [];
-
-  for (const t of hydrated.traits) {
+  const all = allTraits(hydrated)
+  for (const t of all) {
     if (traitDB[t]) {
       matches.push(traitDB[t]);
     }
   }
-
+  console.log(all);
   if (matches.length === 0) {
     return "";
   }

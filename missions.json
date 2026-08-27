@@ -186,7 +186,7 @@
     "id": "desmond2",
     "speaker": "Desmond",
     "side": "left",
-    "dialog": "I'm afraid I'm unable to discuss as of now, there's a veil of fog keeping something sinister hidden, and I must find a way to locate it.",
+    "dialog": "I'm afraid I'm unable to discuss it as of now, there's a veil of fog keeping something sinister hidden, and I must find a way to locate it.",
     "interaction_type": "next",
     "target_id": "patronend"
   },
