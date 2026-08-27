@@ -1155,10 +1155,15 @@ img:not([src]) {
 
 /* Adventurer name above the slots */
 .adv-name {
+position: relative;
     color: white;
-    font-size: 14px;
+    font-size: 16px;
     text-align: center;
+    height: 0px;
+    z-index: 11;
+    left: -80px;
 }
+
 
 
 /* 4 item slots in a row */
@@ -1424,7 +1429,7 @@ img:not([src]) {
 
     color: white;
     font-size: 13px;
-    text-align: center;
+    text-align: left;
 
     pointer-events: none;
 

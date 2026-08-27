@@ -191,7 +191,7 @@ function getSatchelAdventurers(mode) {
     }
 
     if (mode === "mission") {
-        return patrons.filter(p => p.status === "on_mission");
+        return patrons.filter(p => p.status === "mission");
     }
 
     return [];
@@ -349,20 +349,7 @@ function getItemData(itemId) {
   return loreData.inventory[itemId] || null;
 }
 
-function showItemDetails(itemId) {
-  const item = getItemData(itemId);
-  if (!item) return;
 
-  // Example: Injecting into a tooltip or info panel
-  const infoPanel = document.querySelector("#item-info-panel");
-  infoPanel.innerHTML = `
-    <h3>${item.name || itemId}</h3>
-    <p>Type: ${item.type}</p>
-    <p>${item.dmg ? `Damage: ${item.dmg}` : ''}</p>
-    <p>${item.heal ? `Heal: ${item.heal}` : ''}</p>
-    <p><em>${item.desc || ""}</em></p>
-  `;
-}
 
 
 //Updated Move Logic (The "Refactored" Way)
@@ -582,20 +569,42 @@ function initInventoryTooltips() {
         // ITEM
         // -------------------------
 
-        if (hasItem) {
+		if (hasItem) {
 
-            const itemData = loreData.inventory[slot.item];
+			const itemData = loreData.inventory[slot.item];
 
-            const itemName =
-                itemData?.name ||
-                slot.item;
+			const itemName =
+				itemData?.name ||
+				slot.item;
 
-            html += `<strong>${itemName}</strong>`;
+			html += `<strong>${itemName}</strong>`;
 
-            if (slot.qty > 1) {
-                html += `<br>Qty: ${slot.qty}`;
-            }
-        }
+			if (slot.qty > 1) {
+				html += `<br>Qty: ${slot.qty}`;
+			}
+
+			// ------------------------------------
+			// UNIFORM FIELD RENDERING
+			// ------------------------------------
+
+			const skipFields = ["name", "icon", "stack"];
+
+			for (const key in itemData) {
+
+				if (skipFields.includes(key)) {
+					continue;
+				}
+
+				const val = itemData[key];
+
+				if (val !== undefined && val !== null) {
+				}
+				const label = (key === "desc") ? "description" : key;
+				
+				html += `<br>${label}: ${val}`;
+			}
+		}
+
 
 
         // -------------------------

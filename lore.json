@@ -1040,8 +1040,8 @@
     ],
     "adv_Bragain": [
       { "item": "Iron Pick", "qty": 1, "locked": true },
-      { "item": "Lantern", "qty": 1, "locked": true },
       { "item": "Knapsack", "qty": 1, "locked": true },
+      { "item": null, "qty": 0, "locked": false },
       { "item": null, "qty": 0, "locked": false }
     ],
     "adv_Claudio": [
@@ -1624,10 +1624,11 @@
     }
   },
   "inventory": {
-	  "Large_Club": {
+	  "Large Club": {
 		"name": "Large Club",
 		"icon": "/assets/inventory/apple.png",
 		"type": "weapon",
+		"desc": "It was probably a foot of a table. A rather large table.",
 		"dmg": 8
 	  },
 	  "Apple": {
@@ -1642,10 +1643,10 @@
 		"icon": "/assets/inventory/apple.png",
 		"desc": "A horse and buggy."
 	  },
-	  "Iron_Pick": {
+	  "Iron Pick": {
 		"name": "Iron Pick",
 		"icon": "/assets/inventory/apple.png",
-		"desc": "decription"
+		"desc": "A pick's head fixed on a sturdy cane."
 	  },
 	  "Lantern": {
 		"name": "Lantern",
@@ -1655,19 +1656,19 @@
 	  "Knapsack": {
 		"name": "Knapsack",
 		"icon": "/assets/inventory/apple.png",
-		"desc": "decription"
+		"desc": "Not very large, but can store gems."
 	  },
 	  "Lute": {
 		"name": "Lute",
 		"icon": "/assets/inventory/apple.png",
-		"desc": "decription"
+		"desc": "It sings as if it has a bird trapped inside."
 	  },
-	  "Scribe_Kit": {
+	  "Scribe Kit": {
 		"name": "Scribe Kit",
 		"icon": "/assets/inventory/apple.png",
-		"desc": "decription"
+		"desc": "For writing a parchment."
 	  },
-	  "Amyssa_Spellbook": {
+	  "Amyssa's Spellbook": {
 		"name": "Amyssa's Spellbook",
 		"icon": "/assets/inventory/apple.png",
 		"desc": "decription"
@@ -1675,13 +1676,18 @@
 	  "Camp": {
 		"name": "Camp",
 		"icon": "/assets/inventory/apple.png",
-		"desc": "decription"
+		"desc": "A kit that forms a makeshift cover."
 	  },
 	  "Magic Missile": {
 		"name": "Scroll of Magic Missile",
 		"icon": "/assets/inventory/apple.png",
-		"desc": "decription",
+		"desc": "Scroll of Magic Missile",
 		"stack": 10
+	  },
+	  "Crusher's Favorite Mug": {
+		"name": "Crusher's Favorite Mug",
+		"icon": "/assets/inventory/tankard_beer.png",
+		"desc": "A weathered tankard made of Oak and Tin, some etched inked markings on it give it a lot of character."
 	  }
   }
 

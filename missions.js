@@ -1256,7 +1256,7 @@ async function handleMissionEnd(sceneId) {
 			player.treasury ??= {};
 			player.treasury.silver ??= {};
 			player.treasury.silver = 50
-            player.missions.green_1 = 6;
+            player.missions.green_1 = 7;
             Journal.addEntry("You've found 50 silver coins and returned to the guild.");
 			endMission();
             loadPage("tavern");
@@ -1274,7 +1274,7 @@ async function handleMissionEnd(sceneId) {
             });
             player = await storage.loadPlayer(player.id);
             player.missions.tutorial = 2; 
-            player.missions.green_1 = 7;
+            player.missions.green_1 = 8;
             player.missions.green_2 ??= 0;
             player.patrons.adv_Amyssa.status = "idle";
 			recruitRandoms();
