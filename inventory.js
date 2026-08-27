@@ -63,30 +63,6 @@ function renderTreasuryLine() {
         : "Treasury:";
 }
 
-function assignStashItemToAdventurer(stashIndex, advId) {
-    const stashSlot = player.data.stash[stashIndex];
-    if (!stashSlot.item) return false;
-
-    const adv = player.patrons[advId];
-    const inv = adv.inventory;
-
-    for (let i = 0; i < inv.length; i++) {
-        const slot = inv[i];
-
-        if (!slot.locked && slot.item === null) {
-            slot.item = stashSlot.item;
-            slot.qty = stashSlot.qty;
-
-            stashSlot.item = null;
-            stashSlot.qty = 0;
-
-            return true;
-        }
-    }
-
-    return false;
-}
-
 function initStashRightClicks() {
   const stashContainer = document.getElementById("guild-stash");
 
@@ -119,33 +95,26 @@ function initStashChestClick() {
   const grid = document.querySelector("#guild-stash .stash-grid");
   const overlay = document.getElementById("overlay");
 
-  console.log("Chest element:", chest);
-  console.log("Grid element:", grid);
-  if (!chest) {
-    console.warn("Chest icon NOT FOUND in DOM");
-    return;
-  }
-
-  if (!grid) {
-    console.warn("Stash grid NOT FOUND in DOM");
-    return;
-  }
-
-  if (!overlay) {
-    console.warn("Overlay NOT FOUND in DOM");
-    return;
-  }
+  if (!chest || !grid || !overlay) return;
 
   // Clicking the chest toggles stash + overlay
   chest.addEventListener("click", () => {
     console.log("Chest clicked — toggling stash");
-    grid.classList.toggle("hidden");
 
-    if (!grid.classList.contains("hidden")) {
-      // Stash is visible → show overlay
+    // Remove satchel content from overlay
+    overlay.innerHTML = "";
+
+    // Hide any satchel windows in DOM
+    document.querySelectorAll(".adv-satchel").forEach(el => {
+      el.classList.add("hidden");
+    });
+
+    // Toggle stash visibility
+    const stashIsNowVisible = grid.classList.toggle("hidden") === false;
+
+    if (stashIsNowVisible) {
       overlay.classList.remove("hidden");
     } else {
-      // Stash is hidden → hide overlay
       overlay.classList.add("hidden");
     }
 
@@ -191,12 +160,12 @@ function openMissionSatchelContextMenu(advId, slot, x, y) {
 function initSatchel(mode) {
     const grid = document.querySelector(".satchel-grid");
     grid.classList.remove("hidden");
-
+	grid.dataset.mode = mode;
     const advs = getSatchelAdventurers(mode);
     renderSatchelGrid(grid, advs);
 
     initInventoryTooltips();
-
+	initInventoryTransferClicks();
     // Delay so DOM is ready
     setTimeout(() => initSatchelRightClicks(mode), 0);
 }
@@ -342,137 +311,10 @@ document.addEventListener("click", e => {
 //end of satchel section
 
 
-//Adding an Item (Smart Slot Finding) This function checks for existing stacks first (if you want stackable items) and then finds the first empty, unlocked slot.
-function addItemToContainer(container, itemId, quantity = 1) {
-  // 1. Optional: Try to find an existing stack first (if item is stackable)
-  const existingSlot = container.find(slot => slot.item === itemId && !slot.locked);
-  if (existingSlot) {
-    existingSlot.qty += quantity;
-    return true;
-  }
-
-  // 2. Find the first empty, unlocked slot
-  const emptySlot = container.find(slot => slot.item === null && !slot.locked);
-  
-  if (emptySlot) {
-    emptySlot.item = itemId;
-    emptySlot.qty = quantity;
-    return true;
-  }
-
-  console.warn("Inventory Full");
-  return false;
-}
-
-//B. Displaying Item Properties (The Tooltip/Info Logic) Since your inventory only stores the id, you need a helper to fetch the full data from your database for the UI.
 
 function getItemData(itemId) {
   return loreData.inventory[itemId] || null;
 }
-
-
-
-
-//Updated Move Logic (The "Refactored" Way)
-// moveItem(player.data.stash, stashIndex, player.patrons[advId].inventory);
-// moveItem(player.patrons[advId].inventory, slotIndex, player.data.stash);
-// moveItem(player.patrons[srcId].inventory, slotIndex, player.patrons[targetId].inventory);
-// moveItem(player.data.satchel, satchelIndex, player.patrons[advId].inventory);
-
-
-function moveItem(sourceInv, sourceIndex, targetInv) {
-    const slot = sourceInv[sourceIndex];
-
-    // 1. Must have an item
-    if (!slot.item) {
-        pushStatus("No item in source slot");
-        return false;
-    }
-
-    // 2. Slot itself may be locked
-    if (slot.locked) {
-        pushStatus("This item is locked");
-        return false;
-    }
-
-    const itemId = slot.item;
-    const itemData = loreData.inventory[itemId];
-
-    // 3. If item is stackable, try stacking first
-    if (itemData.stack) {
-        const maxStack = itemData.stack;
-
-        // Find an existing stack
-        const existingStack = targetInv.find(s =>
-            !s.locked &&
-            s.item === itemId &&
-            s.qty < maxStack
-        );
-
-        if (existingStack) {
-            const spaceLeft = maxStack - existingStack.qty;
-
-            if (slot.qty <= spaceLeft) {
-                // All items fit
-                existingStack.qty += slot.qty;
-                slot.item = null;
-                slot.qty = 0;
-                return true;
-            } else {
-                // Partial stack fill
-                existingStack.qty = maxStack;
-                slot.qty -= spaceLeft;
-                // Continue to place remaining items in empty slot
-            }
-        }
-    }
-
-    // 4. Find first empty unlocked slot
-    const emptySlot = targetInv.find(s => !s.locked && s.item === null);
-
-    if (!emptySlot) {
-        pushStatus("No space in target inventory");
-        return false;
-    }
-
-    // 5. Move item (remaining qty if partial stack happened)
-    emptySlot.item = slot.item;
-    emptySlot.qty = slot.qty;
-
-    // 6. Clear source
-    slot.item = null;
-    slot.qty = 0;
-
-    return true;
-}
-
-//1. The "Find Best Slot" Logic
-//This function cycles through the array and finds the first available spot. It respects your locked property.
-
-function findAvailableSlot(inventoryArray) {
-  // .findIndex returns the index of the first element that matches the condition
-  // returns -1 if no slot is found
-  return inventoryArray.findIndex(slot => slot.item === null && slot.locked === false);
-}
-
-// 2. Adding Items (Stash or Patron)
-// You can use this for looting, buying, or moving items.
-
-function addItemToInventory(inventoryArray, itemID, amount = 1) {
-  const slotIndex = findAvailableSlot(inventoryArray);
-
-  if (slotIndex !== -1) {
-    inventoryArray[slotIndex].item = itemID;
-    inventoryArray[slotIndex].qty = amount;
-    return true; // Success!
-  }
-
-  console.error("Inventory is full!");
-  return false; // Failed
-}
-
-// 3. Displaying Item Properties
-// To show info in your UI (like a description box or tooltip), you need to bridge the gap between the ID in the inventory and the Data in your database.
 
 function updateUIItemDetails(itemID) {
   const detailsContainer = document.querySelector("#item-details");
@@ -793,432 +635,487 @@ function initInventoryTooltips() {
     });
 }
 
-/*
-modifyAdventurerInventory("add", {
-    advId: "adv_Marlnus",
-    item: "Apple",
-    qty: 6
-});
+function addItemToContainer(container, itemId, quantity = 1) {
+    const itemData = loreData.inventory[itemId];
 
-modifyAdventurerInventory("remove", {
-    advId: "adv_Marlnus",
-    item: "Apple",
-    qty: 2
-});
-
-modifyAdventurerInventory("add", {
-    advId: "adv_Marlnus",
-    item: "Apple",
-    qty: 6,
-    slotIndex: 2
-});
-
-modifyAdventurerInventory("move", {
-    fromAdvId: "adv_Marlnus",
-    fromSlotIndex: 2,
-
-    toAdvId: "adv_Bragain",
-    toSlotIndex: 3
-});
-
-*/
-
-
-function modifyAdventurerInventory(action, options = {}) {
-    const {
-        advId,
-        item,
-        qty = 1,
-        slotIndex = null,
-
-        // Used by move
-        fromAdvId = null,
-        fromSlotIndex = null,
-        toAdvId = null,
-        toSlotIndex = null,
-
-        // Safety / special cases
-        allowLocked = false
-    } = options;
-
-    // --------------------------------------------------
-    // Helpers
-    // --------------------------------------------------
-
-    function getAdventurer(advId) {
-        return player?.patrons?.[advId] || null;
-    }
-
-    function getInventory(advId) {
-        const adv = getAdventurer(advId);
-        return adv?.inventory || null;
-    }
-
-    function isLocked(slot) {
-        return (
-            slot?.locked === true ||
-            slot?.locked === 1 ||
-            slot?.locked === "true"
-        );
-    }
-
-    function isEmpty(slot) {
-        return !slot || slot.item === null || slot.item === undefined;
-    }
-
-    function copySlot(slot) {
-        return {
-            item: slot?.item ?? null,
-            qty: Number(slot?.qty || 0),
-            locked: slot?.locked === true
-        };
-    }
-
-    // --------------------------------------------------
-    // Register only the changed slot
-    // --------------------------------------------------
-
-    function registerChange(advId, index, slot) {
-        const adv = getAdventurer(advId);
-
-        if (!adv) {
-            console.error("Inventory: adventurer not found:", advId);
-            return false;
-        }
-
-        if (!adv.inventory) {
-            adv.inventory = [];
-        }
-
-        // Only create entries for changed slots.
-        adv.inventory[index] = copySlot(slot);
-
-        return true;
-    }
-
-
-    // --------------------------------------------------
-    // ADD
-    // --------------------------------------------------
-
-    if (action === "add") {
-
-        if (!advId || !item) {
-            console.error("Inventory ADD requires advId and item");
-            return false;
-        }
-
-        const inventory = getInventory(advId);
-
-        if (!inventory) {
-            console.error("Inventory not found for:", advId);
-            return false;
-        }
-
-        let amount = Number(qty);
-
-        if (amount <= 0) {
-            return false;
-        }
-
-
-        // ----------------------------------------------
-        // If a specific slot was requested
-        // ----------------------------------------------
-
-        if (slotIndex !== null) {
-
-            const slot = inventory[slotIndex];
-
-            if (!slot) {
-                console.warn("Invalid inventory slot:", slotIndex);
-                return false;
-            }
-
-            if (isLocked(slot) && !allowLocked) {
-                console.warn("Cannot add to locked slot:", advId, slotIndex);
-                return false;
-            }
-
-            if (!isEmpty(slot) && slot.item !== item) {
-                console.warn("Slot already contains another item");
-                return false;
-            }
-
-            if (isEmpty(slot)) {
-                slot.item = item;
-                slot.qty = amount;
-            } else {
-                slot.qty += amount;
-            }
-
-            registerChange(advId, slotIndex, slot);
-
-            return true;
-        }
-
-
-        // ----------------------------------------------
-        // First try stacking existing item
-        // ----------------------------------------------
-
-        for (let i = 0; i < inventory.length; i++) {
-
-            const slot = inventory[i];
-
-            if (
-                !isLocked(slot) &&
-                slot.item === item
-            ) {
-                slot.qty += amount;
-
-                registerChange(advId, i, slot);
-
-                return true;
-            }
-        }
-
-
-        // ----------------------------------------------
-        // Otherwise find empty slot
-        // ----------------------------------------------
-
-        for (let i = 0; i < inventory.length; i++) {
-
-            const slot = inventory[i];
-
-            if (
-                !isLocked(slot) &&
-                isEmpty(slot)
-            ) {
-                slot.item = item;
-                slot.qty = amount;
-
-                registerChange(advId, i, slot);
-
-                return true;
-            }
-        }
-
-
-        console.warn("No available inventory slot for:", item);
-
+    if (!itemData) {
+        console.warn("Unknown item:", itemId);
         return false;
     }
 
+    let remaining = Number(quantity);
 
-    // --------------------------------------------------
-    // REMOVE
-    // --------------------------------------------------
+    if (remaining <= 0) return false;
 
-    if (action === "remove") {
-
-        if (!advId || !item) {
-            console.error("Inventory REMOVE requires advId and item");
-            return false;
-        }
-
-        const inventory = getInventory(advId);
-
-        if (!inventory) {
-            console.error("Inventory not found for:", advId);
-            return false;
-        }
-
-        let remaining = Number(qty);
-
-        if (remaining <= 0) {
-            return false;
-        }
+    const maxStack = Number(itemData.stack || 1);
 
 
-        // ----------------------------------------------
-        // Specific slot
-        // ----------------------------------------------
+    // -----------------------------------------
+    // 1. Fill existing stacks first
+    // -----------------------------------------
 
-        if (slotIndex !== null) {
+    if (maxStack > 1) {
 
-            const slot = inventory[slotIndex];
-
-            if (!slot || slot.item !== item) {
-                return false;
-            }
-
-            if (isLocked(slot) && !allowLocked) {
-                console.warn("Cannot remove from locked slot");
-                return false;
-            }
-
-            if (slot.qty > remaining) {
-
-                slot.qty -= remaining;
-
-            } else {
-
-                slot.item = null;
-                slot.qty = 0;
-            }
-
-            registerChange(advId, slotIndex, slot);
-
-            return true;
-        }
-
-
-        // ----------------------------------------------
-        // Search inventory
-        // ----------------------------------------------
-
-        for (let i = 0; i < inventory.length; i++) {
-
-            const slot = inventory[i];
+        for (const slot of container) {
 
             if (
-                !isLocked(slot) &&
-                slot.item === item
+                !slot.locked &&
+                slot.item === itemId &&
+                slot.qty < maxStack
             ) {
+                const space = maxStack - slot.qty;
+                const amount = Math.min(space, remaining);
 
-                if (slot.qty > remaining) {
-
-                    slot.qty -= remaining;
-
-                } else {
-
-                    remaining -= slot.qty;
-
-                    slot.item = null;
-                    slot.qty = 0;
-                }
-
-                registerChange(advId, i, slot);
+                slot.qty += amount;
+                remaining -= amount;
 
                 if (remaining <= 0) {
                     return true;
                 }
             }
         }
-
-
-        console.warn(
-            "Could not remove requested quantity:",
-            item,
-            qty
-        );
-
-        return false;
     }
 
 
-    // --------------------------------------------------
-    // MOVE
-    // --------------------------------------------------
+    // -----------------------------------------
+    // 2. Put remaining items into empty slots
+    // -----------------------------------------
 
-    if (action === "move") {
+    while (remaining > 0) {
 
-        if (
-            !fromAdvId ||
-            fromSlotIndex === null ||
-            !toAdvId ||
-            toSlotIndex === null
-        ) {
-            console.error(
-                "Inventory MOVE requires fromAdvId, fromSlotIndex, toAdvId and toSlotIndex"
-            );
-
-            return false;
-        }
-
-        const fromInventory = getInventory(fromAdvId);
-        const toInventory = getInventory(toAdvId);
-
-        if (!fromInventory || !toInventory) {
-            return false;
-        }
-
-        const fromSlot = fromInventory[fromSlotIndex];
-        const toSlot = toInventory[toSlotIndex];
-
-        if (!fromSlot || !toSlot) {
-            return false;
-        }
-
-        if (isEmpty(fromSlot)) {
-            console.warn("Cannot move from an empty slot");
-            return false;
-        }
-
-        if (
-            (isLocked(fromSlot) || isLocked(toSlot)) &&
-            !allowLocked
-        ) {
-            console.warn("Cannot move to/from locked slot");
-            return false;
-        }
-
-
-        // ----------------------------------------------
-        // Move into empty slot
-        // ----------------------------------------------
-
-        if (isEmpty(toSlot)) {
-
-            toSlot.item = fromSlot.item;
-            toSlot.qty = fromSlot.qty;
-
-            fromSlot.item = null;
-            fromSlot.qty = 0;
-        }
-
-
-        // ----------------------------------------------
-        // Same item → stack
-        // ----------------------------------------------
-
-        else if (toSlot.item === fromSlot.item) {
-
-            toSlot.qty += fromSlot.qty;
-
-            fromSlot.item = null;
-            fromSlot.qty = 0;
-        }
-
-
-        // ----------------------------------------------
-        // Different item → swap
-        // ----------------------------------------------
-
-        else {
-
-            const tempItem = toSlot.item;
-            const tempQty = toSlot.qty;
-
-            toSlot.item = fromSlot.item;
-            toSlot.qty = fromSlot.qty;
-
-            fromSlot.item = tempItem;
-            fromSlot.qty = tempQty;
-        }
-
-
-        // Register BOTH changed slots
-        registerChange(
-            fromAdvId,
-            fromSlotIndex,
-            fromSlot
+        const emptySlot = container.find(
+            slot => !slot.locked && slot.item === null
         );
 
-        registerChange(
-            toAdvId,
-            toSlotIndex,
-            toSlot
-        );
+        if (!emptySlot) {
+            console.warn("Not enough inventory space for:", itemId);
+            return false;
+        }
+
+        const amount = Math.min(maxStack, remaining);
+
+        emptySlot.item = itemId;
+        emptySlot.qty = amount;
+
+        remaining -= amount;
+    }
+
+    return true;
+}
+
+function transferItem(source, sourceIndex, target) {
+    const sourceSlot = source[sourceIndex];
+
+    if (!sourceSlot || !sourceSlot.item) {
+        pushStatus("No item in source slot");
+        return false;
+    }
+
+    if (sourceSlot.locked) {
+        pushStatus("This item is locked");
+        return false;
+    }
+
+    const itemId = sourceSlot.item;
+    const quantity = sourceSlot.qty;
+
+
+    // -----------------------------------------
+    // Try to add the entire stack
+    // -----------------------------------------
+
+    const originalTarget = target.map(slot => ({
+        item: slot.item,
+        qty: slot.qty
+    }));
+
+    if (addItemToContainer(target, itemId, quantity)) {
+
+        sourceSlot.item = null;
+        sourceSlot.qty = 0;
 
         return true;
     }
 
 
-    console.error("Unknown inventory action:", action);
+    // -----------------------------------------
+    // Target may have accepted part of it
+    // -----------------------------------------
 
+    let transferred = quantity;
+
+    const remainingInSource = sourceSlot.qty;
+
+    // Calculate how much disappeared from the source
+    // by checking target changes.
+    let targetAdded = 0;
+
+    target.forEach((slot, i) => {
+
+        const before = originalTarget[i];
+
+        if (slot.item === itemId) {
+            targetAdded += slot.qty - (
+                before.item === itemId
+                    ? before.qty
+                    : 0
+            );
+        }
+    });
+
+    transferred = targetAdded;
+
+
+    if (transferred > 0) {
+
+        sourceSlot.qty -= transferred;
+
+        if (sourceSlot.qty <= 0) {
+            sourceSlot.item = null;
+            sourceSlot.qty = 0;
+        }
+
+        return true;
+    }
+
+    pushStatus("No space in target inventory");
     return false;
 }
+
+/*
+transferItem(
+    player.data.stash,
+    stashIndex,
+    player.patrons[selectedAdventurer].inventory
+);
+
+transferItem(
+    player.patrons[advId].inventory,
+    slotIndex,
+    player.data.stash
+);
+
+transferItem(
+    player.patrons[sourceAdvId].inventory,
+    sourceSlotIndex,
+    player.patrons[targetAdvId].inventory
+);
+*/
+
+function openInventoryTransferMenu(source, sourceIndex, x, y, mode = null) {
+    const sourceSlot = source[sourceIndex];
+
+    if (!sourceSlot || !sourceSlot.item) {
+        return;
+    }
+
+    if (sourceSlot.locked) {
+        pushStatus("This item is locked");
+        return;
+    }
+
+    document.querySelector(".inventory-transfer-menu")?.remove();
+
+    const menu = document.createElement("div");
+    menu.className = "inventory-transfer-menu";
+
+    menu.innerHTML = `
+        <div class="transfer-title">
+            Move ${sourceSlot.item}
+        </div>
+
+        <div class="transfer-targets"></div>
+
+        <div class="transfer-cancel">
+            Cancel
+        </div>
+    `;
+
+    const targets = menu.querySelector(".transfer-targets");
+
+
+    // =========================================
+    // GUILD STASH
+    // =========================================
+
+    // Guild satchel can send to Guild Stash.
+    // Mission satchel cannot.
+    // Stash itself obviously cannot send to itself.
+    if (
+        mode === "guild" &&
+        source !== player.data.stash
+    ) {
+
+        const button = document.createElement("div");
+
+        button.className = "transfer-target";
+        button.textContent = "Guild Stash";
+
+        button.addEventListener("click", () => {
+
+            menu.remove();
+
+            const success = transferItem(
+                source,
+                sourceIndex,
+                player.data.stash
+            );
+
+            if (success) {
+                refreshInventoryAfterTransfer();
+            }
+        });
+
+        targets.appendChild(button);
+    }
+
+
+    // =========================================
+    // ADVENTURERS
+    // =========================================
+
+    Object.entries(player.patrons).forEach(([advId, adv]) => {
+
+        if (!adv.inventory) return;
+
+        // Don't offer the source adventurer
+        if (adv.inventory === source) return;
+
+
+        // -----------------------------------------
+        // Mission satchel
+        // -----------------------------------------
+
+        if (mode === "mission") {
+
+            // Only adventurers currently on mission
+            if (adv.status !== "mission") {
+                return;
+            }
+
+        }
+
+        // -----------------------------------------
+        // Guild satchel OR Guild stash
+        // -----------------------------------------
+
+        else {
+
+            // Only idle adventurers
+            if (adv.status !== "idle") {
+                return;
+            }
+        }
+
+
+        const button = document.createElement("div");
+
+        button.className = "transfer-target";
+        button.textContent = adv.name || advId;
+
+        button.addEventListener("click", () => {
+
+            menu.remove();
+
+            const success = transferItem(
+                source,
+                sourceIndex,
+                adv.inventory
+            );
+
+            if (success) {
+                refreshInventoryAfterTransfer();
+            }
+        });
+
+        targets.appendChild(button);
+    });
+
+    // =========================================
+    // CANCEL
+    // =========================================
+
+    menu.querySelector(".transfer-cancel").addEventListener(
+        "click",
+        () => {
+            menu.remove();
+        }
+    );
+
+
+    // =========================================
+    // SHOW
+    // =========================================
+
+    menu.style.position = "fixed";
+    menu.style.left = `${x}px`;
+    menu.style.top = `${y}px`;
+
+    document.body.appendChild(menu);
+
+
+    // Keep inside screen
+    requestAnimationFrame(() => {
+
+        const rect = menu.getBoundingClientRect();
+
+        let left = x;
+        let top = y;
+
+        if (left + rect.width > window.innerWidth) {
+            left = window.innerWidth - rect.width - 10;
+        }
+
+        if (top + rect.height > window.innerHeight) {
+            top = window.innerHeight - rect.height - 10;
+        }
+
+        menu.style.left = `${Math.max(10, left)}px`;
+        menu.style.top = `${Math.max(10, top)}px`;
+    });
+}
+
+function refreshInventoryAfterTransfer() {
+    // Refresh stash if it exists
+    if (document.querySelector("#guild-stash .stash-grid")) {
+        renderGuildStash();
+    }
+
+    // Refresh satchel if it exists
+    const satchelGrid = document.querySelector(".satchel-grid");
+
+    if (satchelGrid) {
+        const mode = satchelGrid.dataset.mode || "guild";
+
+        const advs = getSatchelAdventurers(mode);
+
+        renderSatchelGrid(satchelGrid, advs);
+    }
+
+    // Refresh any currently displayed adventurer inventory
+    if (typeof renderAdventurerInventory === "function") {
+        const advId = document.querySelector(
+            ".adventurer-inventory"
+        )?.dataset?.advId;
+
+        if (advId) {
+            renderAdventurerInventory(advId);
+        }
+    }
+}
+
+function initInventoryTransferClicks() {
+
+    if (document.body.dataset.inventoryTransferInitialized === "true") {
+        return;
+    }
+
+    document.body.dataset.inventoryTransferInitialized = "true";
+
+    document.addEventListener("click", e => {
+
+        const slot = e.target.closest(
+            ".slot, .stash-slot"
+        );
+
+        if (!slot) return;
+
+        // Don't interfere with buttons/menus
+        if (e.target.closest(".inventory-transfer-menu")) {
+            return;
+        }
+
+        // Must contain an actual item
+        const itemImage = slot.querySelector(
+            ".invitem-icon, .actual-item"
+        );
+
+        if (!itemImage) {
+            return;
+        }
+
+
+        // -----------------------------------------
+        // Adventurer / Satchel inventory
+        // -----------------------------------------
+
+        if (slot.classList.contains("slot")) {
+
+            const advEl = slot.closest(".adv-satchel");
+
+            if (!advEl) return;
+
+            const advId = advEl.dataset.id;
+            const slotIndex = Number(slot.dataset.slot);
+
+            const inventory =
+                player.patrons[advId]?.inventory;
+
+            if (!inventory) return;
+
+
+            // -------------------------------------
+            // Get satchel mode
+            // -------------------------------------
+
+            const satchelGrid =
+                slot.closest(".satchel-grid");
+
+            if (!satchelGrid) return;
+
+            const mode =
+                satchelGrid.dataset.mode;
+
+
+            console.log(
+                "TRANSFER:",
+                advId,
+                "MODE:",
+                mode
+            );
+
+
+            openInventoryTransferMenu(
+                inventory,
+                slotIndex,
+                e.clientX,
+                e.clientY,
+                mode
+            );
+
+            return;
+        }
+
+
+        // -----------------------------------------
+        // Guild stash
+        // -----------------------------------------
+
+        if (slot.classList.contains("stash-slot")) {
+
+            const slotIndex =
+                Number(slot.dataset.slot);
+
+
+            // Stash has its own mode
+            const mode = "stash";
+
+
+            console.log(
+                "TRANSFER: Guild Stash MODE:",
+                mode
+            );
+
+
+            openInventoryTransferMenu(
+                player.data.stash,
+                slotIndex,
+                e.clientX,
+                e.clientY,
+                mode
+            );
+        }
+    });
+}
+//initInventoryTransferClicks();
 

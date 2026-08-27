@@ -198,7 +198,7 @@ html, body {
   display: block;
   
 }.invitem-icon {
-  width: 34px;
+  width: 37px;
   display: block;
 }
 
@@ -269,7 +269,7 @@ html, body {
     border: 1px solid #333;
     color: white;
     pointer-events: none;
-    z-index: 10;
+    z-index: 46;
     white-space: nowrap;
 }
 
@@ -1059,7 +1059,7 @@ img:not([src]) {
     justify-content: center;
     align-items: center;
 
-    z-index: 41;
+    z-index: 43;
 }
 
 #overlay.hidden {
@@ -1095,7 +1095,7 @@ img:not([src]) {
 }
 
 #satchel {
-    background: #222;
+    background: rgba(0,0,0,0.6);
     padding: 20px;
     border-radius: 8px;
     width: 500px;
@@ -1111,6 +1111,7 @@ img:not([src]) {
     padding: 20px;
     width: 600px;
     min-height: 400px;
+	top: -100px;
 
     display: flex;
     flex-direction: column;
@@ -1189,18 +1190,12 @@ position: relative;
 .slot.empty {
     background: #333;
 }
-/* Locked slot */
-.slot.locked {
-    background: #222;
-    border-color: #666;
-}
-
 /* Locked overlay */
 .slot .lock-overlay {
     position: absolute;
     inset: 0;
     background: #000;
-    opacity: 0.6;
+    opacity: 0.4;
     z-index: 10;
     pointer-events: none;
 }
@@ -1439,4 +1434,54 @@ position: relative;
 
 .satchel-tooltip.visible {
     display: block;
+}
+
+.inventory-transfer-menu {
+    min-width: 160px;
+
+    background: #222;
+    border: 1px solid #666;
+    border-radius: 6px;
+
+    padding: 5px;
+
+    z-index: 100001;
+
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+}
+
+.transfer-title {
+    color: #aaa;
+    font-size: 12px;
+
+    padding: 5px 8px;
+    border-bottom: 1px solid #444;
+
+    margin-bottom: 3px;
+}
+
+.transfer-target,
+.transfer-cancel {
+    padding: 7px 10px;
+
+    color: white;
+    cursor: pointer;
+
+    border-radius: 4px;
+}
+
+.transfer-target:hover {
+    background: #444;
+}
+
+.transfer-cancel {
+    margin-top: 4px;
+
+    color: #aaa;
+    border-top: 1px solid #444;
+}
+
+.transfer-cancel:hover {
+    background: #333;
+    color: white;
 }

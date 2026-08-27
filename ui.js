@@ -2590,7 +2590,7 @@ window.addEventListener('load', scaleApp);
 
 
 function initGuildTooltips() {
-  document.querySelectorAll('.guild_License, .guild_stash').forEach(unit => {
+  document.querySelectorAll('.guild_License').forEach(unit => {
     const zone = unit.querySelector('.hover-zone');
     const tooltip = unit.querySelector('.tooltip');
 
