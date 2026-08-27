@@ -52,7 +52,6 @@ html, body {
   font-weight: 300; /* makes the letters slim */
   }
 
-
   html, body {
     background: #222;
     font-family: Arial, sans-serif;
@@ -78,8 +77,7 @@ html, body {
     will-change: transform;
 }
 
-
-  .app-frame {
+.app-frame {
     display: none;
     width: 540px;
     height: 960px;
@@ -197,6 +195,10 @@ html, body {
 /* 2. Your existing icon code stays as is */
 .item-icon {
   width: 60px;
+  display: block;
+  
+}.invitem-icon {
+  width: 34px;
   display: block;
 }
 
@@ -1015,6 +1017,8 @@ img:not([src]) {
 
 .stash-slot .actual-item {
   z-index: 5; /* Ensures the item stays on top of the empty slot background */
+  height: 48px;
+  width: 48px;
 }
 
 
@@ -1022,9 +1026,10 @@ img:not([src]) {
   position: absolute;
   bottom: 2px;
   right: 4px;
-  color: white;
+  color: #212121;
   font-size: 17px;
-  text-shadow: 1px 2px 2px black;
+  text-shadow: 0px 1px 8px black;
+  z-index: 6;
 }
 
 .lock-overlay {
@@ -1085,12 +1090,7 @@ img:not([src]) {
 
 .slot.locked {
     background: rgba(100,100,100,0.4);
-    pointer-events: none; /* cannot click */
-}
-
-.lock-icon {
-    filter: grayscale(100%) brightness(60%);
-    opacity: 0.6; /* optional */
+    /*pointer-events: none; cannot click */
 }
 
 #satchel {
@@ -1129,33 +1129,47 @@ img:not([src]) {
     z-index: 31;
 }
 
+
+/* 2 adventurers per row */
 .satchel-grid {
     width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
 }
 
+
+/* One adventurer's satchel */
 .adv-satchel {
     background: #1e1e1e;
-    padding: 4px;
+    padding: 8px;
     border-radius: 5px;
-    display: inline-grid;
-    grid-auto-flow: column;
-    align-content: space-around;
-    justify-content: space-between;
-    align-items: stretch;
-    justify-items: center;
-}
-.adv-items {
+
     display: flex;
+    flex-direction: column;
+    align-items: center;
+
     gap: 6px;
 }
 
+
+/* Adventurer name above the slots */
 .adv-name {
-	color: white; 
+    color: white;
+    font-size: 14px;
+    text-align: center;
 }
 
+
+/* 4 item slots in a row */
+.adv-items {
+    display: grid;
+    grid-template-columns: repeat(4, 36px);
+    gap: 6px;
+}
+
+
+/* Individual slot */
 .slot {
     width: 36px;
     height: 36px;
@@ -1163,17 +1177,63 @@ img:not([src]) {
     border: 1px solid #555;
     border-radius: 4px;
     position: relative;
+    overflow: hidden;
 }
 
+.slot.empty {
+    background: #333;
+}
+/* Locked slot */
 .slot.locked {
     background: #222;
     border-color: #666;
+}
+
+/* Locked overlay */
+.slot .lock-overlay {
+    position: absolute;
+    inset: 0;
+    background: #000;
+    opacity: 0.6;
+    z-index: 10;
+    pointer-events: none;
+}
+
+/* Quantity */
+.slot .qty {
+    position: absolute;
+
+    bottom: 0px;
+    right: 3px;
+
+    color: #ffffff;
+    font-size: 13px;
+
+    text-shadow: 0px 1px 8px black;
+
+    z-index: 20;
+
+    pointer-events: none;
+}
+
+/* Item icon */
+.slot .invitem-icon {
+    position: absolute;
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: contain;
+
+    z-index: 1;
 }
 
 .lock-icon {
     width: 100%;
     height: 100%;
     opacity: 0.6;
+	z-index: 5;
 }
 
 #portrait-scroll {
@@ -1347,5 +1407,30 @@ img:not([src]) {
     height: auto;            /* keep natural size */
 }
 
-	
-	
+.satchel-tooltip {
+    position: fixed;
+    z-index: 100000;
+
+    display: none;
+
+    min-width: 100px;
+    max-width: 220px;
+
+    padding: 6px 9px;
+
+    background: rgba(20, 20, 20, 0.95);
+    border: 1px solid #666;
+    border-radius: 5px;
+
+    color: white;
+    font-size: 13px;
+    text-align: center;
+
+    pointer-events: none;
+
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+}
+
+.satchel-tooltip.visible {
+    display: block;
+}

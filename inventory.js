@@ -33,11 +33,12 @@ function renderGuildStash() {
             : "";
 
         return `
-            <div class="stash-slot" data-slot="${index}">
-                <img src="${icon}" class="item-icon">
-                ${qtyHTML}
-                ${lockHTML}
-            </div>
+			<div class="stash-slot" data-slot="${index}">
+				<img src="assets/guild/inventory_empty.png" class="empty-bg">
+				${hasItem ? `<img src="${icon}" class="actual-item">` : ""}
+				${qtyHTML}
+				${lockHTML}
+			</div>
 
         `;
     }).join("");
@@ -170,6 +171,8 @@ function initSatchel(mode) {
     const advs = getSatchelAdventurers(mode);
     renderSatchelGrid(grid, advs);
 
+    initSatchelTooltips();
+
     // Delay so DOM is ready
     setTimeout(() => initSatchelRightClicks(mode), 0);
 }
@@ -192,46 +195,60 @@ function getSatchelAdventurers(mode) {
 }
 
 function renderSatchelGrid(grid, adventurers) {
-    console.log("RENDER INPUT:", adventurers);  // ← ADD THIS HERE
+    console.log("RENDER INPUT:", adventurers);
+
     grid.innerHTML = adventurers.map(adv => {
         const hydrated = getHydratedAdventurer(adv.id);
-		
+
         console.log("HYDRATED:", hydrated);
         console.log("INVENTORY:", hydrated.inventory);
+
         let slotsHTML = "";
 
-		hydrated.inventory.forEach((slot, i) => {
+        hydrated.inventory.forEach((slot, i) => {
 
-            const isLocked = slot.locked;
-            const hasItem = slot.item !== null;
+			const isLocked =
+				slot.locked === true ||
+				slot.locked === 1 ||
+				slot.locked === "true";
+				
+            const hasItem = slot.item !== null && slot.item !== undefined;
 
-			if (slot.item !== null) {
-				// ITEM SLOT
-				const icon = loreData.inventory[slot.item]?.icon || FALLBACK_ITEM_ICON;
-				console.log("DRAWING ICON:", icon, "FOR ITEM:", slot.item);
+            // Quantity
+            const qtyHTML = hasItem && slot.qty > 1
+                ? `<div class="qty">${slot.qty}</div>`
+                : "";
 
-				slotsHTML += `
-					<div class="slot" data-slot="${i}">
-						<img src="${icon}" class="item-icon" data-slot="${i}">
-						${slot.locked ? `<div class="lock-icon"></div>` : ""}
-					</div>
-				`;
-			}
-			else if (slot.locked) {
-				// LOCKED EMPTY SLOT
-				slotsHTML += `
-					<div class="slot locked" data-slot="${i}">
-						<div class="lock-icon"></div>
-					</div>
-				`;
-			}
-			else {
-				// EMPTY SLOT
-				slotsHTML += `
-					<div class="slot empty" data-slot="${i}"></div>
-				`;
-			}
+            // Item icon
+            const icon = hasItem
+                ? (loreData.inventory[slot.item]?.icon || FALLBACK_ITEM_ICON)
+                : "";
 
+            console.log(
+                "SLOT:",
+                i,
+                "ITEM:", slot.item,
+                "QTY:", slot.qty,
+                "LOCKED:", isLocked
+            );
+
+            slotsHTML += `
+                <div class="slot ${isLocked ? "locked" : ""} ${hasItem ? "has-item" : "empty"}"
+                     data-slot="${i}">
+
+                    ${hasItem
+                        ? `<img src="${icon}" class="invitem-icon" data-slot="${i}">`
+                        : ""
+                    }
+
+                    ${qtyHTML}
+
+                    ${isLocked
+                        ? `<div class="lock-overlay"></div>`
+                        : ""
+                    }
+                </div>
+            `;
         });
 
         return `
@@ -242,7 +259,6 @@ function renderSatchelGrid(grid, adventurers) {
         `;
     }).join("");
 }
-
 
 function initSatchelRightClicks(mode) {
     const overlay = document.getElementById("overlay");
@@ -263,7 +279,7 @@ function initSatchelRightClicks(mode) {
             const slot = slotEl.dataset.slot;
 
             // Only items should open the real menu
-            if (slotEl.querySelector(".item-icon")) {
+            if (slotEl.querySelector(".invitem-icon")) {
                 if (mode === "guild") {
                     openGuildSatchelContextMenu(advId, slot, e.pageX, e.pageY);
                 } else {
@@ -466,4 +482,234 @@ function updateUIItemDetails(itemID) {
       ${itemData.type ? `<li>Type: ${itemData.type}</li>` : ""}
     </ul>
   `;
+}
+
+function initSatchelTooltips() {
+    const overlay = document.getElementById("overlay");
+    const tooltip = document.getElementById("satchel-tooltip");
+
+    if (!overlay || !tooltip) {
+        console.error("Satchel tooltip: missing overlay or tooltip");
+        return;
+    }
+
+    // Don't install the handlers more than once
+    if (overlay.dataset.satchelTooltipsInitialized === "true") {
+        return;
+    }
+
+    overlay.dataset.satchelTooltipsInitialized = "true";
+
+    let activeSlot = null;
+
+    function getSlotData(slotEl) {
+        const advEl = slotEl.closest(".adv-satchel");
+        if (!advEl) return null;
+
+        const advId = advEl.dataset.id;
+        const slotIndex = Number(slotEl.dataset.slot);
+
+        const hydrated = getHydratedAdventurer(advId);
+        const slot = hydrated?.inventory?.[slotIndex];
+
+        if (!slot) return null;
+
+        return {
+            advEl,
+            advId,
+            slotIndex,
+            slot
+        };
+    }
+
+    function showTooltip(slotEl, x, y) {
+        const data = getSlotData(slotEl);
+
+        if (!data) {
+            hideTooltip();
+            return;
+        }
+
+        const { slot } = data;
+
+        const isLocked =
+            slot.locked === true ||
+            slot.locked === 1 ||
+            slot.locked === "true";
+
+        const hasItem =
+            slot.item !== null &&
+            slot.item !== undefined;
+
+        // Empty + unlocked = no tooltip
+        if (!hasItem && !isLocked) {
+            hideTooltip();
+            return;
+        }
+
+        let html = "";
+
+        if (hasItem) {
+            const itemData = loreData.inventory[slot.item];
+
+            const itemName =
+                itemData?.name ||
+                slot.item;
+
+            html += `<strong>${itemName}</strong>`;
+
+            if (slot.qty > 1) {
+                html += `<br>Qty: ${slot.qty}`;
+            }
+        }
+
+        if (isLocked) {
+            if (html) {
+                html += `<br>`;
+            }
+
+            html += `<span>Locked</span>`;
+        }
+
+        tooltip.innerHTML = html;
+        tooltip.classList.add("visible");
+
+        activeSlot = slotEl;
+
+        positionTooltip(x, y);
+    }
+
+    function positionTooltip(x, y) {
+        const padding = 10;
+        const offset = 12;
+
+        const rect = tooltip.getBoundingClientRect();
+
+        let left = x + offset;
+        let top = y + offset;
+
+        // Right edge
+        if (left + rect.width + padding > window.innerWidth) {
+            left = x - rect.width - offset;
+        }
+
+        // Bottom edge
+        if (top + rect.height + padding > window.innerHeight) {
+            top = y - rect.height - offset;
+        }
+
+        // Left / top edges
+        left = Math.max(padding, left);
+        top = Math.max(padding, top);
+
+        tooltip.style.left = `${left}px`;
+        tooltip.style.top = `${top}px`;
+    }
+
+    function hideTooltip() {
+        tooltip.classList.remove("visible");
+        tooltip.innerHTML = "";
+        activeSlot = null;
+    }
+
+
+    // ==========================================
+    // MOUSE
+    // ==========================================
+
+    overlay.addEventListener("pointerover", e => {
+
+        if (e.pointerType !== "mouse") return;
+
+        const slotEl = e.target.closest(".slot");
+
+        if (!slotEl || !overlay.contains(slotEl)) {
+            return;
+        }
+
+        // Don't retrigger when moving between
+        // children inside the same slot
+        if (slotEl === activeSlot) {
+            return;
+        }
+
+        showTooltip(
+            slotEl,
+            e.clientX,
+            e.clientY
+        );
+    });
+
+
+    overlay.addEventListener("pointermove", e => {
+
+        if (e.pointerType !== "mouse") return;
+
+        if (!activeSlot) return;
+
+        // Keep tooltip following mouse
+        positionTooltip(
+            e.clientX,
+            e.clientY
+        );
+    });
+
+
+    overlay.addEventListener("pointerout", e => {
+
+        if (e.pointerType !== "mouse") return;
+
+        const slotEl = e.target.closest(".slot");
+
+        if (!slotEl) return;
+
+        const related = e.relatedTarget;
+
+        // Still inside this slot
+        if (related && slotEl.contains(related)) {
+            return;
+        }
+
+        hideTooltip();
+    });
+
+
+    // ==========================================
+    // TOUCH
+    // ==========================================
+
+    overlay.addEventListener("pointerup", e => {
+
+        if (e.pointerType !== "touch") return;
+
+        const slotEl = e.target.closest(".slot");
+
+        if (!slotEl || !overlay.contains(slotEl)) {
+            hideTooltip();
+            return;
+        }
+
+        // Tap same slot again = close
+        if (activeSlot === slotEl) {
+            hideTooltip();
+            return;
+        }
+
+        showTooltip(
+            slotEl,
+            e.clientX,
+            e.clientY
+        );
+    });
+
+
+    // Tap somewhere outside a slot
+    document.addEventListener("pointerup", e => {
+
+        if (e.pointerType !== "touch") return;
+
+        if (!e.target.closest(".slot")) {
+            hideTooltip();
+        }
+    });
 }

@@ -78,7 +78,7 @@
       "proficiency_weapon": "Martial",
       "inventory" : [
 		  { "item": "Large Club", "qty": 1, "locked": true },
-		  { "item": null, "qty": 0, "locked": false },
+		  { "item": "Apple", "qty": 6, "locked": false },
 		  { "item": null, "qty": 0, "locked": false },
 		  { "item": null, "qty": 0, "locked": false }
 		],
@@ -1557,6 +1557,8 @@
       "Amyssa": "Amyssa is focused on her scrolls scribing.",
       "Claudio": "The joyful Claudio is working the crowd, and playing his lute between sessions.",
       "Hogperson": "Hogperson is a pleasant company to be around.",
+      "Hogmother": "Hogmother is a pleasant company to be around, always has an idea for a new batch.",
+	  "Hogfather": "The smell of yeast and baking fills the air of Hogfather's bakery. His mood is up and he's in his element.",
 	  "Crusher": "The Bouncer's watchful eye keeping everyone in order.",
       "default": "They possess unique qualities that set them apart."
     },
@@ -1582,11 +1584,12 @@
     "hiringReferrals": {
       "Bragain": "Bragain can be assigned to a mining location, but he's currently enjoying his leisure time socializing and drinking.",
       "Amyssa": "Amyssa is focused on her scrolls scribing.",
-      "Comedian": "The joyful Claudio is working the crowd, and playing his lute between sessions.",
-      "Cheerful": "The Cheerful Hogperson is a pleasant company to be around.",
-      "default": "They possess unique qualities that set them apart.",
+      "Claudio": "The joyful Claudio is working the crowd, and playing his lute between sessions.",
+      "Hogperson": "The Cheerful Hogperson is a pleasant company to be around.",
 	  "Crusher": "Crusher is an experienced tavern bouncer, and will keep the peace in the inn. Or else.",
-	  "Desmond": "Experienced warrior, but carries a shrouded past and perhaps something more."
+	  "Desmond": "Experienced warrior, but carries a shrouded past and perhaps something more.",
+	  "Tinman B-B-TR": "The Warforged is a pleasant conversationalist, and is very wise.",
+      "default": "They possess unique qualities that set them apart."
     }
   },
   "inventory": {
@@ -1643,7 +1646,7 @@
 		"icon": "/assets/inventory/apple.png",
 		"desc": "decription"
 	  },
-	  "Camp": {
+	  "Magic Missile": {
 		"name": "Scroll of Magic Missile",
 		"icon": "/assets/inventory/apple.png",
 		"desc": "decription",

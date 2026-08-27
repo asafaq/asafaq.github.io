@@ -213,11 +213,10 @@
     "id": "desmond5",
     "speaker": "Guild Master",
     "side": "right",
+    "side2": "left",
     "dialog": "How will you have authority without official title?",
     "speaker2": "Desmond",
-    "side2": "left",
-	"dialog2": "A city officer does not command the light, the light did not forsaken me. Divinity still chooses to channel holy retribution through me and I intend to make good judgement on that. The loss of my fellow men's partnership may not necessarily be a hindrance.",
-	"dialog3": "There's something out there, it doesn't rest. I don't need authority to see to it myself.",
+	"dialog2": "A city officer does not command the light, the light did not forsaken me. Divinity still chooses to channel holy retribution through me and I intend to make good judgement on that. The loss of my fellow men's partnership may not necessarily be a hindrance.\n\nThere's something out there, it doesn't rest. I don't need authority to see to it myself.",
     "interaction_type": "next",
     "target_id": "patronend"
   },
