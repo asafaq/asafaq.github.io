@@ -1155,7 +1155,7 @@ async function handleMissionEnd(sceneId) {
     const endings = {
 // --- TUTORIAL 1 ---
 
-"tutor1_110": async () => {
+"tutor1_110end": async () => {
 
     // Load player (async)
     player = await storage.loadPlayer(player.id);

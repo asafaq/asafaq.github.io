@@ -133,6 +133,8 @@ function initStashChestClick() {
   chest.addEventListener("click", () => {
     console.log("Chest clicked — toggling stash");
     grid.classList.toggle("hidden");
+	
+	initInventoryTooltips();
 	treasury = renderTreasuryLine();
 	pushStatus(treasury, 8000);
   });
@@ -150,6 +152,7 @@ function renderGuildSatchelPage() {
     const satchelGrid = overlay.querySelector(".satchel-grid");
 
 }
+
 function renderMissionSatchelPage() {
     const overlay = document.getElementById("overlay");
     overlay.innerHTML = templates.satchel_mission;
@@ -171,7 +174,7 @@ function initSatchel(mode) {
     const advs = getSatchelAdventurers(mode);
     renderSatchelGrid(grid, advs);
 
-    initSatchelTooltips();
+    initInventoryTooltips();
 
     // Delay so DOM is ready
     setTimeout(() => initSatchelRightClicks(mode), 0);
@@ -484,45 +487,71 @@ function updateUIItemDetails(itemID) {
   `;
 }
 
-function initSatchelTooltips() {
+function initInventoryTooltips() {
     const overlay = document.getElementById("overlay");
     const tooltip = document.getElementById("satchel-tooltip");
 
     if (!overlay || !tooltip) {
-        console.error("Satchel tooltip: missing overlay or tooltip");
+        console.error("Inventory tooltip: missing overlay or tooltip");
         return;
     }
 
-    // Don't install the handlers more than once
-    if (overlay.dataset.satchelTooltipsInitialized === "true") {
+    if (overlay.dataset.inventoryTooltipsInitialized === "true") {
         return;
     }
 
-    overlay.dataset.satchelTooltipsInitialized = "true";
+    overlay.dataset.inventoryTooltipsInitialized = "true";
 
     let activeSlot = null;
 
+
     function getSlotData(slotEl) {
-        const advEl = slotEl.closest(".adv-satchel");
-        if (!advEl) return null;
 
-        const advId = advEl.dataset.id;
-        const slotIndex = Number(slotEl.dataset.slot);
+        // -------------------------
+        // ADVENTURER SATCHEL
+        // -------------------------
+        if (slotEl.classList.contains("slot")) {
 
-        const hydrated = getHydratedAdventurer(advId);
-        const slot = hydrated?.inventory?.[slotIndex];
+            const advEl = slotEl.closest(".adv-satchel");
+            if (!advEl) return null;
 
-        if (!slot) return null;
+            const advId = advEl.dataset.id;
+            const slotIndex = Number(slotEl.dataset.slot);
 
-        return {
-            advEl,
-            advId,
-            slotIndex,
-            slot
-        };
+            const hydrated = getHydratedAdventurer(advId);
+            const slot = hydrated?.inventory?.[slotIndex];
+
+            if (!slot) return null;
+
+            return {
+                slot,
+                type: "satchel"
+            };
+        }
+
+
+        // -------------------------
+        // GUILD STASH
+        // -------------------------
+        if (slotEl.classList.contains("stash-slot")) {
+
+            const slotIndex = Number(slotEl.dataset.slot);
+            const slot = player?.data?.stash?.[slotIndex];
+
+            if (!slot) return null;
+
+            return {
+                slot,
+                type: "stash"
+            };
+        }
+
+        return null;
     }
 
+
     function showTooltip(slotEl, x, y) {
+
         const data = getSlotData(slotEl);
 
         if (!data) {
@@ -530,7 +559,7 @@ function initSatchelTooltips() {
             return;
         }
 
-        const { slot } = data;
+        const slot = data.slot;
 
         const isLocked =
             slot.locked === true ||
@@ -549,7 +578,12 @@ function initSatchelTooltips() {
 
         let html = "";
 
+        // -------------------------
+        // ITEM
+        // -------------------------
+
         if (hasItem) {
+
             const itemData = loreData.inventory[slot.item];
 
             const itemName =
@@ -563,13 +597,20 @@ function initSatchelTooltips() {
             }
         }
 
+
+        // -------------------------
+        // LOCKED
+        // -------------------------
+
         if (isLocked) {
+
             if (html) {
                 html += `<br>`;
             }
 
             html += `<span>Locked</span>`;
         }
+
 
         tooltip.innerHTML = html;
         tooltip.classList.add("visible");
@@ -579,7 +620,9 @@ function initSatchelTooltips() {
         positionTooltip(x, y);
     }
 
+
     function positionTooltip(x, y) {
+
         const padding = 10;
         const offset = 12;
 
@@ -588,47 +631,52 @@ function initSatchelTooltips() {
         let left = x + offset;
         let top = y + offset;
 
+
         // Right edge
         if (left + rect.width + padding > window.innerWidth) {
             left = x - rect.width - offset;
         }
+
 
         // Bottom edge
         if (top + rect.height + padding > window.innerHeight) {
             top = y - rect.height - offset;
         }
 
+
         // Left / top edges
         left = Math.max(padding, left);
         top = Math.max(padding, top);
+
 
         tooltip.style.left = `${left}px`;
         tooltip.style.top = `${top}px`;
     }
 
+
     function hideTooltip() {
+
         tooltip.classList.remove("visible");
         tooltip.innerHTML = "";
+
         activeSlot = null;
     }
 
 
     // ==========================================
-    // MOUSE
+    // MOUSE HOVER
     // ==========================================
 
     overlay.addEventListener("pointerover", e => {
 
         if (e.pointerType !== "mouse") return;
 
-        const slotEl = e.target.closest(".slot");
+        const slotEl = e.target.closest(".slot, .stash-slot");
 
         if (!slotEl || !overlay.contains(slotEl)) {
             return;
         }
 
-        // Don't retrigger when moving between
-        // children inside the same slot
         if (slotEl === activeSlot) {
             return;
         }
@@ -647,7 +695,6 @@ function initSatchelTooltips() {
 
         if (!activeSlot) return;
 
-        // Keep tooltip following mouse
         positionTooltip(
             e.clientX,
             e.clientY
@@ -659,13 +706,12 @@ function initSatchelTooltips() {
 
         if (e.pointerType !== "mouse") return;
 
-        const slotEl = e.target.closest(".slot");
+        const slotEl = e.target.closest(".slot, .stash-slot");
 
         if (!slotEl) return;
 
         const related = e.relatedTarget;
 
-        // Still inside this slot
         if (related && slotEl.contains(related)) {
             return;
         }
@@ -675,14 +721,14 @@ function initSatchelTooltips() {
 
 
     // ==========================================
-    // TOUCH
+    // TOUCH / SINGLE TAP
     // ==========================================
 
     overlay.addEventListener("pointerup", e => {
 
         if (e.pointerType !== "touch") return;
 
-        const slotEl = e.target.closest(".slot");
+        const slotEl = e.target.closest(".slot, .stash-slot");
 
         if (!slotEl || !overlay.contains(slotEl)) {
             hideTooltip();
@@ -703,13 +749,446 @@ function initSatchelTooltips() {
     });
 
 
-    // Tap somewhere outside a slot
+    // ==========================================
+    // TOUCH OUTSIDE
+    // ==========================================
+
     document.addEventListener("pointerup", e => {
 
         if (e.pointerType !== "touch") return;
 
-        if (!e.target.closest(".slot")) {
+        if (!e.target.closest(".slot, .stash-slot")) {
             hideTooltip();
         }
     });
 }
+
+/*
+modifyAdventurerInventory("add", {
+    advId: "adv_Marlnus",
+    item: "Apple",
+    qty: 6
+});
+
+modifyAdventurerInventory("remove", {
+    advId: "adv_Marlnus",
+    item: "Apple",
+    qty: 2
+});
+
+modifyAdventurerInventory("add", {
+    advId: "adv_Marlnus",
+    item: "Apple",
+    qty: 6,
+    slotIndex: 2
+});
+
+modifyAdventurerInventory("move", {
+    fromAdvId: "adv_Marlnus",
+    fromSlotIndex: 2,
+
+    toAdvId: "adv_Bragain",
+    toSlotIndex: 3
+});
+
+*/
+
+
+function modifyAdventurerInventory(action, options = {}) {
+    const {
+        advId,
+        item,
+        qty = 1,
+        slotIndex = null,
+
+        // Used by move
+        fromAdvId = null,
+        fromSlotIndex = null,
+        toAdvId = null,
+        toSlotIndex = null,
+
+        // Safety / special cases
+        allowLocked = false
+    } = options;
+
+    // --------------------------------------------------
+    // Helpers
+    // --------------------------------------------------
+
+    function getAdventurer(advId) {
+        return player?.patrons?.[advId] || null;
+    }
+
+    function getInventory(advId) {
+        const adv = getAdventurer(advId);
+        return adv?.inventory || null;
+    }
+
+    function isLocked(slot) {
+        return (
+            slot?.locked === true ||
+            slot?.locked === 1 ||
+            slot?.locked === "true"
+        );
+    }
+
+    function isEmpty(slot) {
+        return !slot || slot.item === null || slot.item === undefined;
+    }
+
+    function copySlot(slot) {
+        return {
+            item: slot?.item ?? null,
+            qty: Number(slot?.qty || 0),
+            locked: slot?.locked === true
+        };
+    }
+
+    // --------------------------------------------------
+    // Register only the changed slot
+    // --------------------------------------------------
+
+    function registerChange(advId, index, slot) {
+        const adv = getAdventurer(advId);
+
+        if (!adv) {
+            console.error("Inventory: adventurer not found:", advId);
+            return false;
+        }
+
+        if (!adv.inventory) {
+            adv.inventory = [];
+        }
+
+        // Only create entries for changed slots.
+        adv.inventory[index] = copySlot(slot);
+
+        return true;
+    }
+
+
+    // --------------------------------------------------
+    // ADD
+    // --------------------------------------------------
+
+    if (action === "add") {
+
+        if (!advId || !item) {
+            console.error("Inventory ADD requires advId and item");
+            return false;
+        }
+
+        const inventory = getInventory(advId);
+
+        if (!inventory) {
+            console.error("Inventory not found for:", advId);
+            return false;
+        }
+
+        let amount = Number(qty);
+
+        if (amount <= 0) {
+            return false;
+        }
+
+
+        // ----------------------------------------------
+        // If a specific slot was requested
+        // ----------------------------------------------
+
+        if (slotIndex !== null) {
+
+            const slot = inventory[slotIndex];
+
+            if (!slot) {
+                console.warn("Invalid inventory slot:", slotIndex);
+                return false;
+            }
+
+            if (isLocked(slot) && !allowLocked) {
+                console.warn("Cannot add to locked slot:", advId, slotIndex);
+                return false;
+            }
+
+            if (!isEmpty(slot) && slot.item !== item) {
+                console.warn("Slot already contains another item");
+                return false;
+            }
+
+            if (isEmpty(slot)) {
+                slot.item = item;
+                slot.qty = amount;
+            } else {
+                slot.qty += amount;
+            }
+
+            registerChange(advId, slotIndex, slot);
+
+            return true;
+        }
+
+
+        // ----------------------------------------------
+        // First try stacking existing item
+        // ----------------------------------------------
+
+        for (let i = 0; i < inventory.length; i++) {
+
+            const slot = inventory[i];
+
+            if (
+                !isLocked(slot) &&
+                slot.item === item
+            ) {
+                slot.qty += amount;
+
+                registerChange(advId, i, slot);
+
+                return true;
+            }
+        }
+
+
+        // ----------------------------------------------
+        // Otherwise find empty slot
+        // ----------------------------------------------
+
+        for (let i = 0; i < inventory.length; i++) {
+
+            const slot = inventory[i];
+
+            if (
+                !isLocked(slot) &&
+                isEmpty(slot)
+            ) {
+                slot.item = item;
+                slot.qty = amount;
+
+                registerChange(advId, i, slot);
+
+                return true;
+            }
+        }
+
+
+        console.warn("No available inventory slot for:", item);
+
+        return false;
+    }
+
+
+    // --------------------------------------------------
+    // REMOVE
+    // --------------------------------------------------
+
+    if (action === "remove") {
+
+        if (!advId || !item) {
+            console.error("Inventory REMOVE requires advId and item");
+            return false;
+        }
+
+        const inventory = getInventory(advId);
+
+        if (!inventory) {
+            console.error("Inventory not found for:", advId);
+            return false;
+        }
+
+        let remaining = Number(qty);
+
+        if (remaining <= 0) {
+            return false;
+        }
+
+
+        // ----------------------------------------------
+        // Specific slot
+        // ----------------------------------------------
+
+        if (slotIndex !== null) {
+
+            const slot = inventory[slotIndex];
+
+            if (!slot || slot.item !== item) {
+                return false;
+            }
+
+            if (isLocked(slot) && !allowLocked) {
+                console.warn("Cannot remove from locked slot");
+                return false;
+            }
+
+            if (slot.qty > remaining) {
+
+                slot.qty -= remaining;
+
+            } else {
+
+                slot.item = null;
+                slot.qty = 0;
+            }
+
+            registerChange(advId, slotIndex, slot);
+
+            return true;
+        }
+
+
+        // ----------------------------------------------
+        // Search inventory
+        // ----------------------------------------------
+
+        for (let i = 0; i < inventory.length; i++) {
+
+            const slot = inventory[i];
+
+            if (
+                !isLocked(slot) &&
+                slot.item === item
+            ) {
+
+                if (slot.qty > remaining) {
+
+                    slot.qty -= remaining;
+
+                } else {
+
+                    remaining -= slot.qty;
+
+                    slot.item = null;
+                    slot.qty = 0;
+                }
+
+                registerChange(advId, i, slot);
+
+                if (remaining <= 0) {
+                    return true;
+                }
+            }
+        }
+
+
+        console.warn(
+            "Could not remove requested quantity:",
+            item,
+            qty
+        );
+
+        return false;
+    }
+
+
+    // --------------------------------------------------
+    // MOVE
+    // --------------------------------------------------
+
+    if (action === "move") {
+
+        if (
+            !fromAdvId ||
+            fromSlotIndex === null ||
+            !toAdvId ||
+            toSlotIndex === null
+        ) {
+            console.error(
+                "Inventory MOVE requires fromAdvId, fromSlotIndex, toAdvId and toSlotIndex"
+            );
+
+            return false;
+        }
+
+        const fromInventory = getInventory(fromAdvId);
+        const toInventory = getInventory(toAdvId);
+
+        if (!fromInventory || !toInventory) {
+            return false;
+        }
+
+        const fromSlot = fromInventory[fromSlotIndex];
+        const toSlot = toInventory[toSlotIndex];
+
+        if (!fromSlot || !toSlot) {
+            return false;
+        }
+
+        if (isEmpty(fromSlot)) {
+            console.warn("Cannot move from an empty slot");
+            return false;
+        }
+
+        if (
+            (isLocked(fromSlot) || isLocked(toSlot)) &&
+            !allowLocked
+        ) {
+            console.warn("Cannot move to/from locked slot");
+            return false;
+        }
+
+
+        // ----------------------------------------------
+        // Move into empty slot
+        // ----------------------------------------------
+
+        if (isEmpty(toSlot)) {
+
+            toSlot.item = fromSlot.item;
+            toSlot.qty = fromSlot.qty;
+
+            fromSlot.item = null;
+            fromSlot.qty = 0;
+        }
+
+
+        // ----------------------------------------------
+        // Same item → stack
+        // ----------------------------------------------
+
+        else if (toSlot.item === fromSlot.item) {
+
+            toSlot.qty += fromSlot.qty;
+
+            fromSlot.item = null;
+            fromSlot.qty = 0;
+        }
+
+
+        // ----------------------------------------------
+        // Different item → swap
+        // ----------------------------------------------
+
+        else {
+
+            const tempItem = toSlot.item;
+            const tempQty = toSlot.qty;
+
+            toSlot.item = fromSlot.item;
+            toSlot.qty = fromSlot.qty;
+
+            fromSlot.item = tempItem;
+            fromSlot.qty = tempQty;
+        }
+
+
+        // Register BOTH changed slots
+        registerChange(
+            fromAdvId,
+            fromSlotIndex,
+            fromSlot
+        );
+
+        registerChange(
+            toAdvId,
+            toSlotIndex,
+            toSlot
+        );
+
+        return true;
+    }
+
+
+    console.error("Unknown inventory action:", action);
+
+    return false;
+}
+

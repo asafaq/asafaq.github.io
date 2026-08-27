@@ -2,22 +2,24 @@
   "Adventurer": {
     "adv_Marlnus": {
       "name": "Marlnus",
-	  "contractPrice": 100,
+      "contractPrice": 100,
       "icon": "assets/patrons/marlnus_s.png",
       "large": "assets/patrons/marlnus_l.png",
-	  "lounge": {
-		  "preferredType": "counter",
-		  "preferredSeat": "counter1",
-		  "avoidTypes": ["quiet"],
-		  "weight": 5
-			},
+      "lounge": {
+        "preferredType": "counter",
+        "preferredSeat": "counter1",
+        "avoidTypes": [
+          "quiet"
+        ],
+        "weight": 5
+      },
       "top": "160px",
       "left": "150px",
       "location": 2,
-	  "dialog": 1,
+      "dialog": 1,
       "race": "Human",
       "role": "Carriagefarer",
-	  "passive" : true,
+      "passive": true,
       "hp_die": 6,
       "hp_modifier": 1,
       "strengh_mod": 0,
@@ -33,12 +35,6 @@
       "RacialEnemy": "Discounts",
       "proficiency_armor": "Light",
       "proficiency_weapon": "Light",
-	  "inventory" : [
-		  { "item": "Camp", "qty": 1, "locked": true },
-		  { "item": "Carriage", "qty": 1, "locked": true },
-		  { "item": null, "qty": 0, "locked": false },
-		  { "item": null, "qty": 0, "locked": false }
-		],
       "traits": [
         "Persuasion"
       ],
@@ -46,19 +42,21 @@
     },
     "adv_Hogperson": {
       "name": "Hogperson",
-	  "contractPrice": 100,
+      "contractPrice": 100,
       "icon": "assets/patrons/hogperson_s.png",
       "large": "assets/patrons/hogperson.png",
       "top": "300px",
       "left": "380px",
       "location": 1,
-	  "dialog": 1,
-	  "lounge": {
-		  "preferredType": "table1",
-		  "preferredSeat": "table1b",
-		  "avoidTypes": [""],
-		  "weight": 5
-			},
+      "dialog": 1,
+      "lounge": {
+        "preferredType": "table1",
+        "preferredSeat": "table1b",
+        "avoidTypes": [
+          ""
+        ],
+        "weight": 5
+      },
       "race": "Barbarian",
       "role": "Brute",
       "hp_die": 12,
@@ -76,12 +74,6 @@
       "RacialEnemy": "",
       "proficiency_armor": "unarmored",
       "proficiency_weapon": "Martial",
-      "inventory" : [
-		  { "item": "Large Club", "qty": 1, "locked": true },
-		  { "item": "Apple", "qty": 6, "locked": false },
-		  { "item": null, "qty": 0, "locked": false },
-		  { "item": null, "qty": 0, "locked": false }
-		],
       "traits": [
         "Masochist",
         "Cheerful"
@@ -91,19 +83,21 @@
     },
     "adv_Bragain": {
       "name": "Bragain",
-	  "contractPrice": 100,
+      "contractPrice": 100,
       "icon": "assets/patrons/dwarven_miner_s.png",
       "large": "assets/patrons/dwarven_miner.png",
       "top": "220px",
       "left": "380px",
       "location": 1,
-	  "lounge": {
-		  "preferredType": "table1",
-		  "preferredSeat": "table1c",
-		  "avoidTypes": [""],
-		  "weight": 5
-			},
-	  "dialog": 1,
+      "lounge": {
+        "preferredType": "table1",
+        "preferredSeat": "table1c",
+        "avoidTypes": [
+          ""
+        ],
+        "weight": 5
+      },
+      "dialog": 1,
       "race": "Dwarven",
       "role": "Miner",
       "role_comment": "A rogue with a day job. Like a thief, but less proficient",
@@ -122,12 +116,6 @@
       "RacialEnemy": "Rocks",
       "proficiency_armor": "Medium",
       "proficiency_weapon": "Martial",
-		"inventory" : [
-		  { "item": "Iron Pick", "qty": 1, "locked": true },
-		  { "item": "Lantern", "qty": 1, "locked": true },
-		  { "item": "Knapsack", "qty": 1, "locked": true },
-		  { "item": null, "qty": 0, "locked": false }
-		],
       "Knapsack_comment": "Allows the bearer to hold 4 items without value other than in trade, without spending an inventory slot.",
       "traits": [
         "Appraisal",
@@ -142,15 +130,15 @@
     },
     "adv_Claudio": {
       "name": "Claudio",
-	  "contractPrice": 100,
+      "contractPrice": 100,
       "icon": "assets/patrons/Claudio_s.png",
       "large": "assets/patrons/Claudio_s.png",
-	  "lounge": {
-		  "preferredType": "center",
-		  "preferredSeat": null,
-		  "avoidTypes": [],
-		  "weight": 5
-		},
+      "lounge": {
+        "preferredType": "center",
+        "preferredSeat": null,
+        "avoidTypes": [],
+        "weight": 5
+      },
       "top": "330px",
       "left": "250px",
       "location": 2,
@@ -171,12 +159,6 @@
       "RacialEnemy": "",
       "proficiency_armor": "Medium",
       "proficiency_weapon": "Light",
-	  "inventory" : [
-		  { "item": "Lute", "qty": 1, "locked": true },
-		  { "item": null, "qty": 0, "locked": false },
-		  { "item": null, "qty": 0, "locked": false },
-		  { "item": null, "qty": 0, "locked": false }
-		],
       "traits": [
         "Comedian"
       ],
@@ -185,19 +167,19 @@
     },
     "adv_Amyssa": {
       "name": "Amyssa",
-	  "contractPrice": 100,
+      "contractPrice": 100,
       "icon": "assets/patrons/amyssa_s.png",
       "large": "assets/patrons/amyssa_l.png",
       "top": "400px",
       "left": "120px",
       "location": 2,
-	  "lounge": {
-		  "preferredType": "table",
-		  "preferredSeat": "table1e",
-		  "avoidTypes": [],
-		  "weight": 5
-		},
-	  "dialog": 1,
+      "lounge": {
+        "preferredType": "table",
+        "preferredSeat": "table1e",
+        "avoidTypes": [],
+        "weight": 5
+      },
+      "dialog": 1,
       "race": "Elf",
       "role": "Swordmage",
       "hp_die": 10,
@@ -215,12 +197,6 @@
       "RacialEnemy": "",
       "proficiency_armor": "Medium",
       "proficiency_weapon": "Martial",
-	  	"inventory" : [
-		  { "item": "Scribe Kit", "qty": 1, "locked": true },
-		  { "item": "Amyssa's Spellbook", "qty": 1, "locked": true },
-		  { "item": null, "qty": 0, "locked": false },
-		  { "item": null, "qty": 0, "locked": false }
-		],
       "traits": [
         "Spellcaster",
         "Scribe",
@@ -232,18 +208,18 @@
     },
     "adv_Hogmother": {
       "name": "Hogmother",
-	  "contractPrice": 100,
+      "contractPrice": 100,
       "icon": "assets/patrons/hogmother.png",
       "large": "assets/patrons/hogmother.png",
       "top": "300px",
       "left": "80px",
       "location": 11,
-	  "lounge": {
-		  "preferredType": "counter",
-		  "preferredSeat": "counter2",
-		  "avoidTypes": [],
-		  "weight": 5
-			},
+      "lounge": {
+        "preferredType": "counter",
+        "preferredSeat": "counter2",
+        "avoidTypes": [],
+        "weight": 5
+      },
       "race": "Barbarian",
       "race_comment": "Wildmen more of a humanoid than a human. Thick Hide for bonus unarmed AC \tRage +10 tempHP.",
       "role": "Shaman",
@@ -264,12 +240,6 @@
       "RacialEnemy": "Knolls",
       "proficiency_armor": "unarmored",
       "proficiency_weapon": "Martial",
-	  	"inventory" : [
-		  { "item": "Large Cauldron Spoon", "qty": 1, "locked": true },
-		  { "item": "Apothecary kit", "qty": 1, "locked": true },
-		  { "item": null, "qty": 0, "locked": false },
-		  { "item": null, "qty": 0, "locked": false }
-		],
       "traits": [
         "Calm",
         "Apothecary"
@@ -278,13 +248,13 @@
     },
     "adv_Tonica": {
       "name": "Tonica",
-	  "contractPrice": 450,
+      "contractPrice": 450,
       "large": "assets/patrons/tonica_l.png",
       "icon": "assets/patrons/tonica_s.png",
       "top": "300px",
       "left": "380px",
       "location": 1,
-	  "dialog": 1,
+      "dialog": 1,
       "race": "Half-Elf",
       "role": "Green Knight",
       "subrole": "Oath of the Ancients",
@@ -303,29 +273,25 @@
       "RacialEnemy": "",
       "proficiency_armor": "Heavy",
       "proficiency_weapon": "Martial",
-	  "inventory" : [
-		  { "item": "Elvish Bow", "qty": 1, "locked": true },
-		  { "item": "Arrow quiver", "qty": 1, "locked": true },
-		  { "item": null, "qty": 0, "locked": false },
-		  { "item": null, "qty": 0, "locked": false }
-		],
       "traits": [],
       "notes": "Petrified, shrine warden."
     },
     "adv_Lurch": {
       "name": "Lurch",
-	  "contractPrice": 100,
+      "contractPrice": 100,
       "icon": "assets/patrons/lurch_s.png",
       "large": "assets/patrons/lurch.png",
       "top": "300px",
       "left": "380px",
       "location": 1,
-	  "lounge": {
-		  "preferredType": "bar",
-		  "preferredSeat": "bar4",
-		  "avoidTypes": ["table"],
-		  "weight": 5
-			},
+      "lounge": {
+        "preferredType": "bar",
+        "preferredSeat": "bar4",
+        "avoidTypes": [
+          "table"
+        ],
+        "weight": 5
+      },
       "race": "Goblin",
       "role": "Spy",
       "hp_die": 8,
@@ -343,12 +309,6 @@
       "RacialEnemy": "",
       "proficiency_armor": "Light",
       "proficiency_weapon": "Martial",
-	  	"inventory" : [
-		  { "item": null, "qty": 0, "locked": false },
-		  { "item": null, "qty": 0, "locked": false },
-		  { "item": null, "qty": 0, "locked": false },
-		  { "item": null, "qty": 0, "locked": false }
-		],
       "traits": [
         "Independant",
         "Pickpocket"
@@ -358,19 +318,21 @@
     },
     "adv_Desmond": {
       "name": "Desmond",
-	  "contractPrice": 100,
+      "contractPrice": 100,
       "icon": "assets/patrons/desmond_s.png",
       "large": "assets/patrons/desmond_l.png",
       "top": "270px",
       "left": "280px",
-	  "dialog": 1,
+      "dialog": 1,
       "location": 2,
-	  "lounge": {
-		  "preferredType": "bar",
-		  "preferredSeat": "bar2",
-		  "avoidTypes": ["quiet"],
-		  "weight": 5
-			},
+      "lounge": {
+        "preferredType": "bar",
+        "preferredSeat": "bar2",
+        "avoidTypes": [
+          "quiet"
+        ],
+        "weight": 5
+      },
       "race": "Human",
       "role": "Fallen Paladin",
       "hp_die": 10,
@@ -389,12 +351,6 @@
       "Lower Undead_comment": "Skeletons, Zombies, Ghouls, Ghasts.",
       "proficiency_armor": "Heavy",
       "proficiency_weapon": "Martial",
-	  	"inventory" : [
-		  { "item": "Adorned_Basalt_Club", "qty": 1, "locked": true },
-		  { "item": "Holy_water_flask", "qty": 2, "locked": false },
-		  { "item": null, "qty": 0, "locked": false },
-		  { "item": null, "qty": 0, "locked": false }
-		],
       "traits": [
         "Immune to Energy drain",
         "Immune to Fear",
@@ -405,19 +361,21 @@
     },
     "adv_Aasibelle": {
       "name": "Aasibelle",
-	  "contractPrice": 0,
-	  "Premium": true,
-	  "icon": "assets/patrons/Aasibelle_s2.png",
+      "contractPrice": 0,
+      "Premium": true,
+      "icon": "assets/patrons/Aasibelle_s2.png",
       "large": "assets/patrons/Aasibelle_s2.png",
       "top": "260px",
       "left": "180px",
       "location": 1,
-	  "lounge": {
-		  "preferredType": "floor",
-		  "preferredSeat": "floor1",
-		  "avoidTypes": [""],
-		  "weight": 5
-			},
+      "lounge": {
+        "preferredType": "floor",
+        "preferredSeat": "floor1",
+        "avoidTypes": [
+          ""
+        ],
+        "weight": 5
+      },
       "race": "Angel",
       "role": "Paladin",
       "hp_die": 10,
@@ -437,12 +395,6 @@
       "RacialEnemy": "Demons",
       "proficiency_armor": "Heavy",
       "proficiency_weapon": "Martial",
-	  	"inventory" : [
-		  { "item": null, "qty": 0, "locked": false },
-		  { "item": null, "qty": 0, "locked": false },
-		  { "item": null, "qty": 0, "locked": false },
-		  { "item": null, "qty": 0, "locked": false }
-		],
       "traits": [
         "Divine",
         "Holy Aura",
@@ -454,15 +406,15 @@
     },
     "adv_Inferno": {
       "name": "Inferno",
-	  "contractPrice": 999,
-	  "Premium": true,
-	  "icon": "assets/patrons/Aasibelle_s2.png",
+      "contractPrice": 999,
+      "Premium": true,
+      "icon": "assets/patrons/Aasibelle_s2.png",
       "large": "assets/patrons/Aasibelle_s2.png",
       "top": "260px",
       "left": "180px",
       "location": 1,
       "race": "Dragonborne",
-	  "species": "Red Dragon",
+      "species": "Red Dragon",
       "role": "Eldrich Knight",
       "hp_die": 10,
       "hp_modifier": 3,
@@ -479,30 +431,24 @@
       "RacialEnemy": "",
       "proficiency_armor": "Heavy",
       "proficiency_weapon": "Martial",
-	  	"inventory" : [
-		  { "item": "Hairloom Sapphire", "qty": 1, "locked": true },
-		  { "item": null, "qty": 0, "locked": false },
-		  { "item": null, "qty": 0, "locked": false },
-		  { "item": null, "qty": 0, "locked": false }
-		],
       "traits": [
         "Intimidation",
         "Fire Breath",
         "Eternal",
-		"Dragon Hide"
+        "Dragon Hide"
       ],
       "notes": "The premium Pay2Win character. Aasibelle may seem as going out of game balance, but she is a token of gratitude from the development team to the player, and she doesn't have to be played at all as she will cost you no upkeep or space in the tavern."
     },
     "adv_CptBlackmoor": {
       "name": "Cpt. Blackmoor",
-	  "contractPrice": 999,
-	  "icon": "assets/patrons/Aasibelle_s2.png",
+      "contractPrice": 999,
+      "icon": "assets/patrons/Aasibelle_s2.png",
       "large": "assets/patrons/Aasibelle_s2.png",
       "top": "260px",
       "left": "180px",
       "location": 1,
       "race": "Dragonborne",
-	  "species": "Black Dragon",
+      "species": "Black Dragon",
       "role": "Corsair",
       "hp_die": 10,
       "hp_modifier": 2,
@@ -519,33 +465,27 @@
       "RacialEnemy": "",
       "proficiency_armor": "Medium",
       "proficiency_weapon": "Martial",
-	  	"inventory" : [
-		  { "item": "Hairloom Sapphire", "qty": 1, "locked": true },
-		  { "item": null, "qty": 0, "locked": false },
-		  { "item": null, "qty": 0, "locked": false },
-		  { "item": null, "qty": 0, "locked": false }
-		],
       "traits": [
         "Intimidation",
         "Acid Breath",
         "Water Breathing",
-		"Dragon Hide"
+        "Dragon Hide"
       ],
       "notes": "A dangerous pirate, known as the black terror, can breach hulls of ships all on his own."
     },
     "adv_Hogfather": {
       "name": "Hogfather",
-	  "contractPrice": 100,
+      "contractPrice": 100,
       "icon": "assets/patrons/hogfather.png",
       "top": "300px",
       "left": "120px",
       "location": 11,
-	  "lounge": {
-		  "preferredType": "counter",
-		  "preferredSeat": "counter1",
-		  "avoidTypes": [],
-		  "weight": 5
-			},
+      "lounge": {
+        "preferredType": "counter",
+        "preferredSeat": "counter1",
+        "avoidTypes": [],
+        "weight": 5
+      },
       "race": "Barbarian",
       "role": "Baker",
       "hp_die": 12,
@@ -563,13 +503,7 @@
       "RacialEnemy": "Pastries",
       "proficiency_armor": "unarmored",
       "proficiency_weapon": "Martial",
-	  	"inventory" : [
-		  { "item": "Large Rolling Pin", "qty": 1, "locked": true },
-		  { "item": null, "qty": 0, "locked": false },
-		  { "item": null, "qty": 0, "locked": false },
-		  { "item": null, "qty": 0, "locked": false }
-		],
-	   "traits": [
+      "traits": [
         "Cheerful"
       ]
     },
@@ -579,15 +513,15 @@
       "top": "300px",
       "left": "120px",
       "location": 11,
-	  "lounge": {
-		  "preferredType": "door",
-		  "preferredSeat": "door",
-		  "avoidTypes": [],
-		  "weight": 5
-			},
+      "lounge": {
+        "preferredType": "door",
+        "preferredSeat": "door",
+        "avoidTypes": [],
+        "weight": 5
+      },
       "race": "Hog",
-	  "role": "Pet",
-	  "passive" : true,
+      "role": "Pet",
+      "passive": true,
       "hp_die": 6,
       "alignment": "Neutral",
       "level": 1,
@@ -595,12 +529,11 @@
       "size": "Medium",
       "caste": "Commoner",
       "RacialEnemy": "Rodents",
-	  "inventory" : [],
-	  "traits": []
+      "traits": []
     },
     "adv_Balsazar": {
       "name": "Balsazar",
-	  "contractPrice": 100,
+      "contractPrice": 100,
       "icon": "assets/patrons/hogfather.png",
       "top": "300px",
       "left": "120px",
@@ -622,19 +555,13 @@
       "RacialEnemy": "",
       "proficiency_armor": "Heavy",
       "proficiency_weapon": "Martial",
-	  	"inventory" : [
-		  { "item": "Grimoire of Patron", "qty": 1, "locked": true },
-		  { "item": null, "qty": 0, "locked": false },
-		  { "item": null, "qty": 0, "locked": false },
-		  { "item": null, "qty": 0, "locked": false }
-		],
-	   "traits": [
+      "traits": [
         "Creepy Breather"
       ]
     },
     "adv_Finnick": {
       "name": "Finnick",
-	  "contractPrice": 100,
+      "contractPrice": 100,
       "race": "Halfling",
       "icon": "assets/patrons/halfling_s.png",
       "large": "assets/patrons/halfling_L.png",
@@ -654,12 +581,6 @@
       "RacialEnemy": "Potatoes",
       "proficiency_armor": "Medium",
       "proficiency_weapon": "Finesse",
-	  	"inventory" : [
-		  { "item": "Small Rapier", "qty": 1, "locked": true },
-		  { "item": null, "qty": 0, "locked": false },
-		  { "item": null, "qty": 0, "locked": false },
-		  { "item": null, "qty": 0, "locked": false }
-		],
       "traits": [
         "Inconspicuous",
         "Adolescent",
@@ -669,7 +590,7 @@
     },
     "adv_Awetruce": {
       "name": "Awetruce",
-	  "contractPrice": 100,
+      "contractPrice": 100,
       "race": "Direwolf",
       "icon": "assets/patrons/direwolf_s.png",
       "role": "Druid",
@@ -688,30 +609,26 @@
       "RacialEnemy": "Ogres",
       "proficiency_armor": "unarmored",
       "proficiency_weapon": "Wild",
-	  	"inventory" : [
-		  { "item": null, "qty": 0, "locked": true },
-		  { "item": null, "qty": 0, "locked": true },
-		  { "item": null, "qty": 0, "locked": true },
-		  { "item": null, "qty": 0, "locked": true }
-		],
       "traits": [],
       "notes": ""
     },
     "adv_Tinman": {
       "name": "Tinman B-B-TR",
-	  "contractPrice": 0,
-	  "Premium": true,
-	  "icon": "assets/patrons/Tinman.png",
+      "contractPrice": 0,
+      "Premium": true,
+      "icon": "assets/patrons/Tinman.png",
       "large": "assets/patrons/Tinman.png",
-	  "top": "180px",
+      "top": "180px",
       "left": "400px",
       "location": 2,
-	  "lounge": {
-		  "preferredType": "quiet",
-		  "preferredSeat": "corner1",
-		  "avoidTypes": ["bar"],
-		  "weight": 5
-			},
+      "lounge": {
+        "preferredType": "quiet",
+        "preferredSeat": "corner1",
+        "avoidTypes": [
+          "bar"
+        ],
+        "weight": 5
+      },
       "race": "Warforged",
       "role": "Clericbot",
       "hp_die": 8,
@@ -729,22 +646,16 @@
       "RacialEnemy": "",
       "proficiency_armor": "Heavy",
       "proficiency_weapon": "Martial",
-	  	"inventory" : [
-		  { "item": null, "qty": 0, "locked": false },
-		  { "item": null, "qty": 0, "locked": false },
-		  { "item": null, "qty": 0, "locked": false },
-		  { "item": null, "qty": 0, "locked": false }
-		],
       "traits": [
         "Faulty Powerpack",
-		"Immortal Protocol",
+        "Immortal Protocol",
         "Spinning Batter"
       ],
       "notes": "Tinman is a warforged built to contain the soul of a past noble in service of the realm. His construction wasn't completely finished, and he's still in Beta testing. A paid Adventurer, unlocks his unique mission, to travel far to the temple of god, pray for full ressurection, in the temple a Patzi will be haunted by a fey spirit, and forge an Artifact, a replacement Powerpack that fix that Faulty one."
     },
-	"adv_Trollkin": {
+    "adv_Trollkin": {
       "name": "Trollkin",
-	  "contractPrice": 100,
+      "contractPrice": 100,
       "icon": "/assets/patrons/trollkin_s.png",
       "large": "/assets/patrons/trollkin_l.png",
       "top": "350px",
@@ -767,24 +678,25 @@
       "RacialEnemy": "",
       "proficiency_armor": "Light",
       "proficiency_weapon": "Light",
-	  "spells" : {
-		  "1" : [ "Disguise Self", "Charm Person", "Tashas Hideous Laughter"],
-		  "2" : [ "Invisibility", "Suggestion" ]
-	  },
-	  "inventory" : [
-		  { "item": "Amulet of Fire Warding", "qty": 1, "locked": true },
-		  { "item": null, "qty": 0, "locked": false },
-		  { "item": null, "qty": 0, "locked": false },
-		  { "item": null, "qty": 0, "locked": false }
-		],
+      "spells": {
+        "1": [
+          "Disguise Self",
+          "Charm Person",
+          "Tashas Hideous Laughter"
+        ],
+        "2": [
+          "Invisibility",
+          "Suggestion"
+        ]
+      },
       "traits": [
         "Selfish"
       ],
       "notes": "."
     },
-	"adv_Kilokur": {
+    "adv_Kilokur": {
       "name": "Kilokur",
-	  "contractPrice": 100,
+      "contractPrice": 100,
       "icon": "/assets/patrons/trollkin_s.png",
       "large": "/assets/patrons/trollkin_l.png",
       "top": "350px",
@@ -807,18 +719,12 @@
       "RacialEnemy": "",
       "proficiency_armor": "Light",
       "proficiency_weapon": "Martial",
-	  "inventory" : [
-		  { "item": null, "qty": 0, "locked": false },
-		  { "item": null, "qty": 0, "locked": false },
-		  { "item": null, "qty": 0, "locked": false },
-		  { "item": null, "qty": 0, "locked": false }
-		],
       "traits": [],
       "notes": "."
     },
-	"adv_Bogarth": {
+    "adv_Bogarth": {
       "name": "Bogarth",
-	  "contractPrice": 100,
+      "contractPrice": 100,
       "icon": "/assets/patrons/trollkin_s.png",
       "large": "/assets/patrons/trollkin_l.png",
       "top": "350px",
@@ -841,43 +747,45 @@
       "RacialEnemy": "",
       "proficiency_armor": "Medium",
       "proficiency_weapon": "Martial",
-	  "cleric spells": {
-		  "1" : { "Divine Favor" : 2,
-				"Doom" : 2},
-		  "2" : { "Silence": 1,
-				"Bull's Strength": 1, 
-				"Darkness": 1,
-				"Hold Person": 1},
-		  "3" : { "Inflict Serious Wounds" : 1}
-	  },
-	  "inventory" : [
-		  { "item": "Potion of Invisibility", "qty": 4, "locked": false },
-		  { "item": "Envenum kit", "qty": 1, "locked": true },
-		  { "item": "Spiked Gauntlet", "qty": 1, "locked": true },
-		  { "item": null, "qty": 0, "locked": false }
-		],
+      "cleric spells": {
+        "1": {
+          "Divine Favor": 2,
+          "Doom": 2
+        },
+        "2": {
+          "Silence": 1,
+          "Bull's Strength": 1,
+          "Darkness": 1,
+          "Hold Person": 1
+        },
+        "3": {
+          "Inflict Serious Wounds": 1
+        }
+      },
       "traits": [
-		"Ruthless",
-		"Ambusher",
-		"Death Attack"
-		],
+        "Ruthless",
+        "Ambusher",
+        "Death Attack"
+      ],
       "notes": "."
     },
-	"adv_Crusher": {
+    "adv_Crusher": {
       "name": "Crusher",
-	  "contractPrice": 250,
+      "contractPrice": 250,
       "icon": "/assets/patrons/crusher_s.png",
       "large": "/assets/patrons/crusher_l.png",
       "top": "400px",
       "left": "230px",
       "location": 2,
-	  "lounge": {
-		  "preferredType": "door",
-		  "preferredSeat": "door",
-		  "avoidTypes": ["table"],
-		  "weight": 5
-			},
-	  "dialog": 1,
+      "lounge": {
+        "preferredType": "door",
+        "preferredSeat": "door",
+        "avoidTypes": [
+          "table"
+        ],
+        "weight": 5
+      },
+      "dialog": 1,
       "race": "Goon",
       "role": "Bouncer",
       "hp_die": 12,
@@ -895,21 +803,15 @@
       "RacialEnemy": "",
       "proficiency_armor": "Light",
       "proficiency_weapon": "Unarmed",
-	  "inventory" : [
-		  { "item": "Crusher's Favorite Mug", "qty": 1, "locked": true },
-		  { "item": null, "qty": 0, "locked": false },
-		  { "item": null, "qty": 0, "locked": false },
-		  { "item": null, "qty": 0, "locked": false }
-		],
       "traits": [
         "Selfish",
-		"Armwrestler"
+        "Armwrestler"
       ],
       "notes": "The Bar guard and Bouncer none want to mess with."
     },
-	"adv_Wormtail": {
+    "adv_Wormtail": {
       "name": "Wormtail",
-	  "contractPrice": 100,
+      "contractPrice": 100,
       "icon": "/assets/patrons/wormtail_s.png",
       "large": "/assets/patrons/wormtail_l.png",
       "top": "270px",
@@ -932,18 +834,12 @@
       "RacialEnemy": "",
       "proficiency_armor": "Light",
       "proficiency_weapon": "Light",
-	  "inventory" : [
-		  { "item": "Poisoned Dagger", "qty": 1, "locked": true },
-		  { "item": null, "qty": 0, "locked": false },
-		  { "item": null, "qty": 0, "locked": false },
-		  { "item": null, "qty": 0, "locked": false }
-		],
       "traits": [],
       "notes": "A loathsome creature who dwells underground. Lives of unfair fights and easy pickings."
     },
-	"adv_Ugress": {
+    "adv_Ugress": {
       "name": "Ugress",
-	  "contractPrice": 100,
+      "contractPrice": 100,
       "icon": "/assets/patrons/trollkin_s.png",
       "large": "/assets/patrons/trollkin_l.png",
       "top": "350px",
@@ -966,22 +862,16 @@
       "RacialEnemy": "",
       "proficiency_armor": "Light",
       "proficiency_weapon": "Light",
-	  "inventory" : [
-		  { "item": "Pendant of Imprisonment", "qty": 1, "locked": true },
-		  { "item": null, "qty": 0, "locked": false },
-		  { "item": null, "qty": 0, "locked": false },
-		  { "item": null, "qty": 0, "locked": false }
-		],
       "traits": [
         "Vicious",
-		"Dark Ambition",
-		"Magic-Immunity"
+        "Dark Ambition",
+        "Magic-Immunity"
       ],
       "notes": "A vile monstrosity who will stop at nothing. Her Geas forces many to do her bidding, or in a day or a month they'll likely die."
     },
-	"adv_SandraFreja": {
+    "adv_SandraFreja": {
       "name": "Sandra Freja",
-	  "contractPrice": 100,
+      "contractPrice": 100,
       "icon": "/assets/patrons/SandraFreja_s.png",
       "large": "/assets/patrons/SandraFreja_l.png",
       "top": "350px",
@@ -1004,21 +894,15 @@
       "RacialEnemy": "",
       "proficiency_armor": "Heavy",
       "proficiency_weapon": "Martial",
-	  "inventory" : [
-		  { "item": "Helmet of True Seeing", "qty": 1, "locked": true },
-		  { "item": null, "qty": 0, "locked": false },
-		  { "item": null, "qty": 0, "locked": false },
-		  { "item": null, "qty": 0, "locked": false }
-		],
       "traits": [
         "Arrogant",
-		"Ambitious"
+        "Ambitious"
       ],
       "notes": "Female Warrior. Can serve as a ranger across a difficult passage."
     },
-	"adv_Bjorn": {
+    "adv_Bjorn": {
       "name": "Bjorn",
-	  "contractPrice": 100,
+      "contractPrice": 100,
       "icon": "/assets/patrons/SandraFreja_s.png",
       "large": "/assets/patrons/SandraFreja_l.png",
       "top": "350px",
@@ -1041,22 +925,16 @@
       "RacialEnemy": "",
       "proficiency_armor": "Heavy",
       "proficiency_weapon": "Martial",
-	  "inventory" : [
-		  { "item": "Short Sword", "qty": 1, "locked": false },
-		  { "item": null, "qty": 0, "locked": false },
-		  { "item": null, "qty": 0, "locked": false },
-		  { "item": null, "qty": 0, "locked": false }
-		],
       "traits": [
         "Adolescent",
-		"Ambitious",
-		"Stoic"
+        "Ambitious",
+        "Stoic"
       ],
       "notes": "A villager youth, capable of extraordinary feats of strength. Throws cabers since her was 14."
     },
-	"adv_Lili": {
+    "adv_Lili": {
       "name": "Lili Two-Bows",
-	  "contractPrice": 100,
+      "contractPrice": 100,
       "icon": "/assets/patrons/SandraFreja_s.png",
       "large": "/assets/patrons/SandraFreja_l.png",
       "top": "350px",
@@ -1079,22 +957,16 @@
       "RacialEnemy": "",
       "proficiency_armor": "Light",
       "proficiency_weapon": "Martial",
-	  "inventory" : [
-		  { "item": "Short Bow", "qty": 1, "locked": false },
-		  { "item": "Long Bow", "qty": 1, "locked": false },
-		  { "item": null, "qty": 0, "locked": false },
-		  { "item": null, "qty": 0, "locked": false }
-		],
       "traits": [
-		"Stern",
-		"Loner",
-		"Grouchy"
+        "Stern",
+        "Loner",
+        "Grouchy"
       ],
       "notes": "A companion of the exiled dragonangel. Mastered a unique technique to release arrows of longbows behind her back, because her arms are too short otherwise."
     },
-	"adv_Thoran": {
+    "adv_Thoran": {
       "name": "Thoran",
-	  "contractPrice": 100,
+      "contractPrice": 100,
       "icon": "/assets/patrons/SandraFreja_s.png",
       "large": "/assets/patrons/SandraFreja_l.png",
       "top": "350px",
@@ -1117,20 +989,14 @@
       "RacialEnemy": "",
       "proficiency_armor": "Unarmored",
       "proficiency_weapon": "Martial",
-	  "inventory" : [
-		  { "item": "Battle Axe", "qty": 1, "locked": true },
-		  { "item": "Circlet of Intellect", "qty": 1, "locked": true },
-		  { "item": null, "qty": 0, "locked": false },
-		  { "item": null, "qty": 0, "locked": false }
-		],
       "traits": [
-		"Regal"
+        "Regal"
       ],
       "notes": "A companion of the exiled dragonangel. Natural leader, decended from royal family."
     },
-	"adv_Saint": {
+    "adv_Saint": {
       "name": "Saint",
-	  "contractPrice": 100,
+      "contractPrice": 100,
       "icon": "/assets/patrons/SandraFreja_s.png",
       "large": "/assets/patrons/SandraFreja_l.png",
       "top": "350px",
@@ -1153,17 +1019,182 @@
       "RacialEnemy": "",
       "proficiency_armor": "Unarmored",
       "proficiency_weapon": "Martial",
-	  "inventory" : [
-		  { "item": "Katana", "qty": 2, "locked": true },
-		  { "item": null, "qty": 0, "locked": false },
-		  { "item": null, "qty": 0, "locked": false },
-		  { "item": null, "qty": 0, "locked": false }
-		],
       "traits": [
-		""
+        ""
       ],
       "notes": "The cheater anamoly, roaming the world laying waste and ruining the game."
     }
+  },
+  "Adv_Inventory": {
+    "adv_Marlnus": [
+      { "item": "Camp", "qty": 1, "locked": true },
+      { "item": "Carriage", "qty": 1, "locked": true },
+      { "item": null, "qty": 0, "locked": false },
+      { "item": null, "qty": 0, "locked": false }
+    ],
+    "adv_Hogperson": [
+      { "item": "Large Club", "qty": 1, "locked": true },
+      { "item": "Apple", "qty": 6, "locked": false },
+      { "item": null, "qty": 0, "locked": false },
+      { "item": null, "qty": 0, "locked": false }
+    ],
+    "adv_Bragain": [
+      { "item": "Iron Pick", "qty": 1, "locked": true },
+      { "item": "Lantern", "qty": 1, "locked": true },
+      { "item": "Knapsack", "qty": 1, "locked": true },
+      { "item": null, "qty": 0, "locked": false }
+    ],
+    "adv_Claudio": [
+      { "item": "Lute", "qty": 1, "locked": true },
+      { "item": null, "qty": 0, "locked": false },
+      { "item": null, "qty": 0, "locked": false },
+      { "item": null, "qty": 0, "locked": false }
+    ],
+    "adv_Amyssa": [
+      { "item": "Scribe Kit", "qty": 1, "locked": true },
+      { "item": "Amyssa's Spellbook", "qty": 1, "locked": true },
+      { "item": null, "qty": 0, "locked": false },
+      { "item": null, "qty": 0, "locked": false }
+    ],
+    "adv_Hogmother": [
+      { "item": "Large Cauldron Spoon", "qty": 1, "locked": true },
+      { "item": "Apothecary kit", "qty": 1, "locked": true },
+      { "item": null, "qty": 0, "locked": false },
+      { "item": null, "qty": 0, "locked": false }
+    ],
+    "adv_Tonica": [
+      { "item": "Elvish Bow", "qty": 1, "locked": true },
+      { "item": "Arrow quiver", "qty": 1, "locked": true },
+      { "item": null, "qty": 0, "locked": false },
+      { "item": null, "qty": 0, "locked": false }
+    ],
+    "adv_Lurch": [
+      { "item": null, "qty": 0, "locked": false },
+      { "item": null, "qty": 0, "locked": false },
+      { "item": null, "qty": 0, "locked": false },
+      { "item": null, "qty": 0, "locked": false }
+    ],
+    "adv_Desmond": [
+      { "item": "Adorned_Basalt_Club", "qty": 1, "locked": true },
+      { "item": "Holy_water_flask", "qty": 2, "locked": false },
+      { "item": null, "qty": 0, "locked": false },
+      { "item": null, "qty": 0, "locked": false }
+    ],
+    "adv_Aasibelle": [
+      { "item": null, "qty": 0, "locked": false },
+      { "item": null, "qty": 0, "locked": false },
+      { "item": null, "qty": 0, "locked": false },
+      { "item": null, "qty": 0, "locked": false }
+    ],
+    "adv_Inferno": [
+      { "item": "Hairloom Sapphire", "qty": 1, "locked": true },
+      { "item": null, "qty": 0, "locked": false },
+      { "item": null, "qty": 0, "locked": false },
+      { "item": null, "qty": 0, "locked": false }
+    ],
+    "adv_CptBlackmoor": [
+      { "item": "Hairloom Sapphire", "qty": 1, "locked": true },
+      { "item": null, "qty": 0, "locked": false },
+      { "item": null, "qty": 0, "locked": false },
+      { "item": null, "qty": 0, "locked": false }
+    ],
+    "adv_Hogfather": [
+      { "item": "Large Rolling Pin", "qty": 1, "locked": true },
+      { "item": null, "qty": 0, "locked": false },
+      { "item": null, "qty": 0, "locked": false },
+      { "item": null, "qty": 0, "locked": false }
+    ],
+    "adv_Hogwarts": [],
+    "adv_Balsazar": [
+      { "item": "Grimoire of Patron", "qty": 1, "locked": true },
+      { "item": null, "qty": 0, "locked": false },
+      { "item": null, "qty": 0, "locked": false },
+      { "item": null, "qty": 0, "locked": false }
+    ],
+    "adv_Finnick": [
+      { "item": "Small Rapier", "qty": 1, "locked": true },
+      { "item": null, "qty": 0, "locked": false },
+      { "item": null, "qty": 0, "locked": false },
+      { "item": null, "qty": 0, "locked": false }
+    ],
+    "adv_Awetruce": [
+      { "item": null, "qty": 0, "locked": true },
+      { "item": null, "qty": 0, "locked": true },
+      { "item": null, "qty": 0, "locked": true },
+      { "item": null, "qty": 0, "locked": true }
+    ],
+    "adv_Tinman": [
+      { "item": null, "qty": 0, "locked": false },
+      { "item": null, "qty": 0, "locked": false },
+      { "item": null, "qty": 0, "locked": false },
+      { "item": null, "qty": 0, "locked": false }
+    ],
+    "adv_Trollkin": [
+      { "item": "Amulet of Fire Warding", "qty": 1, "locked": true },
+      { "item": null, "qty": 0, "locked": false },
+      { "item": null, "qty": 0, "locked": false },
+      { "item": null, "qty": 0, "locked": false }
+    ],
+    "adv_Kilokur": [
+      { "item": null, "qty": 0, "locked": false },
+      { "item": null, "qty": 0, "locked": false },
+      { "item": null, "qty": 0, "locked": false },
+      { "item": null, "qty": 0, "locked": false }
+    ],
+    "adv_Bogarth": [
+      { "item": "Potion of Invisibility", "qty": 4, "locked": false },
+      { "item": "Envenum kit", "qty": 1, "locked": true },
+      { "item": "Spiked Gauntlet", "qty": 1, "locked": true },
+      { "item": null, "qty": 0, "locked": false }
+    ],
+    "adv_Crusher": [
+      { "item": "Crusher's Favorite Mug", "qty": 1, "locked": true },
+      { "item": null, "qty": 0, "locked": false },
+      { "item": null, "qty": 0, "locked": false },
+      { "item": null, "qty": 0, "locked": false }
+    ],
+    "adv_Wormtail": [
+      { "item": "Poisoned Dagger", "qty": 1, "locked": true },
+      { "item": null, "qty": 0, "locked": false },
+      { "item": null, "qty": 0, "locked": false },
+      { "item": null, "qty": 0, "locked": false }
+    ],
+    "adv_Ugress": [
+      { "item": "Pendant of Imprisonment", "qty": 1, "locked": true },
+      { "item": null, "qty": 0, "locked": false },
+      { "item": null, "qty": 0, "locked": false },
+      { "item": null, "qty": 0, "locked": false }
+    ],
+    "adv_SandraFreja": [
+      { "item": "Helmet of True Seeing", "qty": 1, "locked": true },
+      { "item": null, "qty": 0, "locked": false },
+      { "item": null, "qty": 0, "locked": false },
+      { "item": null, "qty": 0, "locked": false }
+    ],
+    "adv_Bjorn": [
+      { "item": "Short Sword", "qty": 1, "locked": false },
+      { "item": null, "qty": 0, "locked": false },
+      { "item": null, "qty": 0, "locked": false },
+      { "item": null, "qty": 0, "locked": false }
+    ],
+    "adv_Lili": [
+      { "item": "Short Bow", "qty": 1, "locked": false },
+      { "item": "Long Bow", "qty": 1, "locked": false },
+      { "item": null, "qty": 0, "locked": false },
+      { "item": null, "qty": 0, "locked": false }
+    ],
+    "adv_Thoran": [
+      { "item": "Battle Axe", "qty": 1, "locked": true },
+      { "item": "Circlet of Intellect", "qty": 1, "locked": true },
+      { "item": null, "qty": 0, "locked": false },
+      { "item": null, "qty": 0, "locked": false }
+    ],
+    "adv_Saint": [
+      { "item": "Katana", "qty": 2, "locked": true },
+      { "item": null, "qty": 0, "locked": false },
+      { "item": null, "qty": 0, "locked": false },
+      { "item": null, "qty": 0, "locked": false }
+    ]
   },
   "Races": {
     "Human": {

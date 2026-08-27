@@ -370,7 +370,6 @@ async function recruitAdventurer(advId) {
 
     // 5. Mutate state in memory
     player.patrons[advId] = newbornState;
-
     // 6. Persist to storage — THIS is the only place async matters
     try {
         await storage.savePlayer(player);   // <-- the only meaningful await
@@ -383,10 +382,12 @@ async function recruitAdventurer(advId) {
 
 function createDefaultPatronState(advId) {
     const lore = loreData.Adventurer[advId];
+	const inventory = loreData.Adv_Inventory[advId];
 	// console.log("ADV ID RECEIVED:", advId);
 	// console.log("LORE EXISTS:", advId in loreData.Adventurer);
 	// console.log("LORE ENTRY:", loreData.Adventurer[advId]);
 
+	console.log(inventory);
     if (!lore) {
         console.warn(`Missing lore for ${advId}`);
         return null;
@@ -427,25 +428,25 @@ function createDefaultPatronState(advId) {
     };
 
     // Normalize armor proficiency
-    let prof = (lore.proficiency_armor || "unarmed").toLowerCase();
+    let prof = (lore.proficiency_armor || "unarmored").toLowerCase();
     if (!armorBonus.hasOwnProperty(prof)) {
-        prof = "unarmed";
+        prof = "unarmored";
     }
     // --- Compute AC ---
     let AC = 10 + Dexterity + (armorBonus[prof] || 0);
 
-    // Barbarian bonus only when unarmed
+    // Barbarian bonus only when unarmored
     if (race === "barbarian" && prof === "unarmored") {
         AC += hpMod;
     }
 
-    // Barbarian bonus only when unarmed
+    // Barbarian bonus only when unarmored
     if (race === "direwolf" && prof === "unarmored") {
         AC += hpMod;
     }
 
-    // Monk AC formula (only when unarmed)
-    if (role === "monk" && prof === "unarmed") {
+    // Monk AC formula (only when unarmored)
+    if (role === "monk" && prof === "unarmored") {
         AC = 10 + wisdom;
     }
 
@@ -484,7 +485,7 @@ function createDefaultPatronState(advId) {
         Level: level,
         Exp: initialExp, 
         expClassKey,
-		
+		inventory
     };
 }
 
