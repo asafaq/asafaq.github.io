@@ -14,32 +14,66 @@ function renderGuildStash() {
     }
 
     const stashGrid = document.querySelector("#guild-stash .stash-grid");
-    if (!stashGrid) return;
+
+    if (!stashGrid) {
+        console.warn("Guild stash grid NOT FOUND");
+        return;
+    }
 
     stashGrid.innerHTML = player.data.stash.map((slot, index) => {
-        const hasItem = slot.item !== null;
-        const itemData = hasItem ? loreData.inventory[slot.item] : null;
 
-        const icon = hasItem
-            ? (itemData?.icon || FALLBACK_ITEM_ICON)
-            : "assets/guild/inventory_empty.png";
+        const hasItem =
+            slot.item !== null &&
+            slot.item !== undefined &&
+            slot.item !== "";
 
-        const qtyHTML = slot.qty > 1
-            ? `<div class="qty">${slot.qty}</div>`
-            : "";
+        const itemData =
+            hasItem
+                ? loreData?.inventory?.[slot.item]
+                : null;
 
-        const lockHTML = slot.locked
-            ? `<div class="lock-overlay"></div>`
-            : "";
+        const itemIcon =
+            itemData?.icon || FALLBACK_ITEM_ICON;
+
+        const qtyHTML =
+            hasItem && slot.qty > 1
+                ? `<div class="qty">${slot.qty}</div>`
+                : "";
+
+        const lockHTML =
+            slot.locked
+                ? `<div class="lock-overlay"></div>`
+                : "";
 
         return `
-			<div class="stash-slot" data-slot="${index}">
-				<img src="assets/guild/inventory_empty.png" class="empty-bg">
-				${hasItem ? `<img src="${icon}" class="actual-item">` : ""}
-				${qtyHTML}
-				${lockHTML}
-			</div>
+            <div
+                class="stash-slot"
+                data-slot="${index}"
+                data-item="${hasItem ? slot.item : ""}"
+            >
 
+                <!-- ALWAYS present: inventory slot background -->
+                <img
+                    src="assets/guild/inventory_empty.png"
+                    class="stash-slot-background"
+                    draggable="false"
+                    alt=""
+                >
+
+                <!-- Only present when slot contains an item -->
+                ${hasItem ? `
+                    <img
+                        src="${itemIcon}"
+                        class="item-icon"
+                        draggable="false"
+                        alt="${itemData?.name || slot.item}"
+                    >
+                ` : ""}
+
+                ${qtyHTML}
+                ${lockHTML}
+
+            </div>
         `;
     }).join("");
 }
@@ -119,6 +153,7 @@ function initStashChestClick() {
     }
 
     initInventoryTooltips();
+	initInventoryTransferClicks();
     treasury = renderTreasuryLine();
     pushStatus(treasury, 8000);
   });
@@ -338,32 +373,40 @@ function updateUIItemDetails(itemID) {
 }
 
 function initInventoryTooltips() {
-    const overlay = document.getElementById("overlay");
+
     const tooltip = document.getElementById("satchel-tooltip");
 
-    if (!overlay || !tooltip) {
-        console.error("Inventory tooltip: missing overlay or tooltip");
+    if (!tooltip) {
+        console.error("Inventory tooltip: #satchel-tooltip NOT FOUND");
         return;
     }
 
-    if (overlay.dataset.inventoryTooltipsInitialized === "true") {
+    if (document.documentElement.dataset.inventoryTooltipsInitialized === "true") {
         return;
     }
 
-    overlay.dataset.inventoryTooltipsInitialized = "true";
+    document.documentElement.dataset.inventoryTooltipsInitialized = "true";
 
     let activeSlot = null;
 
+
+    // =========================================================
+    // GET SLOT DATA
+    // =========================================================
 
     function getSlotData(slotEl) {
 
         // -------------------------
         // ADVENTURER SATCHEL
         // -------------------------
+
         if (slotEl.classList.contains("slot")) {
 
             const advEl = slotEl.closest(".adv-satchel");
-            if (!advEl) return null;
+
+            if (!advEl) {
+                return null;
+            }
 
             const advId = advEl.dataset.id;
             const slotIndex = Number(slotEl.dataset.slot);
@@ -371,7 +414,9 @@ function initInventoryTooltips() {
             const hydrated = getHydratedAdventurer(advId);
             const slot = hydrated?.inventory?.[slotIndex];
 
-            if (!slot) return null;
+            if (!slot) {
+                return null;
+            }
 
             return {
                 slot,
@@ -383,12 +428,15 @@ function initInventoryTooltips() {
         // -------------------------
         // GUILD STASH
         // -------------------------
+
         if (slotEl.classList.contains("stash-slot")) {
 
             const slotIndex = Number(slotEl.dataset.slot);
             const slot = player?.data?.stash?.[slotIndex];
 
-            if (!slot) return null;
+            if (!slot) {
+                return null;
+            }
 
             return {
                 slot,
@@ -396,9 +444,14 @@ function initInventoryTooltips() {
             };
         }
 
+
         return null;
     }
 
+
+    // =========================================================
+    // SHOW TOOLTIP
+    // =========================================================
 
     function showTooltip(slotEl, x, y) {
 
@@ -418,29 +471,28 @@ function initInventoryTooltips() {
 
         const hasItem =
             slot.item !== null &&
-            slot.item !== undefined;
+            slot.item !== undefined &&
+            slot.item !== "";
 
-        // Empty + unlocked = no tooltip
+
+        // Empty unlocked slot
         if (!hasItem && !isLocked) {
             hideTooltip();
             return;
         }
 
+
         let html = "";
 
-        // Keep this outside the block so the image
-        // can be accessed later.
-        const itemData =
-            hasItem
-                ? loreData?.inventory?.[slot.item]
-                : null;
 
-
-        // -------------------------
+        // =====================================================
         // ITEM
-        // -------------------------
+        // =====================================================
 
         if (hasItem) {
+
+            const itemData =
+                loreData?.inventory?.[slot.item];
 
             const itemName =
                 itemData?.name ||
@@ -448,22 +500,24 @@ function initInventoryTooltips() {
 
             html += `<strong>${itemName}</strong>`;
 
+
             if (slot.qty > 1) {
                 html += `<br>Qty: ${slot.qty}`;
             }
 
-            // ------------------------------------
-            // UNIFORM FIELD RENDERING
-            // ------------------------------------
 
-            const skipFields = [
-                "name",
-                "icon",
-                "stack",
-                "image"
-            ];
+            // -----------------------------------------------
+            // ITEM DATA
+            // -----------------------------------------------
 
             if (itemData) {
+
+                const skipFields = [
+                    "name",
+                    "icon",
+                    "stack",
+                    "image"
+                ];
 
                 for (const key in itemData) {
 
@@ -471,43 +525,46 @@ function initInventoryTooltips() {
                         continue;
                     }
 
-                    const val = itemData[key];
+                    const value = itemData[key];
 
-                    // Don't display empty fields
-                    if (val === undefined || val === null) {
+                    if (
+                        value === undefined ||
+                        value === null ||
+                        value === ""
+                    ) {
                         continue;
                     }
 
                     const label =
                         key === "desc"
-                            ? "description"
+                            ? "Description"
                             : key;
 
-                    html += `<br>${label}: ${val}`;
+                    html += `<br>${label}: ${value}`;
                 }
-            }
 
 
-            // ------------------------------------
-            // IMAGE
-            // ------------------------------------
+                // -------------------------------------------
+                // OPTIONAL IMAGE
+                // -------------------------------------------
 
-            if (itemData?.image) {
+                if (itemData.image) {
 
-                html += `
-                    <br>
-                    <img
-                        src="${itemData.image}"
-                        class="satchel-tooltip-item-image"
-                    >
-                `;
+                    html += `
+                        <br>
+                        <img
+                            src="${itemData.image}"
+                            class="satchel-tooltip-item-image"
+                        >
+                    `;
+                }
             }
         }
 
 
-        // -------------------------
+        // =====================================================
         // LOCKED
-        // -------------------------
+        // =====================================================
 
         if (isLocked) {
 
@@ -528,7 +585,15 @@ function initInventoryTooltips() {
     }
 
 
+    // =========================================================
+    // POSITION
+    // =========================================================
+
     function positionTooltip(x, y) {
+
+        if (!activeSlot) {
+            return;
+        }
 
         const padding = 10;
         const offset = 12;
@@ -539,19 +604,22 @@ function initInventoryTooltips() {
         let top = y + offset;
 
 
-        // Right edge
-        if (left + rect.width + padding + 100 > window.innerWidth) {
-            left = x - rect.width - offset + 100;
+        if (
+            left + rect.width + padding >
+            window.innerWidth
+        ) {
+            left = x - rect.width - offset;
         }
 
 
-        // Bottom edge
-        if (top + rect.height + padding > window.innerHeight) {
+        if (
+            top + rect.height + padding >
+            window.innerHeight
+        ) {
             top = y - rect.height - offset;
         }
 
 
-        // Left / top edges
         left = Math.max(padding, left);
         top = Math.max(padding, top);
 
@@ -560,6 +628,10 @@ function initInventoryTooltips() {
         tooltip.style.top = `${top}px`;
     }
 
+
+    // =========================================================
+    // HIDE
+    // =========================================================
 
     function hideTooltip() {
 
@@ -570,17 +642,20 @@ function initInventoryTooltips() {
     }
 
 
-    // ==========================================
-    // MOUSE HOVER
-    // ==========================================
+    // =========================================================
+    // MOUSE OVER
+    // =========================================================
 
-    overlay.addEventListener("pointerover", e => {
+    document.addEventListener("pointerover", e => {
 
-        if (e.pointerType !== "mouse") return;
+        if (e.pointerType !== "mouse") {
+            return;
+        }
 
-        const slotEl = e.target.closest(".slot, .stash-slot");
+        const slotEl =
+            e.target.closest(".slot, .stash-slot");
 
-        if (!slotEl || !overlay.contains(slotEl)) {
+        if (!slotEl) {
             return;
         }
 
@@ -596,11 +671,19 @@ function initInventoryTooltips() {
     });
 
 
-    overlay.addEventListener("pointermove", e => {
+    // =========================================================
+    // MOUSE MOVE
+    // =========================================================
 
-        if (e.pointerType !== "mouse") return;
+    document.addEventListener("pointermove", e => {
 
-        if (!activeSlot) return;
+        if (e.pointerType !== "mouse") {
+            return;
+        }
+
+        if (!activeSlot) {
+            return;
+        }
 
         positionTooltip(
             e.clientX,
@@ -609,17 +692,29 @@ function initInventoryTooltips() {
     });
 
 
-    overlay.addEventListener("pointerout", e => {
+    // =========================================================
+    // MOUSE OUT
+    // =========================================================
 
-        if (e.pointerType !== "mouse") return;
+    document.addEventListener("pointerout", e => {
 
-        const slotEl = e.target.closest(".slot, .stash-slot");
+        if (e.pointerType !== "mouse") {
+            return;
+        }
 
-        if (!slotEl) return;
+        const slotEl =
+            e.target.closest(".slot, .stash-slot");
+
+        if (!slotEl) {
+            return;
+        }
 
         const related = e.relatedTarget;
 
-        if (related && slotEl.contains(related)) {
+        if (
+            related &&
+            slotEl.contains(related)
+        ) {
             return;
         }
 
@@ -627,26 +722,31 @@ function initInventoryTooltips() {
     });
 
 
-    // ==========================================
-    // TOUCH / SINGLE TAP
-    // ==========================================
+    // =========================================================
+    // TOUCH
+    // =========================================================
 
-    overlay.addEventListener("pointerup", e => {
+    document.addEventListener("pointerup", e => {
 
-        if (e.pointerType !== "touch") return;
+        if (e.pointerType !== "touch") {
+            return;
+        }
 
-        const slotEl = e.target.closest(".slot, .stash-slot");
+        const slotEl =
+            e.target.closest(".slot, .stash-slot");
 
-        if (!slotEl || !overlay.contains(slotEl)) {
+
+        if (!slotEl) {
             hideTooltip();
             return;
         }
 
-        // Tap same slot again = close
+
         if (activeSlot === slotEl) {
             hideTooltip();
             return;
         }
+
 
         showTooltip(
             slotEl,
@@ -656,18 +756,7 @@ function initInventoryTooltips() {
     });
 
 
-    // ==========================================
-    // TOUCH OUTSIDE
-    // ==========================================
-
-    document.addEventListener("pointerup", e => {
-
-        if (e.pointerType !== "touch") return;
-
-        if (!e.target.closest(".slot, .stash-slot")) {
-            hideTooltip();
-        }
-    });
+    console.log("Inventory tooltips initialized");
 }
 
 function addItemToContainer(container, itemId, quantity = 1) {

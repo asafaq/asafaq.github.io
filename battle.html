@@ -901,12 +901,85 @@ function update() {
 		active.traits?.includes("Comedian") &&
 		!isAnyBardSinging()
 	) {
-		createBtn(bar, "🎭 Joke", startJokeAction);
+		createBtn(bar, "🎭 Joke", startJokeAction, "", "", "Blue");
 	}
+
+	const combatItems = getUsableCombatItems(active);
+
+	combatItems.forEach(item => {
+		createBtn(
+			bar,
+			item.label,
+			() => handleCombatItem(item),
+			"",
+			"",
+			"Item"
+		);
+	});
+
+
 	
 	createBtn(bar, "💥 Developer Auto‑Win", autoWinBattle, "", "auto-win-btn", "Dev");
 
     checkVictory();
+}
+
+const COMBAT_ITEMS = {
+    "Wand of Magic Missiles": {
+        label: "🪄 Magic Missiles",
+        actionType: "spell",
+        concentration: true,
+        consumesAction: true
+    },
+
+    "Scroll of Burning Hands": {
+        label: "📜 Burning Hands",
+        actionType: "spell",
+        concentration: true,
+        consumesAction: true
+    },
+
+    "Potion of Healing": {
+        label: "🧪 Healing Potion",
+        actionType: "item",
+        concentration: false,
+        consumesAction: true
+    }
+};
+
+function getUsableCombatItems(unit) {
+    if (!unit?.inventory || !Array.isArray(unit.inventory)) {
+        return [];
+    }
+
+    return unit.inventory
+        .map(invItem => {
+            const itemName = invItem.item;
+            const definition = COMBAT_ITEMS[itemName];
+
+            if (!definition) return null;
+
+            // Locked items cannot currently be manipulated by the character.
+            if (invItem.locked) return null;
+
+            // If your inventory entries eventually have quantity,
+            // this prevents showing items that have none left.
+            if (invItem.quantity !== undefined && invItem.quantity <= 0) {
+                return null;
+            }
+
+            // Same idea for charges.
+            if (invItem.charges !== undefined && invItem.charges <= 0) {
+                return null;
+            }
+
+            return {
+                inventoryItem: invItem,
+                name: itemName,
+                ...definition
+            };
+        })
+        .filter(Boolean);
 }
 
 function skillBox(theme, x, y, integerNeeded, checkboxNeeded, defaults = {}) {
@@ -995,6 +1068,10 @@ function skillBox(theme, x, y, integerNeeded, checkboxNeeded, defaults = {}) {
 		};
 
     });
+}
+
+function handleCombatItem(item) {
+    console.log("COMBAT ITEM:", item);
 }
 
 function autoWinBattle() {
@@ -1341,7 +1418,13 @@ function createBtn(parent, text, func, className = '', id = '', colorPreset = ''
 	const BTN_COLORS = {
 		Holy: { bg: "yellow", font: "#00008B" },
 		Dev:  { bg: "white",  font: "black" },
-		Danger: { bg: "#8B0000", font: "white" }
+		Danger: { bg: "#8B0000", font: "white" },
+		Blue: { bg: "#4a90e2", font: "white" },
+		Orange: { bg: "#f1c40f", font: "black" },
+		Light_grey: { bg: "#9e9e9e", font: "black" },
+		Light_red: { bg: "#ff5722", font: "black" },
+		Grey: { bg: "#607d8b", font: "white" },
+		Item: { bg: "#52463a", font: "white" }
 	};
     const btn = document.createElement('button');
     btn.innerText = text;

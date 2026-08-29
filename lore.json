@@ -1694,6 +1694,18 @@
 		"desc": "Scroll of Magic Missile",
 		"stack": 10
 	  },
+	  "Wand of Magic Missiles": {
+		"name": "Scroll of Magic Missile",
+		"icon": "/assets/inventory/magic_scroll.png",
+		"desc": "Scroll of Magic Missile",
+		"stack": 1
+	  },
+	  "Scroll of Burning Hands": {
+		"name": "Scroll of Magic Missile",
+		"icon": "/assets/inventory/magic_scroll.png",
+		"desc": "Scroll of Magic Missile",
+		"stack": 10
+	  },
 	  "Crusher's Favorite Mug": {
 		"name": "Crusher's Favorite Mug",
 		"icon": "/assets/inventory/tankard_beer.png",
