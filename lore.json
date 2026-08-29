@@ -73,7 +73,7 @@
       "caste": "Commoner",
       "RacialEnemy": "",
       "proficiency_armor": "unarmored",
-      "proficiency_weapon": "Martial",
+      "proficiency_weapon": "Simple",
       "traits": [
         "Masochist",
         "Cheerful"
@@ -239,7 +239,7 @@
       "caste": "Commoner",
       "RacialEnemy": "Knolls",
       "proficiency_armor": "unarmored",
-      "proficiency_weapon": "Martial",
+      "proficiency_weapon": "Simple",
       "traits": [
         "Calm",
         "Apothecary"
@@ -502,7 +502,7 @@
       "caste": "Commoner",
       "RacialEnemy": "Pastries",
       "proficiency_armor": "unarmored",
-      "proficiency_weapon": "Martial",
+      "proficiency_weapon": "Simple",
       "traits": [
         "Cheerful"
       ]
@@ -533,8 +533,9 @@
     },
     "adv_Balsazar": {
       "name": "Balsazar",
-      "contractPrice": 100,
-      "icon": "assets/patrons/hogfather.png",
+      "contractPrice": 800,
+      "icon": "assets/patrons/balsazar_s.png",
+      "large": "assets/patrons/balsazar_l.png",
       "top": "300px",
       "left": "120px",
       "location": 2,
@@ -544,13 +545,12 @@
       "hp_modifier": 4,
       "strengh_mod": 3,
       "Dexterity_mod": -1,
-      "wisdom_mod": 1,
+      "wisdom_mod": -1,
       "intelligence_mod": -3,
       "charisma_mod": 1,
       "alignment": "Evil",
       "level": 3,
       "sex": 1,
-      "size": "Medium",
       "caste": "Noble",
       "RacialEnemy": "",
       "proficiency_armor": "Heavy",
@@ -1029,8 +1029,8 @@
     "adv_Marlnus": [
       { "item": "Camp", "qty": 1, "locked": true },
       { "item": "Carriage", "qty": 1, "locked": true },
-      { "item": null, "qty": 0, "locked": false },
-      { "item": null, "qty": 0, "locked": false }
+      { "item": null, "qty": 0, "locked": true },
+      { "item": null, "qty": 0, "locked": true }
     ],
     "adv_Hogperson": [
       { "item": "Large Club", "qty": 1, "locked": true },
@@ -1626,7 +1626,7 @@
   "inventory": {
 	  "Large Club": {
 		"name": "Large Club",
-		"icon": "/assets/inventory/apple.png",
+		"icon": "/assets/inventory/club.png",
 		"type": "weapon",
 		"desc": "It was probably a foot of a table. A rather large table.",
 		"dmg": 8
@@ -1645,7 +1645,7 @@
 	  },
 	  "Iron Pick": {
 		"name": "Iron Pick",
-		"icon": "/assets/inventory/apple.png",
+		"icon": "/assets/inventory/pickaxe.png",
 		"desc": "A pick's head fixed on a sturdy cane."
 	  },
 	  "Lantern": {
@@ -1665,12 +1665,22 @@
 	  },
 	  "Scribe Kit": {
 		"name": "Scribe Kit",
-		"icon": "/assets/inventory/apple.png",
+		"icon": "/assets/inventory/kit.png",
 		"desc": "For writing a parchment."
+	  },
+	  "Apothecary Kit": {
+		"name": "Apothecary Kit",
+		"icon": "/assets/inventory/kit.png",
+		"desc": "For grinding, mixing and fermenting liquids."
+	  },
+	  "Envenum Kit": {
+		"name": "Envenum Kit",
+		"icon": "/assets/inventory/kit.png",
+		"desc": "For grinding, mixing and fermenting liquids."
 	  },
 	  "Amyssa's Spellbook": {
 		"name": "Amyssa's Spellbook",
-		"icon": "/assets/inventory/apple.png",
+		"icon": "/assets/inventory/spellbook.png",
 		"desc": "Hold's Amyssa's copied spells. She wrote them herself."
 	  },
 	  "Camp": {
@@ -1680,7 +1690,7 @@
 	  },
 	  "Magic Missile": {
 		"name": "Scroll of Magic Missile",
-		"icon": "/assets/inventory/apple.png",
+		"icon": "/assets/inventory/magic_scroll.png",
 		"desc": "Scroll of Magic Missile",
 		"stack": 10
 	  },
@@ -1688,6 +1698,40 @@
 		"name": "Crusher's Favorite Mug",
 		"icon": "/assets/inventory/tankard_beer.png",
 		"desc": "A weathered tankard made of Oak and Tin, some etched inked markings on it give it a lot of character."
+	  },
+	  "Potion of Healing": {
+		"name": "Potion of Healing",
+		"icon": "/assets/inventory/potion.png",
+		"desc": "A small flask containing liquid.",
+		"stack": 10
+	  },
+	  "Tarot king of swords": {
+		"image": "/assets/inventory/tarot/king_of_swords.png",
+		"name": "king of swords",
+		"icon": "/assets/inventory/card_back3.png",
+		"desc": "A tarot card drawn on leather. It contains minor arcane powers.",
+		"stack": 4
+	  },
+	  "Tarot the fool": {
+		"image": "/assets/inventory/tarot/the_fool.png",
+		"name": "the fool",
+		"icon": "/assets/inventory/card_back2.png",
+		"desc": "A tarot card drawn on leather. It contains major arcane powers.",
+		"stack": 4
+	  },
+	  "Tarot the hierophant": {
+		"image": "/assets/inventory/tarot/the_hierophant.png",
+		"name": "the hierophant",
+		"icon": "/assets/inventory/card_back2.png",
+		"desc": "A tarot card drawn on leather. It contains major arcane powers.",
+		"stack": 4
+	  },
+	  "Tarot the high priestess": {
+		"image": "/assets/inventory/tarot/the_high_priestess.png",
+		"name": "the high priestess",
+		"icon": "/assets/inventory/card_back2.png",
+		"desc": "A tarot card drawn on leather. It contains major arcane powers.",
+		"stack": 4
 	  }
   }
 

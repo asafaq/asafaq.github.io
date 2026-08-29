@@ -9,5 +9,8 @@
     "Gold": "An overvalued metal, its absense is spread due to the greed of vile draconian monsters who hide it in their caverns.",
     "Electrum": "A precious alloy traded in tablet-like coins."
   },
-  "Monsters": {}
+  "Monsters": {},
+  "Inventory": {
+	"Tarot Cards": "On leather backs, scattered over the world, you might find arcane magic painted on cards. They come in two classes, Minor and Major Arcana, can be invoked to unleash their magic. There's a rumor whomever gathers all the Major Arcana cards gets a wish as a reward."
+  }
 }

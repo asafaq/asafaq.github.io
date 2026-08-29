@@ -428,46 +428,81 @@ function initInventoryTooltips() {
 
         let html = "";
 
+        // Keep this outside the block so the image
+        // can be accessed later.
+        const itemData =
+            hasItem
+                ? loreData?.inventory?.[slot.item]
+                : null;
+
+
         // -------------------------
         // ITEM
         // -------------------------
 
-		if (hasItem) {
+        if (hasItem) {
 
-			const itemData = loreData.inventory[slot.item];
+            const itemName =
+                itemData?.name ||
+                slot.item;
 
-			const itemName =
-				itemData?.name ||
-				slot.item;
+            html += `<strong>${itemName}</strong>`;
 
-			html += `<strong>${itemName}</strong>`;
+            if (slot.qty > 1) {
+                html += `<br>Qty: ${slot.qty}`;
+            }
 
-			if (slot.qty > 1) {
-				html += `<br>Qty: ${slot.qty}`;
-			}
+            // ------------------------------------
+            // UNIFORM FIELD RENDERING
+            // ------------------------------------
 
-			// ------------------------------------
-			// UNIFORM FIELD RENDERING
-			// ------------------------------------
+            const skipFields = [
+                "name",
+                "icon",
+                "stack",
+                "image"
+            ];
 
-			const skipFields = ["name", "icon", "stack"];
+            if (itemData) {
 
-			for (const key in itemData) {
+                for (const key in itemData) {
 
-				if (skipFields.includes(key)) {
-					continue;
-				}
+                    if (skipFields.includes(key)) {
+                        continue;
+                    }
 
-				const val = itemData[key];
+                    const val = itemData[key];
 
-				if (val !== undefined && val !== null) {
-				}
-				const label = (key === "desc") ? "description" : key;
-				
-				html += `<br>${label}: ${val}`;
-			}
-		}
+                    // Don't display empty fields
+                    if (val === undefined || val === null) {
+                        continue;
+                    }
 
+                    const label =
+                        key === "desc"
+                            ? "description"
+                            : key;
+
+                    html += `<br>${label}: ${val}`;
+                }
+            }
+
+
+            // ------------------------------------
+            // IMAGE
+            // ------------------------------------
+
+            if (itemData?.image) {
+
+                html += `
+                    <br>
+                    <img
+                        src="${itemData.image}"
+                        class="satchel-tooltip-item-image"
+                    >
+                `;
+            }
+        }
 
 
         // -------------------------
@@ -505,8 +540,8 @@ function initInventoryTooltips() {
 
 
         // Right edge
-        if (left + rect.width + padding > window.innerWidth) {
-            left = x - rect.width - offset;
+        if (left + rect.width + padding + 100 > window.innerWidth) {
+            left = x - rect.width - offset + 100;
         }
 
 
@@ -702,6 +737,15 @@ function addItemToContainer(container, itemId, quantity = 1) {
 
     return true;
 }
+
+/*	creating an item in a patron's inventory.
+addItemToContainer(
+    player.patrons.adv_Amyssa.inventory,
+    "Amyssa's Spellbook",
+    0
+);
+*/
+
 
 function transferItem(source, sourceIndex, target) {
     const sourceSlot = source[sourceIndex];
@@ -1119,3 +1163,19 @@ function initInventoryTransferClicks() {
 }
 //initInventoryTransferClicks();
 
+function positionTooltip(x, y) {
+    const tooltip = document.getElementById("satchel-tooltip");
+
+    tooltip.style.left = x + "px";
+    tooltip.style.top = y + "px";
+
+    // Force layout so we can read width
+    const rect = tooltip.getBoundingClientRect();
+
+    const screenWidth = window.innerWidth;
+
+    // If tooltip goes off the right side, clamp it
+    if (rect.right > screenWidth) {
+        tooltip.style.left = (screenWidth - rect.width - 10) + "px";
+    }
+}

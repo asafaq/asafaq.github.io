@@ -1013,11 +1013,11 @@ img:not([src]) {
 
 /* Optional: Make the background slightly faded when an item sits over it */
 .stash-slot .empty-bg {
-  z-index: 1; 
+  z-index: 44; 
 }
 
 .stash-slot .actual-item {
-  z-index: 5; /* Ensures the item stays on top of the empty slot background */
+  z-index: 45; /* Ensures the item stays on top of the empty slot background */
   height: 48px;
   width: 48px;
 }
@@ -1030,7 +1030,7 @@ img:not([src]) {
   color: #212121;
   font-size: 17px;
   text-shadow: 0px 1px 8px black;
-  z-index: 6;
+  z-index: 45;
 }
 
 .lock-overlay {
@@ -1046,6 +1046,11 @@ img:not([src]) {
   cursor: pointer;
 }
 
+#stash-chest-icon {
+  z-index: 40;
+  position: relative;
+}
+
 #overlay {
     position: fixed;
     top: 60px;
@@ -1059,8 +1064,9 @@ img:not([src]) {
     justify-content: center;
     align-items: center;
 
-    z-index: 43;
+    z-index: 42;
 }
+
 
 #overlay.hidden {
     display: none;
@@ -1100,6 +1106,7 @@ img:not([src]) {
     border-radius: 8px;
     width: 500px;
     max-width: 90vw;
+	z-index: 44;
 }
 
 .satchel-window {
@@ -1111,14 +1118,14 @@ img:not([src]) {
     padding: 20px;
     width: 600px;
     min-height: 400px;
-	top: -100px;
+	top: -50px;
 
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 10px;
 
-    z-index: 41;
+    z-index: 44;
 }
 
 .close-btn {
@@ -1409,13 +1416,13 @@ position: relative;
 }
 
 .satchel-tooltip {
-    position: fixed;
+    position: absolute;
     z-index: 100000;
 
     display: none;
 
-    min-width: 100px;
-    max-width: 220px;
+    min-width: 130px;
+    max-width: 260px;
 
     padding: 6px 9px;
 
@@ -1434,6 +1441,14 @@ position: relative;
 
 .satchel-tooltip.visible {
     display: block;
+}
+
+.satchel-tooltip-item-image {
+    display: block;
+    max-width: 160px;
+    max-height: 160px;
+    margin: 8px auto 0;
+    object-fit: contain;
 }
 
 .inventory-transfer-menu {
