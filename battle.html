@@ -109,6 +109,7 @@ let staticObstacles = [],
 	 layOnHandsUser = null;
 	 layOnHandsAmount = 0;
 	 layOnHandsCure = false; 
+	targetingMode = null;
 
 const STRDEX_TABLE = {
   str: ['warrior', 'fighter', 'barbarian', 'paladin', 'cleric', 'ranger', 'monk', 'shaman', 'swordmage', 'brute', 'squire', 'paladin', 'bouncer', 'fallen paladin', 'clericbot', 'druid', 'warlock'],
@@ -855,74 +856,16 @@ function update() {
     if (hitBonus !== 0) hitEl.innerText = `HIT: ${hitBonus > 0 ? "+" : ""}${hitBonus}`;
     if (dmgBonus !== 0) dmgEl.innerText = `DMG: ${dmgBonus > 0 ? "+" : ""}${dmgBonus}`;
 
-    bar.innerHTML = '';
-    createBtn(bar, "📍 Move", "maneuver", toggleMove, isMoving ? 'btn-move-active' : '', "move-btn");
-	const hasElvishBow = active.inventory.some(i => i.item === "Elvish Bow");
-
-    if (active.stunned) {
-        Bus.emit('LOG', `${active.name} is stunned and loses their turn! 🤣`);
-		active.stunned = false;
-		active.hasAction = false;
-		active.speed = maxSpeed /2;
-        //return endTurn();
-    }
-    if (hasElvishBow) {
-		createBtn(bar, "🏹 Elvish Bow", "action", () => startRangedTargeting("Elvish Bow"));
-	}
-    if (active.race === "Barbarian" && active.isRaging && active.rageTurnsActive >= 3) {
-        createBtn(bar, "End Rage", "free action", handleEndRage);
-    }
-    if (active.role === "Bard") {
-        createBtn(bar, "🏹 Crossbow", "action", () => startRangedTargeting("Crossbow"));
-    }
-    if (active.skills && active.skills.smite > 0) {
-        createBtn(bar, "🔆 Divine Smite", "action", startSmiteTargeting, "", "", "Holy");
-    }
-    if (isRogue(active.role)) {
-        if (active.isHiding) {
-            createBtn(bar, "🗡️ Sneak", "action", startSneakTargeting);
-        } else {
-            createBtn(bar, "⚔️ Strike", "action", startMeleeTargeting);
-            createBtn(bar, "️👤 Hide", "free action", handleHide);
-        }
-    } else {
-        if (!hasElvishBow) createBtn(bar, "⚔️ Strike", "action", startMeleeTargeting);
-    }
-    if (canCast(active.role) && !active.isSinging && !active.isRaging) {
-        createBtn(bar, "✨ Spell", "casting", handleSpell);
-    }
-    if (canHeal(active.role) && !active.isRaging) {
-        createBtn(bar, "💚 Heal", "instant", startHealTargeting);
-    }
-	if (active.skills && active.skills.layonhands > 0) {
-		createBtn(bar, "🤲 Lay on Hands", "instant", startLayOnHandsTargeting, "", "", "Holy");
-	}
-	if (
-		active.traits?.includes("Comedian") &&
-		!isAnyBardSinging()
-	) {
-		createBtn(bar, "🎭 Joke", "action", startJokeAction, "", "", "Blue");
-	}
-
-	const combatItems = getUsableCombatItems(active);
-
-	combatItems.forEach(item => {
-		createBtn(
-			bar,
-			item.label,
-			"item",
-			() => handleCombatItem(item),
-			"",
-			"",
-			"Item"
-		);
-	});
-
-
-	
-	createBtn(bar, "💥 Developer Auto‑Win", "Developer", autoWinBattle, "", "auto-win-btn", "Dev");
-
+	updateActionBar(active);
     checkVictory();
+}
+
+function setTargetingMode(mode) {
+    targetingMode = mode;
+}
+
+function clearTargetingMode() {
+    targetingMode = null;
 }
 
 const COMBAT_ITEMS = {
@@ -940,11 +883,25 @@ const COMBAT_ITEMS = {
         consumesAction: true
     },
 
-    "Potion of Healing": {
+    /*"Potion of Healing": {
         label: "🧪 Healing Potion",
         actionType: "item",
         concentration: false,
         consumesAction: true
+    },*/
+
+	"Elvish Bow": {
+        label: "🏹 Elvish Bow",
+        subText: "action",
+        actionType: "weapon",
+        concentration: false,
+        consumesAction: true,
+
+        ammo: {
+            item: "Arrow quiver",
+            property: "ammo",
+            minimum: 1
+        }
     }
 };
 
@@ -960,9 +917,6 @@ function getUsableCombatItems(unit) {
 
             if (!definition) return null;
 
-            // Locked items cannot currently be manipulated by the character.
-            if (invItem.locked) return null;
-
             // If your inventory entries eventually have quantity,
             // this prevents showing items that have none left.
             if (invItem.quantity !== undefined && invItem.quantity <= 0) {
@@ -974,6 +928,26 @@ function getUsableCombatItems(unit) {
                 return null;
             }
 
+            // --------------------------------
+            // AMMUNITION REQUIREMENT
+            // --------------------------------
+
+            if (definition.ammo) {
+                const ammoItem = active.inventory.find(
+                    i => i.item === definition.ammo.item
+                );
+
+                if (!ammoItem) {
+                    return null;
+                }
+
+                const ammoAmount = ammoItem[definition.ammo.property] ?? 0;
+
+                if (ammoAmount < definition.ammo.minimum) {
+                    return null;
+                }
+            }
+			
             return {
                 inventoryItem: invItem,
                 name: itemName,
@@ -981,6 +955,410 @@ function getUsableCombatItems(unit) {
             };
         })
         .filter(Boolean);
+}
+
+function getAvailableActions(active) {
+    const actions = [];
+
+    // -------------------------
+    // MOVEMENT
+    // -------------------------
+
+    actions.push({
+        id: "move",
+        label: "📍 Move",
+        handler: () => toggleMove(),
+        activeClass: isMoving ? "btn-move-active" : "",
+        category: "Movement"
+    });
+
+
+    // -------------------------
+    // COMBAT ITEMS
+    // -------------------------
+
+    const combatItems = getUsableCombatItems(active);
+
+    combatItems.forEach(item => {
+        actions.push({
+            id: `item-${item.name}`,
+            label: item.label,
+            handler: () => handleCombatItem(item),
+            category: "Item",
+            item
+        });
+    });
+
+
+    // -------------------------
+    // RAGE
+    // -------------------------
+
+    if (
+        active.race === "Barbarian" &&
+        active.isRaging &&
+        active.rageTurnsActive >= 3
+    ) {
+        actions.push({
+            id: "end-rage",
+            label: "End Rage",
+            handler: handleEndRage,
+            category: "Class"
+        });
+    }
+
+
+    // -------------------------
+    // BARD
+    // -------------------------
+
+    if (active.role === "Bard") {
+        actions.push({
+            id: "crossbow",
+            label: "🏹 Crossbow",
+            handler: () => startRangedTargeting("Crossbow"),
+            category: "Weapon"
+        });
+    }
+
+
+    // -------------------------
+    // SMITE
+    // -------------------------
+
+    if (active.skills && active.skills.smite > 0) {
+        actions.push({
+            id: "divine-smite",
+            label: "🔆 Divine Smite",
+            handler: startSmiteTargeting,
+            category: "Holy"
+        });
+    }
+
+
+    // -------------------------
+    // ROGUE
+    // -------------------------
+
+    if (isRogue(active.role)) {
+
+        if (active.isHiding) {
+            actions.push({
+                id: "sneak",
+                label: "🗡️ Sneak",
+                handler: startSneakTargeting,
+                category: "Weapon"
+            });
+        } else {
+            actions.push({
+                id: "strike",
+                label: "⚔️ Strike",
+                handler: startMeleeTargeting,
+                category: "Weapon"
+            });
+
+            actions.push({
+                id: "hide",
+                label: "👤 Hide",
+                handler: handleHide,
+                category: "Class"
+            });
+        }
+
+    } else {
+
+        // Temporary preservation of current Elvish Bow behavior.
+        const hasElvishBow = active.inventory?.some(
+            i => i.item === "Elvish Bow"
+        );
+
+        if (!hasElvishBow) {
+            actions.push({
+                id: "strike",
+                label: "⚔️ Strike",
+                handler: startMeleeTargeting,
+                category: "Weapon"
+            });
+        }
+    }
+
+
+    // -------------------------
+    // SPELL
+    // -------------------------
+
+    if (
+        canCast(active.role) &&
+        !active.isSinging &&
+        !active.isRaging
+    ) {
+        actions.push({
+            id: "spell",
+            label: "✨ Spell",
+            handler: handleSpell,
+            category: "Spell"
+        });
+    }
+
+
+    // -------------------------
+    // HEAL
+    // -------------------------
+
+    if (
+        canHeal(active.role) &&
+        !active.isRaging
+    ) {
+        actions.push({
+            id: "heal",
+            label: "💚 Heal",
+            handler: startHealTargeting,
+            category: "Spell"
+        });
+    }
+
+
+    // -------------------------
+    // LAY ON HANDS
+    // -------------------------
+
+    if (active.skills && active.skills.layonhands > 0) {
+        actions.push({
+            id: "lay-on-hands",
+            label: "🤲 Lay on Hands",
+            handler: startLayOnHandsTargeting,
+            category: "Holy"
+        });
+    }
+
+
+    // -------------------------
+    // JOKE
+    // -------------------------
+
+    if (
+        active.traits?.includes("Comedian") &&
+        !isAnyBardSinging()
+    ) {
+        actions.push({
+            id: "joke",
+            label: "🎭 Joke",
+            handler: startJokeAction,
+            category: "Utility"
+        });
+    }
+
+
+    // -------------------------
+    // DEV
+    // -------------------------
+
+    actions.push({
+        id: "developer-auto-win",
+        label: "💥 Developer Auto-Win",
+        handler: autoWinBattle,
+        category: "Dev",
+        cssClass: "auto-win-btn"
+    });
+
+
+    return actions;
+}
+
+function updateActionBar(active) {
+    const bar = document.getElementById('action-bar');
+
+    if (!bar) return;
+
+    bar.innerHTML = '';
+
+    createBtn(
+        bar,
+        "📍 Move",
+        "maneuver",
+        toggleMove,
+        isMoving ? 'btn-move-active' : '',
+        "move-btn"
+    );
+
+    const hasElvishBow = active.inventory.some(
+        i => i.item === "Elvish Bow"
+    );
+
+    if (active.stunned) {
+        Bus.emit(
+            'LOG',
+            `${active.name} is stunned and loses their turn! 🤣`
+        );
+
+        active.stunned = false;
+        active.hasAction = false;
+        active.speed = maxSpeed / 2;
+    }
+
+    if (hasElvishBow) {
+        createBtn(
+            bar,
+            "🏹 Elvish Bow",
+            "ranged action",
+            () => startRangedTargeting("Elvish Bow")
+        );
+    }
+
+    if (
+        active.race === "Barbarian" &&
+        active.isRaging &&
+        active.rageTurnsActive >= 3
+    ) {
+        createBtn(
+            bar,
+            "End Rage",
+            "free action",
+            handleEndRage
+        );
+    }
+
+    if (active.role === "Bard") {
+        createBtn(
+            bar,
+            "🏹 Crossbow",
+            "action",
+            () => startRangedTargeting("Crossbow")
+        );
+    }
+
+    if (active.skills?.smite > 0) {
+        createBtn(
+            bar,
+            "🔆 Divine Smite",
+            "action",
+            startSmiteTargeting,
+            "",
+            "",
+            "Holy"
+        );
+    }
+
+    if (isRogue(active.role)) {
+
+        if (active.isHiding) {
+            createBtn(
+                bar,
+                "🗡️ Sneak",
+                "action",
+                startSneakTargeting
+            );
+        } else {
+            createBtn(
+                bar,
+                "⚔️ Strike",
+                "action",
+                startMeleeTargeting
+            );
+
+            createBtn(
+                bar,
+                "👤 Hide",
+                "free action",
+                handleHide
+            );
+        }
+
+    } else {
+
+        if (!hasElvishBow) {
+            createBtn(
+                bar,
+                "⚔️ Strike",
+                "action",
+                startMeleeTargeting
+            );
+        }
+    }
+
+    if (
+        canCast(active.role) &&
+        !active.isSinging &&
+        !active.isRaging
+    ) {
+        createBtn(
+            bar,
+            "✨ Spell",
+            "casting",
+            handleSpell
+        );
+    }
+
+    if (
+        canHeal(active.role) &&
+        !active.isRaging
+    ) {
+        createBtn(
+            bar,
+            "💚 Heal",
+            "instant",
+            startHealTargeting
+        );
+    }
+
+    if (active.skills?.layonhands > 0) {
+        createBtn(
+            bar,
+            "🤲 Lay on Hands",
+            "instant",
+            startLayOnHandsTargeting,
+            "",
+            "",
+            "Holy"
+        );
+    }
+
+    if (
+        active.traits?.includes("Comedian") &&
+        !isAnyBardSinging()
+    ) {
+        createBtn(
+            bar,
+            "🎭 Joke",
+            "action",
+            startJokeAction,
+            "",
+            "",
+            "Blue"
+        );
+    }
+
+    // -------------------------
+    // COMBAT ITEMS
+    // -------------------------
+
+    const combatItems = getUsableCombatItems(active);
+
+    combatItems.forEach(item => {
+        createBtn(
+            bar,
+            item.label,
+            "item",
+            () => handleCombatItem(item),
+            "",
+            "",
+            "Item"
+        );
+    });
+
+    // -------------------------
+    // DEV
+    // -------------------------
+
+    createBtn(
+        bar,
+        "💥 Developer Auto-Win",
+        "Developer",
+        autoWinBattle,
+        "",
+        "auto-win-btn",
+        "Dev"
+    );
 }
 
 function skillBox(theme, x, y, integerNeeded, checkboxNeeded, defaults = {}) {

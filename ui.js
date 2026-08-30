@@ -2469,7 +2469,7 @@ function renderCharSheet(adv) {
                     <ul class="char-stats">
                         ${show(adv.hp_modifier)        ? `<li>HP: ${adv.hp_modifier}</li>` : ""}
                         ${show(adv.strengh_mod)        ? `<li>STR: ${adv.strengh_mod}</li>` : ""}
-                        ${show(adv.Dexterity_mod)        ? `<li>DEX: ${adv.Dexterity_mod}</li>` : ""}
+                        ${show(adv.dexterity_mod)      ? `<li>DEX: ${adv.dexterity_mod}</li>` : ""}
                         ${show(adv.wisdom_mod)         ? `<li>WIS: ${adv.wisdom_mod}</li>` : ""}
                         ${show(adv.intelligence_mod)   ? `<li>INT: ${adv.intelligence_mod}</li>` : ""}
                         ${show(adv.charisma_mod)       ? `<li>CHA: ${adv.charisma_mod}</li>` : ""}

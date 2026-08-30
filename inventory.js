@@ -937,7 +937,7 @@ transferItem(
 
 function openInventoryTransferMenu(source, sourceIndex, x, y, mode = null) {
     const sourceSlot = source[sourceIndex];
-
+	console.log("transfer menu fired");
     if (!sourceSlot || !sourceSlot.item) {
         return;
     }
@@ -1138,7 +1138,7 @@ function refreshInventoryAfterTransfer() {
 }
 
 function initInventoryTransferClicks() {
-
+    console.log("initInventoryTransferClicks called");
     if (document.body.dataset.inventoryTransferInitialized === "true") {
         return;
     }
@@ -1146,13 +1146,20 @@ function initInventoryTransferClicks() {
     document.body.dataset.inventoryTransferInitialized = "true";
 
     document.addEventListener("click", e => {
-
+		
+        console.log("Global click handler fired on:", e.target);
+		
         const slot = e.target.closest(
             ".slot, .stash-slot"
         );
 
         if (!slot) return;
 
+        console.log("Slot classes:", slot.classList.value);
+
+        if (slot.classList.contains("stash-slot")) {
+            console.log("Entered stash-slot branch");
+        }
         // Don't interfere with buttons/menus
         if (e.target.closest(".inventory-transfer-menu")) {
             return;
@@ -1160,7 +1167,7 @@ function initInventoryTransferClicks() {
 
         // Must contain an actual item
         const itemImage = slot.querySelector(
-            ".invitem-icon, .actual-item"
+            ".invitem-icon, .actual-item, .item-icon"
         );
 
         if (!itemImage) {
@@ -1226,10 +1233,14 @@ function initInventoryTransferClicks() {
 
         if (slot.classList.contains("stash-slot")) {
 
+			console.log("Stash contents:", player.data.stash);
+
+
             const slotIndex =
                 Number(slot.dataset.slot);
 
-
+			
+			console.log("Slot index:", slotIndex);
             // Stash has its own mode
             const mode = "stash";
 
@@ -1239,6 +1250,7 @@ function initInventoryTransferClicks() {
                 mode
             );
 
+			console.log("Clicked element:", slot, slot.classList);
 
             openInventoryTransferMenu(
                 player.data.stash,
