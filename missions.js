@@ -268,7 +268,7 @@ const PORTRAITS = {
     },
 
     Claudio: {
-        default: "/assets/patrons/claudio.png",
+        default: "/assets/patrons/Claudio.png",
         Disguised: "/assets/missions/claudio_disguise_l.png",
         Disguised2: "/assets/missions/claudio_disguise2_l.png",
         Amyssa: "/assets/patrons/amyssa_l.png"
@@ -1178,9 +1178,24 @@ async function handleMissionEnd(sceneId) {
     await recruitAdventurer("adv_Bragain");
     await recruitAdventurer("adv_Claudio");
     await recruitAdventurer("adv_Amyssa");
+	player.patrons.adv_Amyssa.status = "applicant";
     player.patrons.adv_Bragain.location = 3;
     player.patrons.adv_Hogperson.location = 3;
     player.patrons.adv_Claudio.location = 0;
+    if (!player?.data?.stash || player.data.stash.length === 0) {
+        player.data.stash = Array.from({ length: 12 }, () => ({
+            item: null,
+            qty: 0,
+            locked: false
+        }));
+		
+		await storage.savePlayer(player);
+    }
+	addItemToContainer(
+		player.data.stash,
+		"Tarot the fool",
+		1
+	);	
 
     player.missions.current_mission.current_party = "party_A";
     player.missions.current_mission.id = "green_1";
@@ -1277,6 +1292,11 @@ async function handleMissionEnd(sceneId) {
             player.missions.green_1 = 8;
             player.missions.green_2 ??= 0;
             player.patrons.adv_Amyssa.status = "idle";
+			addItemToContainer(
+				player.data.stash,
+				"Scroll of Chromatic Orb",
+				2
+				);	
 			recruitRandoms();
             Journal.addEntry("You've recruited Amyssa to sign a 25 silver coins contract.");
             loadPage("tavern");

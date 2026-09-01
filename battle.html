@@ -2308,7 +2308,7 @@ function getAdjacentEnemy(attacker) {
     );
 }
 
-function handleRangedAttack(attacker, target) {
+function handleRangedAttack(attacker, target, weapon = "ranged_attack") {
     const roll = Math.floor(Math.random() * 20) + 1;
     const totalHit = roll + (attacker.hitBonus || 0);
 
@@ -2497,7 +2497,6 @@ function getPCGroups() {
     };
 }
 
-
 function handleDrinkPotion(user) {
     if (!user || user.hp <= 0) return;
 
@@ -2507,7 +2506,7 @@ function handleDrinkPotion(user) {
     const oldHP = user.hp;
     user.hp = Math.min(user.maxHp, user.hp + heal);
 
-    Bus.emit('LOG', `🧪 ${user.name} drinks a potion and heals ${user.hp - oldHP} HP.`);
+    Bus.emit('LOG', `🧪 ${user.name} quaffs a potion and heals ${user.hp - oldHP} HP.`);
 
     update();
     //buildReactionPanel();   // ⭐ refreshes HP in headers

@@ -55,7 +55,7 @@
     "target_id": "patronend"
   },
   {
-    "id": "Amyssa1",
+    "id": "Amyssa2",
     "dialog": "We agree.",
     "speaker": [
       "Amyssa",
@@ -73,7 +73,7 @@
     "target_id": "patronend"
   },
   {
-    "id": "Amyssa2",
+    "id": "Amyssa1",
     "speaker": "Amyssa",
     "side": "right",
     "dialog": ".......................",

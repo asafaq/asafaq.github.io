@@ -1713,6 +1713,12 @@
 		"desc": "Scroll of Magic Missile",
 		"stack": 10
 	  },
+	  "Scroll of Chromatic Orb": {
+		"name": "Scroll of Chromatic Orb",
+		"icon": "/assets/inventory/magic_scroll.png",
+		"desc": "Scroll of Chromatic Orb",
+		"stack": 10
+	  },
 	  "Crusher's Favorite Mug": {
 		"name": "Crusher's Favorite Mug",
 		"icon": "/assets/inventory/tankard_beer.png",

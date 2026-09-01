@@ -1,6 +1,6 @@
 
 //inventory section
-function renderGuildStash() {
+async function renderGuildStash() {
     if (!player?.missions?.current_mission?.active) {
         depositSatchel();
     }
@@ -11,6 +11,8 @@ function renderGuildStash() {
             qty: 0,
             locked: false
         }));
+		
+		await storage.savePlayer(player);
     }
 
     const stashGrid = document.querySelector("#guild-stash .stash-grid");

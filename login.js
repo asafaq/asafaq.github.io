@@ -29,7 +29,6 @@ const assetUrls = [
   "/assets/guild/bakery.png",
   "/assets/guild/bakery_sign.png",
   "/assets/guild/chest60.png",
-  "/assets/guild/contract_parchment.png",
   "/assets/guild/default.png",
   "/assets/guild/guild.png",
   "/assets/guild/guild_master.png",
