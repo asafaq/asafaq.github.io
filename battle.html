@@ -110,6 +110,7 @@ let staticObstacles = [],
 	 layOnHandsAmount = 0;
 	 layOnHandsCure = false; 
 	targetingMode = null;
+	corpses = [];
 
 const STRDEX_TABLE = {
   str: ['warrior', 'fighter', 'barbarian', 'paladin', 'cleric', 'ranger', 'monk', 'shaman', 'swordmage', 'brute', 'squire', 'paladin', 'bouncer', 'fallen paladin', 'clericbot', 'druid', 'warlock'],
@@ -725,11 +726,55 @@ async function init() {
 		} else {
 			t.innerText = u.name.substring(0,2).toUpperCase();
 		}
-
+		// ☠️ DEAD / CORPSE
+		if (u.dead) {
+			t.classList.add("token-dead");
+		}
 		grid.appendChild(t);
 	});
 
 
+	corpses.forEach((corpse, i) => {
+
+		let t = document.getElementById(`corpse-${i}`);
+
+		if (!t) {
+			t = document.createElement('div');
+
+			t.id = `corpse-${i}`;
+
+			grid.appendChild(t);
+		}
+
+		// ALWAYS enforce corpse classes
+		t.className = 'token token_enemy token-dead';
+		console.log("token token_enemy token-dead");
+
+		// Preserve monster size
+		if (corpse.size === "L") {
+			t.classList.add("token-large");
+		}
+
+		if (corpse.size === "H") {
+			t.classList.add("token-huge");
+		}
+
+		// Use original monster icon
+		if (corpse.icon) {
+			t.style.backgroundImage = `url('${corpse.icon}')`;
+		}
+
+		// Position
+		t.style.display = "flex";
+		t.style.left = (corpse.x * 54 + 4) + 'px';
+		t.style.top = (corpse.y * 54 + 4) + 'px';
+
+		console.log(
+			"☠️ CORPSE RENDER:",
+			t.id,
+			t.className
+		);
+	});
 	// Mark that the round has already started
 	roundStarted = true;
     update();
@@ -817,7 +862,43 @@ function update() {
 
     });
 
+// =====================================================
+// CORPSES
+// =====================================================
 
+	corpses.forEach((corpse, i) => {
+
+		let t = document.getElementById(`corpse-${i}`);
+
+		// Create corpse token if it doesn't exist
+		if (!t) {
+			t = document.createElement('div');
+
+			t.id = `corpse-${i}`;
+			t.className = 'token token-dead token_enemy';
+
+			// Preserve monster size
+			if (corpse.size === "L") {
+				t.classList.add("token-large");
+			}
+
+			if (corpse.size === "H") {
+				t.classList.add("token-huge");
+			}
+
+			// Use the original monster's icon
+			if (corpse.icon) {
+				t.style.backgroundImage = `url('${corpse.icon}')`;
+			}
+
+			grid.appendChild(t);
+		}
+
+		// Position corpse where the monster died
+		t.style.display = "flex";
+		t.style.left = (corpse.x * 54 + 4) + "px";
+		t.style.top = (corpse.y * 54 + 4) + "px";
+	});
     const bar = document.getElementById('action-bar');
     const endBtn = document.getElementById('end-turn-btn');
     //console.log("Traits:", active.traits);		//debug
@@ -1604,8 +1685,24 @@ function applyDamage(target, amount) {
     // ⭐ 3. If HP drops to 0 or below, remove from board
     if (target.hp <= 0) {
         target.hp = 0;
-        target.x = -1;
-        target.y = -1;
+
+		// ==========================================
+		// ☠️ CREATE CORPSE BEFORE REMOVING UNIT
+		// ==========================================
+
+		const corpse = {
+			x: target.x,
+			y: target.y,
+			icon: target.icon,
+			size: target.size
+		};
+
+		console.log("☠️ CREATING CORPSE:", corpse);
+
+         target.x = -1;
+         target.y = -1;
+		corpses.push(corpse);
+
 		awardFoeDefeat(target);
 		//Bus.emit('LOG', `☠️ ${target.name} falls!`);
 

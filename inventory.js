@@ -500,63 +500,131 @@ function initInventoryTooltips() {
             // ITEM DATA
             // -----------------------------------------------
 
-            if (itemData) {
 
-                const skipFields = [
-                    "name",
-                    "icon",
-                    "stack",
-                    "image",
-                    "charges",
-                ];
+			if (itemData) {
 
-                for (const key in itemData) {
+				const skipFields = [
+					"name",
+					"icon",
+					"stack",
+					"image",
+					"charges",
+					"weapon",
+					"food",
+				];
 
-                    if (skipFields.includes(key)) {
-                        continue;
-                    }
+				// -------------------------------------------
+				// NORMAL ITEM FIELDS
+				// -------------------------------------------
 
-                    const value = itemData[key];
+				for (const key in itemData) {
 
-                    if (
-                        value === undefined ||
-                        value === null ||
-                        value === ""
-                    ) {
-                        continue;
-                    }
+					if (skipFields.includes(key)) {
+						continue;
+					}
+
+					const value = itemData[key];
+
+					if (
+						value === undefined ||
+						value === null ||
+						value === ""
+					) {
+						continue;
+					}
+
+					const label =
+						key === "desc"
+							? "Description"
+							: key;
+
+					html += `<br>${label}: ${value}`;
+				}
 
 
-                    const label =
-                        key === "desc"
-                            ? "Description"
-                            : key;
+				// -------------------------------------------
+				// WEAPON INFO
+				// -------------------------------------------
 
-                    html += `<br>${label}: ${value}`;
-					
+				if (
+					itemData.type === "weapon" &&
+					Array.isArray(itemData.weapon)
+				) {
 
-					if (Array.isArray(itemData.charges) && itemData.charges.length === 2) {
-						const [current, max] = itemData.charges;
-						html += `<br>Charges: ${current} out of ${max}`;
-					}					
-                }
+					const [
+						proficiency,
+						damageDie,
+						damageType,
+						bonus,
+						cursed
+					] = itemData.weapon;
+
+					let weaponText = `Weapon proficiency: ${proficiency}, d${damageDie} ${damageType} damage`;
+
+					// Only show bonus when it isn't 0
+					if (bonus !== undefined && bonus !== null && bonus !== 0) {
+						weaponText += `, ${bonus > 0 ? "+" : ""}${bonus} bonus`;
+					}
+
+					// Only show cursed when true
+					if (cursed === true) {
+						weaponText += `, Cursed`;
+					}
+
+					html += `<br>${weaponText}`;
+				}
 
 
-                // -------------------------------------------
-                // OPTIONAL IMAGE
-                // -------------------------------------------
+				// -------------------------------------------
+				// FOOD INFO
+				// -------------------------------------------
 
-                if (itemData.image) {
+				if (
+					itemData.type === "food" &&
+					Array.isArray(itemData.food)
+				) {
 
-                    html += `
-                        <br>
-                        <img
-                            src="${itemData.image}"
-                            class="satchel-tooltip-item-image"
-                        >
-                    `;
-                }
-            }
+					const [
+						foodGroup,
+						quantity
+					] = itemData.food;
+
+					html += `<br>Food group: ${foodGroup}, quantity: ${quantity}`;
+				}
+
+
+				// -------------------------------------------
+				// CHARGES
+				// -------------------------------------------
+
+				if (
+					Array.isArray(itemData.charges) &&
+					itemData.charges.length === 2
+				) {
+
+					const [current, max] = itemData.charges;
+
+					html += `<br>Charges: ${current} out of ${max}`;
+				}
+
+
+				// -------------------------------------------
+				// OPTIONAL IMAGE
+				// -------------------------------------------
+
+				if (itemData.image) {
+
+					html += `
+						<br>
+						<img
+							src="${itemData.image}"
+							class="satchel-tooltip-item-image"
+						>
+					`;
+				}
+			}
+
+
         }
 
 

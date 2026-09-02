@@ -429,7 +429,7 @@
 	  "silver": 2,
 	  "morale": 15,
 		"ac": 8,
-		"attack": 3,
+		"attack": 1,
 		"actions": [
 			{
 			"name": "Branch",

@@ -1629,8 +1629,7 @@
 		"icon": "/assets/inventory/club.png",
 		"type": "weapon",
 		"weapon": ["Simple", 8, "blunt", 0, false],
-		"desc": "It was probably a foot of a table. A rather large table.",
-		"dmg": 8
+		"desc": "It was probably a foot of a table. A rather large table."
 	  },
 	  "Weapon": {
 		"name": "Large Weapon",
@@ -1674,8 +1673,7 @@
 		"icon": "/assets/inventory/apple.png",
 		"type": "food",
 		"food": ["C", 2],
-		"stack": 10,
-		"heal": 2
+		"stack": 10
 	  },
 	  "Carriage": {
 		"name": "Carriage",
