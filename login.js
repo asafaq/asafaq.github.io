@@ -187,11 +187,24 @@ const assetUrls = [
 ];
 
 function beginSilentPreload() {
+    console.log("========== BEGIN SILENT PRELOAD ==========");
+
     showLoadingOverlay();
 
-    preloadPromise = preloadAssets(assetUrls, (loaded, total) => {
-        updateLoadingText(loaded, total);
+    preloadPromise = preloadAssets(assetUrls, function(loaded, total) {
+        console.log("CALLBACK RECEIVED:", loaded, total);
+
+        const text = document.getElementById("loadingText");
+
+        console.log("TEXT ELEMENT:", text);
+
+        if (text) {
+            text.textContent = `Loading assets (${loaded}/${total})`;
+        }
     }).then(assets => {
+        console.log("========== PRELOAD COMPLETE ==========");
+        console.log("Assets loaded:", Object.keys(assets).length);
+
         preloadedAssets = assets;
         hideLoadingOverlay();
     });
@@ -202,24 +215,18 @@ function beginSilentPreload() {
 // const assetUrls = ["img/card1.png", "img/card2.png", ...];
 
 function preloadAssets(urls, onProgress) {
+    console.log("========== PRELOAD ASSETS ==========");
+    console.log("Total URLs:", urls.length);
+    console.log("Progress callback:", onProgress);
+
     return new Promise(resolve => {
-        if (!urls || urls.length === 0) {
-            console.warn("preloadAssets: no URLs provided");
-
-            if (onProgress) {
-                onProgress(0, 0);
-            }
-
-            resolve({});
-            return;
-        }
-
         const images = {};
         let loaded = 0;
         const total = urls.length;
 
-        // Show initial progress
+        // Immediately report 0/total
         if (onProgress) {
+            console.log("CALLING PROGRESS:", 0, total);
             onProgress(0, total);
         }
 
@@ -230,7 +237,10 @@ function preloadAssets(urls, onProgress) {
                 images[url] = img;
                 loaded++;
 
+                console.log("IMAGE COMPLETE:", loaded, "/", total, url);
+
                 if (onProgress) {
+                    console.log("CALLING PROGRESS:", loaded, total);
                     onProgress(loaded, total);
                 }
 
@@ -240,10 +250,8 @@ function preloadAssets(urls, onProgress) {
             };
 
             img.onerror = () => {
-                console.warn("preloadAssets: failed to load", url);
+                console.warn("IMAGE FAILED:", url);
 
-                // Count failed images as processed so that
-                // one broken image doesn't prevent completion.
                 loaded++;
 
                 if (onProgress) {
@@ -255,19 +263,39 @@ function preloadAssets(urls, onProgress) {
                 }
             };
 
+            // IMPORTANT: src comes AFTER the event handlers
             img.src = url;
         });
     });
 }
 
+
 function showLoadingOverlay() {
     document.getElementById("loadingOverlay").style.display = "block";
 }
 
+
 function updateLoadingText(loaded, total) {
-    document.getElementById("loadingText").textContent =
-        `Loading assets (${loaded}/${total})`;
+    const overlay = document.getElementById("loadingOverlay");
+    const text = document.getElementById("loadingText");
+
+    console.log("UI UPDATE:", {
+        loaded,
+        total,
+        overlay,
+        text,
+        currentText: text ? text.textContent : "TEXT ELEMENT NOT FOUND"
+    });
+
+    if (!text) {
+        console.error("loadingText element NOT FOUND!");
+        return;
+    }
+
+    text.textContent = `Loading assets (${loaded}/${total})`;
 }
+
+
 
 function hideLoadingOverlay() {
     document.getElementById("loadingOverlay").style.display = "none";
