@@ -1706,7 +1706,7 @@
 	  },
 	  "Scribe Kit": {
 		"name": "Scribe Kit",
-		"icon": "/assets/inventory/scribe_package.png",
+		"icon": "/assets/inventory/package.png",
 		"desc": "For writing a parchment."
 	  },
 	  "Apothecary Kit": {

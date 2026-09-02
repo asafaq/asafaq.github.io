@@ -192,11 +192,11 @@ function beginSilentPreload() {
     showLoadingOverlay();
 
     preloadPromise = preloadAssets(assetUrls, function(loaded, total) {
-        console.log("CALLBACK RECEIVED:", loaded, total);
+        // console.log("CALLBACK RECEIVED:", loaded, total);
 
         const text = document.getElementById("loadingText");
 
-        console.log("TEXT ELEMENT:", text);
+        // console.log("TEXT ELEMENT:", text);
 
         if (text) {
             text.textContent = `Loading assets (${loaded}/${total})`;
@@ -215,9 +215,9 @@ function beginSilentPreload() {
 // const assetUrls = ["img/card1.png", "img/card2.png", ...];
 
 function preloadAssets(urls, onProgress) {
-    console.log("========== PRELOAD ASSETS ==========");
-    console.log("Total URLs:", urls.length);
-    console.log("Progress callback:", onProgress);
+    // console.log("========== PRELOAD ASSETS ==========");
+    // console.log("Total URLs:", urls.length);
+    // console.log("Progress callback:", onProgress);
 
     return new Promise(resolve => {
         const images = {};
@@ -226,7 +226,7 @@ function preloadAssets(urls, onProgress) {
 
         // Immediately report 0/total
         if (onProgress) {
-            console.log("CALLING PROGRESS:", 0, total);
+            // console.log("CALLING PROGRESS:", 0, total);
             onProgress(0, total);
         }
 
@@ -237,10 +237,10 @@ function preloadAssets(urls, onProgress) {
                 images[url] = img;
                 loaded++;
 
-                console.log("IMAGE COMPLETE:", loaded, "/", total, url);
+                // console.log("IMAGE COMPLETE:", loaded, "/", total, url);
 
                 if (onProgress) {
-                    console.log("CALLING PROGRESS:", loaded, total);
+                    // console.log("CALLING PROGRESS:", loaded, total);
                     onProgress(loaded, total);
                 }
 
@@ -279,13 +279,13 @@ function updateLoadingText(loaded, total) {
     const overlay = document.getElementById("loadingOverlay");
     const text = document.getElementById("loadingText");
 
-    console.log("UI UPDATE:", {
-        loaded,
-        total,
-        overlay,
-        text,
-        currentText: text ? text.textContent : "TEXT ELEMENT NOT FOUND"
-    });
+    // console.log("UI UPDATE:", {
+        // loaded,
+        // total,
+        // overlay,
+        // text,
+        // currentText: text ? text.textContent : "TEXT ELEMENT NOT FOUND"
+    // });
 
     if (!text) {
         console.error("loadingText element NOT FOUND!");

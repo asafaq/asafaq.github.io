@@ -228,21 +228,35 @@ function renderSatchelGrid(grid, adventurers) {
     console.log("RENDER INPUT:", adventurers);
 
     grid.innerHTML = adventurers.map(adv => {
-        const hydrated = getHydratedAdventurer(adv.id);
 
-        console.log("HYDRATED:", hydrated);
-        console.log("INVENTORY:", hydrated.inventory);
+        // Hydration is only used to retrieve display information such as the name
+        const hydrated = getHydratedAdventurer(adv.id);
+        const advName = hydrated?.name || adv.name || adv.id;
+
+        // Inventory comes directly from the adventurer object
+        const inventory = adv.inventory;
+
+        console.log("ADVENTURER:", adv);
+        console.log("NAME:", advName);
+        console.log("INVENTORY:", inventory);
+
+        if (!Array.isArray(inventory)) {
+            console.error("INVALID INVENTORY:", adv.id, inventory);
+            return "";
+        }
 
         let slotsHTML = "";
 
-        hydrated.inventory.forEach((slot, i) => {
+        inventory.forEach((slot, i) => {
 
-			const isLocked =
-				slot.locked === true ||
-				slot.locked === 1 ||
-				slot.locked === "true";
-				
-            const hasItem = slot.item !== null && slot.item !== undefined;
+            const isLocked =
+                slot.locked === true ||
+                slot.locked === 1 ||
+                slot.locked === "true";
+
+            const hasItem =
+                slot.item !== null &&
+                slot.item !== undefined;
 
             // Quantity
             const qtyHTML = hasItem && slot.qty > 1
@@ -283,12 +297,14 @@ function renderSatchelGrid(grid, adventurers) {
 
         return `
             <div class="adv-satchel" data-id="${adv.id}">
-                <div class="adv-name">${hydrated.name}</div>
+                <div class="adv-name">${advName}</div>
                 <div class="adv-items">${slotsHTML}</div>
             </div>
         `;
+
     }).join("");
 }
+
 
 function initSatchelRightClicks(mode) {
     const overlay = document.getElementById("overlay");
