@@ -155,7 +155,6 @@ const assetUrls = [
   "/assets/patrons/crusher_l.png",
   "/assets/patrons/crusher_s.png",
   "/assets/patrons/default.png",
-  "/assets/patrons/desmond.png",
   "/assets/patrons/desmond_l.png",
   "/assets/patrons/desmond_s.png",
   "/assets/patrons/direwolf.png",
@@ -202,10 +201,15 @@ function beginSilentPreload() {
 // assetUrls should be an array of strings, e.g.:
 // const assetUrls = ["img/card1.png", "img/card2.png", ...];
 
-function preloadAssets(urls) {
+function preloadAssets(urls, onProgress) {
     return new Promise(resolve => {
         if (!urls || urls.length === 0) {
             console.warn("preloadAssets: no URLs provided");
+
+            if (onProgress) {
+                onProgress(0, 0);
+            }
+
             resolve({});
             return;
         }
@@ -214,21 +218,44 @@ function preloadAssets(urls) {
         let loaded = 0;
         const total = urls.length;
 
+        // Show initial progress
+        if (onProgress) {
+            onProgress(0, total);
+        }
+
         urls.forEach(url => {
             const img = new Image();
-            img.src = url;
 
             img.onload = () => {
                 images[url] = img;
                 loaded++;
-                if (loaded === total) resolve(images);
+
+                if (onProgress) {
+                    onProgress(loaded, total);
+                }
+
+                if (loaded === total) {
+                    resolve(images);
+                }
             };
 
             img.onerror = () => {
                 console.warn("preloadAssets: failed to load", url);
+
+                // Count failed images as processed so that
+                // one broken image doesn't prevent completion.
                 loaded++;
-                if (loaded === total) resolve(images);
+
+                if (onProgress) {
+                    onProgress(loaded, total);
+                }
+
+                if (loaded === total) {
+                    resolve(images);
+                }
             };
+
+            img.src = url;
         });
     });
 }
@@ -236,10 +263,12 @@ function preloadAssets(urls) {
 function showLoadingOverlay() {
     document.getElementById("loadingOverlay").style.display = "block";
 }
+
 function updateLoadingText(loaded, total) {
     document.getElementById("loadingText").textContent =
         `Loading assets (${loaded}/${total})`;
 }
+
 function hideLoadingOverlay() {
     document.getElementById("loadingOverlay").style.display = "none";
 }
@@ -394,6 +423,7 @@ function resetLoginForm() {
 	passwordVerifyInput.style.display = "none";
 	passwordVerifyInput.value = "";
 }
+
 function resetLoginForm() {
 	const usernameInput = document.getElementById("username");
 	const passwordVerifyInput = document.getElementById("passwordVerify");
@@ -402,6 +432,7 @@ function resetLoginForm() {
 	passwordVerifyInput.style.display = "none";
 	passwordVerifyInput.value = "";
 }
+
 function resetLoginForm() {
 	const usernameInput = document.getElementById("username");
 	const passwordVerifyInput = document.getElementById("passwordVerify");
@@ -410,6 +441,7 @@ function resetLoginForm() {
 	passwordVerifyInput.style.display = "none";
 	passwordVerifyInput.value = "";
 }
+
 async function addNewPlayerData(username, password) {
 	// 1. Core Failsafe: Check if user exists directly at storage level
 	const existingPlayer = await storage.loadPlayer(username);

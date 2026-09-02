@@ -159,22 +159,6 @@ function resetGame() {
 // 2. RENDERING LOGIC
 //async function renderScene(sceneId) {
 
-/*
-condition:     - Requires trait(s). Single or ANY in array.
-condition_not:     - Must NOT have trait.
-disabled:     - true → always disabled.
-condition_alignment:     - Requires at least one member with alignment.
-condition_not_alignment:     - Disabled if ANY member has alignment.
-condition_mission (future):     - Requires mission stage.
-DISABLED IF:
-    missing required trait
-    OR forbidden trait present
-    OR disabled === true
-    OR required alignment missing
-    OR forbidden alignment present
-    OR mission stage unmet (future)
-*/
-
 function createDialogWindow(dlg, index = 0) {
 
     const isDual = dlg.portrait && dlg.portrait.length > 1;

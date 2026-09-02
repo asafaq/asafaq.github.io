@@ -346,34 +346,6 @@ document.addEventListener("click", e => {
 });
 
 //end of satchel section
-
-
-
-function getItemData(itemId) {
-  return loreData.inventory[itemId] || null;
-}
-
-function updateUIItemDetails(itemID) {
-  const detailsContainer = document.querySelector("#item-details");
-  const itemData = loreData.inventory[itemID]; // Looking up the key in your DB
-
-  if (!itemData) {
-    detailsContainer.innerHTML = "Select an item to see details.";
-    return;
-  }
-
-  // Build the HTML based on what properties exist in the DB
-  detailsContainer.innerHTML = `
-    <h4>${itemID}</h4>
-    <p>${itemData.desc || "No description available."}</p>
-    <ul>
-      ${itemData.dmg ? `<li>Damage: ${itemData.dmg}</li>` : ""}
-      ${itemData.heal ? `<li>Heals: ${itemData.heal}</li>` : ""}
-      ${itemData.type ? `<li>Type: ${itemData.type}</li>` : ""}
-    </ul>
-  `;
-}
-
 function initInventoryTooltips() {
 
     const tooltip = document.getElementById("satchel-tooltip");
@@ -518,7 +490,8 @@ function initInventoryTooltips() {
                     "name",
                     "icon",
                     "stack",
-                    "image"
+                    "image",
+                    "charges",
                 ];
 
                 for (const key in itemData) {
@@ -537,12 +510,19 @@ function initInventoryTooltips() {
                         continue;
                     }
 
+
                     const label =
                         key === "desc"
                             ? "Description"
                             : key;
 
                     html += `<br>${label}: ${value}`;
+					
+
+					if (Array.isArray(itemData.charges) && itemData.charges.length === 2) {
+						const [current, max] = itemData.charges;
+						html += `<br>Charges: ${current} out of ${max}`;
+					}					
                 }
 
 
@@ -833,7 +813,7 @@ function addItemToContainer(container, itemId, quantity = 1) {
 addItemToContainer(
     player.patrons.adv_Amyssa.inventory,
     "Amyssa's Spellbook",
-    0
+    1
 );
 */
 

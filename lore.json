@@ -1041,7 +1041,7 @@
     "adv_Bragain": [
       { "item": "Iron Pick", "qty": 1, "locked": true },
       { "item": "Knapsack", "qty": 1, "locked": true },
-      { "item": null, "qty": 0, "locked": false },
+      { "item": "Lantern", "qty": 1, "locked": true },
       { "item": null, "qty": 0, "locked": false }
     ],
     "adv_Claudio": [
@@ -1059,7 +1059,7 @@
     "adv_Hogmother": [
       { "item": "Large Cauldron Spoon", "qty": 1, "locked": true },
       { "item": "Apothecary kit", "qty": 1, "locked": true },
-      { "item": null, "qty": 0, "locked": false },
+      { "item": "Potion of Healing", "qty": 4, "locked": false },
       { "item": null, "qty": 0, "locked": false }
     ],
     "adv_Tonica": [
@@ -1628,13 +1628,52 @@
 		"name": "Large Club",
 		"icon": "/assets/inventory/club.png",
 		"type": "weapon",
+		"weapon": ["Simple", 8, "blunt", 0, false],
 		"desc": "It was probably a foot of a table. A rather large table.",
 		"dmg": 8
+	  },
+	  "Weapon": {
+		"name": "Large Weapon",
+		"icon": "/assets/inventory/club.png",
+		"type": "weapon",
+		"weapon": ["Simple", 8, "blunt", 0, false],
+		"desc": "Weapon type, damage dice, damage type, cursed."
+	  },
+	  "Food": {
+		"name": "Large Food",
+		"icon": "/assets/inventory/club.png",
+		"type": "food",
+		"food": ["A", 10],
+		"desc": "Nutrition type, quantity."
+	  },
+	  "Adorned_Basalt_Club": {
+		"name": "Adorned_Basalt_Club",
+		"icon": "/assets/inventory/Adorned_Basalt_Club.png",
+		"type": "weapon",
+		"weapon": ["Simple", 8, "blunt", -2, true],
+		"desc": "It is heavy and hard to swing. Made from black rock with small white crystals embedded inside, they tingle slightly in the light. It would deliver devastating blows to Skeletons, Zombies, Ghouls and Ghasts. The black stone body of the club seems cursed, but the crystals hold a radiant energy.",
+		"bonus": [6, "radiant", "corporeal undead"],
+		"bonus_desc": "adds d6 radiant damage to corporeal undead."
+	  },
+	  "Large Cauldron Spoon": {
+		"name": "Large Cauldron Spoon",
+		"icon": "/assets/inventory/wooden_spoon.png",
+		"type": "weapon",
+		"weapon": ["Simple", 6, "blunt", 0, false],
+		"desc": "A sturdy thick wooden spoon dual-use for cutlery and savagery."
+	  },
+	  "small_rapier": {
+		"name": "small_rapier",
+		"icon": "/assets/inventory/small_rapier.png",
+		"type": "weapon",
+		"weapon": ["Finesse", 6, "piercing", 0, false],
+		"desc": "Finnik's little sword. Plain yet deadly."
 	  },
 	  "Apple": {
 		"name": "Apple",
 		"icon": "/assets/inventory/apple.png",
 		"type": "food",
+		"food": ["C", 2],
 		"stack": 10,
 		"heal": 2
 	  },
@@ -1646,36 +1685,38 @@
 	  "Iron Pick": {
 		"name": "Iron Pick",
 		"icon": "/assets/inventory/pickaxe.png",
+		"type": "weapon",
+		"weapon": ["Martial", 6, "piercing"],
 		"desc": "A pick's head fixed on a sturdy cane."
 	  },
 	  "Lantern": {
 		"name": "Lantern",
-		"icon": "/assets/inventory/apple.png",
-		"desc": "decription"
+		"icon": "/assets/inventory/lantern.png",
+		"desc": "Lights up the room."
 	  },
 	  "Knapsack": {
 		"name": "Knapsack",
-		"icon": "/assets/inventory/apple.png",
+		"icon": "/assets/inventory/knapsack.png",
 		"desc": "Not very large, but can store gems."
 	  },
 	  "Lute": {
 		"name": "Lute",
-		"icon": "/assets/inventory/apple.png",
-		"desc": "It sings as if it has a bird trapped inside."
+		"icon": "/assets/inventory/lute.png",
+		"desc": "It sings as if it has a bird trapped inside. A musical instrument is a foci for many bard skills."
 	  },
 	  "Scribe Kit": {
 		"name": "Scribe Kit",
-		"icon": "/assets/inventory/kit.png",
+		"icon": "/assets/inventory/scribe_package.png",
 		"desc": "For writing a parchment."
 	  },
 	  "Apothecary Kit": {
 		"name": "Apothecary Kit",
-		"icon": "/assets/inventory/kit.png",
+		"icon": "/assets/inventory/package.png",
 		"desc": "For grinding, mixing and fermenting liquids."
 	  },
 	  "Envenum Kit": {
 		"name": "Envenum Kit",
-		"icon": "/assets/inventory/kit.png",
+		"icon": "/assets/inventory/package.png",
 		"desc": "For grinding, mixing and fermenting liquids."
 	  },
 	  "Amyssa's Spellbook": {
@@ -1702,8 +1743,8 @@
 	  },
 	  "Amyssa's Wand of Colour Spray": {
 		"name": "Wand of Colour Spray",
-		"icon": "/assets/inventory/magic_scroll.png",
-		"desc": "Wand of Colour Spray, it's made of a slender branch of polished white ash, and in its head there's a crystal shaped in a prism.",
+		"icon": "/assets/inventory/wand.png",
+		"desc": "Wand of Colour Spray, it's made of a slender branch of polished dark Ash wood, and in its head is a crystal shaped prism.",
 		"charges": [ 7 , 20 ],
 		"stack": 1
 	  },
@@ -1726,7 +1767,7 @@
 	  },
 	  "Potion of Healing": {
 		"name": "Potion of Healing",
-		"icon": "/assets/inventory/potion.png",
+		"icon": "/assets/inventory/potion_red.png",
 		"desc": "A small flask containing liquid.",
 		"stack": 10
 	  },
