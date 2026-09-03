@@ -2572,21 +2572,20 @@ function getTimeCategory(hour) {
 }
 
 function scaleApp() {
-  const frame = document.querySelector('.app-wrapper');
+    const frame = document.querySelector('.app-wrapper');
 
-  const targetWidth = 540;
-  const targetHeight = 960;
+    const targetWidth = 540;
+    const targetHeight = 960;
 
-  const scaleX = window.innerWidth / targetWidth;
-  const scaleY = window.innerHeight / targetHeight;
+    const scaleX = window.innerWidth / targetWidth;
+    const scaleY = window.innerHeight / targetHeight;
 
-  const scale = Math.min(scaleX, scaleY);
+    const scale = Math.min(scaleX, scaleY);
 
-  frame.style.left = `${window.innerWidth / 2}px`;
-  frame.style.transform = `translateX(-50%) scale(${scale})`;
+    frame.style.setProperty('--scale', scale);
 }
+
 window.addEventListener('resize', scaleApp);
-window.addEventListener('load', scaleApp);
 
 
 function initGuildTooltips() {
