@@ -303,24 +303,27 @@ html, body {
 }
 
 .login-box input {
+    display: block;
     width: 90%;
+    height: 36px;
     padding: 8px;
-    margin: 8px 0;
+    margin: 8px auto;
     border: none;
     border-radius: 5px;
+    box-sizing: border-box;
 }
 
 .login-box button {
+    display: block;
     width: 90%;
     padding: 10px;
+    margin: 8px auto;
     background: #4CAF50;
     border: none;
     border-radius: 5px;
     color: white;
     font-size: 16px;
     cursor: pointer;
-    margin-left: auto;
-    margin-right: auto;
     box-sizing: border-box;
 }
 

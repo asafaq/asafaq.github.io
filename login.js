@@ -366,141 +366,169 @@ let pendingNewUser = null;
 // { username, password } when waiting for password verify
 
 async function login() {
-	const usernameInput = document.getElementById("username");
-	const passwordInput = document.getElementById("password");
-	const passwordVerifyInput = document.getElementById("passwordVerify");
-	const status = document.getElementById("status");
+    const usernameInput = document.getElementById("username");
+    const passwordInput = document.getElementById("password");
+    const passwordVerifyInput = document.getElementById("passwordVerify");
+    const status = document.getElementById("status");
 
-	const username = usernameInput.value.trim();
-	const password = passwordInput.value.trim();
-	const passwordVerify = passwordVerifyInput.value.trim();
+    const username = usernameInput.value.trim();
+    const password = passwordInput.value.trim();
+    const passwordVerify = passwordVerifyInput.value.trim();
 
-	if (!username || !password) {
-		status.textContent = "Enter username and password";
-		return;
-	}
+    if (!username || !password) {
+        status.textContent = "Enter username and password";
+        return;
+    }
 
-	// 1. Fetch player from DB
-	player = await storage.loadPlayer(username);
+    // =====================================================
+    // 1. FETCH PLAYER
+    // =====================================================
 
-	// 2. REGISTRATION FLOW (If player does NOT exist)
-	if (!player) {
-		// Step A: First click -> Lock username & show verify input
-		if (passwordVerifyInput.style.display === "none") {
-			passwordVerifyInput.style.display = "block";
-			usernameInput.readOnly = true; 
-			status.textContent = "Account not found. Confirm password to register.";
-			return;
-		}
+    player = await storage.loadPlayer(username);
 
-		// Step B: Validate verify password input
-		if (!passwordVerify) {
-			status.textContent = "Please verify your password.";
-			return;
-		}
+    // =====================================================
+    // 2. REGISTRATION FLOW
+    // =====================================================
 
-		if (password !== passwordVerify) {
-			status.textContent = "Passwords do not match!";
-			return;
-		}
+    if (!player) {
 
-		// Step C: Failsafe re-check to prevent overwriting
-		const safetyCheck = await storage.loadPlayer(username);
-		if (safetyCheck) {
-			status.textContent = "Account already exists! Form reset.";
-			resetLoginForm();
-			return;
-		}
+        // First click: show password verification
+        if (passwordVerifyInput.style.display === "none") {
+            passwordVerifyInput.style.display = "block";
+            usernameInput.readOnly = true;
 
-		// Step D: Create account and await storage write
-		await addNewPlayerData(username, password);
-		console.log("CREATING NEW PLAYER:", username);
+            status.textContent =
+                "Account not found. Confirm password to register.";
 
-		// Step E: Load newly created player object into memory
-		player = await storage.loadPlayer(username);
-	}
+            return;
+        }
 
-	// 3. AUTHENTICATION CHECK (Runs for BOTH existing and new players)
-	if (!player || !player.auth || player.auth.password !== password) {
-		console.log("LOADING PLAYER:", player, "typed Wrong password.");
-		status.textContent = "Wrong password";
-		return;
-	}
+        // Verify password was entered
+        if (!passwordVerify) {
+            status.textContent = "Please verify your password.";
+            return;
+        }
 
-	// 4. LOGIN SUCCESS
-	console.log("LOADING PLAYER FROM DB:", player);
-	status.textContent = "Login successful!";
-	document.querySelector(".login-box").style.display = "none";
-	document.getElementById("app-frame").style.display = "block";
+        // Verify passwords match
+        if (password !== passwordVerify) {
+            status.textContent = "Passwords do not match!";
+            return;
+        }
 
-	// Handle preloader if active
-	if (typeof ENABLE_PRELOAD !== "undefined" && ENABLE_PRELOAD && typeof preloadPromise !== "undefined" && preloadPromise) {
-		await waitAtLeast(500, preloadPromise);
-	}
+        // Final safety check
+        const safetyCheck = await storage.loadPlayer(username);
 
-	// 5. Start game with full player DB object
-	startGame(player, typeof preloadedAssets !== "undefined" ? preloadedAssets : null);
+        if (safetyCheck) {
+            status.textContent = "Account already exists! Form reset.";
+            resetLoginForm();
+            return;
+        }
+
+        // Create account
+        await addNewPlayerData(username, password);
+
+        console.log("CREATING NEW PLAYER:", username);
+
+        // Load newly-created player
+        player = await storage.loadPlayer(username);
+    }
+
+    // =====================================================
+    // 3. AUTHENTICATION
+    // =====================================================
+
+    if (!player || !player.auth ||
+        player.auth.password !== password) {
+
+        console.log(
+            "LOADING PLAYER:",
+            player,
+            "typed Wrong password."
+        );
+
+        status.textContent = "Wrong password";
+        return;
+    }
+
+    // =====================================================
+    // 4. LOGIN SUCCESS
+    // =====================================================
+
+    console.log("LOADING PLAYER FROM DB:", player);
+
+    status.textContent = "Login successful!";
+
+    document.querySelector(".login-box").style.display = "none";
+    document.getElementById("app-frame").style.display = "block";
+
+    // Handle preloader
+    if (
+        typeof ENABLE_PRELOAD !== "undefined" &&
+        ENABLE_PRELOAD &&
+        typeof preloadPromise !== "undefined" &&
+        preloadPromise
+    ) {
+        await waitAtLeast(500, preloadPromise);
+    }
+
+    // Start game
+    startGame(
+        player,
+        typeof preloadedAssets !== "undefined"
+            ? preloadedAssets
+            : null
+    );
 }
+
 
 function resetLoginForm() {
-	const usernameInput = document.getElementById("username");
-	const passwordVerifyInput = document.getElementById("passwordVerify");
-	
-	usernameInput.readOnly = false;
-	usernameInput.value = "";
-	passwordVerifyInput.style.display = "none";
-	passwordVerifyInput.value = "";
+    const usernameInput = document.getElementById("username");
+    const passwordInput = document.getElementById("password");
+    const passwordVerifyInput = document.getElementById("passwordVerify");
+    const status = document.getElementById("status");
+
+    usernameInput.readOnly = false;
+
+    usernameInput.value = "";
+    passwordInput.value = "";
+    passwordVerifyInput.value = "";
+
+    passwordVerifyInput.style.display = "none";
+
+    status.textContent = "";
 }
 
-function resetLoginForm() {
-	const usernameInput = document.getElementById("username");
-	const passwordVerifyInput = document.getElementById("passwordVerify");
-	
-	usernameInput.readOnly = false;
-	passwordVerifyInput.style.display = "none";
-	passwordVerifyInput.value = "";
-}
-
-function resetLoginForm() {
-	const usernameInput = document.getElementById("username");
-	const passwordVerifyInput = document.getElementById("passwordVerify");
-	
-	usernameInput.readOnly = false;
-	passwordVerifyInput.style.display = "none";
-	passwordVerifyInput.value = "";
-}
 
 async function addNewPlayerData(username, password) {
-	// 1. Core Failsafe: Check if user exists directly at storage level
-	const existingPlayer = await storage.loadPlayer(username);
-	if (existingPlayer) {
-		throw new Error(`CRITICAL: Attempted to overwrite existing account "${username}". Action blocked.`);
-	}
 
-	// 2. Build new player object
-	const newPlayerData = {
-		auth: {
-			username: username,
-			password: password
-		},
-		stats: { level: 1, gold: 0 }, // Adjust to match your player structure
-		created: Date.now()
-	};
+    // Core failsafe: never overwrite existing account
+    const existingPlayer = await storage.loadPlayer(username);
 
-	// 3. Save only after passing the existence check
-	await storage.savePlayer(username, newPlayerData);
-}
-// Helper function to reset form if registration is aborted or completed
-function resetLoginForm() {
-	const usernameInput = document.getElementById("username");
-	const passwordVerifyInput = document.getElementById("passwordVerify");
-	
-	usernameInput.readOnly = false;
-	passwordVerifyInput.style.display = "none";
-	passwordVerifyInput.value = "";
-}
-function showPasswordVerifyField() {
-    document.getElementById("passwordVerify").style.display = "block";
+    if (existingPlayer) {
+        throw new Error(
+            `CRITICAL: Attempted to overwrite existing account "${username}". Action blocked.`
+        );
+    }
+
+    const newPlayerData = {
+        auth: {
+            username: username,
+            password: password
+        },
+
+        stats: {
+            level: 1,
+            gold: 0
+        },
+
+        created: Date.now()
+    };
+
+    await storage.savePlayer(username, newPlayerData);
 }
 
-window.addEventListener("DOMContentLoaded", initLoginSystem);
+
+window.addEventListener(
+    "DOMContentLoaded",
+    initLoginSystem
+);

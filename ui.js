@@ -2572,17 +2572,12 @@ function getTimeCategory(hour) {
 }
 
 function scaleApp() {
-    const frame = document.querySelector('.app-wrapper');
+    const scale = Math.min(
+        window.innerWidth / 540,
+        window.innerHeight / 960
+    );
 
-    const targetWidth = 540;
-    const targetHeight = 960;
-
-    const scaleX = window.innerWidth / targetWidth;
-    const scaleY = window.innerHeight / targetHeight;
-
-    const scale = Math.min(scaleX, scaleY);
-
-    frame.style.setProperty('--scale', scale);
+    document.documentElement.style.setProperty('--scale', scale);
 }
 
 window.addEventListener('resize', scaleApp);
