@@ -1611,7 +1611,7 @@ async function handleMissionEnd(sceneId) {
 			recruitAdventurer("adv_Hogwarts");
             player.patrons.adv_Hogwarts.location = 11;
             player.patrons.adv_Hogwarts.status = "nocontract";
-			player.locations = {};
+			if (!player.locations) {player.locations = {};}
 			player.locations.bakery = true;
 			player.missions.dwood_fort2 = 5;
 			

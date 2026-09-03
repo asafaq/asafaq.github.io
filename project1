@@ -210,7 +210,6 @@
             <File name="dwood_1.txt" />
             <File name="favicon.ico" />
             <File name="index.html" />
-            <File name="inventory,js" />
             <File name="inventory.js" />
             <File name="items.js" />
             <File name="item_db.json" />
@@ -233,5 +232,4 @@
             <File name="workspace" />
         </Folder>
     </Project>
-    <Project name="Project Name" />
 </NotepadPlus>

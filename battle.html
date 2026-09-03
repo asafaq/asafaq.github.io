@@ -61,8 +61,8 @@
 				<span id="unit-speed">SPD: 0</span>
 			</div>
 			<div id="bottom-buttons">
-				<button id="end-turn-btn" onclick="endTurn()">END TURN</button>
-				<button id="retreat-btn" onclick="handleRetreat()">RETREAT</button>
+				<button id="end-turn-btn">END TURN</button>
+				<button id="retreat-btn">RETREAT</button>
 			</div>
 		</div>
 	<div id="dm-screen"></div>
@@ -1548,7 +1548,7 @@ function autoWinBattle() {
 
 function npcAI() {
     const u = units[initiativeOrder[turnIndex].index];
-    if (!u || u.hp <= 0) return endTurn();
+    if (!u || u.hp <= 0) return endTurn(u);;
 
     if (u.status !== "NPC") return; // safety
 
@@ -1580,7 +1580,7 @@ function npcAI() {
 function runSupportMageScript(u) {
 
     const monsters = units.filter(m => m.type === "monster" && m.hp > 0);
-    if (monsters.length === 0) return endTurn();
+    if (monsters.length === 0) return endTurn(u);;
 
     const corners = [
         { x: 0, y: 0 },
@@ -1612,7 +1612,7 @@ function runSupportMageScript(u) {
 
     npcCastSpell(u);
 
-    endTurn();
+    endTurn(u);;
 }
 
 function refreshRound() {
@@ -2428,7 +2428,7 @@ function handleRangedAttack(attacker, target, weapon = "ranged_attack") {
 
     attacker.hasAction = false;
     update();
-    endTurn();
+    endTurn(attacker);;
 }
 
 function startReactionPhase() {
@@ -2609,11 +2609,17 @@ function handleDrinkPotion(user) {
     //buildReactionPanel();   // ⭐ refreshes HP in headers
 }
 
-function endTurn() {
+function endTurn(previousActor = null, alreadyAdvanced = false) {
+
+    if (victoryShown) {
+        return;
+    }
+	
     isMoving = false;
 
     // Rage tracking
-    const current = units[initiativeOrder[turnIndex].index];
+    const current = previousActor;
+
     if (current && current.isRaging) {
         current.rageTurnsActive++;
     }
@@ -2640,54 +2646,81 @@ function endTurn() {
         pendingSpells = [];
     }
 
-    // ADVANCE TURN — NO RECURSION
-    let attempts = 0;
+	// ADVANCE TURN — NO RECURSION
+	if (!alreadyAdvanced) {
 
-    while (attempts < initiativeOrder.length) {
-        turnIndex = (turnIndex + 1) % initiativeOrder.length;
-        attempts++;
+		let attempts = 0;
 
-        const next = units[initiativeOrder[turnIndex].index];
+		while (attempts < initiativeOrder.length) {
+			turnIndex = (turnIndex + 1) % initiativeOrder.length;
+			attempts++;
 
-        if (next.hp <= 0) continue;
+			const next = units[initiativeOrder[turnIndex].index];
 
-        break; // Found next active unit
-    }
+			if (next.hp <= 0) continue;
+
+			break;
+		}
+	}
 
     const active = units[initiativeOrder[turnIndex].index];
 
-    // ROUND BOUNDARY CHECK
-    const firstAliveOrderIndex = initiativeOrder.findIndex(o => units[o.index].hp > 0);
+	// =====================================================
+	// ROUND BOUNDARY CHECK
+	// =====================================================
 
-    if (turnIndex === firstAliveOrderIndex && roundStarted) {
-        roundStarted = false;
+	// A round ends ONLY when we naturally advance from the
+	// last initiative position back to the first.
+	//
+	// Do NOT use "turnIndex === 0" here because a unit can
+	// retreat from index 0 and cause the array to shift.
 
-        refreshRound();
+	if (!alreadyAdvanced && turnIndex === 0 && roundStarted) {
+		roundStarted = false;
 
-        // Bard song fade
-        if (isAnyBardSinging()) {
-            const singingBard = units.find(u => u.type === "pc" && u.role === "Bard" && u.isSinging);
-            if (singingBard) {
-                singingBard.isSinging = false;
-                units.forEach(u => {
-                    if (u.type === "pc" && u !== singingBard) {
-                        u.hitBonus -= 1;
-                        u.damageBonus -= 1;
-                    }
-                });
-                singingBard.hitBonus += 1;
-                singingBard.damageBonus += 1;
-                Bus.emit('LOG', `🎵 ${singingBard.name}'s song fades.`);
-            }
-        }
+		refreshRound();
 
-        // Reset PC abilities
-        units.forEach(pc => {
-            if (pc.type !== 'pc') return;
-            if (pc.role === "Miner") pc.canHide = true;
-            if (pc.role === "Bard") pc.canSing = true;
-        });
-    }
+		// Bard song fade
+		if (isAnyBardSinging()) {
+			const singingBard = units.find(
+				u => u.type === "pc" &&
+					 u.role === "Bard" &&
+					 u.isSinging
+			);
+
+			if (singingBard) {
+				singingBard.isSinging = false;
+
+				units.forEach(u => {
+					if (u.type === "pc" && u !== singingBard) {
+						u.hitBonus -= 1;
+						u.damageBonus -= 1;
+					}
+				});
+
+				singingBard.hitBonus += 1;
+				singingBard.damageBonus += 1;
+
+				Bus.emit(
+					'LOG',
+					`🎵 ${singingBard.name}'s song fades.`
+				);
+			}
+		}
+
+		// Reset PC abilities
+		units.forEach(pc => {
+			if (pc.type !== 'pc') return;
+
+			if (pc.role === "Miner") {
+				pc.canHide = true;
+			}
+
+			if (pc.role === "Bard") {
+				pc.canSing = true;
+			}
+		});
+	}
 
     // START REACTION PHASE
     if (!roundStarted) {
@@ -2700,22 +2733,25 @@ function endTurn() {
     Bus.emit('LOG', `Turn: ${active.name}`);
     update();
 
-    if (active.type === 'monster') {
-        setTimeout(monsterAI, 800);
-    }
+	if (active.type === 'monster') {
+		setTimeout(() => {
+			if (victoryShown) return;
+			monsterAI();
+		}, 800);
+	}
 }
 
 function monsterAI() {
 
     const u = units[initiativeOrder[turnIndex].index];
 
-    if (!u || u.hp <= 0) return endTurn();
+    if (!u || u.hp <= 0) return endTurn(u);;
 
     if (u.stunned) {
         Bus.emit('LOG', `${u.name} is stunned and loses their turn! 🤣`);
 		hideDMScreen();
 		u.stunned = false;
-        return endTurn();
+        return endTurn(u);;
     }
 
 
@@ -2730,9 +2766,9 @@ function monsterAI() {
 			u.hasAction = false;
 			setTimeout(() => {
 				hideDMScreen();
-				endTurn();
+				endTurn(u);;
 				}, 600);
-			return endTurn();
+			return endTurn(u);;
 			}
 	}		
     u.hasAction = true;
@@ -2741,7 +2777,7 @@ function monsterAI() {
     runFreeAction(u);
 	
     const target = findNearestPC(u);
-    if (!target) return endTurn();
+    if (!target) return endTurn(u);;
 
 
 
@@ -2785,7 +2821,7 @@ function monsterAI() {
 
     setTimeout(() => {
         hideDMScreen();
-        endTurn();
+        endTurn(u);;
     }, 600);
 }
 
@@ -3778,7 +3814,10 @@ async function handleRetreat() {
     const active = units[activeIndex];
     if (!active) return;
 
-    const confirmed = await showConfirmation(`${active.name} wants to retreat. Allow it?`);
+    const confirmed = await showConfirmation(
+        `${active.name} wants to retreat. Allow it?`
+    );
+
     if (!confirmed) {
         Bus.emit('LOG', `${active.name} decides to stay in the fight!`);
         return;
@@ -3790,19 +3829,43 @@ async function handleRetreat() {
 
     Bus.emit('LOG', `${active.name} retreats from battle!`);
 
-    initiativeOrder = initiativeOrder.filter(o => o.index !== activeIndex);
+    // Remove the retreating unit
+    initiativeOrder = initiativeOrder.filter(
+        o => o.index !== activeIndex
+    );
 
+    if (initiativeOrder.length === 0) {
+        checkVictory();
+        return;
+    }
+
+    // The old turnIndex now points to the next character.
     if (turnIndex >= initiativeOrder.length) {
         turnIndex = 0;
     }
 
-    endTurn();
-}
+    // If no PCs remain, the battle is over.
+    const alivePCs = units.filter(
+        u => u.type === "pc" && u.hp > 0
+    );
 
+    if (alivePCs.length === 0) {
+        checkVictory();
+        return;
+    }
+
+    // Normal retreat: continue to next combatant.
+    endTurn(active, true);
+}
 
 function checkVictory() {
     if (victoryShown) return; 
-    
+
+	const savedData = JSON.parse(localStorage.getItem('currentBattle')) || {};
+	const xp = battleXP;
+	const loot = savedData.loot || [];
+	const silver = savedData.silver || 0;
+
     // ⭐ FIX: Prevent premature activation before round officially starts
     if (units.length === 0 || !roundStarted) return;
 
@@ -3855,10 +3918,6 @@ function checkVictory() {
     if (aliveMonsters.length === 0) {
         victoryShown = true; // Set early to prevent parallel executions
 		refreshRetreatHp();
-        const savedData = JSON.parse(localStorage.getItem('currentBattle')) || {};
-        const xp = battleXP;
-        const loot = savedData.loot || [];
-		const silver = savedData.silver || 0;
 
         const defeated = units
             .filter(u => u.type === 'monster')
@@ -4052,6 +4111,14 @@ function scaleScreen() {
 
 window.addEventListener("resize", scaleScreen);
 window.addEventListener("load", scaleScreen);
+
+document.getElementById("end-turn-btn").addEventListener("click", () => {
+    endTurn();
+});
+
+document.getElementById("retreat-btn").addEventListener("click", () => {
+    handleRetreat();
+});
 
 </script>
 
