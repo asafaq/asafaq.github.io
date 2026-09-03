@@ -1191,13 +1191,18 @@ if (page === "mission_dwood_1") {
 
 if (page === "book") {
   hideRightMenu();
-  fetch("book.json")
-    .then(res => res.json())
+  fetch("/book.json")
+	  .then(res => {
+		if (!res.ok) {
+		  throw new Error(`Network response was not ok: ${res.status}`);
+		}
+		return res.json();
+	  })
     .then(book => {
       const container = document.getElementById("lore-sections");
 
       // ⭐ Insert races as a nested object inside Rules
-      book.Rules.Races = loreData.Races;
+      book.Rules.Races = (typeof loreData !== 'undefined' && loreData.Races) ? loreData.Races : {};
 
       // ⭐ Render book.json sections
       Object.keys(book).forEach(sectionName => {
