@@ -19,7 +19,19 @@
 <div id="loadingOverlay">
     <div id="loadingText">Loading assets (0/0)</div>
 </div>
+<script>
+(function () {
+    const width = 540;
+    const height = 960;
 
+    const scale = Math.min(
+        window.innerWidth / width,
+        window.innerHeight / height
+    );
+
+    document.documentElement.style.setProperty('--scale', scale);
+})();
+</script>
 		<div class="login-wrapper">
 			<div class="login-box">
 			<p>Login / Register<br>(using local storage only)</p>

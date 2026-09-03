@@ -70,11 +70,14 @@ html, body {
 .app-wrapper {
     width: 540px;
     height: 960px;
+
     position: fixed;
     top: 0;
     left: 50%;
+
     transform-origin: top center;
     transform: translateX(-50%) scale(var(--scale, 1));
+
     will-change: transform;
 }
 
