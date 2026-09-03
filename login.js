@@ -199,7 +199,7 @@ function beginSilentPreload() {
         // console.log("TEXT ELEMENT:", text);
 
         if (text) {
-            text.textContent = `Loading assets (${loaded}/${total})`;
+            text.textContent = `(${loaded}/${total})`;
         }
     }).then(assets => {
         console.log("========== PRELOAD COMPLETE ==========");
@@ -269,11 +269,9 @@ function preloadAssets(urls, onProgress) {
     });
 }
 
-
 function showLoadingOverlay() {
     document.getElementById("loadingOverlay").style.display = "block";
 }
-
 
 function updateLoadingText(loaded, total) {
     const overlay = document.getElementById("loadingOverlay");
@@ -292,10 +290,8 @@ function updateLoadingText(loaded, total) {
         return;
     }
 
-    text.textContent = `Loading assets (${loaded}/${total})`;
+    text.textContent = `(${loaded}/${total})`;
 }
-
-
 
 function hideLoadingOverlay() {
     document.getElementById("loadingOverlay").style.display = "none";
