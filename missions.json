@@ -1533,7 +1533,7 @@
     "interaction_type": "selection",
     "options": [
       {
-        "text": "Have a Dwarf inspect the stones of the shrine.",
+        "text": "[Dwarf cunning] Inspect the stones of the shrine.",
         "target_id": "greenshrine1_103",
         "condition": {
           "type": "race",
@@ -1597,9 +1597,9 @@
     "id": "green2_702",
     "speaker": "Apparation",
     "side": "left",
-    "dialog": "Stand fast Bargain of the subterranean miners!",
+    "dialog": "Stand fast Bargain of the subterranean folk!",
     "dialog2": "Why are you wasting your time with those ragged wanderers who get nowhere and accumulate nothing?!",
-    "dialog3": "Come join me in the depths, surrounded by treasures we’ll be richer than all of them!",
+    "dialog3": "Come join your kin in the bowls of the earth, surrounded by treasures we’ll be richer than all of them!",
     "interaction_type": "next",
     "target_id": "green2_703"
   },

@@ -2610,135 +2610,211 @@ function handleDrinkPotion(user) {
 }
 
 function endTurn(previousActor = null, alreadyAdvanced = false) {
-
     if (victoryShown) {
         return;
     }
-	
+
     isMoving = false;
 
-    // Rage tracking
     const current = previousActor;
 
     if (current && current.isRaging) {
         current.rageTurnsActive++;
     }
 
-    // Resolve end-of-round spells
+    // =====================================================
+    // PENDING SPELLS
+    // =====================================================
+
     const lastAliveOrderIndex = [...initiativeOrder]
-        .map((o, idx) => ({ idx, alive: units[o.index].hp > 0 }))
+        .map((o, idx) => ({
+            idx,
+            alive: units[o.index].hp > 0
+        }))
         .filter(o => o.alive)
         .map(o => o.idx)
         .pop();
 
     if (turnIndex === lastAliveOrderIndex && pendingSpells.length > 0) {
         pendingSpells.forEach(({ caster, target, spell }) => {
+
             if (!caster.isConcentrating) {
-                Bus.emit('LOG', `💨 ${caster.name}'s ${spell} fizzles.`);
+                Bus.emit(
+                    'LOG',
+                    `💨 ${caster.name}'s ${spell} fizzles.`
+                );
                 return;
             }
+
             if (target.hp > 0) {
                 const d = Math.floor(Math.random() * 8) + 2;
-                Bus.emit('LOG', `🔥 ${caster.name}'s ${spell} hits ${target.name}:`);
+
+                Bus.emit(
+                    'LOG',
+                    `🔥 ${caster.name}'s ${spell} hits ${target.name}:`
+                );
+
                 applyDamage(target, d);
             }
         });
+
         pendingSpells = [];
     }
 
-	// ADVANCE TURN — NO RECURSION
-	if (!alreadyAdvanced) {
 
-		let attempts = 0;
+    // =====================================================
+    // ADVANCE TURN
+    // =====================================================
 
-		while (attempts < initiativeOrder.length) {
-			turnIndex = (turnIndex + 1) % initiativeOrder.length;
-			attempts++;
+    let wrappedToNextRound = false;
 
-			const next = units[initiativeOrder[turnIndex].index];
+    if (!alreadyAdvanced) {
 
-			if (next.hp <= 0) continue;
+        let attempts = 0;
 
-			break;
-		}
-	}
+        while (attempts < initiativeOrder.length) {
 
-    const active = units[initiativeOrder[turnIndex].index];
+            const nextIndex =
+                (turnIndex + 1) % initiativeOrder.length;
 
-	// =====================================================
-	// ROUND BOUNDARY CHECK
-	// =====================================================
+            // We crossed from the END of the initiative
+            // list back toward the beginning.
+            if (nextIndex <= turnIndex) {
+                wrappedToNextRound = true;
+            }
 
-	// A round ends ONLY when we naturally advance from the
-	// last initiative position back to the first.
-	//
-	// Do NOT use "turnIndex === 0" here because a unit can
-	// retreat from index 0 and cause the array to shift.
+            turnIndex = nextIndex;
+            attempts++;
 
-	if (!alreadyAdvanced && turnIndex === 0 && roundStarted) {
-		roundStarted = false;
+            const next =
+                units[initiativeOrder[turnIndex].index];
 
-		refreshRound();
+            // Skip dead units
+            if (next.hp <= 0) {
+                continue;
+            }
 
-		// Bard song fade
-		if (isAnyBardSinging()) {
-			const singingBard = units.find(
-				u => u.type === "pc" &&
-					 u.role === "Bard" &&
-					 u.isSinging
-			);
+            // Found the next living unit
+            break;
+        }
+    }
 
-			if (singingBard) {
-				singingBard.isSinging = false;
 
-				units.forEach(u => {
-					if (u.type === "pc" && u !== singingBard) {
-						u.hitBonus -= 1;
-						u.damageBonus -= 1;
-					}
-				});
+    // =====================================================
+    // ROUND BOUNDARY
+    // =====================================================
 
-				singingBard.hitBonus += 1;
-				singingBard.damageBonus += 1;
+    if (wrappedToNextRound && roundStarted) {
 
-				Bus.emit(
-					'LOG',
-					`🎵 ${singingBard.name}'s song fades.`
-				);
-			}
-		}
+        roundStarted = false;
 
-		// Reset PC abilities
-		units.forEach(pc => {
-			if (pc.type !== 'pc') return;
+        refreshRound();
 
-			if (pc.role === "Miner") {
-				pc.canHide = true;
-			}
 
-			if (pc.role === "Bard") {
-				pc.canSing = true;
-			}
-		});
-	}
+        // =================================================
+        // BARD SONG FADE
+        // =================================================
 
+        if (isAnyBardSinging()) {
+
+            const singingBard = units.find(
+                u =>
+                    u.type === "pc" &&
+                    u.role === "Bard" &&
+                    u.isSinging
+            );
+
+            if (singingBard) {
+
+                singingBard.isSinging = false;
+
+                units.forEach(u => {
+
+                    if (
+                        u.type === "pc" &&
+                        u !== singingBard
+                    ) {
+                        u.hitBonus -= 1;
+                        u.damageBonus -= 1;
+                    }
+                });
+
+                singingBard.hitBonus += 1;
+                singingBard.damageBonus += 1;
+
+                Bus.emit(
+                    'LOG',
+                    `🎵 ${singingBard.name}'s song fades.`
+                );
+            }
+        }
+
+
+        // =================================================
+        // RESET PC ABILITIES
+        // =================================================
+
+        units.forEach(pc => {
+
+            if (pc.type !== 'pc') return;
+
+            if (pc.role === "Miner") {
+                pc.canHide = true;
+            }
+
+            if (pc.role === "Bard") {
+                pc.canSing = true;
+            }
+        });
+    }
+
+
+    // =====================================================
     // START REACTION PHASE
+    // =====================================================
+
     if (!roundStarted) {
+
         roundStarted = true;
-        requestAnimationFrame(() => startReactionPhase());
+
+        requestAnimationFrame(() =>
+            startReactionPhase()
+        );
+
         return;
     }
 
-    // NORMAL TURN
-    Bus.emit('LOG', `Turn: ${active.name}`);
+
+    // =====================================================
+    // START NEXT TURN
+    // =====================================================
+
+    const active =
+        units[initiativeOrder[turnIndex].index];
+
+    Bus.emit(
+        'LOG',
+        `Turn: ${active.name}`
+    );
+
     update();
 
-	if (active.type === 'monster') {
-		setTimeout(() => {
-			if (victoryShown) return;
-			monsterAI();
-		}, 800);
-	}
+
+    // =====================================================
+    // MONSTER AI
+    // =====================================================
+
+    if (active.type === 'monster') {
+
+        setTimeout(() => {
+
+            // Battle may have ended while waiting
+            if (victoryShown) return;
+
+            monsterAI();
+
+        }, 800);
+    }
 }
 
 function monsterAI() {
