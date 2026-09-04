@@ -2,7 +2,9 @@ html, body {
     position: relative;
     overflow-x: hidden;
     background: #222;
-    font-family: Arial, sans-serif;
+    font-family: Inter;
+	font-size: 18px;
+	
     padding: 0;
     margin: 0;
     height: 100%;
@@ -41,7 +43,7 @@ html, body {
     opacity: 0;
 }
 
-  .status-bar {
+.status-bar {
     width: 100%;
     height: 60px;
     background: #333;
@@ -52,9 +54,9 @@ html, body {
   font-weight: 300; /* makes the letters slim */
   }
 
-  html, body {
+html, body {
     background: #222;
-    font-family: Arial, sans-serif;
+    font-family: Inter;
     padding: 0;
     margin: 0;
     padding: 0;
@@ -94,13 +96,15 @@ html, body {
     /*overflow: hidden; /* Prevents scrolling if things go out of bounds */
 	overflow-y: auto;
     overflow-x: hidden;
-
+	background-image: url('assets/bg/1.jpg');
+	background-size: cover;
+	background-position: center;
   }
 
   .main-window {
     padding: 5px;
     padding-right: 60px;
-    background: #A28A65;
+    /* background: #A28A65; */
   }
 
   .right-menu {
@@ -1484,7 +1488,9 @@ position: relative;
 }
 
 .transfer-target,
-.transfer-cancel {
+.transfer-cancel,
+.transfer-confirm
+ {
     padding: 7px 10px;
 
     color: white;
@@ -1497,14 +1503,14 @@ position: relative;
     background: #444;
 }
 
-.transfer-cancel {
+.transfer-cancel, .transfer-confirm {
     margin-top: 4px;
 
     color: #aaa;
     border-top: 1px solid #444;
 }
 
-.transfer-cancel:hover {
+.transfer-cancel:hover, .transfer-confirm:hover {
     background: #333;
     color: white;
 }

@@ -902,7 +902,8 @@ addItemToContainer(
 */
 
 
-function transferItem(source, sourceIndex, target) {
+function transferItem(source, sourceIndex, target, requestedQuantity = null) {
+
     const sourceSlot = source[sourceIndex];
 
     if (!sourceSlot || !sourceSlot.item) {
@@ -916,58 +917,41 @@ function transferItem(source, sourceIndex, target) {
     }
 
     const itemId = sourceSlot.item;
-    const quantity = sourceSlot.qty;
+    const availableQuantity = Number(sourceSlot.qty) || 1;
 
+    // If no quantity was specified, move the entire stack.
+    const quantity = requestedQuantity === null
+        ? availableQuantity
+        : Number(requestedQuantity);
 
-    // -----------------------------------------
-    // Try to add the entire stack
-    // -----------------------------------------
+    if (!Number.isInteger(quantity) || quantity <= 0) {
+        pushStatus("Invalid quantity");
+        return false;
+    }
 
-    const originalTarget = target.map(slot => ({
-        item: slot.item,
-        qty: slot.qty
-    }));
-
-    if (addItemToContainer(target, itemId, quantity)) {
-
-        sourceSlot.item = null;
-        sourceSlot.qty = 0;
-
-        return true;
+    if (quantity > availableQuantity) {
+        pushStatus(`You only have ${availableQuantity}`);
+        return false;
     }
 
 
     // -----------------------------------------
-    // Target may have accepted part of it
+    // Remember target before transfer
     // -----------------------------------------
 
-    let transferred = quantity;
-
-    const remainingInSource = sourceSlot.qty;
-
-    // Calculate how much disappeared from the source
-    // by checking target changes.
-    let targetAdded = 0;
-
-    target.forEach((slot, i) => {
-
-        const before = originalTarget[i];
-
-        if (slot.item === itemId) {
-            targetAdded += slot.qty - (
-                before.item === itemId
-                    ? before.qty
-                    : 0
-            );
-        }
-    });
-
-    transferred = targetAdded;
+    const originalTarget = target.map(slot => ({
+        item: slot.item,
+        qty: Number(slot.qty) || 0
+    }));
 
 
-    if (transferred > 0) {
+    // -----------------------------------------
+    // Try to add requested quantity
+    // -----------------------------------------
 
-        sourceSlot.qty -= transferred;
+    if (addItemToContainer(target, itemId, quantity)) {
+
+        sourceSlot.qty -= quantity;
 
         if (sourceSlot.qty <= 0) {
             sourceSlot.item = null;
@@ -977,10 +961,234 @@ function transferItem(source, sourceIndex, target) {
         return true;
     }
 
+
+    // -----------------------------------------
+    // Target may have accepted part of it
+    // -----------------------------------------
+
+    let targetAdded = 0;
+
+    target.forEach((slot, i) => {
+
+        const before = originalTarget[i];
+
+        if (slot.item === itemId) {
+
+            const beforeQty =
+                before.item === itemId
+                    ? before.qty
+                    : 0;
+
+            const difference = slot.qty - beforeQty;
+
+            if (difference > 0) {
+                targetAdded += difference;
+            }
+        }
+    });
+
+
+    // -----------------------------------------
+    // Remove whatever was actually transferred
+    // -----------------------------------------
+
+    if (targetAdded > 0) {
+
+        sourceSlot.qty -= targetAdded;
+
+        if (sourceSlot.qty <= 0) {
+            sourceSlot.item = null;
+            sourceSlot.qty = 0;
+        }
+
+        return true;
+    }
+
+
     pushStatus("No space in target inventory");
     return false;
 }
 
+async function showTransferQuantity(menu, source, sourceIndex, target) {
+
+    const sourceSlot = source[sourceIndex];
+
+    if (!sourceSlot || !sourceSlot.item) {
+        return;
+    }
+
+    const currentQuantity = Number(sourceSlot.qty) || 1;
+
+
+    // =========================================
+    // Single item
+    // =========================================
+
+    if (currentQuantity <= 1) {
+
+        menu.remove();
+
+        const success = transferItem(
+            source,
+            sourceIndex,
+            target,
+            1
+        );
+
+        if (success) {
+            refreshInventoryAfterTransfer();
+			await storage.savePlayer(player);
+        }
+
+        return;
+    }
+
+
+    // =========================================
+    // Quantity selector
+    // =========================================
+
+    let quantity = currentQuantity;
+
+    menu.innerHTML = `
+        <div class="transfer-title">
+            Move ${sourceSlot.item}
+        </div>
+
+        <div class="transfer-quantity-title">
+            How many?
+        </div>
+
+        <div class="transfer-quantity-controls">
+
+            <button class="transfer-qty-minus">
+                −
+            </button>
+
+            <input
+                class="transfer-qty-input"
+                type="number"
+                min="1"
+                max="${currentQuantity}"
+                value="${currentQuantity}"
+            >
+
+            <button class="transfer-qty-plus">
+                +
+            </button>
+
+        </div>
+
+        <div class="transfer-actions">
+
+            <div class="transfer-confirm">
+                Move
+            </div>
+
+            <div class="transfer-cancel">
+                Cancel
+            </div>
+
+        </div>
+    `;
+
+
+    const input = menu.querySelector(".transfer-qty-input");
+    const minus = menu.querySelector(".transfer-qty-minus");
+    const plus = menu.querySelector(".transfer-qty-plus");
+    const confirm = menu.querySelector(".transfer-confirm");
+    const cancel = menu.querySelector(".transfer-cancel");
+
+
+    // =========================================
+    // Validate quantity
+    // =========================================
+
+    function updateQuantity(value) {
+
+        value = Number(value);
+
+        if (!Number.isInteger(value)) {
+            value = 1;
+        }
+
+        value = Math.max(
+            1,
+            Math.min(currentQuantity, value)
+        );
+
+        quantity = value;
+        input.value = value;
+    }
+
+
+    // =========================================
+    // Minus
+    // =========================================
+
+    minus.addEventListener("click", () => {
+        updateQuantity(quantity - 1);
+    });
+
+
+    // =========================================
+    // Plus
+    // =========================================
+
+    plus.addEventListener("click", () => {
+        updateQuantity(quantity + 1);
+    });
+
+
+    // =========================================
+    // Manual input
+    // =========================================
+
+    input.addEventListener("change", () => {
+        updateQuantity(input.value);
+    });
+
+
+    // =========================================
+    // Move
+    // =========================================
+
+    confirm.addEventListener("click", async () => {
+
+        updateQuantity(input.value);
+
+        const success = transferItem(
+            source,
+            sourceIndex,
+            target,
+            quantity
+        );
+
+        if (success) {
+            menu.remove();
+            refreshInventoryAfterTransfer();
+			
+			await storage.savePlayer(player);
+        }
+    });
+
+
+    // =========================================
+    // Cancel
+    // =========================================
+
+    cancel.addEventListener("click", () => {
+        menu.remove();
+    });
+
+
+    // =========================================
+    // Select current quantity
+    // =========================================
+
+    input.focus();
+    input.select();
+}
 /*
 transferItem(
     player.data.stash,
@@ -1002,8 +1210,11 @@ transferItem(
 */
 
 function openInventoryTransferMenu(source, sourceIndex, x, y, mode = null) {
+
     const sourceSlot = source[sourceIndex];
-	console.log("transfer menu fired");
+
+    console.log("transfer menu fired");
+
     if (!sourceSlot || !sourceSlot.item) {
         return;
     }
@@ -1037,9 +1248,6 @@ function openInventoryTransferMenu(source, sourceIndex, x, y, mode = null) {
     // GUILD STASH
     // =========================================
 
-    // Guild satchel can send to Guild Stash.
-    // Mission satchel cannot.
-    // Stash itself obviously cannot send to itself.
     if (
         mode === "guild" &&
         source !== player.data.stash
@@ -1052,17 +1260,13 @@ function openInventoryTransferMenu(source, sourceIndex, x, y, mode = null) {
 
         button.addEventListener("click", () => {
 
-            menu.remove();
-
-            const success = transferItem(
+            showTransferQuantity(
+                menu,
                 source,
                 sourceIndex,
                 player.data.stash
             );
 
-            if (success) {
-                refreshInventoryAfterTransfer();
-            }
         });
 
         targets.appendChild(button);
@@ -1094,6 +1298,7 @@ function openInventoryTransferMenu(source, sourceIndex, x, y, mode = null) {
 
         }
 
+
         // -----------------------------------------
         // Guild satchel OR Guild stash
         // -----------------------------------------
@@ -1114,21 +1319,18 @@ function openInventoryTransferMenu(source, sourceIndex, x, y, mode = null) {
 
         button.addEventListener("click", () => {
 
-            menu.remove();
-
-            const success = transferItem(
+            showTransferQuantity(
+                menu,
                 source,
                 sourceIndex,
                 adv.inventory
             );
 
-            if (success) {
-                refreshInventoryAfterTransfer();
-            }
         });
 
         targets.appendChild(button);
     });
+
 
     // =========================================
     // CANCEL
@@ -1153,7 +1355,10 @@ function openInventoryTransferMenu(source, sourceIndex, x, y, mode = null) {
     document.body.appendChild(menu);
 
 
+    // =========================================
     // Keep inside screen
+    // =========================================
+
     requestAnimationFrame(() => {
 
         const rect = menu.getBoundingClientRect();

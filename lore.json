@@ -1058,7 +1058,7 @@
     ],
     "adv_Hogmother": [
       { "item": "Large Cauldron Spoon", "qty": 1, "locked": true },
-      { "item": "Apothecary kit", "qty": 1, "locked": true },
+      { "item": "Apothecary Kit", "qty": 1, "locked": true },
       { "item": "Potion of Healing", "qty": 4, "locked": false },
       { "item": null, "qty": 0, "locked": false }
     ],
