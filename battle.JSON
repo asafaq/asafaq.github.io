@@ -973,6 +973,42 @@
 			"damageBonus": 1	}
 			]
     },
+    "otyugh": {
+      "name": "Otyugh",
+	  "type": "monster",
+	  "race": "aberration",
+      "hp": 104,
+      "maxHp": 104,
+      "speed": 6,
+	  "size": "L",
+	  "noImageRing": true,
+	  "xp": 220,
+      "icon": "/assets/monsters/otyugh.png",
+      "color": "#c0392b",
+	  "morale": 20,
+		"ac": 14,
+		"attack": 3,
+		"actions": [
+			{
+			"name": "Tentacle",
+			"type": "piercing",
+			"#": 2,
+			"hitMod": 3,
+			"range": 2,
+			"damageDie": 8,
+			"damageBonus": 3	},
+			{
+			"name": "Bite",
+			"type": "piercing",
+			"#": 1,
+			"hitMod": 6,
+			"range": 1,
+			"damageDie": 16,
+			"damageBonus": 3,
+			"condition": { "name": "otyugh_poison", "save": "hp", "dc": 15}
+			}
+			]
+    },
     "owlbear": {
       "name": "Owl Bear",
 	  "type": "monster",

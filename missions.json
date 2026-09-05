@@ -2637,7 +2637,31 @@
     ],
     "dialog": "???",
     "interaction_type": "next",
-    "target_id": "green3_224"
+    "target_id": "green3_224",
+    "branches": [
+      {
+        "condition": "party_member",
+        "value": "Tonica",
+        "target_id": "green3_224a"
+      }]
+  },
+  {
+    "id": "green3_224a",
+    "speaker": [
+      "Amyssa",
+      "Tonica"
+    ],
+    "portrait": [
+      "/assets/patrons/amyssa_l.png",
+      "/assets/patrons/tonica_l.png"
+    ],
+    "side": [
+      "left",
+      "right"
+    ],
+    "dialog": "???",
+    "interaction_type": "next",
+    "target_id": "green3_227"
   },
   {
     "id": "green3_224",

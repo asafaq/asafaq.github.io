@@ -45,6 +45,9 @@ window.addEventListener("message", async (event) => {
 					if (pc.statuseffect) {
 						patron.statuseffect = pc.statuseffect;
 					}
+					if (pc.inventory) {
+						patron.inventory = pc.inventory;
+					}
 
                     if (typeof patron.Exp === 'undefined') patron.Exp = 0;
                     if (!patron.Level) patron.Level = 1;

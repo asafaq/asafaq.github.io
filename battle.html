@@ -2437,29 +2437,87 @@ function getAdjacentEnemy(attacker) {
 }
 
 function handleRangedAttack(attacker, target, weapon = "ranged_attack") {
+    if (!attacker.hasAction) return;
+    if (!target || target.hp <= 0) return;
+
+    // =========================================
+    // ATTACK BONUSES
+    // =========================================
+
+    const dexMod = attacker.stats?.dex || 0;
+    const profBonus = attacker.prof || 0;
+    const hitBonus = attacker.hitBonus || 0;
+
+    const totalHitBonus = dexMod + profBonus + hitBonus;
+
+    // =========================================
+    // ROLL TO HIT
+    // =========================================
+
     const roll = Math.floor(Math.random() * 20) + 1;
-    const totalHit = roll + (attacker.hitBonus || 0);
+    const totalHit = roll + totalHitBonus;
 
-    Bus.emit('LOG', `${attacker.name} fires a bolt! (Roll: ${roll} + ${attacker.hitBonus || 0})`);
+    Bus.emit(
+        'LOG',
+        `${attacker.name} fires a bolt! (Roll: ${roll} + ${totalHitBonus})`
+    );
 
-	if (attacker.isEnsnaringStrike) {
-		attacker.isEnsnaringStrike = false;
-		target.statuseffect.ensnare = true;
-		}
+    // =========================================
+    // ENSNARING STRIKE
+    // =========================================
 
-    if (totalHit >= target.ac) {
-        const dmgRoll = Math.floor(Math.random() * 8) + 1; // 1d8
-        const totalDmg = dmgRoll + (attacker.damageBonus || 0);
+    if (attacker.isEnsnaringStrike) {
+        attacker.isEnsnaringStrike = false;
+        target.statuseffect.ensnare = true;
 
-        Bus.emit('LOG', `🏹 Hit! The bolt deals ${totalDmg} damage.`);
-        applyDamage(target, totalDmg);
-    } else {
-        Bus.emit('LOG', `❌ Miss! The bolt flies wide.`);
+        Bus.emit(
+            'LOG',
+            `🏹 ${attacker.name} ensnared ${target.name}, they can't move and take continuous damage.`
+        );
     }
 
+    // =========================================
+    // HIT
+    // =========================================
+
+    const targetAC = target.ac || 10;
+    const isCrit = roll === 20;
+    const isHit = isCrit || (roll !== 1 && totalHit >= targetAC);
+
+    if (isHit) {
+
+        // =========================================
+        // DAMAGE
+        // =========================================
+
+        const dmgRoll = Math.floor(Math.random() * 8) + 1; // 1d8
+
+        const damageBonus = attacker.damageBonus || 0;
+        const totalDmg = dmgRoll + dexMod + damageBonus;
+
+        Bus.emit(
+            'LOG',
+            `🏹 Hit! ${attacker.name} deals ${totalDmg} damage.`
+        );
+
+        applyDamage(target, totalDmg);
+
+    } else {
+
+        Bus.emit(
+            'LOG',
+            `❌ Miss! ${attacker.name} misses (${totalHit} vs AC ${targetAC}).`
+        );
+    }
+
+    // =========================================
+    // END ACTION / TURN
+    // =========================================
+
     attacker.hasAction = false;
+
     update();
-    endTurn(attacker);;
+    endTurn(attacker);
 }
 
 function startReactionPhase() {
@@ -2672,8 +2730,18 @@ function handleDrinkPotion(user, item) {
 
     const actualHeal = user.hp - oldHP;
 
-    // Consume exactly one potion
+    // =========================================
+    // CONSUME EXACTLY ONE POTION
+    // =========================================
+
     invItem.qty--;
+
+    // Clear this exact inventory slot when empty
+    if (invItem.qty <= 0) {
+        invItem.item = null;
+        invItem.qty = 0;
+        invItem.locked = false;
+    }
 
     // Lock out further healing potions this round
     user.quaffedPotionThisRound = true;
