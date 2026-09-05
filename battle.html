@@ -1287,7 +1287,13 @@ function updateActionBar(active) {
             () => startRangedTargeting("Elvish Bow")
         );
     }
-
+console.log(
+    "🔥 ACTION BAR RAGE CHECK:",
+    active.name,
+    "race:", active.race,
+    "isRaging:", active.isRaging,
+    "rageTurnsActive:", active.rageTurnsActive
+);
     if (
         active.race === "Barbarian" &&
         active.isRaging &&
@@ -2665,10 +2671,6 @@ function endTurn(previousActor = null, alreadyAdvanced = false) {
 
     const current = previousActor;
 
-    if (current && current.isRaging) {
-        current.rageTurnsActive++;
-    }
-
     // =====================================================
     // PENDING SPELLS
     // =====================================================
@@ -2756,7 +2758,15 @@ function endTurn(previousActor = null, alreadyAdvanced = false) {
         roundStarted = false;
 
         refreshRound();
+		units.forEach(unit => {
 
+			if (unit.type !== "pc") return;
+
+			if (unit.isRaging) {
+				unit.rageTurnsActive++;
+			}
+
+		});
 
         // =================================================
         // BARD SONG FADE
