@@ -693,32 +693,53 @@ ${`
 </div>
 `,
 
-	cogwheel: `
-		<div>
-	  <label>Guild Name:</label>
-	  <input id="guildNameInput" type="text">
-	</div>
-	<div>
-	  <label>Party A:</label>
-	  <input id="partyAInput" type="text" maxlength="22">
-	</div>
+cogwheel: `
+    <div id="cogwheelPage">
 
-	<div>
-	  <label>Party B:</label>
-	  <input id="partyBInput" type="text" maxlength="22">
-	</div>
-	<div>
-      <label>Text Speed:</label>
-      <select id="typewriterSelect">
-        <option value="false">Normal (typewriter)</option>
-        <option value="true">Instant (skip)</option>
-      </select>
+        <div class="settingRow">
+            <label>Guild Name:</label>
+            <input id="guildNameInput" type="text">
+        </div>
+
+        <div class="settingRow">
+            <label>Party A:</label>
+            <input id="partyAInput" type="text" maxlength="22">
+        </div>
+
+        <div class="settingRow">
+            <label>Party B:</label>
+            <input id="partyBInput" type="text" maxlength="22">
+        </div>
+
+        <div class="settingRow">
+            <label>Text Speed:</label>
+            <select id="typewriterSelect">
+                <option value="false">Normal (typewriter)</option>
+                <option value="true">Instant (skip)</option>
+            </select>
+        </div>
+
+        <div class="saveRow">
+            <button id="saveBtn">Save Changes</button>
+            <span id="saveStatus"></span>
+        </div>
+
+        <div class="developerContact">
+            Contact the developer on
+            <a href="https://discord.gg/euWseSRKmQ"
+               target="_blank"
+               rel="noopener noreferrer">
+                Discord
+            </a>
+        </div>
+
+        <button id="jstest">
+            Launch function test for devs
+            (Refresh if you don't wanna die)
+        </button>
+
     </div>
-	<button id="saveBtn">Save Changes</button>
-	<div id="saveStatus" style="margin-top: 6px; color: white; font-weight: bold;"></div>
-	<div>Contact the developer on <a href="https://discord.gg/euWseSRKmQ" target="_blank" rel="noopener noreferrer">Discord</a></div>
-	<br><br><br><br><button id="jstest">Launch function test for devs (Refresh if you don't wanna die)</button>
-	`,
+`,
 
 	shop: `
 	  <div style="padding: 20px; font-family: Arial;">
@@ -1210,7 +1231,7 @@ if (page === "book") {
 
         const sectionTitle = document.createElement("h2");
         sectionTitle.textContent = sectionName;
-        sectionTitle.style.fontSize = "16px";
+        sectionTitle.style.fontSize = "18px";
         sectionTitle.style.marginTop = "10px";
         container.appendChild(sectionTitle);
 
@@ -1228,7 +1249,7 @@ if (page === "book") {
           const itemContent = document.createElement("div");
           itemContent.style.display = "none";
           itemContent.style.marginLeft = "10px";
-          itemContent.style.fontSize = "16px";
+          itemContent.style.fontSize = "18px";
 
           // ⭐ If the item is an object → render sub-items (Races)
           if (typeof itemValue === "object") {
@@ -1244,7 +1265,7 @@ if (page === "book") {
               const subContent = document.createElement("div");
               subContent.style.display = "none";
               subContent.style.marginLeft = "10px";
-              subContent.style.fontSize = "16px";
+              subContent.style.fontSize = "18px";
 
               // build race text
               const traits = sub.Traits.join(", ");
@@ -1339,7 +1360,7 @@ function injectAllRaces(container, racesObj) {
     const itemContent = document.createElement("div");
     itemContent.style.display = "none";
     itemContent.style.marginLeft = "12px";
-    itemContent.style.fontSize = "16px";
+    itemContent.style.fontSize = "18px";
 
     // one-line description + traits
     const traitsList = race.Traits.join(", ");
