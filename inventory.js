@@ -511,6 +511,7 @@ function initInventoryTooltips() {
 					"charges",
 					"weapon",
 					"food",
+					"type"
 				];
 
 				// -------------------------------------------

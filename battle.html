@@ -964,12 +964,12 @@ const COMBAT_ITEMS = {
         consumesAction: true
     },
 
-    /*"Potion of Healing": {
+    "Potion of Healing": {
         label: "🧪 Healing Potion",
         actionType: "item",
         concentration: false,
         consumesAction: true
-    },*/
+    },
 
 	"Elvish Bow": {
         label: "🏹 Elvish Bow",
@@ -987,48 +987,42 @@ const COMBAT_ITEMS = {
 };
 
 function getUsableCombatItems(unit) {
+
     if (!unit?.inventory || !Array.isArray(unit.inventory)) {
         return [];
     }
 
+    // Only show healing potion when injured
+    const injured = unit.hp < unit.maxHp;
+
     return unit.inventory
         .map(invItem => {
+
             const itemName = invItem.item;
             const definition = COMBAT_ITEMS[itemName];
 
-            if (!definition) return null;
-
-            // If your inventory entries eventually have quantity,
-            // this prevents showing items that have none left.
-            if (invItem.quantity !== undefined && invItem.quantity <= 0) {
+            if (!definition) {
                 return null;
             }
 
-            // Same idea for charges.
-            if (invItem.charges !== undefined && invItem.charges <= 0) {
+            // Empty item slot
+            if ((invItem.qty ?? 0) <= 0) {
                 return null;
             }
 
-            // --------------------------------
-            // AMMUNITION REQUIREMENT
-            // --------------------------------
-
-            if (definition.ammo) {
-                const ammoItem = active.inventory.find(
-                    i => i.item === definition.ammo.item
-                );
-
-                if (!ammoItem) {
-                    return null;
-                }
-
-                const ammoAmount = ammoItem[definition.ammo.property] ?? 0;
-
-                if (ammoAmount < definition.ammo.minimum) {
-                    return null;
-                }
+            // Locked item
+            if (invItem.locked === true) {
+                return null;
             }
-			
+
+            // Healing items only make sense when injured
+            if (
+                itemName === "Potion of Healing" &&
+                !injured
+            ) {
+                return null;
+            }
+
             return {
                 inventoryItem: invItem,
                 name: itemName,
@@ -1058,17 +1052,25 @@ function getAvailableActions(active) {
     // COMBAT ITEMS
     // -------------------------
 
-    const combatItems = getUsableCombatItems(active);
+	const combatItems = getUsableCombatItems(pc);
 
-    combatItems.forEach(item => {
-        actions.push({
-            id: `item-${item.name}`,
-            label: item.label,
-            handler: () => handleCombatItem(item),
-            category: "Item",
-            item
-        });
-    });
+	console.log(
+		"REACTIONS FOR:",
+		pc.name,
+		"COMBAT ITEMS:",
+		combatItems
+	);
+
+	combatItems.forEach(item => {
+
+		createReactionBtn(
+			actions,
+			item.label || item.name,
+			() => handleCombatItem(item, pc),
+			pc
+		);
+
+	});
 
 
     // -------------------------
@@ -1530,8 +1532,20 @@ function skillBox(theme, x, y, integerNeeded, checkboxNeeded, defaults = {}) {
     });
 }
 
-function handleCombatItem(item) {
-    console.log("COMBAT ITEM:", item);
+function handleCombatItem(item, user) {
+
+    if (!item || !user) return;
+
+    switch (item.name) {
+
+        case "Potion of Healing":
+            handleDrinkPotion(user, item);
+            break;
+
+        default:
+            console.warn("Unhandled combat item:", item.name);
+            break;
+    }
 }
 
 function autoWinBattle() {
@@ -2490,7 +2504,27 @@ function buildReactionPanel(panelId, pcList) {
         const actions = document.createElement('div');
         actions.className = "reaction-actions";
         div.appendChild(actions);
+		const combatItems = getUsableCombatItems(pc);
 
+		console.log(
+			"REACTION CHARACTER:",
+			pc.name,
+			"HP:",
+			pc.hp,
+			"/",
+			pc.maxHp
+		);
+		
+		combatItems.forEach(item => {
+
+			createReactionBtn(
+				actions,
+				item.label || item.name,
+				() => handleCombatItem(item, pc),
+				pc
+			);
+
+		});
         if (pc.race === "Barbarian" && !pc.usedRage) {
             createReactionBtn(actions, "Rage", () => handleRage(pc), pc);
         }
@@ -2513,7 +2547,7 @@ function buildReactionPanel(panelId, pcList) {
 			}, pc);
         }
 
-        createReactionBtn(actions, "Healing Potion", () => handleDrinkPotion(pc), pc);
+        //createReactionBtn(actions, "Healing Potion", () => handleDrinkPotion(pc), pc);
 
         panel.appendChild(div);
     });
@@ -2594,19 +2628,32 @@ function getPCGroups() {
     };
 }
 
-function handleDrinkPotion(user) {
-    if (!user || user.hp <= 0) return;
+function handleDrinkPotion(user, item) {
 
-    // Heal amount: 2–7 HP
+    if (!user || user.hp <= 0) return;
+    if (!item?.inventoryItem) return;
+
+    const invItem = item.inventoryItem;
+
+    if ((invItem.qty ?? 0) <= 0) {
+        return;
+    }
+
+    // Heal 3–8 HP
     const heal = Math.floor(Math.random() * 6) + 3;
 
     const oldHP = user.hp;
     user.hp = Math.min(user.maxHp, user.hp + heal);
 
-    Bus.emit('LOG', `🧪 ${user.name} quaffs a potion and heals ${user.hp - oldHP} HP.`);
+    // Consume ONE potion
+    invItem.qty--;
+
+    Bus.emit(
+        'LOG',
+        `🧪 ${user.name} quaffs a potion and heals ${user.hp - oldHP} HP.`
+    );
 
     update();
-    //buildReactionPanel();   // ⭐ refreshes HP in headers
 }
 
 function endTurn(previousActor = null, alreadyAdvanced = false) {
@@ -2911,7 +2958,6 @@ const monsterFreeDialogue = {
     duration: 3000
 };
 
-
 function getMonsterDialogueContainer() {
     let container = document.getElementById("monster-free-dialogue-container");
 
@@ -2924,7 +2970,6 @@ function getMonsterDialogueContainer() {
 
     return container;
 }
-
 
 function runFreeAction(monster) {
     if (!monster || monster.hp <= 0) return;
@@ -2947,7 +2992,6 @@ function runFreeAction(monster) {
 
     showMonsterDialogue(monster, text);
 }
-
 
 function showMonsterDialogue(monster, text) {
     const id = monsterFreeDialogue.nextId++;
@@ -2974,7 +3018,6 @@ function showMonsterDialogue(monster, text) {
 		removeMonsterDialogue(id);
 	}, duration);
 }
-
 
 function removeMonsterDialogue(id) {
     const index = monsterFreeDialogue.messages.findIndex(
