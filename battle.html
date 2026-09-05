@@ -968,7 +968,7 @@ const COMBAT_ITEMS = {
         label: "🧪 Healing Potion",
         actionType: "item",
         concentration: false,
-        consumesAction: true
+        consumesAction: false
     },
 
 	"Elvish Bow": {
@@ -1019,6 +1019,14 @@ function getUsableCombatItems(unit) {
             if (
                 itemName === "Potion of Healing" &&
                 !injured
+            ) {
+                return null;
+            }
+
+            // Only one healing potion per combat round
+            if (
+                itemName === "Potion of Healing" &&
+                unit.quaffedPotionThisRound === true
             ) {
                 return null;
             }
@@ -1427,8 +1435,8 @@ console.log(
         createBtn(
             bar,
             item.label,
-            "item",
-            () => handleCombatItem(item),
+            item.consumesAction === false ? "free action" : "item",
+            () => handleCombatItem(item, active),
             "",
             "",
             "Item"
@@ -1641,10 +1649,13 @@ function refreshRound() {
         if (u.hp > 0) {
             u.hasAction = true;
             u.speed = u.maxSpeed ?? 6;
+            // One healing potion per combat round
+            u.quaffedPotionThisRound = false;
         } else {
             // Keep dead units clean
             u.hasAction = false;
             u.speed = 0;
+            u.quaffedPotionThisRound = false;
         }
     });
 
@@ -2641,22 +2652,35 @@ function handleDrinkPotion(user, item) {
 
     const invItem = item.inventoryItem;
 
-    if ((invItem.qty ?? 0) <= 0) {
+    // No potion left
+    if ((invItem.qty ?? 0) <= 0) return;
+
+    // Already quaffed this round
+    if (user.quaffedPotionThisRound === true) {
         return;
     }
 
-    // Heal 3–8 HP
+    // Heal amount: 3–8 HP
     const heal = Math.floor(Math.random() * 6) + 3;
 
     const oldHP = user.hp;
-    user.hp = Math.min(user.maxHp, user.hp + heal);
 
-    // Consume ONE potion
+    user.hp = Math.min(
+        user.maxHp,
+        user.hp + heal
+    );
+
+    const actualHeal = user.hp - oldHP;
+
+    // Consume exactly one potion
     invItem.qty--;
+
+    // Lock out further healing potions this round
+    user.quaffedPotionThisRound = true;
 
     Bus.emit(
         'LOG',
-        `🧪 ${user.name} quaffs a potion and heals ${user.hp - oldHP} HP.`
+        `🧪 ${user.name} quaffs a potion and heals ${actualHeal} HP.`
     );
 
     update();
