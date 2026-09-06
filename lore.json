@@ -1661,8 +1661,8 @@
 		"weapon": ["Simple", 6, "blunt", 0, false],
 		"desc": "A sturdy thick wooden spoon dual-use for cutlery and savagery."
 	  },
-	  "small_rapier": {
-		"name": "small_rapier",
+	  "Small Rapier": {
+		"name": "Small Rapier",
 		"icon": "/assets/inventory/small_rapier.png",
 		"type": "weapon",
 		"weapon": ["Finesse", 6, "piercing", 0, false],

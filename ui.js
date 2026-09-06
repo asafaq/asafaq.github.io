@@ -481,16 +481,34 @@ ${`
     </button>
 `}
 
-	    <!-- POI: Platform (always visible) -->
+${player?.missions?.dwood_fort2 >= 5 ? `
+    <!-- Platform without Awetruce -->
     <div id="dwood_platform"
-		 class="poi ${
-			 (player?.missions?.dwood_fort1 === 1 ||
-			 player?.missions?.dwood_1 === 2) ? 'mapLight' : ''}"
+         class="poi mapLight"
+         data-node="dwood_platform"
+         style="position:absolute; top:318px; left:400px; transform:scale(0.35); z-index:10;">
+         <img src="/assets/missions/stone_pedestal.png">
+    </div>
+` : `
+    <!-- Platform with Awetruce -->
+    <div id="dwood_platform"
+         class="poi ${
+             (
+                 (
+                     player?.missions?.dwood_fort1 === 1 ||
+                     player?.missions?.dwood_1 === 2
+                 ) &&
+                 (
+                     player?.missions?.dwood_fort2 === undefined ||
+                     player?.missions?.dwood_fort2 < 5
+                 )
+             ) ? 'mapLight' : ''
+         }"
          data-node="dwood_platform"
          style="position:absolute; top:318px; left:400px; transform:scale(0.35); z-index:10;">
          <img src="/assets/missions/stone_pedestal_wolf.png">
     </div>
-	
+`}
 	
 	${player?.missions?.dwood_1 > -1 && player?.missions?.dwood_1 < 2 ? `
 
@@ -1232,7 +1250,7 @@ if (page === "book") {
         const sectionTitle = document.createElement("h2");
         sectionTitle.textContent = sectionName;
         sectionTitle.style.fontSize = "18px";
-        sectionTitle.style.marginTop = "10px";
+        sectionTitle.style.marginTop = "6px";
         container.appendChild(sectionTitle);
 
         Object.keys(sectionData).forEach(itemName => {
@@ -1248,7 +1266,6 @@ if (page === "book") {
           // hidden content container
           const itemContent = document.createElement("div");
           itemContent.style.display = "none";
-          itemContent.style.marginLeft = "10px";
           itemContent.style.fontSize = "18px";
 
           // ⭐ If the item is an object → render sub-items (Races)
@@ -1260,11 +1277,10 @@ if (page === "book") {
               subTitle.textContent = subName;
               subTitle.style.cursor = "pointer";
               subTitle.style.textDecoration = "underline";
-              subTitle.style.margin = "4px 0";
+              subTitle.style.margin = "2px 0";
 
               const subContent = document.createElement("div");
               subContent.style.display = "none";
-              subContent.style.marginLeft = "10px";
               subContent.style.fontSize = "18px";
 
               // build race text
